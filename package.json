@@ -7,6 +7,8 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
+    "start": "node ./src/index.ts",
+    "server": "npx ts-node --files src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
