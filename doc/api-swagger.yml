@@ -1,0 +1,218 @@
+swagger: '2.0'
+info:
+  description: |
+    This is the Prophecy Api documentation
+  version: 1.0.0
+  title: "Prophecy Api"
+
+# host: "localhost" # TODO: change
+
+# basePath: "/api"
+
+tags:
+  - name: "account"
+    description: "Everything about the user's account"
+  - name: "events"
+    description: "Everything about the events"
+  - name: "armies"
+    description: "Everything about the armies"
+  - name: "prophecies"
+    description: "Everything about the prophecies"
+  - name: "statistics"
+    description: "Everything about the statistics"
+  - name: "settings"
+    description: "Everything about the settings"
+  - name: "chats"
+    description: "Everything about the chats"
+  - name: "users"
+    description: "Everything about the users"
+
+# schemes:
+#   - "http"
+#   - "https"
+
+
+paths:
+
+# Account: 
+
+  /account/sign-in:
+    post:
+      parameters:
+        - name: "username"
+          in: "body"
+          description: "The user's username"
+          required: true
+          type: string
+        - name: "password"
+          in: "body"
+          description: "The user's password"
+          required: true
+          type: string
+      tags: 
+        - "account"
+      summary: "Enables the user to sign in"      
+      description: "Enables the user to sign in"
+      responses:
+        # TODO
+        
+  /account/sign-up:
+    post:
+      parameters:
+        # TODO
+      tags: 
+        - "account"
+      summary: "Enables the user to create an account"
+      description: "Enables the user to create an account"
+      responses: 
+        # TODO
+        
+  /account/sign-out:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "account"
+      summary: "Enables the user to logout"
+      description: "Enables the user to logout"
+      responses:
+
+
+# Events
+
+  /events/get-events:
+  
+  /events/save-event/{eventId}:
+  
+  /events/unsave-event/{eventId}:
+  
+  /events/get-saved-events:
+  
+  /events/create-event:
+  
+  /events/delete-event/{eventId}:
+  
+  /event/organizer/update-event/{eventId}:
+ 
+  
+# Armies
+  
+  /armies/get-armies:
+  
+  /armies/create-army:
+  
+  /armies/delete-army/{armyId}:
+  
+  /armies/update-army/{armyId}:
+  
+  /armies/tags/get-tags:
+  
+  /armies/tags/create-tag:
+  
+  /armies/tag/delete-tag/{tagId}:
+  
+  /armies/tag/update-tag/{tagId}:
+ 
+  
+# Prophecies
+
+  /prophecies/get-prophecy:
+  
+  /prophecies/delete-prophecy/{prophecyId}:
+  
+  /prophecies/get-history:
+
+  
+# Statistics
+
+  /statistics/get-statistics:
+  
+  /statistics/create-statistic:
+  
+  /statistics/delete-statistic/{statisticId}:
+  
+  /statistics/update-statistic/{statisticId}:
+
+  
+# Settings
+
+  /settings/account/update-password:
+  
+  /settings/account/update-username:
+  
+  /settings/account/update-profile-picture:
+  
+  /settings/account/update-email-address:
+  
+  /settings/account/delete-account:
+  
+  /settings/chat/set-message-rights:
+  
+  /settings/chat/get-message-rights:
+
+  
+# Chat
+
+  /chat/conversation/get-conversations:
+
+  /chat/conversation/create-conversation:
+  
+  /chat/conversation/delete-conversaton/{conversationId}:
+  
+  /chat/conversation/update-conversation/{conversationId}:
+  
+  /chat/conversation/{conversationId}/add-user/{userId}:
+  
+  /chat/conversation/{conversationId}/remove-user/{userId}:
+  
+  /chat/conversation/{conversationId}/add-message:
+  
+  /chat/conversation/{conversationId}/delete-message/{messageId}:
+  
+  /chat/conversation/{conversationId}/update-message/{messageId}:
+  
+  
+# Users
+
+  /users/get-users:
+
+  /users/follow-user:
+
+  /users/unfollow-user:
+
+  /users/block-user:
+
+  /users/unblock-user:
+
+  /users/get-blocked-users:
+
+  /users/profile/get-profile-informations:
+
+  /users/profile/statistics/get-shared-statistics:
+
+  /users/profile/statistics/share-statistic:
+
+  /users/profile/statistics/unshare-statistic:
+
+  /users/profile/statistics/get-shared-statistics:
+
+  /users/profile/armies/share-army:
+
+  /users/profile/armies/unshare-army:
+
+  /users/profile/armies/get-shared-armies:
+
+  /users/profile/pictures/share-picture:
+
+  /users/profile/pictures/unshare-picture:
+
+  /users/profile/pictures/get-shared-pictures:
+
+  /users/profile/followers/get-followers:
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /Victoire-Rabeau/Prophecy-api/1.0.0
+schemes:
+ - https
+ - http
