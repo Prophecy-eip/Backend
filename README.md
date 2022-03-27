@@ -2,4 +2,10 @@
 
 ## Run
 
-`npm install && npm run server`
+Provide a `PORT` variable in a `.env` file.
+
+Run:
+
+```bash
+docker-compose up
+```
