@@ -2,4 +2,4 @@
 
 ## Run
 
-`npm install && node src/index.ts`
+`npm install && npm run server`
