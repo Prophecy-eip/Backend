@@ -1,4 +1,4 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   description: |
     This is the Prophecy Api documentation
@@ -26,6 +26,10 @@ tags:
     description: "Everything about the chats"
   - name: "users"
     description: "Everything about the users"
+  - name: "armies tags"
+    description: "Everything about the armies tags"
+  - name: "units"
+    description: "Everything about the units"
 
 # schemes:
 #   - "http"
@@ -43,7 +47,7 @@ paths:
           in: "body"
           description: "The user's username"
           required: true
-          type: string
+          type: "string"
         - name: "password"
           in: "body"
           description: "The user's password"
@@ -76,42 +80,190 @@ paths:
       summary: "Enables the user to logout"
       description: "Enables the user to logout"
       responses:
+        # TODO
 
+# EVENTS
 
-# Events
+  # create
+  /events/create-event:
+    post:
+      parameters:
+        # TODO
+      tags:
+        - "events"
+      summary: "Creates a new event"
+      description: "Creates a new event"
+      responses:
+        # TODO
+        
+  /events/save-event:
+    post:
+      parameters:
+        # TODO
+      tags:
+        - "events"
+      summary: "Saves an event for the user"
+      description: "Saves an event for the user"
+      responses: 
+        # TODO
 
+  # read
   /events/get-events:
-  
-  /events/save-event/{eventId}:
-  
-  /events/unsave-event/{eventId}:
+    get:
+      parameters:
+        #TODO
+      tags:
+        - "events"
+      summary: "Retrieves the events"
+      description: "Retrieves the events"
+      responses:
+        # TODO
   
   /events/get-saved-events:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "events"
+      summary: "Retrieves the saved events"
+      description: "Retrieves the saved events"
+      responses: 
+        # TODO
   
-  /events/create-event:
+  # update
+  /event/update-event:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "events"
+      summary: "Updates an event's informations"
+      description: "Updates an event's informations"
+      responses:
+        # TODO
+
+  # delete
+  /events/delete-event/:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "events"
+      summary: "Deletes an event"
+      description: "Deletes an event"
+      responses: 
+        # TODO
   
-  /events/delete-event/{eventId}:
-  
-  /event/organizer/update-event/{eventId}:
+  /events/unsave-event:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "events"
+      summary: "Unsaves an event for the user"
+      description: "Unsaves an event for the user"
+      responses:
+        # TODO
+
  
-  
-# Armies
-  
-  /armies/get-armies:
-  
+# ARMIES
+
+  # create
   /armies/create-army:
+    post:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Creates a new army"
+      description: "Creates a new army"
+      responses:
+        # TODO
   
-  /armies/delete-army/{armyId}:
+  # read
+  /armies/get-armies:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Retrieves the user's armies"
+      description: "Retrieves the user's armies"
+      responses:
+        # TODO
   
-  /armies/update-army/{armyId}:
+  # update
+  /armies/update-army:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Updates an army"
+      description: "Updates an army"
+      responses:
+        # TODO
+      
+  # delete
   
-  /armies/tags/get-tags:
+  /armies/delete-army:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Deletes an army"
+      description: "Deletes an army"
+      responses:
+        # TODO
+
+# ARMIES TAGS
   
+  # create
   /armies/tags/create-tag:
+    post:
+      parameters:
+        # TODO
+      tags:
+        - "armies tags"
+      summary: "Creates an army tag"
+      descrition: "Creates an army tag"
+      responses:
+        # TODO
   
+  # read
+  /armies/tags/get-tags:
+    get:
+      parameters:
+        # TODO
+      tags: 
+        - "armies tags"
+      summary: "Retrieves the user's armies tags"
+      description: "retrieves the user's armies tags"
+      
+  # update
+  /armies/tag/update-tag:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "armies tags"
+      summary: "Updates an army tag"
+      description: "Updates an army tag"
+      responses: 
+        # TODO
+  
+  # delete
   /armies/tag/delete-tag/{tagId}:
-  
-  /armies/tag/update-tag/{tagId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "armies tags"
+      summary: "Deletes an army tag"
+      description: "Deletes an army tag"
+      responses:
+        # TODO
  
   
 # Prophecies
@@ -188,8 +340,6 @@ paths:
 
   /users/profile/get-profile-informations:
 
-  /users/profile/statistics/get-shared-statistics:
-
   /users/profile/statistics/share-statistic:
 
   /users/profile/statistics/unshare-statistic:
@@ -209,10 +359,8 @@ paths:
   /users/profile/pictures/get-shared-pictures:
 
   /users/profile/followers/get-followers:
-
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
 basePath: /Victoire-Rabeau/Prophecy-api/1.0.0
 schemes:
  - https
- - http
