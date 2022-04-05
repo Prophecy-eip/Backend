@@ -166,7 +166,7 @@ paths:
         # TODO
 
  
-# ARMIES
+# ARMIES LISTS
 
   # create
   /armies/create-army:
@@ -239,7 +239,7 @@ paths:
       tags: 
         - "armies tags"
       summary: "Retrieves the user's armies tags"
-      description: "retrieves the user's armies tags"
+      description:
       
   # update
   /armies/tag/update-tag:
@@ -249,7 +249,7 @@ paths:
       tags:
         - "armies tags"
       summary: "Updates an army tag"
-      description: "Updates an army tag"
+      description: ""
       responses: 
         # TODO
   
@@ -261,47 +261,145 @@ paths:
       tags:
         - "armies tags"
       summary: "Deletes an army tag"
-      description: "Deletes an army tag"
+      description: ""
       responses:
         # TODO
  
   
 # Prophecies
 
+  # read
   /prophecies/get-prophecy:
-  
-  /prophecies/delete-prophecy/{prophecyId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "prophecies"
+      summary: "Retrieves a prophecy for the user"
+      description: ""
+      responses:
+        # TODO
   
   /prophecies/get-history:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "prophecies"
+      summary: "Retrieves the prophecies histrory"
+      description: ""
+      responses:
+        # TODO
 
   
-# Statistics
+# STATISTICS
 
-  /statistics/get-statistics:
-  
+  # create
   /statistics/create-statistic:
+    post:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Creates a new statistic"
+      descirption: ""
+      
+  # read
+  /statistics/get-statistics:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Retrieves the user's statistics"
+      description: ""
+      responses:
+        # TODO
   
-  /statistics/delete-statistic/{statisticId}:
+  # update    
+  /statistics/update-statistic:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Updates a statistic"
+      description: ""
+      responses:
+        # TODO
+      
+  # delete
+  /statistics/delete-statistic:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Deletes a statistic"
+      description: ""
+      responses:
+        # TODO
   
-  /statistics/update-statistic/{statisticId}:
 
-  
-# Settings
+# SETTINGS
 
+  # update
   /settings/account/update-password:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Updates the user's password"
+      description: ""
+      responses:
+        # TODO
   
   /settings/account/update-username:
-  
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Updates the user's username"
+      description: ""
+      responses:
+        # TODO
+
   /settings/account/update-profile-picture:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Updates the user's profile picture"
+      description: ""
+      responses: 
+        # TODO
   
   /settings/account/update-email-address:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Updates the user's email address"
+      description: ""
+      responses: 
+        # TODO
   
+  # delete
   /settings/account/delete-account:
-  
-  /settings/chat/set-message-rights:
-  
-  /settings/chat/get-message-rights:
-
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Deletes the user's account"
+      description: ""
+      responses:
+        # TODO
+      
   
 # Chat
 
