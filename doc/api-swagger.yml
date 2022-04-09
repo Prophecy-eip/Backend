@@ -1,4 +1,4 @@
-swagger: "2.0"
+openapi: 3.0.0
 info:
   description: |
     This is the Prophecy Api documentation
@@ -6,33 +6,39 @@ info:
   title: "Prophecy Api"
 
 # host: "localhost" # TODO: change
-
 # basePath: "/api"
 
 tags:
-  - name: "account"
-    description: "Everything about the user's account"
-  - name: "events"
-    description: "Everything about the events"
-  - name: "armies"
-    description: "Everything about the armies"
-  - name: "prophecies"
-    description: "Everything about the prophecies"
-  - name: "statistics"
-    description: "Everything about the statistics"
-  - name: "settings"
-    description: "Everything about the settings"
-  - name: "users"
-    description: "Everything about the users"
-  - name: "units"
-    description: "Everything about the units"
-  - name: "teams"
-    description: "Everything about the teams"
+  - name: account
+    description: Everything about the user's account
+  - name: events
+    description: Everything about the events
+  - name: armies
+    description: Everything about the armies
+  - name: prophecies
+    description: Everything about the prophecies
+  - name: statistics
+    description: Everything about the statistics
+  - name: settings
+    description: Everything about the settings
+  - name: users
+    description: Everything about the users
+  - name: units
+    description: Everything about the units
+  - name: teams
+    description: Everything about the teams
+  - name: localtions
+    description: Everyting about the locations
 
-# schemes:
-#   - "http"
-#   - "https"
 
+#components:
+#  securitySchemes:
+#    bearerAuth:
+#      type: http
+#      scheme: bearer
+
+#security:
+#  - bearerAuth: []
 
 paths:
 
@@ -40,141 +46,238 @@ paths:
 
   /account/sign-in:
     post:
-      parameters: # parameter content type: text
-        - name: "username"
-          in: "body"
-          description: "The user's username"
-          required: true
-          type: "string"
-        - name: "password"
-          in: "body"
-          description: "The user's password"
-          required: true
-          type: string
-      tags: 
-        - "account"
-      summary: "Enables the user to sign in"      
+      summary: Enables the user to sign in
       description: ""
+      tags: 
+        - account
+#      security:
+#        - bearerAuth: []
+      parameters:
+#        - in: header
+#          name: ""
+#          type: ""
+          # TODO: Add header content
+        - in: body 
+          name: signInCredentials
+          description: The sign in required informations
+          required: true
+          schema:
+            $ref: '#/definitions/signInCredentials'
       responses:
-        # TODO
+        200:
+          description: Data received on connection success
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/connectionResponse'
+                
+        # TODO: complete
         
   /account/sign-up:
     put:
-      parameters:
-        # TODO
-      tags: 
-        - "account"
-      summary: "Enables the user to create an account"
+      summary: Enables the user to create an account
       description: ""
-      responses: 
-        # TODO
-        
+      tags: 
+        - account
+      parameters:
+        # TODO: add header
+        - in: body
+          name: signUpCredentials
+          description: The sign up required informations
+          required: true
+          schema:
+            $ref: '#/definitions/signUpCredentials'
+      responses:
+        200:
+          description: Data received on connection success
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/connectionResponse'
+        # TODO: complete
+      
   /account/sign-out:
     post:
-      parameters:
-        # TODO
-      tags:
-        - "account"
-      summary: "Enables the user to logout"
+      summary: Enables the user to logout
       description: ""
+      tags:
+        - account
+      parameters:
+        # TODO: add parameters
       responses:
-        # TODO
+        200:
+          description: OK
+        # TODO: complete
 
 # EVENTS
 
   # create
   /events/create-event:
     post:
-      parameters:
-        # TODO
-      tags:
-        - "events"
-      summary: "Creates a new event"
+      summary: Creates a new event
       description: ""
+      parameters:
+        # TODO: add parameters
+      tags:
+        - events
       responses:
-        # TODO
+        200: 
+          description: New event's id
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuid'
+        # TODO: complete
         
   /events/save-event/{eventId}:
     put:
-      parameters:
-        # TODO
-      tags:
-        - "events"
-      summary: "Saves an event for the user"
+      summary: Saves an event for the user
       description: ""
+      tags:
+        - events
+      parameters:
+        # TODO: add header
+        - in: path
+          name: eventId
+          description: The event's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
       responses: 
-        # TODO
+        200:
+          description: OK
+        # TODO: complete
 
   # read
   /events/get-events-list:
     get:
-      parameters:
-        #TODO
-      tags:
-        - "events"
-      summary: "Retrieves the events list"
+      summary: Retrieves the events list
       description: ""
+      tags:
+        - events
+      parameters:
+        #TODO: complete
+        - in: body
+          name: listData # TODO: rename
+          description: Specifies the search
+          required: false
+          schema:
+            $ref: '#/definitions/listRequest'
       responses:
-        # TODO
+        200: 
+          description: An array of events id
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuidArray'
+        # TODO: complete
         
   /events/get-event/{eventId}:
     get:
-      parameters:
-        # TODO
-      tags:
-        - "events"
-      summary: "Retrieves an event data"
+      summary: Retrieves an event data
       description: ""
+      tags:
+        - events
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
+        # TODO: complete
       responses:
+        200:
+          description: An event object
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/eventObject'
         # TODO
   
   /events/get-saved-events-list:
     get:
-      parameters:
-        # TODO
-      tags:
-        - "events"
-      summary: "Retrieves the saved events list"
+      summary: Retrieves the saved events list
       description: ""
+      tags:
+        - events
+      parameters:
+        # TODO: complete
+        - in: body
+          name: listData # TODO: change
+          description: The list filters
+          schema:
+            $ref: '#/definitions/listRequest'
       responses: 
-        # TODO
+        200:
+          description: List of events ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuidArray'
+        # TODO: complete
   
   # update
   /event/update-event/{eventId}:
     put:
-      parameters:
-        # TODO
-      tags:
-        - "events"
       summary: "Updates an event's informations"
       description: ""
+      tags:
+        - "events"
+      parameters:
+        # TODO: complete
+        - in: path
+          name: eventId
+          description: The event's id
+          schema:
+            $ref: '#/definitions/uuid'
+        - in: body
+          name: event
+          description: The event's data
+          schema:
+            $ref: '#/definitions/eventObject'
       responses:
-        # TODO
+        200:
+          description: OK
+        # TODO: complete
+        
+  /events/unsave-event/{eventId}:
+    put:
+      summary: Unsaves an event for the user
+      description: ""
+      tags:
+        - events
+      parameters:
+        # TODO: complete
+        - in: path
+          name: eventId
+          description: The event's id
+          schema:
+            $ref: '#/definitions/uuid'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
 
   # delete
   /events/delete-event/{eventId}:
     delete:
-      parameters:
-        # TODO
-      tags:
-        - "events"
-      summary: "Deletes an event"
+      summary: Deletes an event
       description: ""
-      responses: 
-        # TODO
-  
-  /events/unsave-event/{eventId}:
-    put:
-      parameters:
-        # TODO
       tags:
-        - "events"
-      summary: "Unsaves an event for the user"
-      description: ""
+        - events
+      parameters:
+        # TODO: complete
+        - in: path
+          name: eventId
+          description: The event's id
+          schema:
+            $ref: '#definitions/uuid'
       responses:
-        # TODO
+        200:
+          description: OK
+        # TODO: complete
+  
 
- 
 # ARMIES LISTS
 
   # create
@@ -851,8 +954,215 @@ paths:
       responses:
         # TODO
 
+
+# LOCATIONS
+
+  # create
+  /locations/create-location:
+    post:
+      summary: Creates a location
+      description: ""
+      tags:
+        - locations
+      parameters:
+        # TODO
+      responses:
+        # TODO
+  
+  # read
+  /locations/get-locations-list:
+    get:
+      summary: Retrieves a locations list
+      description: ""
+      tags:
+        - locations
+      parameters:
+        # TODO
+      responses:
+        # TODO
+        
+  /locations/get-location/{locationId}:
+    get:
+      summary: Retrieves a location information
+      description: ""
+      tags:
+        - locations
+      parameters:
+        # TODO
+      responses:
+        # TODO
+  
+  # update
+  /locations/update-location/{locationId}:
+    put:
+      summary: Updates a location data
+      description: ""
+      tags:
+        - locations
+      parameters:
+        # TODO
+      responses:
+        # TODO
+
+  # delete
+  /locations/delete-location/{locationId}:
+    delete:
+      summary: Deletes a location
+      description: ""
+      tags:
+        - locations
+      parameters:
+        # TODO
+      responses:
+        # TODO
+  
+definitions:
+
+  signInCredentials:
+    description: Informations required to sign in
+    properties:
+      username:
+        type: string
+        description: The user's username
+        example: username
+      password:
+        type: string
+        description: The user's password
+        example: password
+    required:
+      - username
+      - password
+      
+  signUpCredentials:
+    description: Informations required to sign up
+    properties:
+      username:
+        type: string
+        description: The user's username
+        exemple: "username"
+      email:
+        type: string
+        description: The user's email address
+        example: email@address.com
+      password:
+        type: string
+        description: The user's password
+        example: password
+    required:
+      - username
+      - email
+      - password
+      
+  connectionResponse:
+    description: The data sent on connection
+    properties:
+      accessToken:
+        type: string
+        description: The required token
+      refreshToken:
+        type: string
+        description: The token to refresh the access token
+      userId:
+        type: string
+        description: The user's id
+        format: uuid
+    required:
+      - accessToken
+      - refreshToken # Keep refresh token ?
+      - userId
+      
+  uuid:
+    type: string
+    format: uuid
+      
+  uuidArray:
+    type: array
+    items:
+      $ref: '#/definitions/uuid'
+      
+  length:
+    type: integer
+    # format: uint
+    # example: 42
+    
+  date:
+    type: string
+    format: date
+    example: DD-MM-YYYY
+    
+  time:
+    type: string
+    format: time
+    example: HH-MM
+    
+  link:
+    type: string
+    format: link
+    example: www.link.com
+    
+  name:
+    type: string
+    example: name
+    
+  description:
+    type: string
+    example: description
+    
+  tag:
+    type: string
+    example: tag
+    
+  listRequest:
+    description: Data requested on a list
+    properties:
+      length:
+        type: integer
+        format: uint
+        example: 42
+      flags:
+        type: array
+        items:
+          type: string
+          example: flag1
+          
+  eventObject:
+    description: Event data
+    properties:
+      id: 
+        $ref: '#/definitions/uuid'
+      name:
+        $ref: '#/definitions/name'
+      description:
+        $ref: '#/definitions/description'
+      tag:
+        $ref: '#/definitions/tag'
+      date:
+        $ref: '#/definitions/date'
+      time:
+        $ref: '#/definitions/time'
+      link:
+        $ref: '#/definitions/link'
+      locationId:
+        $ref: '#/definitions/uuid'
+    required:
+      - id
+      - name
+      - description
+      - tag
+      - date
+      - time
+      - locatonId
+      
+  locationObject:
+    
+      
+
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
 basePath: /Victoire-Rabeau/Prophecy/1.0.0
 schemes:
  - https
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Victoire-Rabeau/Prophecy-Api/1.0.0
