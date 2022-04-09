@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   description: |
     This is the Prophecy Api documentation
-  version: 1.0.1
+  version: 1.0.0
   title: "Prophecy Api"
 
 # host: "localhost" # TODO: change
@@ -40,7 +40,7 @@ paths:
 
   /account/sign-in:
     post:
-      parameters:
+      parameters: # parameter content type: text
         - name: "username"
           in: "body"
           description: "The user's username"
@@ -54,29 +54,29 @@ paths:
       tags: 
         - "account"
       summary: "Enables the user to sign in"      
-      description: "Enables the user to sign in"
+      description: ""
       responses:
         # TODO
         
   /account/sign-up:
-    post:
+    put:
       parameters:
         # TODO
       tags: 
         - "account"
       summary: "Enables the user to create an account"
-      description: "Enables the user to create an account"
+      description: ""
       responses: 
         # TODO
         
   /account/sign-out:
-    get:
+    post:
       parameters:
         # TODO
       tags:
         - "account"
       summary: "Enables the user to logout"
-      description: "Enables the user to logout"
+      description: ""
       responses:
         # TODO
 
@@ -90,76 +90,87 @@ paths:
       tags:
         - "events"
       summary: "Creates a new event"
-      description: "Creates a new event"
+      description: ""
       responses:
         # TODO
         
-  /events/save-event:
-    post:
+  /events/save-event/{eventId}:
+    put:
       parameters:
         # TODO
       tags:
         - "events"
       summary: "Saves an event for the user"
-      description: "Saves an event for the user"
+      description: ""
       responses: 
         # TODO
 
   # read
-  /events/get-events:
+  /events/get-events-list:
     get:
       parameters:
         #TODO
       tags:
         - "events"
-      summary: "Retrieves the events"
-      description: "Retrieves the events"
+      summary: "Retrieves the events list"
+      description: ""
       responses:
         # TODO
-  
-  /events/get-saved-events:
+        
+  /events/get-event/{eventId}:
     get:
       parameters:
         # TODO
       tags:
         - "events"
-      summary: "Retrieves the saved events"
-      description: "Retrieves the saved events"
+      summary: "Retrieves an event data"
+      description: ""
+      responses:
+        # TODO
+  
+  /events/get-saved-events-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "events"
+      summary: "Retrieves the saved events list"
+      description: ""
       responses: 
         # TODO
   
   # update
-  /event/update-event:
+  /event/update-event/{eventId}:
     put:
       parameters:
         # TODO
       tags:
         - "events"
       summary: "Updates an event's informations"
-      description: "Updates an event's informations"
+      description: ""
       responses:
         # TODO
 
   # delete
-  /events/delete-event/:
+  /events/delete-event/{eventId}:
     delete:
       parameters:
         # TODO
       tags:
         - "events"
       summary: "Deletes an event"
-      description: "Deletes an event"
+      description: ""
       responses: 
         # TODO
   
-  /events/unsave-event:
-    delete:
+  /events/unsave-event/{eventId}:
+    put:
       parameters:
         # TODO
       tags:
         - "events"
       summary: "Unsaves an event for the user"
-      description: "Unsaves an event for the user"
+      description: ""
       responses:
         # TODO
 
@@ -174,24 +185,36 @@ paths:
       tags:
         - "armies"
       summary: "Creates a new army"
-      description: "Creates a new army"
+      description: ""
       responses:
         # TODO
   
   # read
-  /armies/get-armies:
+  /armies/get-armies-list:
     get:
       parameters:
         # TODO
       tags:
         - "armies"
-      summary: "Retrieves the user's armies"
-      description: "Retrieves the user's armies"
+      summary: "Retrieves the user's armies list"
+      description: ""
       responses:
         # TODO
   
+  /armies/get-army/{armyId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Retrieves an army data"
+      description: ""
+      responses:
+        # TODO
+      
+  
   # update
-  /armies/update-army:
+  /armies/update-army/{armyId}:
     put:
       parameters:
         # TODO
@@ -204,7 +227,7 @@ paths:
       
   # delete
   
-  /armies/delete-army:
+  /armies/delete-army/{armyId}:
     delete:
       parameters:
         # TODO
@@ -230,17 +253,30 @@ paths:
         # TODO
   
   # read
-  /armies/tags/get-tags:
+  /armies/tags/get-tags-list:
     get:
       parameters:
         # TODO
       tags: 
         - "armies"
-      summary: "Retrieves the user's armies tags"
+      summary: "Retrieves the user's armies tags list"
       description:
+      responses:
+        # TODO
+  
+  /armies/tag/get-tag/{tagId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Retrieves a tag data"
+      description: ""
+      responses:
+        # TODO
       
   # update
-  /armies/tag/update-tag:
+  /armies/tag/update-tag/{tagId}:
     put:
       parameters:
         # TODO
@@ -252,7 +288,7 @@ paths:
         # TODO
   
   # delete
-  /armies/tag/delete-tag:
+  /armies/tag/delete-tag/{tagId}:
     delete:
       parameters:
         # TODO
@@ -303,19 +339,30 @@ paths:
       descirption: ""
       
   # read
-  /statistics/get-statistics:
+  /statistics/get-statistics-list:
     get:
       parameters:
         # TODO
       tags:
         - "statistics"
-      summary: "Retrieves the user's statistics"
+      summary: "Retrieves the user's statistics list"
+      description: ""
+      responses:
+        # TODO
+        
+  /statistics/get-statistic/{statisticId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Retrieves a statistic data"
       description: ""
       responses:
         # TODO
   
   # update    
-  /statistics/update-statistic:
+  /statistics/update-statistic/{statisticId}:
     put:
       parameters:
         # TODO
@@ -327,7 +374,7 @@ paths:
         # TODO
       
   # delete
-  /statistics/delete-statistic:
+  /statistics/delete-statistic/{statisticId}:
     delete:
       parameters:
         # TODO
@@ -414,7 +461,7 @@ paths:
         # TODO
         
   /teams/{teamId}/create-message:
-    post:
+    put:
       parameters:
         # TODO
       tags:
@@ -425,13 +472,24 @@ paths:
         # TODO  
       
   # read
-  /teams/get-teams:
+  /teams/get-teams-list:
     get:
       parameters:
         # TODO
       tags:
         - "teams"
-      summary: "Retrieves the user's teams"
+      summary: "Retrieves the user's teams list"
+      description: ""
+      responses:
+        # TODO
+  
+  /teams/get-team/{teamId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "teams"
+      summary: "Retrieves a team data"
       description: ""
       responses:
         # TODO
@@ -448,7 +506,7 @@ paths:
         # TODO
         
   # update
-  /teams/rename-team:
+  /teams/rename-team/{teamId}:
     put:
       parameters:
         # TODO
@@ -459,7 +517,7 @@ paths:
       responses:
         # TODO
         
-  /teams/{teamId}/update-message:
+  /teams/{teamId}/update-message/{messageId}:
     put:
       parameters:
         # TODO
@@ -470,8 +528,8 @@ paths:
       responses:
         # TODO
   
-  /teams/{teamId}/invite-user:
-    post:
+  /teams/{teamId}/invite-user/{userId}:
+    put:
       parameters: 
         # TODO
       tags:
@@ -493,18 +551,18 @@ paths:
           # TODO
           
     # delete
-    /teams/delete-team:
-        delete:
-          parameters:
-            # TODO
-          tags:
-            - "teams"
-          summary: "Deletes a team"
-          description: ""
-          responses:
-            # TODO
+    /teams/delete-team/{teamId}:
+      delete:
+        parameters:
+          # TODO
+        tags:
+          - "teams"
+        summary: "Deletes a team"
+        description: ""
+        responses:
+          # TODO
       
-  /teams/{teamId}/delete-message:
+  /teams/{teamId}/delete-message/{messageId}:
     delete:
       parameters:
         # TODO
@@ -515,44 +573,286 @@ paths:
       responses:
         # TODO
 
+
+# UNITS
+  
+  # create
+  /units/create-unit:
+    post:
+      parameter:
+        # TODO
+      tags:
+        - "units"
+      summary: "Creates a unit"
+      description: ""
+      responses:
+        # TODO
+  
+  # read
+  /units/get-units-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "units"
+      summary: "Retrieves the user's units list"
+      descriptions: ""
+      responses:
+        # TODO
+  
+  /units/get-unit/{unitId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "units"
+      summary: "Retrieves a unit data"
+      description: ""
+      responses:
+        # TODO
+  
+  # update
+  /units/update-unit/{unitId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "units"
+      summary: "Updates a unit"
+      description: ""
+      responses:
+        # TODO
+  
+  # delete
+  /units/delete-unit/{unitId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "units"
+      summary: "Deletes a unit"
+      description: ""
+      responses:
+        # TODO
+  
+
 # Users
 
-  /users/get-users:
+  # create
 
-  /users/follow-user:
+  # read
+  /users/get-users-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves a users list"
+      description: ""
+      responses: 
+        # TODO
+        
+  /users/get-user/{userId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves a user data"
+      description: ""
+      responses:
+        # TODO
+        
+  /users/get-blocked-users-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves the blocked users list"
+      description: ""
+      responses:
+        # TODO
+        
+  /users/{userId}/profile/statistics/get-shared-statistics-list:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves the list of shared statistics"
+      description: ""
+      responses:
+        # TODO
+        
+  /users/{userId}/profile/armies/get-shared-armies-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves the shared armies list"
+      description: ""
+      responses:
+        # TODO
+      
+  /users/{userId}/profile/pictures/get-shared-pictures-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retreves the shared pictures list"
+      description: ""
+      responses:
+        # TODO
+      
+  /users/profile/pictures/get-sared-picture/{pictureId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves a shared picture data"
+      description: ""
+      responses:
+        # TODO
+  
+  /users/{userId}/profile/followers/get-followers-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves a user followers list"
+      description: ""
+      responses:
+        # TODO
+    
+  /users/{userId}/profile/followers/get-followed-users-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves the followed users list"
+      description: ""
+      responses:
+        # TODO
+        
+  #update
+  /users/follow-user/{userId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Follows a user"
+      description: ""
+      responses:
+        # TODO
 
-  /users/unfollow-user:
+  /users/unfollow-user/{userId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unfollows a user"
+      description: ""
+      responses:
+        # TODO
 
-  /users/block-user:
+  /users/block-user/{userId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Blocks a user"
+      description: ""
+      responses:
+        # TODO
 
-  /users/unblock-user:
+  /users/unblock-user/{userId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unblocks a user"
+      description: ""
+      responses:
+        # TODO
 
-  /users/get-blocked-users:
+  /users/profile/statistics/share-statistic/{statisticId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Shares a statistic"
+      description: ""
+      responses:
+        # TODO
 
-  /users/profile/get-profile-informations:
+  /users/profile/statistics/unshare-statistic/{statisticId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unshares a statistic"
+      description: ""
+      responses:
+        # TODO
 
-  /users/profile/statistics/share-statistic:
+  /users/profile/armies/share-army/{armyId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Shares an army list"
+      description: ""
+      responses:
+        # TODO
 
-  /users/profile/statistics/unshare-statistic:
-
-  /users/profile/statistics/get-shared-statistics:
-
-  /users/profile/armies/share-army:
-
-  /users/profile/armies/unshare-army:
-
-  /users/profile/armies/get-shared-armies:
+  /users/profile/armies/unshare-army/{armyId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unshares an army list"
+      description: ""
+      responses:
+        # TODO
 
   /users/profile/pictures/share-picture:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Shares a picture"
+      description: ""
+      responses:
+        # TODO
 
-  /users/profile/pictures/unshare-picture:
-
-  /users/profile/pictures/get-shared-pictures:
-
-  /users/profile/followers/get-followers:
+  /users/profile/pictures/unshare-picture/{pictureId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unshares a picture"
+      description: ""
+      responses:
+        # TODO
 
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
-basePath: /Victoire-Rabeau/Prophecy-api/1.0.0
+basePath: /Victoire-Rabeau/Prophecy/1.0.0
 schemes:
  - https
