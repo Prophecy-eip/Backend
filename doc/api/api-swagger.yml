@@ -1446,20 +1446,69 @@ definitions:
             description: The unit's base size
             type:
             example:
-        
+  
+  unitCharacteristicProfiles:
+    description: The Characteristic Profiles of each unit entry contain the values of all of a unit’s Global, Defensive, and Offensive Characteristics
+    type: object
+    properties:
+      global: # TODO: make map (see multipart models)
+          $ref: '#/definitions/unitGlobalStatistics'
+      defensive: # TODO: make map (see multipart models)
+           $ref: '#/definitions/unitDefensiveStatistics'
+      offensive: # TODO: make map (see multipart models)
+           $ref: '#/definitions/unitOffensiveStatistics'
+  
+  unitModelRules: # TODO
+    description: In this part of the unit entry, the unit’s Model Rules are displayed
+    type: object
+    properties:
+      global:
+      
+      defensive:
+      
+      offensive:
+      
+  unitOptions: # TODO
+    description:
+    type: object
+    properties:
+      commandGroupOptions:
+        description:
+        type:
+        example:
+      unrestrictedOptions:
+        description:
+        type:
+        example:
+      restrictedOptions:
+        description:
+        type:
+        example:
+      modelRules:
+        description:
+        type:
+        example:
+      magicOptions:
+        description:
+        type:
+        example:
+      mountOptions:
+        description:
+        type:
+        example:
+  
   unitObject:
     description: A unit's data
     type: object
     properties:
       header:
         $ref: '#/definitions/unitHeader'
-      globalStatistics:
-        $ref: '#/definitions/unitGlobalStatistics'
-      defensiveStatistics:
-         $ref: '#/definitions/unitDefensiveStatistics'
-      offensiveStatistics:
-         $ref: '#/definitions/unitOffensiveStatistics'
+      characteristicProfiles:
+        $ref: '#/definitions/unitCharacteristicProfiles'
+      modelRules:
+         $ref: '#/definitions/unitModelRules'
       options:
+        $ref: '#/definitions/unitOptions'
     
 
 # Added by API Auto Mocking Plugin
