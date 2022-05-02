@@ -9,400 +9,6 @@ info:
   host: "localhost" # TODO: change
   basePath: /api
   
-  
-  definitions:
-  
-    signInCredentials:
-      description: Informations required to sign in
-      type: object
-      properties:
-        username:
-          type: string
-          description: The user's username
-          example: username
-        password:
-          type: string
-          description: The user's password
-          example: password
-      required:
-        - username
-        - password
-        
-    signUpCredentials:
-      description: Informations required to sign up
-      type: object
-      properties:
-        username:
-          type: string
-          description: The user's username
-          exemple: "username"
-        email:
-          type: string
-          description: The user's email address
-          example: email@address.com
-        password:
-          type: string
-          description: The user's password
-          example: password
-      required:
-        - username
-        - email
-        - password
-        
-    connectionResponse:
-      description: The data sent on connection
-      properties:
-        accessToken:
-          type: string
-          description: The required token
-        refreshToken:
-          type: string
-          description: The token to refresh the access token
-        userId:
-          type: string
-          description: The user's id
-          format: uuid
-      required:
-        - accessToken
-        - refreshToken # Keep refresh token ?
-        - userId
-        
-    uuid:
-      type: string
-      format: uuid
-        
-    uuidArray:
-      type: array
-      items:
-        $ref: '#/definitions/uuid'
-        
-    length:
-      type: integer
-      # format: uint
-      example: 42
-      
-    date:
-      type: string
-      format: date
-      example: DD-MM-YYYY
-      
-    time:
-      type: string
-      format: time
-      example: HH-MM-SS
-      
-    link:
-      type: string
-      format: link
-      example: www.link.com
-      
-    name:
-      type: string
-      example: name
-      
-    description:
-      type: string
-      example: description
-      
-    tag:
-      type: string
-      example: tag
-      
-    listRequest:
-      description: Data requested on a list
-      properties:
-        length:
-          $ref: '#/definitions/length'
-        flags:
-          type: array
-          items:
-            type: string
-            example: flag1
-            
-    eventObject:
-      description: Event data
-      type: object
-      properties:
-        name:
-          $ref: '#/definitions/name'
-        description:
-          $ref: '#/definitions/description'
-        tag:
-          $ref: '#/definitions/tag'
-        date:
-          $ref: '#/definitions/date'
-        time:
-          $ref: '#/definitions/time'
-        link:
-          $ref: '#/definitions/link'
-        locationId:
-          $ref: '#/definitions/uuid'
-      required:
-        - name
-        - description
-        - tag
-        - date
-        - time
-        - locationId
-        
-    locationObject:
-      description: Location data
-      type: object
-      properties:
-        name:
-          $ref: '#/definitions/name'
-        description:
-          $ref: '#/definitions/description'
-        number:
-          # name: number
-          # definitions: The street's number
-          $ref: '#/definitions/length'
-        street:
-          name: street
-          description: The street's name
-          type: string
-          example: "Rue Pasteur"
-        city:
-          name: city
-          description: A city name
-          type: string
-          example: Le Kremlin-Bicêtre
-        postalCode:
-          name: postalCode
-          description: The city's postal code
-          type: number
-          example: 94270
-        country:
-          name: country
-          description: The coutry's name
-          type: string
-          example: France
-  
-    teamCredentials:
-      description: A team's credentials
-      type: object
-      properties: 
-        name: 
-          $ref: '#/definitions/name'
-        desription: 
-          $ref: '#/definitions/description'
-          
-    teamObject:
-      description: A team's data
-      type: object
-      properties:
-        name: 
-          $ref: '#/definitions/name'
-        description: 
-          $ref: '#/definitions/description'
-        messages:
-          type: array
-          items:
-            $ref: '#/definitions/messageObject'
-        members:
-          $ref: '#/definitions/uuidArray'
-          
-    messageObject:
-      description: A message's data
-      type: object
-      properties:
-        authorId:
-          $ref: '#/definitions/uuid'
-        message:
-          type: string
-          example: This is a message
-        date:
-          $ref: '#/definitions/date'
-        time:
-          $ref: '#/definitions/time'
-    
-    unitGlobalStatistics: # TODO
-      description: The unit's global statistics
-      type: object
-      properties:
-        adv:
-          name: Advance Rate
-          description: The distance the model can Advance Move in inches
-          type: number
-          example: 5
-        mar:
-          name: March Rate
-          description: The distance the model can March Move in inches
-          type: number
-          example: 10
-        dis:
-          name: Discipline
-          description: The model’s ability to stand and fight
-          type: number
-          example: 9
-        modelRules:
-    
-    unitDefensiveStatistics: # TODO
-      description: The unit's defensive statistics
-      type: object
-      properties:
-        hp:
-          name: Health Points
-          description: When the model loses this many Health Points, it is removed as a casualty
-          type: number
-          example: 3
-        def:
-          name: Defensive Skill
-          description: How well the model avoids being hit in melee
-          type: number
-          example: 6
-        res:
-          name: Resilience
-          description: How easily the model withstands blows
-          type: number
-          example: 5
-        arm:
-          name: Armour
-          description: The innate Armour of the model
-          type: number
-          example: 0
-        modelRules: # TODO
-    
-    unitOffensiveStatistics: # TODO
-      description: The unit's offensive statistics
-      type: object
-      properties:
-        att:
-          name: Attack Value
-          description: The number of times the model part can strike in a Round of Combat
-          type: number
-          example:
-        off:
-          name: Offensive Skill
-          description: How good the model part is at scoring hits in melee
-          type: number
-          example:
-        str:
-          name: Strength
-          description: How easily the model part can wound enemy models
-          type: number
-          example:
-        ap:
-          name: Armour Penetration
-          description: How well the model part can penetrate the Armour of enemy models
-          type: number
-          example:
-        agi:
-          name: Agility
-          description: Model parts with a higher Agility strike first in melee
-          type: number
-          example:
-        modelRules: # TODO
-        
-    unitHeader:
-      description: The header of a unit entry usually contains all the general information on the unit 
-      type: object
-      properties:
-        name:
-          description: This is the name of the unit that will be used e.g. when choosing the unit to perform an action like Charging, or when targeting the unit with a spell or a Shooting Attack
-          type: string
-          example:
-        armyCategories: # TODO
-          description: Every unit is part of an Army Category, like Characters, Core, or Special, which is important e.g. for building an army or for certain Model Rules
-          type: array
-          example:
-        size: # TODO
-          description: The unit size tells you the minimum and the maximum size of the unit when building an army. The minimum unit size corresponds to the number of models that the unit must contain at least. And accordingly, the maximum unit size represents the number of models that the unit can consist of at the most
-          type:
-          ewample:
-        cost: # TODO
-          description: The unit cost tells you how many points you have to pay for adding the unit to your army in its minimum size, and how many points each additional model will cost. For some units in the game, an additional model will cost the same amount of points as a model that is part of the unit’s minimum size, while for others additional models may be more or less expensive than the initial models.
-          type:
-          example:
-        scoring: # TODO
-          description: Some units have a certain Model Rule called Scoring, which is relevant for winning Secondary Objectives during the game
-          type:
-          example:
-        cap: # TODO
-          description: Certain units can only be selected a limited number of times in an army. In this case, you will find a “0–X Units/Army” cap in the unit entry
-          type:
-          example:
-        spacifications: # TODO
-          description: Every model in the game has a specific Height, Type, and base size, which are relevant for a wide variety of game mechanics and Model Rules
-          type;: object
-          properties:
-            height:
-              description: The unit's height
-              type:
-              example:
-            type:
-              description: The unit's type
-              type:
-              example:
-            base:
-              description: The unit's base size
-              type:
-              example:
-    
-    unitCharacteristicProfiles:
-      description: The Characteristic Profiles of each unit entry contain the values of all of a unit’s Global, Defensive, and Offensive Characteristics
-      type: object
-      properties:
-        global: # TODO: make map (see multipart models)
-            $ref: '#/definitions/unitGlobalStatistics'
-        defensive: # TODO: make map (see multipart models)
-             $ref: '#/definitions/unitDefensiveStatistics'
-        offensive: # TODO: make map (see multipart models)
-             $ref: '#/definitions/unitOffensiveStatistics'
-    
-    unitModelRules: # TODO
-      description: In this part of the unit entry, the unit’s Model Rules are displayed
-      type: object
-      properties:
-        global:
-        
-        defensive:
-        
-        offensive:
-        
-    unitOptions: # TODO
-      description:
-      type: object
-      properties:
-        commandGroupOptions:
-          description:
-          type:
-          example:
-        unrestrictedOptions:
-          description:
-          type:
-          example:
-        restrictedOptions:
-          description:
-          type:
-          example:
-        modelRules:
-          description:
-          type:
-          example:
-        magicOptions:
-          description:
-          type:
-          example:
-        mountOptions:
-          description:
-          type:
-          example:
-    
-    unitObject:
-      description: A unit's data
-      type: object
-      properties:
-        header:
-          $ref: '#/definitions/unitHeader'
-        characteristicProfiles:
-          $ref: '#/definitions/unitCharacteristicProfiles'
-        modelRules:
-           $ref: '#/definitions/unitModelRules'
-        options:
-          $ref: '#/definitions/unitOptions'
-      
-
 
 tags:
   - name: account
@@ -427,6 +33,14 @@ tags:
     description: Everything about the locations
   - name: armies-lists
     description: Everything about the armies lists
+  - name: spells
+    description: Everything about the spells
+  - name: rules
+    description: Everything about the armies rules
+  - name: items
+    description: Everything about the armies items
+  - name: organisation
+    description: Everything about the armies organisation
 
 
 #components:
@@ -554,7 +168,7 @@ paths:
         # TODO: complete
 
   # read
-  /events/get-events-list:
+  /events/get-events:
     get:
       summary: Retrieves the events list
       description: ""
@@ -599,7 +213,7 @@ paths:
                 $ref: '#/definitions/eventObject'
         # TODO
 
-  /events/get-saved-events-list:
+  /events/get-saved-events:
     get:
       summary: Retrieves the saved events list
       description: ""
@@ -704,7 +318,7 @@ paths:
         # TODO: complete
 
   # read
-  /armies-lists/get-armies-lists-list:
+  /armies-lists/get-armies-lists:
     get:
       summary: Retrieves the user's armies list
       description: ""
@@ -762,12 +376,12 @@ paths:
       tags:
         - armies-lists
       summary: "Creates an army tag"
-      descrition: "Creates an army tag"
+      description: "Creates an army tag"
       responses:
         # TODO
 
   # read
-  /armies-lists/tags/get-tags-list:
+  /armies-lists/tags/get-tags:
     get:
       parameters:
         # TODO
@@ -850,10 +464,12 @@ paths:
       tags:
         - "statistics"
       summary: "Creates a new statistic"
-      descirption: ""
+      description: ""
+      responses:
+         # TODO
       
   # read
-  /statistics/get-statistics-list:
+  /statistics/get-statistics:
     get:
       parameters:
         # TODO
@@ -1016,7 +632,7 @@ paths:
         # TODO: complete  
       
   # read
-  /teams/get-teams-list:
+  /teams/get-teams:
     get:
       parameters:
         # TODO
@@ -1083,28 +699,28 @@ paths:
       responses:
         # TODO
       
-    /teams/{teamId}/respond-to-invitation:
-      put:
-        parameters:
-          # TODO
-        tags:
-          - "teams"
-        summary: "Sends a response to a team invitation"
-        description: ""
-        responses:
-          # TODO
+  /teams/{teamId}/respond-to-invitation:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "teams"
+      summary: "Sends a response to a team invitation"
+      description: ""
+      responses:
+        # TODO
           
     # delete
-    /teams/delete-team/{teamId}:
-      delete:
-        parameters:
-          # TODO
-        tags:
-          - "teams"
-        summary: "Deletes a team"
-        description: ""
-        responses:
-          # TODO
+  /teams/delete-team/{teamId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "teams"
+      summary: "Deletes a team"
+      description: ""
+      responses:
+        # TODO
       
   /teams/{teamId}/delete-message/{messageId}:
     delete:
@@ -1118,41 +734,105 @@ paths:
         # TODO
 
 
+# ARMIES
+  
+  # create
+  # /armies/create-army: 
+  #   post:
+  #     summary: Creates a new army
+  #     description: ""
+  #     tags:
+  #       - armies
+  #     parameters: []
+  #       # TODO
+  #     responses:
+  #       # TODO
+
+  # read
+  /armies/get-armies:
+    get:
+      summary: Retrieves the armies ids
+      description: ""
+      tags:
+        - armies
+      parameters: []
+        # TODO
+      responses:
+        # TODO
+  
+  /armies/get-army/{armyId}:
+    get:
+      summary: Retrieves an army's data
+      description: ""
+      tags:
+        - armies
+      parameters: []
+        # TODO
+      responses:
+          # TODO
+  
+  # update
+  # /armies/update-army/{armyId}:
+  #   put:
+  #     summary: Updates an army data
+  #     description: ""
+  #     tags:
+  #       - armies
+  #     parameters: []
+  #       # TODO
+  #     responses:
+  #       # TODO
+  
+  # delete
+  # /armies/delete-army/{armyId}:
+  #   delete:
+  #     summary: Deletes an army 
+  #     description: ""
+  #     tags:
+  #       - armies
+  #     parameters: []
+  #       # TODO
+  #     responses:
+  #       # TODO
+
   # UNITS
 
   # create
-  /units/create-unit:
-    post:
-      parameter:
-        # TODO
-      tags:
-        - "units"
-      summary: "Creates a unit"
-      description: ""
-      responses:
-        # TODO
+  # /armies/{armyId}/units/create-unit:
+  #   post:
+  #     summary: Creates a unit
+  #     description: ""
+  #     tags:
+  #       - armies
+  #       - units
+  #     parameter: []
+  #       # TODO
+  #     responses:
+  #       # TODO
 
   # read
-  /units/get-units-list:
+  /armies/{armyId}/units/get-units:
     get:
-      parameters:
-        # TODO
+      summary: Retrieves the army's units list
+      description: ""
       tags:
-        - "units"
-      summary: "Retrieves the user's units list"
-      descriptions: ""
+        - armies
+        - units
+      parameters: []
+        # TODO
       responses:
         
         # TODO
 
-  /units/get-unit/{unitId}:
+  /armies/{armyId}/units/get-unit/{unitId}:
     get:
+      summary: Retrieves a unit data
+      description: ""
+      tags:
+        - armies
+        - units
       parameters:
         # TODO
-      tags:
-        - "units"
-      summary: "Retrieves a unit data"
-      description: ""
       responses:
         200:
           description: The unit's data
@@ -1163,36 +843,159 @@ paths:
         # TODO
 
   # update
-  /units/update-unit/{unitId}:
-    put:
-      parameters:
-        # TODO
-      tags:
-        - "units"
-      summary: "Updates a unit"
-      description: ""
-      responses:
-        # TODO
+  # /armies/{armiyId}/units/update-unit/{unitId}:
+  #   put:
+  #     summary: Updates a unit
+  #     description: ""
+  #     tags:
+  #       - armies
+  #       - units
+  #     parameters: []
+  #       # TODO
+  #     responses:
+  #       # TODO
 
   # delete
-  /units/delete-unit/{unitId}:
-    delete:
-      parameters:
-        # TODO
-      tags:
-        - "units"
-      summary: "Deletes a unit"
+  # /armies/{armyId}/units/delete-unit/{unitId}:
+  #   delete:
+  #     summary: Deletes a unit
+  #     description: ""
+  #     tags:
+  #       - armies
+  #       - units
+  #     parameters: []
+  #       # TODO
+  #     responses:
+  #       # TODO
+
+
+# SPELLS
+  
+  # create
+  
+  # read
+  /armies/{armyId}/spells/get-spells:
+    get:
+      summary: Retrieves the army's spells list
       description: ""
+      tags:
+        - armies
+        - spells
+      parameters: []
+        # TODO
       responses:
         # TODO
+        
+  /armies/{armyId}/spells/get-spell/{spallId}:
+    get:
+      summary: Retrieves the spell's data
+      description: ""
+      tags:
+        - armies
+        - spells
+      parameters: []
+       # TODO
+      responses:
+        # TODO
+        
+  # update
+  
+  # delete
+
+# RULES
+  
+  # create
+  
+  # read
+  /armies/{armyId}/rules/get-rules:
+    get:
+      summary: Retrieves the army's rules
+      description: ""
+      tags:
+        - armies
+        - rules
+      parameters: []
+        # TODO
+      responses:
+        # TODO
+  
+  /armies/{armyId}/rules/get-rule/{ruleId}:
+    get:
+      summary: Retrieves the rule's data
+      description: ""
+      tags:
+        - armies
+        - rules
+      parameters: []
+        # TODO
+      responses:
+        # TODO
+  
+  # update
+  
+  # delete
+
+# ITEMS
+  # create
+  
+  # read
+  /armies/{armyId}/items/get-items:
+    get:
+      summary: Retrieves the army's items
+      description: ""
+      tags:
+        - armies
+        - items
+      parameters: []
+        # TODO
+      responses:
+        # TODO
+    
+  /armies/{armyId}/items/get-item/{itemId}:
+    get:
+      summary: Retrieves the item's data
+      description: ""
+      tags:
+        - armies
+        - items
+      parameters: []
+        # TODO
+      responses:
+        # TODO
+  
+  # update
+  
+  # delete
 
 
-  # Users
+# ORGANISATION
+
+  # create
+  
+  # read
+  /armies/{armyId}/get-organisation:
+    get:
+      summary: Retrieves the army's organisation
+      description: ""
+      tags:
+        - armies
+        - organisation
+      parameters: []
+        # TODO
+      responses:
+        # TODO
+  
+  # update
+  
+  # delete
+  
+  
+# USERS
 
   # create
 
   # read
-  /users/get-users-list:
+  /users/get-users:
     get:
       parameters:
         # TODO
@@ -1214,7 +1017,7 @@ paths:
       responses:
         # TODO
         
-  /users/get-blocked-users-list:
+  /users/get-blocked-users:
     get:
       parameters:
         # TODO
@@ -1225,7 +1028,7 @@ paths:
       responses:
         # TODO
         
-  /users/{userId}/profile/statistics/get-shared-statistics-list:
+  /users/{userId}/profile/statistics/get-shared-statistics:
     put:
       parameters:
         # TODO
@@ -1236,7 +1039,7 @@ paths:
       responses:
         # TODO
         
-  /users/{userId}/profile/armies/get-shared-armies-list:
+  /users/{userId}/profile/armies/get-shared-armies:
     get:
       parameters:
         # TODO
@@ -1247,7 +1050,7 @@ paths:
       responses:
         # TODO
       
-  /users/{userId}/profile/pictures/get-shared-pictures-list:
+  /users/{userId}/profile/pictures/get-shared-pictures:
     get:
       parameters:
         # TODO
@@ -1269,7 +1072,7 @@ paths:
       responses:
         # TODO
 
-  /users/{userId}/profile/followers/get-followers-list:
+  /users/{userId}/profile/followers/get-followers:
     get:
       parameters:
         # TODO
@@ -1280,7 +1083,7 @@ paths:
       responses:
         # TODO
     
-  /users/{userId}/profile/followers/get-followed-users-list:
+  /users/{userId}/profile/followers/get-followed-users:
     get:
       parameters:
         # TODO
@@ -1430,7 +1233,7 @@ paths:
         # TODO: complete
 
   # read
-  /locations/get-locations-list:
+  /locations/get-locations:
     get:
       summary: Retrieves a locations list
       description: ""
@@ -1516,67 +1319,399 @@ paths:
           description: OK
         # TODO: complete
   
-# ARMIES
-  
-  # create
-  /armies/create-army: 
-    post:
-      summary: Creates a new army
-      description: ""
-      tags:
-        - armies
-      parameters: []
-        # TODO
-      responses:
-        # TODO
 
-  # read
-  /armies/get-armies-list:
-    get:
-      summary: Retrieves the armies ids
-      description: ""
-      tags:
-        - armies
-      parameters: []
-        # TODO
-      responses:
-        # TODO
+definitions:
   
-  /armies/get-army/{armyId}:
-    get:
-      summary: Retrieves an army's data
-      description: ""
-      tags:
-        - armies
-      parameters: []
-        # TODO
-      responses:
-          # TODO
+  signInCredentials:
+    description: Informations required to sign in
+    type: object
+    properties:
+      username:
+        type: string
+        description: The user's username
+        example: username
+      password:
+        type: string
+        description: The user's password
+        example: password
+    required:
+      - username
+      - password
+      
+  signUpCredentials:
+    description: Informations required to sign up
+    type: object
+    properties:
+      username:
+        type: string
+        description: The user's username
+        exemple: "username"
+      email:
+        type: string
+        description: The user's email address
+        example: email@address.com
+      password:
+        type: string
+        description: The user's password
+        example: password
+    required:
+      - username
+      - email
+      - password
+      
+  connectionResponse:
+    description: The data sent on connection
+    properties:
+      accessToken:
+        type: string
+        description: The required token
+      refreshToken:
+        type: string
+        description: The token to refresh the access token
+      userId:
+        type: string
+        description: The user's id
+        format: uuid
+    required:
+      - accessToken
+      - refreshToken # Keep refresh token ?
+      - userId
+      
+  uuid:
+    type: string
+    format: uuid
+      
+  uuidArray:
+    type: array
+    items:
+      $ref: '#/definitions/uuid'
+      
+  length:
+    type: integer
+    # format: uint
+    example: 42
+    
+  date:
+    type: string
+    format: date
+    example: DD-MM-YYYY
+    
+  time:
+    type: string
+    format: time
+    example: HH-MM-SS
+    
+  link:
+    type: string
+    format: link
+    example: www.link.com
+    
+  name:
+    type: string
+    example: name
+    
+  description:
+    type: string
+    example: description
+    
+  tag:
+    type: string
+    example: tag
+    
+  listRequest:
+    description: Data requested on a list
+    properties:
+      length:
+        $ref: '#/definitions/length'
+      flags:
+        type: array
+        items:
+          type: string
+          example: flag1
+          
+  eventObject:
+    description: Event data
+    type: object
+    properties:
+      name:
+        $ref: '#/definitions/name'
+      description:
+        $ref: '#/definitions/description'
+      tag:
+        $ref: '#/definitions/tag'
+      date:
+        $ref: '#/definitions/date'
+      time:
+        $ref: '#/definitions/time'
+      link:
+        $ref: '#/definitions/link'
+      locationId:
+        $ref: '#/definitions/uuid'
+    required:
+      - name
+      - description
+      - tag
+      - date
+      - time
+      - locationId
+      
+  locationObject:
+    description: Location data
+    type: object
+    properties:
+      name:
+        $ref: '#/definitions/name'
+      description:
+        $ref: '#/definitions/description'
+      number:
+        # name: number
+        # definitions: The street's number
+        $ref: '#/definitions/length'
+      street:
+        name: street
+        description: The street's name
+        type: string
+        example: "Rue Pasteur"
+      city:
+        name: city
+        description: A city name
+        type: string
+        example: Le Kremlin-Bicêtre
+      postalCode:
+        name: postalCode
+        description: The city's postal code
+        type: number
+        example: 94270
+      country:
+        name: country
+        description: The coutry's name
+        type: string
+        example: France
+
+  teamCredentials:
+    description: A team's credentials
+    type: object
+    properties: 
+      name: 
+        $ref: '#/definitions/name'
+      desription: 
+        $ref: '#/definitions/description'
+        
+  teamObject:
+    description: A team's data
+    type: object
+    properties:
+      name: 
+        $ref: '#/definitions/name'
+      description: 
+        $ref: '#/definitions/description'
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/messageObject'
+      members:
+        $ref: '#/definitions/uuidArray'
+        
+  messageObject:
+    description: A message's data
+    type: object
+    properties:
+      authorId:
+        $ref: '#/definitions/uuid'
+      message:
+        type: string
+        example: This is a message
+      date:
+        $ref: '#/definitions/date'
+      time:
+        $ref: '#/definitions/time'
   
-  # update
-  /armies/update-army/{armyId}:
-    put:
-      summary: Updates an army data
-      description: ""
-      tags:
-        - armies
-      parameters: []
-        # TODO
-      responses:
-        # TODO
+  unitGlobalStatistics: # TODO
+    description: The unit's global statistics
+    type: object
+    properties:
+      adv:
+        name: Advance Rate
+        description: The distance the model can Advance Move in inches
+        type: number
+        example: 5
+      mar:
+        name: March Rate
+        description: The distance the model can March Move in inches
+        type: number
+        example: 10
+      dis:
+        name: Discipline
+        description: The model’s ability to stand and fight
+        type: number
+        example: 9
+      modelRules:
   
-  # delete
-  /armies/delete-army/{armyId}:
-    delete:
-      summary: Deletes an army 
-      description: ""
-      tags:
-        - armies
-      parameters: []
-        # TODO
-      responses:
-        # TODO
+  unitDefensiveStatistics: # TODO
+    description: The unit's defensive statistics
+    type: object
+    properties:
+      hp:
+        name: Health Points
+        description: When the model loses this many Health Points, it is removed as a casualty
+        type: number
+        example: 3
+      def:
+        name: Defensive Skill
+        description: How well the model avoids being hit in melee
+        type: number
+        example: 6
+      res:
+        name: Resilience
+        description: How easily the model withstands blows
+        type: number
+        example: 5
+      arm:
+        name: Armour
+        description: The innate Armour of the model
+        type: number
+        example: 0
+      modelRules: # TODO
   
+  unitOffensiveStatistics: # TODO
+    description: The unit's offensive statistics
+    type: object
+    properties:
+      att:
+        name: Attack Value
+        description: The number of times the model part can strike in a Round of Combat
+        type: number
+        example:
+      off:
+        name: Offensive Skill
+        description: How good the model part is at scoring hits in melee
+        type: number
+        example:
+      str:
+        name: Strength
+        description: How easily the model part can wound enemy models
+        type: number
+        example:
+      ap:
+        name: Armour Penetration
+        description: How well the model part can penetrate the Armour of enemy models
+        type: number
+        example:
+      agi:
+        name: Agility
+        description: Model parts with a higher Agility strike first in melee
+        type: number
+        example:
+      modelRules: # TODO
+      
+  unitHeader:
+    description: The header of a unit entry usually contains all the general information on the unit 
+    type: object
+    properties:
+      name:
+        description: This is the name of the unit that will be used e.g. when choosing the unit to perform an action like Charging, or when targeting the unit with a spell or a Shooting Attack
+        type: string
+        example:
+      armyCategories: # TODO
+        description: Every unit is part of an Army Category, like Characters, Core, or Special, which is important e.g. for building an army or for certain Model Rules
+        type: array
+        example:
+      size: # TODO
+        description: The unit size tells you the minimum and the maximum size of the unit when building an army. The minimum unit size corresponds to the number of models that the unit must contain at least. And accordingly, the maximum unit size represents the number of models that the unit can consist of at the most
+        type:
+        ewample:
+      cost: # TODO
+        description: The unit cost tells you how many points you have to pay for adding the unit to your army in its minimum size, and how many points each additional model will cost. For some units in the game, an additional model will cost the same amount of points as a model that is part of the unit’s minimum size, while for others additional models may be more or less expensive than the initial models.
+        type:
+        example:
+      scoring: # TODO
+        description: Some units have a certain Model Rule called Scoring, which is relevant for winning Secondary Objectives during the game
+        type:
+        example:
+      cap: # TODO
+        description: Certain units can only be selected a limited number of times in an army. In this case, you will find a “0–X Units/Army” cap in the unit entry
+        type:
+        example:
+      spacifications: # TODO
+        description: Every model in the game has a specific Height, Type, and base size, which are relevant for a wide variety of game mechanics and Model Rules
+        type;: object
+        properties:
+          height:
+            description: The unit's height
+            type:
+            example:
+          type:
+            description: The unit's type
+            type:
+            example:
+          base:
+            description: The unit's base size
+            type:
+            example:
+  
+  unitCharacteristicProfiles:
+    description: The Characteristic Profiles of each unit entry contain the values of all of a unit’s Global, Defensive, and Offensive Characteristics
+    type: object
+    properties:
+      global: # TODO: make map (see multipart models)
+          $ref: '#/definitions/unitGlobalStatistics'
+      defensive: # TODO: make map (see multipart models)
+           $ref: '#/definitions/unitDefensiveStatistics'
+      offensive: # TODO: make map (see multipart models)
+           $ref: '#/definitions/unitOffensiveStatistics'
+  
+  unitModelRules: # TODO
+    description: In this part of the unit entry, the unit’s Model Rules are displayed
+    type: object
+    properties:
+      global:
+      
+      defensive:
+      
+      offensive:
+      
+  unitOptions: # TODO
+    description:
+    type: object
+    properties:
+      commandGroupOptions:
+        description:
+        type:
+        example:
+      unrestrictedOptions:
+        description:
+        type:
+        example:
+      restrictedOptions:
+        description:
+        type:
+        example:
+      modelRules:
+        description:
+        type:
+        example:
+      magicOptions:
+        description:
+        type:
+        example:
+      mountOptions:
+        description:
+        type:
+        example:
+  
+  unitObject:
+    description: A unit's data
+    type: object
+    properties:
+      header:
+        $ref: '#/definitions/unitHeader'
+      characteristicProfiles:
+        $ref: '#/definitions/unitCharacteristicProfiles'
+      modelRules:
+         $ref: '#/definitions/unitModelRules'
+      options:
+        $ref: '#/definitions/unitOptions'
+    
   
 # Added by API Auto Mocking Plugin
 # host: virtserver.swaggerhub.com
