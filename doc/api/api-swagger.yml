@@ -1,0 +1,1473 @@
+openapi: 3.0.0
+info:
+  description: |
+    This is the Prophecy Api documentation
+  version: 1.0.0
+  title: "Prophecy Api"
+
+# host: "localhost" # TODO: change
+# basePath: "/api"
+
+tags:
+  - name: account
+    description: Everything about the user's account
+  - name: events
+    description: Everything about the events
+  - name: armies
+    description: Everything about the armies
+  - name: prophecies
+    description: Everything about the prophecies
+  - name: statistics
+    description: Everything about the statistics
+  - name: settings
+    description: Everything about the settings
+  - name: users
+    description: Everything about the users
+  - name: units
+    description: Everything about the units
+  - name: teams
+    description: Everything about the teams
+  - name: locations
+    description: Everything about the locations
+
+
+#components:
+#  securitySchemes:
+#    bearerAuth:
+#      type: http
+#      scheme: bearer
+
+#security:
+#  - bearerAuth: []
+
+paths:
+
+# ACCOUNT 
+
+  /account/sign-in:
+    post:
+      summary: Enables the user to sign in
+      description: ""
+      tags: 
+        - account
+  #      security:
+  #        - bearerAuth: []
+      parameters: []
+  #        - in: header
+  #          name: ""
+  #          type: ""
+          # TODO: Add header content
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/signInCredentials'
+      responses:
+        200:
+          description: Data received on connection success
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/connectionResponse'
+                
+        # TODO: complete
+        
+  /account/sign-up:
+    put:
+      summary: Enables the user to create an account
+      description: ""
+      tags: 
+        - account
+      parameters: []
+        # TODO: add header
+        
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/signUpCredentials'
+      responses:
+        200:
+          description: Data received on connection success
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/connectionResponse'
+        # TODO: complete
+      
+  /account/sign-out:
+    post:
+      summary: Enables the user to logout
+      description: ""
+      tags:
+        - account
+      parameters: []
+        # TODO: add parameters
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+
+  # EVENTS
+
+  # create
+  /events/create-event:
+    post:
+      summary: Creates a new event
+      description: ""
+      parameters: []
+        # TODO: add parameters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/eventObject'
+      tags:
+        - events
+      responses:
+        200: 
+          description: New event's id
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuid'
+        # TODO: complete
+        
+  /events/save-event/{eventId}:
+    put:
+      summary: Saves an event for the user
+      description: ""
+      tags:
+        - events
+      parameters:
+        # TODO: add header
+        - in: path
+          name: eventId
+          description: The event's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
+      responses: 
+        200:
+          description: OK
+        # TODO: complete
+
+  # read
+  /events/get-events-list:
+    get:
+      summary: Retrieves the events list
+      description: ""
+      tags:
+        - events
+      parameters: []
+        #TODO: complete
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/eventObject'
+      responses:
+        200: 
+          description: An array of events id
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuidArray'
+        # TODO: complete
+        
+  /events/get-event/{eventId}:
+    get:
+      summary: Retrieves an event data
+      description: ""
+      tags:
+        - events
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
+        # TODO: complete
+      responses:
+        200:
+          description: An event object
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/eventObject'
+        # TODO
+
+  /events/get-saved-events-list:
+    get:
+      summary: Retrieves the saved events list
+      description: ""
+      tags:
+        - events
+      parameters: []
+        # TODO: complete
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/listRequest'
+      responses: 
+        200:
+          description: List of events ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuidArray'
+        # TODO: complete
+
+  # update
+  /event/update-event/{eventId}:
+    put:
+      summary: Updates an event's informations
+      description: ""
+      tags:
+        - events
+      parameters:
+        # TODO: complete
+        - in: path
+          name: eventId
+          description: The event's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/eventObject'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+        
+  /events/unsave-event/{eventId}:
+    put:
+      summary: Unsaves an event for the user
+      description: ""
+      tags:
+        - events
+      parameters:
+        # TODO: complete
+        - in: path
+          name: eventId
+          description: The event's id
+          schema:
+            $ref: '#/definitions/uuid'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+
+  # delete
+  /events/delete-event/{eventId}:
+    delete:
+      summary: Deletes an event
+      description: ""
+      tags:
+        - events
+      parameters:
+        # TODO: complete
+        - in: path
+          name: eventId
+          description: The event's id
+          required: true
+          schema:
+            $ref: '#definitions/uuid'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+
+
+  # ARMIES LISTS
+
+  # create
+  /armies/create-army:
+    post:
+      summary: Creates a new army
+      description: ""
+      tags:
+        - armies
+      parameters: []
+        # TODO
+      responses:
+        200:
+          description: Army's id
+        # TODO: complete
+
+  # read
+  /armies/get-armies-list:
+    get:
+      summary: Retrieves the user's armies list
+      description: ""
+      tags:
+        - armies
+      parameters: []
+        # TODO
+      responses: []
+        # TODO
+
+  /armies/get-army/{armyId}:
+    get:
+      summary: "Retrieves an army data"
+      description: ""
+      tags:
+        - armies
+      parameters: [] 
+        # TODO
+      responses: []
+        # TODO
+
+
+  # update
+  /armies/update-army/{armyId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Updates an army"
+      description: "Updates an army"
+      responses:
+        # TODO
+      
+  # delete
+
+  /armies/delete-army/{armyId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Deletes an army"
+      description: "Deletes an army"
+      responses:
+        # TODO
+
+  # ARMIES TAGS
+
+  # create
+  /armies/tags/create-tag:
+    post:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Creates an army tag"
+      descrition: "Creates an army tag"
+      responses:
+        # TODO
+
+  # read
+  /armies/tags/get-tags-list:
+    get:
+      parameters:
+        # TODO
+      tags: 
+        - "armies"
+      summary: "Retrieves the user's armies tags list"
+      description:
+      responses:
+        # TODO
+
+  /armies/tag/get-tag/{tagId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Retrieves a tag data"
+      description: ""
+      responses:
+        # TODO
+      
+  # update
+  /armies/tag/update-tag/{tagId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Updates an army tag"
+      description: ""
+      responses: 
+        # TODO
+
+  # delete
+  /armies/tag/delete-tag/{tagId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "armies"
+      summary: "Deletes an army tag"
+      description: ""
+      responses:
+        # TODO
+
+
+  # PROPHECIES
+
+  # read
+  /prophecies/get-prophecy:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "prophecies"
+      summary: "Retrieves a prophecy for the user"
+      description: ""
+      responses:
+        # TODO
+
+  /prophecies/get-history:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "prophecies"
+      summary: "Retrieves the prophecies histrory"
+      description: ""
+      responses:
+        # TODO
+
+
+  # STATISTICS
+
+  # create
+  /statistics/create-statistic:
+    post:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Creates a new statistic"
+      descirption: ""
+      
+  # read
+  /statistics/get-statistics-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Retrieves the user's statistics list"
+      description: ""
+      responses:
+        # TODO
+        
+  /statistics/get-statistic/{statisticId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Retrieves a statistic data"
+      description: ""
+      responses:
+        # TODO
+
+  # update    
+  /statistics/update-statistic/{statisticId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Updates a statistic"
+      description: ""
+      responses:
+        # TODO
+      
+  # delete
+  /statistics/delete-statistic/{statisticId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "statistics"
+      summary: "Deletes a statistic"
+      description: ""
+      responses:
+        # TODO
+
+
+  # SETTINGS
+
+  # update
+  /settings/account/update-password:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Updates the user's password"
+      description: ""
+      responses:
+        # TODO
+
+  /settings/account/update-username:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Updates the user's username"
+      description: ""
+      responses:
+        # TODO
+
+  /settings/account/update-profile-picture:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Updates the user's profile picture"
+      description: ""
+      responses: 
+        # TODO
+
+  /settings/account/update-email-address:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Updates the user's email address"
+      description: ""
+      responses: 
+        # TODO
+
+  # delete
+  /settings/account/delete-account:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "settings"
+      summary: "Deletes the user's account"
+      description: ""
+      responses:
+        # TODO
+      
+      
+  # TEAMS
+
+  # create
+  /teams/create-team:
+    post:
+      summary: Creates a new team
+      description: ""
+      tags:
+        - teams
+      parameters: []
+        # TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/teamObject'
+      responses:
+        200:
+          description: The team's id
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuid'
+        # TODO: complete
+        
+  /teams/{teamId}/create-message:
+    put:
+      summary: Creates a new message in the team
+      description: ""
+      tags:
+        - teams
+      parameters:
+        # TODO: complete
+        - in: path
+          name: teamId
+          description: The team's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/messageObject' # credentials
+      responses:  
+        200:
+          description: The message's id
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuid'
+        # TODO: complete  
+      
+  # read
+  /teams/get-teams-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "teams"
+      summary: "Retrieves the user's teams list"
+      description: ""
+      responses:
+        # TODO
+
+  /teams/get-team/{teamId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "teams"
+      summary: "Retrieves a team data"
+      description: ""
+      responses:
+        # TODO
+        
+  /teams/{teamId}/get-messages:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "teams"
+      summary: "Retrieves the team's messages"
+      description: ""
+      responses:
+        # TODO
+        
+  # update
+  /teams/rename-team/{teamId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "teams"
+      summary: "Renames a team"
+      description: ""
+      responses:
+        # TODO
+        
+  /teams/{teamId}/update-message/{messageId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "teams"
+      summary: "Updates a team's message"
+      description: ""
+      responses:
+        # TODO
+
+  /teams/{teamId}/invite-user/{userId}:
+    put:
+      parameters: 
+        # TODO
+      tags:
+        - "teams"
+      summary: "Invites a user in a team"
+      description: ""
+      responses:
+        # TODO
+      
+    /teams/{teamId}/respond-to-invitation:
+      put:
+        parameters:
+          # TODO
+        tags:
+          - "teams"
+        summary: "Sends a response to a team invitation"
+        description: ""
+        responses:
+          # TODO
+          
+    # delete
+    /teams/delete-team/{teamId}:
+      delete:
+        parameters:
+          # TODO
+        tags:
+          - "teams"
+        summary: "Deletes a team"
+        description: ""
+        responses:
+          # TODO
+      
+  /teams/{teamId}/delete-message/{messageId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "teams"
+      summary: "Deletes a team's message"
+      description: ""
+      responses:
+        # TODO
+
+
+  # UNITS
+
+  # create
+  /units/create-unit:
+    post:
+      parameter:
+        # TODO
+      tags:
+        - "units"
+      summary: "Creates a unit"
+      description: ""
+      responses:
+        # TODO
+
+  # read
+  /units/get-units-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "units"
+      summary: "Retrieves the user's units list"
+      descriptions: ""
+      responses:
+        
+        # TODO
+
+  /units/get-unit/{unitId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "units"
+      summary: "Retrieves a unit data"
+      description: ""
+      responses:
+        200:
+          description: The unit's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/unitObject'
+        # TODO
+
+  # update
+  /units/update-unit/{unitId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "units"
+      summary: "Updates a unit"
+      description: ""
+      responses:
+        # TODO
+
+  # delete
+  /units/delete-unit/{unitId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "units"
+      summary: "Deletes a unit"
+      description: ""
+      responses:
+        # TODO
+
+
+  # Users
+
+  # create
+
+  # read
+  /users/get-users-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves a users list"
+      description: ""
+      responses: 
+        # TODO
+        
+  /users/get-user/{userId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves a user data"
+      description: ""
+      responses:
+        # TODO
+        
+  /users/get-blocked-users-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves the blocked users list"
+      description: ""
+      responses:
+        # TODO
+        
+  /users/{userId}/profile/statistics/get-shared-statistics-list:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves the list of shared statistics"
+      description: ""
+      responses:
+        # TODO
+        
+  /users/{userId}/profile/armies/get-shared-armies-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves the shared armies list"
+      description: ""
+      responses:
+        # TODO
+      
+  /users/{userId}/profile/pictures/get-shared-pictures-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retreves the shared pictures list"
+      description: ""
+      responses:
+        # TODO
+      
+  /users/profile/pictures/get-sared-picture/{pictureId}:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves a shared picture data"
+      description: ""
+      responses:
+        # TODO
+
+  /users/{userId}/profile/followers/get-followers-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves a user followers list"
+      description: ""
+      responses:
+        # TODO
+    
+  /users/{userId}/profile/followers/get-followed-users-list:
+    get:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Retrieves the followed users list"
+      description: ""
+      responses:
+        # TODO
+        
+  #update
+  /users/follow-user/{userId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Follows a user"
+      description: ""
+      responses:
+        # TODO
+
+  /users/unfollow-user/{userId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unfollows a user"
+      description: ""
+      responses:
+        # TODO
+
+  /users/block-user/{userId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Blocks a user"
+      description: ""
+      responses:
+        # TODO
+
+  /users/unblock-user/{userId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unblocks a user"
+      description: ""
+      responses:
+        # TODO
+
+  /users/profile/statistics/share-statistic/{statisticId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Shares a statistic"
+      description: ""
+      responses:
+        # TODO
+
+  /users/profile/statistics/unshare-statistic/{statisticId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unshares a statistic"
+      description: ""
+      responses:
+        # TODO
+
+  /users/profile/armies/share-army/{armyId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Shares an army list"
+      description: ""
+      responses:
+        # TODO
+
+  /users/profile/armies/unshare-army/{armyId}:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unshares an army list"
+      description: ""
+      responses:
+        # TODO
+
+  /users/profile/pictures/share-picture:
+    put:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Shares a picture"
+      description: ""
+      responses:
+        # TODO
+
+  /users/profile/pictures/unshare-picture/{pictureId}:
+    delete:
+      parameters:
+        # TODO
+      tags:
+        - "users"
+      summary: "Unshares a picture"
+      description: ""
+      responses: []
+        # TODO
+
+
+  # LOCATIONS
+
+  # create
+  /locations/create-location:
+    post:
+      summary: Creates a location
+      description: ""
+      tags:
+        - locations
+      parameters: []
+        # TODO: complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/locationObject'
+      responses:
+        200:
+          description: The location's id
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuid'
+        # TODO: complete
+
+  # read
+  /locations/get-locations-list:
+    get:
+      summary: Retrieves a locations list
+      description: ""
+      tags:
+        - locations
+      parameters: []
+        # TODO: complete
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/listRequest'
+      responses:
+        200:
+          description: The locations ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuidArray'
+        # TODO: complete
+        
+  /locations/get-location/{locationId}:
+    get:
+      summary: Retrieves a location information
+      description: ""
+      tags:
+        - locations
+      parameters:
+        # TODO: complete
+        - in: path
+          name: locationId
+          description: The location's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
+      responses:
+        200:
+          description: The location's data
+          content:
+            application/json: 
+              schema:
+                $ref: '#/definitions/locationObject'
+        # TODO: complete
+
+  # update
+  /locations/update-location/{locationId}:
+    put:
+      summary: Updates a location data
+      description: ""
+      tags:
+        - locations
+      parameters:
+        - in: path
+          name: locationId
+          description: The location's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
+        # TODO: complete
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+
+  # delete
+  /locations/delete-location/{locationId}:
+    delete:
+      summary: Deletes a location
+      description: ""
+      tags:
+        - locations
+      parameters:
+        - in: path
+          name: locationId
+          description: The location's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
+        # TODO: complete
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+
+definitions:
+
+  signInCredentials:
+    description: Informations required to sign in
+    type: object
+    properties:
+      username:
+        type: string
+        description: The user's username
+        example: username
+      password:
+        type: string
+        description: The user's password
+        example: password
+    required:
+      - username
+      - password
+      
+  signUpCredentials:
+    description: Informations required to sign up
+    type: object
+    properties:
+      username:
+        type: string
+        description: The user's username
+        exemple: "username"
+      email:
+        type: string
+        description: The user's email address
+        example: email@address.com
+      password:
+        type: string
+        description: The user's password
+        example: password
+    required:
+      - username
+      - email
+      - password
+      
+  connectionResponse:
+    description: The data sent on connection
+    properties:
+      accessToken:
+        type: string
+        description: The required token
+      refreshToken:
+        type: string
+        description: The token to refresh the access token
+      userId:
+        type: string
+        description: The user's id
+        format: uuid
+    required:
+      - accessToken
+      - refreshToken # Keep refresh token ?
+      - userId
+      
+  uuid:
+    type: string
+    format: uuid
+      
+  uuidArray:
+    type: array
+    items:
+      $ref: '#/definitions/uuid'
+      
+  length:
+    type: integer
+    # format: uint
+    example: 42
+    
+  date:
+    type: string
+    format: date
+    example: DD-MM-YYYY
+    
+  time:
+    type: string
+    format: time
+    example: HH-MM-SS
+    
+  link:
+    type: string
+    format: link
+    example: www.link.com
+    
+  name:
+    type: string
+    example: name
+    
+  description:
+    type: string
+    example: description
+    
+  tag:
+    type: string
+    example: tag
+    
+  listRequest:
+    description: Data requested on a list
+    properties:
+      length:
+        $ref: '#/definitions/length'
+      flags:
+        type: array
+        items:
+          type: string
+          example: flag1
+          
+  eventObject:
+    description: Event data
+    type: object
+    properties:
+      name:
+        $ref: '#/definitions/name'
+      description:
+        $ref: '#/definitions/description'
+      tag:
+        $ref: '#/definitions/tag'
+      date:
+        $ref: '#/definitions/date'
+      time:
+        $ref: '#/definitions/time'
+      link:
+        $ref: '#/definitions/link'
+      locationId:
+        $ref: '#/definitions/uuid'
+    required:
+      - name
+      - description
+      - tag
+      - date
+      - time
+      - locationId
+      
+  locationObject:
+    description: Location data
+    type: object
+    properties:
+      name:
+        $ref: '#/definitions/name'
+      description:
+        $ref: '#/definitions/description'
+      number:
+        # name: number
+        # definitions: The street's number
+        $ref: '#/definitions/length'
+      street:
+        name: street
+        description: The street's name
+        type: string
+        example: "Rue Pasteur"
+      city:
+        name: city
+        description: A city name
+        type: string
+        example: Le Kremlin-Bicêtre
+      postalCode:
+        name: postalCode
+        description: The city's postal code
+        type: number
+        example: 94270
+      country:
+        name: country
+        description: The coutry's name
+        type: string
+        example: France
+
+  teamCredentials:
+    description: A team's credentials
+    type: object
+    properties: 
+      name: 
+        $ref: '#/definitions/name'
+      desription: 
+        $ref: '#/definitions/description'
+        
+  teamObject:
+    description: A team's data
+    type: object
+    properties:
+      name: 
+        $ref: '#/definitions/name'
+      description: 
+        $ref: '#/definitions/description'
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/messageObject'
+      members:
+        $ref: '#/definitions/uuidArray'
+        
+  messageObject:
+    description: A message's data
+    type: object
+    properties:
+      authorId:
+        $ref: '#/definitions/uuid'
+      message:
+        type: string
+        example: This is a message
+      date:
+        $ref: '#/definitions/date'
+      time:
+        $ref: '#/definitions/time'
+  
+  unitGlobalStatistics: # TODO
+    description: The unit's global statistics
+    type: object
+    properties:
+      adv:
+        name: Advance Rate
+        description: The distance the model can Advance Move in inches
+        type: number
+        example: 5
+      mar:
+        name: March Rate
+        description: The distance the model can March Move in inches
+        type: number
+        example: 10
+      dis:
+        name: Discipline
+        description: The model’s ability to stand and fight
+        type: number
+        example: 9
+      modelRules:
+  
+  unitDefensiveStatistics: # TODO
+    description: The unit's defensive statistics
+    type: object
+    properties:
+      hp:
+        name: Health Points
+        description: When the model loses this many Health Points, it is removed as a casualty
+        type: number
+        example: 3
+      def:
+        name: Defensive Skill
+        description: How well the model avoids being hit in melee
+        type: number
+        example: 6
+      res:
+        name: Resilience
+        description: How easily the model withstands blows
+        type: number
+        example: 5
+      arm:
+        name: Armour
+        description: The innate Armour of the model
+        type: number
+        example: 0
+      modelRules: # TODO
+  
+  unitOffensiveStatistics: # TODO
+    description: The unit's offensive statistics
+    type: object
+    properties:
+      att:
+        name: Attack Value
+        description: The number of times the model part can strike in a Round of Combat
+        type: number
+        example:
+      off:
+        name: Offensive Skill
+        description: How good the model part is at scoring hits in melee
+        type: number
+        example:
+      str:
+        name: Strength
+        description: How easily the model part can wound enemy models
+        type: number
+        example:
+      ap:
+        name: Armour Penetration
+        description: How well the model part can penetrate the Armour of enemy models
+        type: number
+        example:
+      agi:
+        name: Agility
+        description: Model parts with a higher Agility strike first in melee
+        type: number
+        example:
+      modelRules: # TODO
+      
+  unitHeader:
+    description: The header of a unit entry usually contains all the general information on the unit 
+    type: object
+    properties:
+      name:
+        description: This is the name of the unit that will be used e.g. when choosing the unit to perform an action like Charging, or when targeting the unit with a spell or a Shooting Attack
+        type: string
+        example:
+      armyCategory: # TODO
+        description: Every unit is part of an Army Category, like Characters, Core, or Special, which is important e.g. for building an army or for certain Model Rules
+        type: 
+        example:
+      size: # TODO
+        description: The unit size tells you the minimum and the maximum size of the unit when building an army. The minimum unit size corresponds to the number of models that the unit must contain at least. And accordingly, the maximum unit size represents the number of models that the unit can consist of at the most
+        type:
+        ewample:
+      cost: # TODO
+        description: The unit cost tells you how many points you have to pay for adding the unit to your army in its minimum size, and how many points each additional model will cost. For some units in the game, an additional model will cost the same amount of points as a model that is part of the unit’s minimum size, while for others additional models may be more or less expensive than the initial models.
+        type:
+        example:
+      scoring: # TODO
+        description: Some units have a certain Model Rule called Scoring, which is relevant for winning Secondary Objectives during the game
+        type:
+        example:
+      cap: # TODO
+        description: Certain units can only be selected a limited number of times in an army. In this case, you will find a “0–X Units/Army” cap in the unit entry
+        type:
+        example:
+      spacifications: # TODO
+        description: Every model in the game has a specific Height, Type, and base size, which are relevant for a wide variety of game mechanics and Model Rules
+        type;: object
+        properties:
+          height:
+            description: The unit's height
+            type:
+            example:
+          type:
+            description: The unit's type
+            type:
+            example:
+          base:
+            description: The unit's base size
+            type:
+            example:
+        
+  unitObject:
+    description: A unit's data
+    type: object
+    properties:
+      header:
+        $ref: '#/definitions/unitHeader'
+      globalStatistics:
+        $ref: '#/definitions/unitGlobalStatistics'
+      defensiveStatistics:
+         $ref: '#/definitions/unitDefensiveStatistics'
+      offensiveStatistics:
+         $ref: '#/definitions/unitOffensiveStatistics'
+      options:
+    
+
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /Victoire-Rabeau/Prophecy/1.0.0
+schemes:
+- https
+servers:
+# Added by API Auto Mocking Plugin
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/Victoire-Rabeau/Prophecy/1.0.0
