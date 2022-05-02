@@ -1515,8 +1515,69 @@ paths:
         200:
           description: OK
         # TODO: complete
+  
+# ARMIES
+  
+  # create
+  /armies/create-army: 
+    post:
+      summary: Creates a new army
+      description: ""
+      tags:
+        - armies
+      parameters: []
+        # TODO
+      responses:
+        # TODO
 
-
+  # read
+  /armies/get-armies-list:
+    get:
+      summary: Retrieves the armies ids
+      description: ""
+      tags:
+        - armies
+      parameters: []
+        # TODO
+      responses:
+        # TODO
+  
+  /armies/get-army/{armyId}:
+    get:
+      summary: Retrieves an army's data
+      description: ""
+      tags:
+        - armies
+      parameters: []
+        # TODO
+      responses:
+          # TODO
+  
+  # update
+  /armies/update-army/{armyId}:
+    put:
+      summary: Updates an army data
+      description: ""
+      tags:
+        - armies
+      parameters: []
+        # TODO
+      responses:
+        # TODO
+  
+  # delete
+  /armies/delete-army/{armyId}:
+    delete:
+      summary: Deletes an army 
+      description: ""
+      tags:
+        - armies
+      parameters: []
+        # TODO
+      responses:
+        # TODO
+  
+  
 # Added by API Auto Mocking Plugin
 # host: virtserver.swaggerhub.com
 # basePath: /Victoire-Rabeau/Prophecy/1.0.0
