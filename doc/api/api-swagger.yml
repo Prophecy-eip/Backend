@@ -818,11 +818,22 @@ paths:
       tags:
         - armies
         - units
-      parameters: []
-        # TODO
+      parameters: 
+        # TODO: complete
+        - in: path
+          name: armyId
+          description: The army's id
+          required: true
+          schema: 
+            $ref: '#/definitions/uuid'
       responses:
-        
-        # TODO
+        200:
+          description: The units ids list
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/uuidArray'
+        # TODO: compete
 
   /armies/{armyId}/units/get-unit/{unitId}:
     get:
@@ -832,7 +843,19 @@ paths:
         - armies
         - units
       parameters:
-        # TODO
+        # TODO: complete
+        - in: path
+          name: armyId
+          description: The army's id
+          required: true
+          schema: 
+            $ref: '#/definitions/uuid'
+        - in: path
+          name: unitId
+          description: The unit's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
       responses:
         200:
           description: The unit's data
@@ -840,7 +863,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/unitObject'
-        # TODO
+        # TODO: complete
 
   # update
   # /armies/{armiyId}/units/update-unit/{unitId}:
@@ -876,28 +899,58 @@ paths:
   # read
   /armies/{armyId}/spells/get-spells:
     get:
-      summary: Retrieves the army's spells list
+      summary: Retrieves the army's spells ids list
       description: ""
       tags:
         - armies
         - spells
-      parameters: []
-        # TODO
+      parameters:
+        # TODO: complete
+          - in: path
+            name: armyId
+            description: The army's id
+            required: true
+            schema:
+              $ref: '#/definitions/uuid'
       responses:
-        # TODO
+        200:
+          description: The spells ids
+          content:
+            application/json:
+              schema: 
+                $ref: '#/definitions/uuidArray' 
+        # TODO: complete
         
-  /armies/{armyId}/spells/get-spell/{spallId}:
+  /armies/{armyId}/spells/get-spell/{spellId}:
     get:
       summary: Retrieves the spell's data
       description: ""
       tags:
         - armies
         - spells
-      parameters: []
-       # TODO
+      parameters: 
+       # TODO: complet
+        - in: path
+          name: armyId
+          description: The army's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
+        - in: path
+          name: spellId
+          description: The spell's id
+          required: true
+          schema:
+            $ref: '#/definitions/uuid'
       responses:
-        # TODO
-        
+        200:
+          description: The spell's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/spellObject'
+        # TODO: complete
+      
   # update
   
   # delete
@@ -1711,7 +1764,41 @@ definitions:
          $ref: '#/definitions/unitModelRules'
       options:
         $ref: '#/definitions/unitOptions'
-    
+  
+  spellObject:
+    description: 
+    type: object
+    properties:
+      classification:
+        description: Spells are classified into the different categories Learned Spells, Attribute Spells, and Hereditary Spells by letters or numbers
+        type: string
+        example: 1
+      name:
+        description: The spell's name
+        type: string
+        example: Water Jet
+      castingValue:
+        description: The Casting Value is the minimum value you need to reach to succeed a Casting Attempt
+        type: number
+        example: 4
+      range: 
+        description: The spell's range in inches
+        type: number
+        example: 36
+      type:
+        description: The spell type describes how the spell’s targets have to be chosen
+        type: array
+        items: string
+        example: ["Damage", "Hex", "Missile"]
+      duration:
+        description: The duration of a spell determines how long the effects of the spell are applied
+        type: string
+        example: Instant
+      effect:
+        description: The effect of a spell defines what happens to the target of the spell when the spell is successfully cast
+        type: string
+        example: The target suffers D6 hits with Strength 4, Armour Penetration 0, and Magical Attacks
+        
   
 # Added by API Auto Mocking Plugin
 # host: virtserver.swaggerhub.com
@@ -1722,3 +1809,5 @@ servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/Victoire-Rabeau/Prophecy/1.0.0
+components:
+  schemas:
