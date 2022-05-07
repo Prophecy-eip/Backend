@@ -163,12 +163,12 @@ paths:
         - events
       parameters: []
         #TODO: complete
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/eventObject'
+#      requestBody:
+#        required: false
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/eventObject'
       responses:
         200: 
           description: An array of events id
@@ -208,12 +208,12 @@ paths:
         - events
       parameters: []
         # TODO: complete
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/listRequest'
+#      requestBody:
+#        required: false
+ #       content:
+  #        application/json:
+   #         schema:
+    #          $ref: '#/components/schemas/listRequest'
       responses: 
         200:
           description: List of events ids
@@ -315,7 +315,13 @@ paths:
       parameters: []
         # TODO
       responses:
-        # TODO
+        200:
+          description: The armies lists' ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
+        # TODO: complete
 
   /armies-lists/get-list/{listId}:
     get:
@@ -323,7 +329,13 @@ paths:
       description: ""
       tags:
         - armies-lists
-      parameters: [] 
+      parameters:
+        - in: path
+          name: listId
+          description: The list's id
+          required: true
+          example:
+            $ref: '#/components/schemas/uuid'
         # TODO
       responses: []
         # TODO
@@ -333,6 +345,10 @@ paths:
   /armies-lists/update-list/{listId}:
     put:
       parameters:
+        - in: path
+          description: The list's id
+          required: true
+          
         # TODO
       tags:
         - armies-lists
@@ -345,73 +361,75 @@ paths:
 
   /armies-lists/delete-list/{listId}:
     delete:
-      parameters:
-        # TODO
+      summary: Deletes an army list
+      description: ""
       tags:
         - armies-lists
-      summary: "Deletes an army list"
-      description: ""
-      responses:
+      parameters:
         # TODO
+      responses:
+        200:
+          description: OK
+        # TODO: complete
 
   # ARMIES LISTS TAGS
 
   # create
   /armies-lists/tags/create-tag:
     post:
-      parameters:
-        # TODO
+      summary: Creates an army tag
+      description: ""
       tags:
         - armies-lists
-      summary: "Creates an army tag"
-      description: "Creates an army tag"
+      parameters:
+        # TODO
       responses:
         # TODO
 
   # read
   /armies-lists/tags/get-tags:
     get:
-      parameters:
-        # TODO
+      summary: Retrieves the user's armies lists tags list
+      description: ""
       tags: 
         - armies-lists
-      summary: "Retrieves the user's armies lists tags list"
-      description: ""
+      parameters:
+        # TODO
       responses:
         # TODO
 
   /armies-lists/tag/get-tag/{tagId}:
     get:
-      parameters:
-        # TODO
+      summary: Retrieves a tag data
+      description: ""
       tags:
         - armies-lists
-      summary: "Retrieves a tag data"
-      description: ""
+      parameters:
+        # TODO
       responses:
         # TODO
       
   # update
   /armies-lists/tag/update-tag/{tagId}:
     put:
-      parameters:
-        # TODO
+      summary: Updates an army list tag
+      description: ""
       tags:
         - armies-lists
-      summary: "Updates an army list tag"
-      description: ""
+      parameters:
+        # TODO
       responses: 
         # TODO
 
   # delete
   /armies-lists/tag/delete-tag/{tagId}:
     delete:
-      parameters:
-        # TODO
+      summary: Deletes an army list tag
+      description: ""
       tags:
         - armies-lists
-      summary: "Deletes an army list tag"
-      description: ""
+      parameters:
+        # TODO
       responses:
         # TODO
 
@@ -421,23 +439,23 @@ paths:
   # read
   /prophecies/get-prophecy:
     get:
+      summary: Retrieves a prophecy for the user
+      description: ""
+      tags:
+        - prophecies
       parameters:
         # TODO
-      tags:
-        - "prophecies"
-      summary: "Retrieves a prophecy for the user"
-      description: ""
       responses:
         # TODO
 
   /prophecies/get-history:
     get:
+      summary: Retrieves the prophecies histrory
+      description: ""
+      tags:
+        - prophecies
       parameters:
         # TODO
-      tags:
-        - "prophecies"
-      summary: "Retrieves the prophecies histrory"
-      description: ""
       responses:
         # TODO
 
@@ -447,59 +465,59 @@ paths:
   # create
   /statistics/create-statistic:
     post:
+      summary: Creates a new statistic
+      description: ""
+      tags:
+        - statistics
       parameters:
         # TODO
-      tags:
-        - "statistics"
-      summary: "Creates a new statistic"
-      description: ""
       responses:
          # TODO
       
   # read
   /statistics/get-statistics:
     get:
+      summary: Retrieves the user's statistics list
+      description: ""
+      tags:
+        - statistics
       parameters:
         # TODO
-      tags:
-        - "statistics"
-      summary: "Retrieves the user's statistics list"
-      description: ""
       responses:
         # TODO
         
   /statistics/get-statistic/{statisticId}:
     get:
+      summary: Retrieves a statistic data
+      description: ""
+      tags:
+        - statistics
       parameters:
         # TODO
-      tags:
-        - "statistics"
-      summary: "Retrieves a statistic data"
-      description: ""
       responses:
         # TODO
 
   # update    
   /statistics/update-statistic/{statisticId}:
     put:
+      summary: Updates a statistic
+      description: ""
+      tags:
+        - statistics
       parameters:
         # TODO
-      tags:
-        - "statistics"
-      summary: "Updates a statistic"
-      description: ""
       responses:
         # TODO
       
   # delete
   /statistics/delete-statistic/{statisticId}:
     delete:
+      summary: Deletes a statistic
+      description: ""
+      tags:
+        - statistics
       parameters:
         # TODO
-      tags:
-        - "statistics"
-      summary: "Deletes a statistic"
-      description: ""
       responses:
         # TODO
 
@@ -657,102 +675,102 @@ paths:
   # read
   /teams/get-teams:
     get:
+      summary: Retrieves the user's teams list
+      description: ""
+      tags:
+        - teams
       parameters:
         # TODO
-      tags:
-        - "teams"
-      summary: "Retrieves the user's teams list"
-      description: ""
       responses:
         # TODO
 
   /teams/get-team/{teamId}:
     get:
+      summary: Retrieves a team's data
+      description: ""
+      tags:
+        - teams
       parameters:
         # TODO
-      tags:
-        - "teams"
-      summary: "Retrieves a team data"
-      description: ""
       responses:
         # TODO
         
   /teams/{teamId}/get-messages:
     get:
+      summary: Retrieves the team's messages
+      description: ""
+      tags:
+        - teams
       parameters:
         # TODO
-      tags:
-        - "teams"
-      summary: "Retrieves the team's messages"
-      description: ""
       responses:
         # TODO
         
   # update
   /teams/rename-team/{teamId}:
     put:
+      summary: Renames a team
+      description: ""
+      tags:
+        - teams
       parameters:
         # TODO
-      tags:
-        - "teams"
-      summary: "Renames a team"
-      description: ""
       responses:
         # TODO
         
   /teams/{teamId}/update-message/{messageId}:
     put:
+      summary: Updates a team's message
+      description: ""
+      tags:
+        - teams
       parameters:
         # TODO
-      tags:
-        - "teams"
-      summary: "Updates a team's message"
-      description: ""
       responses:
         # TODO
 
   /teams/{teamId}/invite-user/{userId}:
     put:
+      summary: Invites a user in a team
+      description: ""
+      tags:
+        - teams
       parameters: 
         # TODO
-      tags:
-        - "teams"
-      summary: "Invites a user in a team"
-      description: ""
       responses:
         # TODO
       
   /teams/{teamId}/respond-to-invitation:
     put:
+      summary: Sends a response to a team invitation
+      description: ""
+      tags:
+        - teams
       parameters:
         # TODO
-      tags:
-        - "teams"
-      summary: "Sends a response to a team invitation"
-      description: ""
       responses:
         # TODO
           
     # delete
   /teams/delete-team/{teamId}:
     delete:
+      summary: Deletes a team
+      description: ""
+      tags:
+        - teams
       parameters:
         # TODO
-      tags:
-        - "teams"
-      summary: "Deletes a team"
-      description: ""
       responses:
         # TODO
       
   /teams/{teamId}/delete-message/{messageId}:
     delete:
+      summary: Deletes a team's message
+      description: ""
+      tags:
+        - teams
       parameters:
         # TODO
-      tags:
-        - "teams"
-      summary: "Deletes a team's message"
-      description: ""
       responses:
         # TODO
 
@@ -781,17 +799,35 @@ paths:
       parameters: []
         # TODO
       responses:
-        # TODO
+        200:
+          description: The armies ids list
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/uuidArray'
+        # TODO: complete
   
-  /armies/get-army/{armyId}:
+  /armies/{armyId}/get-name:
     get:
-      summary: Retrieves an army's data
+      summary: Retrieves the army's name
       description: ""
       tags:
         - armies
-      parameters: []
-        # TODO
+      parameters:
+        - in: path
+          name: armyId
+          description: The army's id
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        # TODO: complete
       responses:
+        200:
+          description: The army's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/name'
           # TODO
   
   # update
@@ -990,10 +1026,22 @@ paths:
       tags:
         - armies
         - rules
-      parameters: []
-        # TODO
+      parameters:
+        - in: path
+          name: armyId
+          description: The Army's id
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        # TODO: complete
       responses:
-        # TODO
+        200:
+          description: The army's rules ids list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
+        # TODO: complete
   
   /armies/{armyId}/rules/get-rule/{ruleId}:
     get:
@@ -1002,9 +1050,27 @@ paths:
       tags:
         - armies
         - rules
-      parameters: []
-        # TODO
+      parameters:
+        - in: path
+          name: armyId
+          description: The army's id
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - in: path
+          name: ruleId
+          description: The rule's id
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        # TODO: complete
       responses:
+        200: 
+          description: The rule's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ruleObject'
         # TODO
   
   # update
@@ -1022,10 +1088,22 @@ paths:
       tags:
         - armies
         - items
-      parameters: []
-        # TODO
+      parameters:
+        - in: path
+          name: armyId
+          description: The army's id
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        # TODO: complete
       responses:
-        # TODO
+        200:
+          description: The army's items ids list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
+        # TODO: complete
     
   /armies/{armyId}/items/get-item/{itemId}:
     get:
@@ -1034,9 +1112,27 @@ paths:
       tags:
         - armies
         - items
-      parameters: []
-        # TODO
+      parameters:
+        - in: path
+          name: armyId
+          description: The army's id
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - in: path
+          name: itemId
+          description: The item's id
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        # TODO: complete
       responses:
+        200:
+          description: The item's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/itemObject'
         # TODO
   
   # update
@@ -1073,211 +1169,211 @@ paths:
   # read
   /users/get-users:
     get:
+      summary: Retrieves a users list
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Retrieves a users list"
-      description: ""
       responses: 
         # TODO
         
   /users/get-user/{userId}:
     get:
+      summary: Retrieves a user data
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Retrieves a user data"
-      description: ""
       responses:
         # TODO
         
   /users/get-blocked-users:
     get:
+      summary: Retrieves the blocked users list
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Retrieves the blocked users list"
-      description: ""
       responses:
         # TODO
         
   /users/{userId}/profile/statistics/get-shared-statistics:
     put:
+      summary: Retrieves the list of shared statistics
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Retrieves the list of shared statistics"
-      description: ""
       responses:
         # TODO
         
   /users/{userId}/profile/armies/get-shared-armies:
     get:
+      summary: Retrieves the shared armies list
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Retrieves the shared armies list"
-      description: ""
       responses:
         # TODO
       
   /users/{userId}/profile/pictures/get-shared-pictures:
     get:
+      summary: Retreves the shared pictures list
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Retreves the shared pictures list"
-      description: ""
       responses:
         # TODO
       
   /users/profile/pictures/get-sared-picture/{pictureId}:
     get:
+      summary: Retrieves a shared picture data
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Retrieves a shared picture data"
-      description: ""
       responses:
         # TODO
 
   /users/{userId}/profile/followers/get-followers:
     get:
+      summary: Retrieves a user followers list
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Retrieves a user followers list"
-      description: ""
       responses:
         # TODO
     
   /users/{userId}/profile/followers/get-followed-users:
     get:
+      summary: Retrieves the followed users list
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Retrieves the followed users list"
-      description: ""
       responses:
         # TODO
         
   #update
   /users/follow-user/{userId}:
     put:
+      summary: Follows a user
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Follows a user"
-      description: ""
       responses:
         # TODO
 
   /users/unfollow-user/{userId}:
     put:
+      summary: Unfollows a user
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Unfollows a user"
-      description: ""
       responses:
         # TODO
 
   /users/block-user/{userId}:
     put:
+      summary: Blocks a user
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Blocks a user"
-      description: ""
       responses:
         # TODO
 
   /users/unblock-user/{userId}:
     put:
+      summary: Unblocks a user
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Unblocks a user"
-      description: ""
       responses:
         # TODO
 
   /users/profile/statistics/share-statistic/{statisticId}:
     put:
+      summary: Shares a statistic
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Shares a statistic"
-      description: ""
       responses:
         # TODO
 
   /users/profile/statistics/unshare-statistic/{statisticId}:
     put:
+      summary: Unshares a statistic
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Unshares a statistic"
-      description: ""
       responses:
         # TODO
 
   /users/profile/armies/share-army/{armyId}:
     put:
+      summary: Shares an army list
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Shares an army list"
-      description: ""
       responses:
         # TODO
 
   /users/profile/armies/unshare-army/{armyId}:
     put:
+      summary: Unshares an army list
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Unshares an army list"
-      description: ""
       responses:
         # TODO
 
   /users/profile/pictures/share-picture:
     put:
+      summary: Shares a picture
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Shares a picture"
-      description: ""
       responses:
         # TODO
 
   /users/profile/pictures/unshare-picture/{pictureId}:
     delete:
+      summary: Unshares a picture
+      description: ""
+      tags:
+        - users
       parameters:
         # TODO
-      tags:
-        - "users"
-      summary: "Unshares a picture"
-      description: ""
       responses: []
         # TODO
 
@@ -1424,6 +1520,10 @@ components:
       type: string
       description: The user's email address
       example: email@address.com
+      
+    description:
+      type: string
+      example: This is a description.
   
     signInCredentials:
       description: Informations required to sign in
@@ -1458,16 +1558,12 @@ components:
         accessToken:
           type: string
           description: The required token
-        refreshToken:
-          type: string
-          description: The token to refresh the access token
         userId:
           type: string
           description: The user's id
           format: uuid
       required:
         - accessToken
-        - refreshToken # Keep refresh token ?
         - userId
         
     uuid:
@@ -1503,10 +1599,6 @@ components:
       type: string
       example: name
       
-    description:
-      type: string
-      example: description
-      
     tag:
       type: string
       example: tag
@@ -1520,6 +1612,18 @@ components:
         y: 
           type: number
           example: 25
+          
+    limit:
+      type: object
+      properties:
+        type:
+          description: The limit's type
+          type: string
+          enum: ["Min", "Max", "No limit"]
+        value:
+          description: The limit's value in percent
+          type: number
+          example: 42
       
     listRequest:
       description: Data requested on a list
@@ -1784,6 +1888,25 @@ components:
       #type:
        #   example:
     
+    unitCategory:
+      description: A unit category data
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/name'
+        limit:
+          description: The unit category's limit
+          type: object
+          properties:
+            type:
+              description: The limit's type
+              type: string
+              enum: ["Min", "Max", "No limit"]
+            value:
+              description: The limit's value in percent
+              type: number
+              example: 42
+              
     unitObject:
       description: A unit's data
       type: object
@@ -1831,6 +1954,81 @@ components:
           description: The effect of a spell defines what happens to the target of the spell when the spell is successfully cast
           type: string
           example: The target suffers D6 hits with Strength 4, Armour Penetration 0, and Magical Attacks
+    
+    ruleObject:
+      description: A rule data
+      type: object
+      properties:
+        category:
+          description: The rule's category
+          type: string
+          example: category
+        name:
+          $ref: '#/components/schemas/name'
+        description:
+          allOf:
+            - description: The rule's description
+            - $ref: '#/components/schemas/description'
+        options:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                description: THhe description's name
+                type: string
+                example: name
+              description:
+                allOf:
+                  - description: The option's description
+                  - $ref: '#/components/schemas/description'
+    itemObject:
+      description: An item's data
+      type: object
+      
+    armyOrganisation:
+      description: The army's organisation
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            allOf:
+              - description: The organisation's name
+              - $ref: '#/components/schemas/name'
+          limit:
+            allOf:
+              - description: The category's limit
+              - $ref: '#/components/schemas/limit'
+
+    armyObject:
+      description: The army's data
+      type: object
+      properties:
+        name:
+          allOf:
+            - description: The army's name
+            - $ref: '#/components/schemas/name'
+        rules:
+          allOf:
+            - description: The army's rules ids list
+            - $ref: '#/components/schemas/uuidArray'
+        spells:
+          allOf:
+            - description: The army's spells ids list
+            - $ref: '#/components/schemas/uuidArray'
+        items:
+          allOf:
+            - description: The army's items ids list
+            - $ref: '#/components/schemas/uuidArray'
+        organisation:
+          allOf:
+            - description: The army's organisation
+            - $ref: '#/components/schemas/armyOrganisation'
+        units:
+          allOf:
+            - description: The army's units ids list
+            - $ref: '#/components/schemas/uuidArray'
   
   securitySchemes:
     bearerAuth:
