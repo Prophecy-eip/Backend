@@ -145,12 +145,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: eventId
-          description: The event's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/eventId'
       responses: 
         200:
           description: OK
@@ -187,11 +182,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: eventId
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/eventId'
         # TODO: complete
       responses:
         200:
@@ -233,12 +224,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: eventId
-          description: The event's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/eventId'
       requestBody:
         required: true
         content:
@@ -260,12 +246,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: eventId
-          description: The event's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/eventId'
       responses:
         200:
           description: OK
@@ -282,12 +263,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: eventId
-          description: The event's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/eventId'
       responses:
         200:
           description: OK
@@ -345,12 +321,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: listId
-          description: The list's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/listId'
         # TODO
       responses:
         # TODO: complete
@@ -367,9 +338,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          description: The list's id
-          required: true
+        - $ref: '#/components/parametersSchemes/listId'
         # TODO
       responses:
         200:
@@ -388,6 +357,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/listId'
         # TODO: complete
       responses:
         200:
@@ -551,6 +521,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/statisticId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -566,7 +537,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
+        - $ref: '#/components/parametersSchemes/statisticId'
       responses:
         200:
           description: OK
@@ -583,7 +554,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
+        - $ref: '#/components/parametersSchemes/statisticId'
       responses:
         200:
           description: OK
@@ -736,12 +707,7 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
-        - in: path
-          name: teamId
-          description: The team's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/teamId'
       requestBody:
         required: true
         content:
@@ -782,6 +748,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/teamId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -796,6 +763,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/teamId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -811,6 +779,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/teamId'
         # TODO: compelte
       responses:
         200:
@@ -827,6 +796,8 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/teamId'
+        - $ref: '#/components/parametersSchemes/messageId'
         # TODO: complete
       responses:
         200:
@@ -843,6 +814,8 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/teamId'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         200:
@@ -859,6 +832,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/teamId'
         # TODO
       responses:
         200:
@@ -876,6 +850,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/teamId'
         # TODO: complete
       responses:
         200:
@@ -892,6 +867,8 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/teamId'
+        - $ref: '#/components/parametersSchemes/messageId'
         # TODO: complete
       responses:
         200:
@@ -940,17 +917,14 @@ paths:
       description: ""
       tags:
         - armies
+      security:
+        - bearerAuth: []
       parameters:
-        - in: path
-          name: armyId
-          description: The army's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-        # TODO: complete
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/armyId'
       responses:
         200:
-          description: The army's data
+          description: The army's name
           content:
             application/json:
               schema:
@@ -1009,12 +983,7 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
-        - in: path
-          name: armyId
-          description: The army's id
-          required: true
-          schema: 
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/armyId'
       responses:
         200:
           description: The units ids list
@@ -1035,19 +1004,8 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
-        - in: path
-          name: armyId
-          description: The army's id
-          required: true
-          schema: 
-            $ref: '#/components/schemas/uuid'
-        - in: path
-          name: unitId
-          description: The unit's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/armyId'
+        - $ref: '#/components/parametersSchemes/unitId'
       responses:
         200:
           description: The unit's data
@@ -1101,12 +1059,7 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
-        - in: path
-          name: armyId
-          description: The army's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/armyId'
       responses:
         200:
           description: The spells ids
@@ -1128,12 +1081,7 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
        # TODO: complet
-        - in: path
-          name: armyId
-          description: The army's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/armyId'
         - in: path
           name: spellId
           description: The spell's id
@@ -1169,12 +1117,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: armyId
-          description: The Army's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/armyId'
         # TODO: complete
       responses:
         200:
@@ -1196,12 +1139,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: armyId
-          description: The army's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/armyId'
         - in: path
           name: ruleId
           description: The rule's id
@@ -1237,12 +1175,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: armyId
-          description: The army's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/armyId'
         # TODO: complete
       responses:
         200:
@@ -1264,12 +1197,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: armyId
-          description: The army's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/armyId'
         - in: path
           name: itemId
           description: The item's id
@@ -1307,6 +1235,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/armyId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -1345,6 +1274,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -1373,6 +1303,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -1387,6 +1318,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -1401,6 +1333,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -1429,6 +1362,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -1443,6 +1377,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -1458,6 +1393,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         200:
@@ -1474,6 +1410,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         200: 
@@ -1490,6 +1427,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         200:
@@ -1506,6 +1444,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
         200:
@@ -1522,6 +1461,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/statisticId'
         # TODO: complete
       responses:
         200:
@@ -1538,6 +1478,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/statisticId'
         # TODO: complete
       responses:
         200: 
@@ -1555,6 +1496,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/armyId'
         # TODO: complete
       responses:
         200:
@@ -1571,6 +1513,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/armyId'
         # TODO: complete
       responses:
         200:
@@ -1676,13 +1619,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
-        - in: path
-          name: locationId
-          description: The location's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/locationId'
       responses:
         200:
           description: The location's data
@@ -1703,13 +1640,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: locationId
-          description: The location's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-        # TODO: complete
+        - $ref: '#/components/parametersSchemes/locationId'
       responses:
         200:
           description: OK
@@ -1726,13 +1657,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - in: path
-          name: locationId
-          description: The location's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-        # TODO: complete
+        - $ref: '#/components/parametersSchemes/locationId'
       responses:
         200:
           description: OK
@@ -2249,7 +2174,7 @@ components:
           description: The item's models restriction
           type: string
           example: Models without Ambush only.
-          enchantment:
+        enchantment:
           
       
     armyOrganisation:
@@ -2311,6 +2236,78 @@ components:
       required: true
       schema: 
         $ref: '#/components/securitySchemes/bearerAuth'
+    
+    eventId:
+      in: path
+      name: eventId
+      description: The event's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+    
+    listId:
+      in: path
+      name: listId
+      description: The list's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+    
+    statisticId:
+      in: path
+      name: statisticId
+      description: The statistic's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+    
+    teamId:
+      in: path
+      name: teamId
+      description: The team's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+        
+    messageId:
+      in: path
+      name: messageId
+      description: The message's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+        
+    userId:
+      in: path
+      name: userId
+      description: The user's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+        
+    armyId:
+      in: path
+      name: armyId
+      description: The army's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+        
+    unitId:
+      in: path
+      name: unitId
+      description: The unit's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+    
+    locationId:
+      in: path
+      name: locationId
+      description: The location's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
       
 
 #security:
