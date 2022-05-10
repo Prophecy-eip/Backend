@@ -901,7 +901,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO
+        # TODO: add tags
       responses:
         200:
           description: The armies ids list
@@ -1796,6 +1796,16 @@ components:
           description: The limit's value in percent
           type: number
           example: 42
+          
+    interval:
+      type: object
+      properties:
+        min:
+          type: number
+          example: 0
+        max:
+          type: number
+          example: 4
       
     listRequest:
       description: Data requested on a list
@@ -1917,7 +1927,7 @@ components:
           description: 'Discipline: The model’s ability to stand and fight'
           type: number
           example: 9
-        modelRules:
+        # modelRules
     
     unitDefensiveStatistics: # TODO
       description: The unit's defensive statistics
@@ -1976,35 +1986,46 @@ components:
         armyCategories: # TODO
           description: Every unit is part of an Army Category, like Characters, Core, or Special, which is important e.g. for building an army or for certain Model Rules
           type: array
-          example:
-        size: # TODO
-          description: The unit size tells you the minimum and the maximum size of the unit when building an army. The minimum unit size corresponds to the number of models that the unit must contain at least. And accordingly, the maximum unit size represents the number of models that the unit can consist of at the most
-          type:
-          example:
-        cost: # TODO
+          items:
+            type: string
+            example: Core
+        size:
+          allOf:
+            - description: The unit size tells you the minimum and the maximum size of the unit when building an army. The minimum unit size corresponds to the number of models that the unit must contain at least. And accordingly, the maximum unit size represents the number of models that the unit can consist of at the most
+            - $ref: '#/components/schemas/interval'
+        cost:
           description: The unit cost tells you how many points you have to pay for adding the unit to your army in its minimum size, and how many points each additional model will cost. For some units in the game, an additional model will cost the same amount of points as a model that is part of the unit’s minimum size, while for others additional models may be more or less expensive than the initial models.
-          type:
+          type: object
+          properties:
+            base:
+              description: The model's base cost in points
+              type: number
+              example: 120
+            extraModel:
+              description: The extra models' cost in points
+              type: number
+              example: 10
           example:
-        scoring: # TODO
+        scoring: # TODO: check
           description: Some units have a certain Model Rule called Scoring, which is relevant for winning Secondary Objectives during the game
-          type:
-          example:
-        cap: # TODO
-          description: Certain units can only be selected a limited number of times in an army. In this case, you will find a “0–X Units/Army” cap in the unit entry
-          type:
-          example:
-        specifications: # TODO
+          type: boolean
+          example: true
+        cap:
+          allOf:
+            - description: Certain units can only be selected a limited number of times in an army. In this case, you will find a “0–X Units/Army” cap in the unit entry
+            - $ref: '#/components/schemas/interval'
+        specifications:
           description: Every model in the game has a specific Height, Type, and base size, which are relevant for a wide variety of game mechanics and Model Rules
-          # type: object
+          type: object
           properties:
             height:
               description: The unit's height
-              type:
-              example:
+              type: string
+              enum: ['Standard', 'Large', 'Gigantic', 'Chariot']
             type:
-              description: The unit's type
-              type:
-              example:
+              description: The unit's type # TODO: check
+              type: string
+              example: Infantry
             base:
               allOf:
                 - description: The model's base size
@@ -2026,37 +2047,47 @@ components:
       type: object
       properties:
         global:
-        
+          type: array
+          items:
+            type: string
+            example: Scoring
         defensive:
-        
+          type: array
+          items:
+            type: string
+            example: Light Armour
         offensive:
-        
-    unitOptions: # TODO
-      description:
-      type: object
-      properties:
-        commandGroupOptions:
-          description:
-          type:
-          example:
-        unrestrictedOptions:
-          description:
-          type:
-          example:
-        restrictedOptions:
-          description:
-          type:
-          example:
-        modelRules:
-          description:
-          type:
-          example:
-        magicOptions:
-          description:
-          type:
-          example:
-        mountOptions:
-          description:
+          type: array
+          items:
+            type: string
+            example: Halberd
+      
+    # unitOptions: # TODO
+    #   description:
+    #   type: object
+    #   properties:
+    #     commandGroupOptions:
+    #       description:
+    #       type:
+    #       example:
+    #     unrestrictedOptions:
+    #       description:
+    #       type:
+    #       example:
+    #     restrictedOptions:
+    #       description:
+    #       type:
+    #       example:
+    #     modelRules:
+    #       description:
+    #       type:
+    #       example:
+    #     magicOptions:
+    #       description:
+    #       type:
+    #       example:
+    #     mountOptions:
+    #       description:
       #type:
        #   example:
     
@@ -2090,42 +2121,45 @@ components:
         modelRules:
            $ref: '#/components/schemas/unitModelRules'
         options:
-          $ref: '#/components/schemas/unitOptions'
-    
-    spellObject:
-      description: A spell data
-      type: object
-      properties:
-        classification:
-          description: Spells are classified into the different categories Learned Spells, Attribute Spells, and Hereditary Spells by letters or numbers
-          type: string
-          example: 1
-        name:
-          description: The spell's name
-          type: string
-          example: Water Jet
-        castingValue:
-          description: The Casting Value is the minimum value you need to reach to succeed a Casting Attempt
-          type: number
-          example: 4
-        range: 
-          description: The spell's range in inches
-          type: number
-          example: 36
-        type:
-          description: The spell type describes how the spell’s targets have to be chosen
+          # $ref: '#/components/schemas/unitOptions'
           type: array
-          items: 
-            type: string
-          example: ["Damage", "Hex", "Missile"]
-        duration:
-          description: The duration of a spell determines how long the effects of the spell are applied
-          type: string
-          example: Instant
-        effect:
-          description: The effect of a spell defines what happens to the target of the spell when the spell is successfully cast
-          type: string
-          example: The target suffers D6 hits with Strength 4, Armour Penetration 0, and Magical Attacks
+          items:
+            $ref: '#/components/schemas/modifierObject'
+    
+    # spellObject:
+    #   description: A spell data
+    #   type: object
+    #   properties:
+    #     classification:
+    #       description: Spells are classified into the different categories Learned Spells, Attribute Spells, and Hereditary Spells by letters or numbers
+    #       type: string
+    #       example: 1
+    #     name:
+    #       description: The spell's name
+    #       type: string
+    #       example: Water Jet
+    #     castingValue:
+    #       description: The Casting Value is the minimum value you need to reach to succeed a Casting Attempt
+    #       type: number
+    #       example: 4
+    #     range: 
+    #       description: The spell's range in inches
+    #       type: number
+    #       example: 36
+    #     type:
+    #       description: The spell type describes how the spell’s targets have to be chosen
+    #       type: array
+    #       items: 
+    #         type: string
+    #       example: ["Damage", "Hex", "Missile"]
+    #     duration:
+    #       description: The duration of a spell determines how long the effects of the spell are applied
+    #       type: string
+    #       example: Instant
+    #     effect:
+    #       description: The effect of a spell defines what happens to the target of the spell when the spell is successfully cast
+    #       type: string
+    #       example: The target suffers D6 hits with Strength 4, Armour Penetration 0, and Magical Attacks
     
     ruleObject:
       description: A rule data
@@ -2154,27 +2188,27 @@ components:
                 allOf:
                   - description: The option's description
                   - $ref: '#/components/schemas/description'
-    itemObject:
-      description: An item's data
-      type: object
-      properties:
-        category:
-          description: The item's category
-          type: string
-          example: category
-        name:
-          allOf:
-            - description: The item's name
-            - $ref: '#/components/schemas/name'
-        cost:
-          description: The item's points cost
-          type: number
-          example: 42
-        modelRestriction:
-          description: The item's models restriction
-          type: string
-          example: Models without Ambush only.
-        enchantment:
+  #  itemObject:
+  #    description: An item's data
+  #    type: object
+  #    properties:
+  #       category:
+  #         description: The item's category
+  #         type: string
+  #         example: category
+  #       name:
+  #         allOf:
+  #           - description: The item's name
+  #           - $ref: '#/components/schemas/name'
+  #       cost:
+  #         description: The item's points cost
+  #         type: number
+  #         example: 42
+  #       modelRestriction:
+  #         description: The item's models restriction
+  #         type: string
+  #         example: Models without Ambush only.
+  #       enchantment:
           
       
     armyOrganisation:
@@ -2204,14 +2238,14 @@ components:
           allOf:
             - description: The army's rules ids list
             - $ref: '#/components/schemas/uuidArray'
-        spells:
+        modifiers:
           allOf:
-            - description: The army's spells ids list
+            - description: The army's modifiers ids list
             - $ref: '#/components/schemas/uuidArray'
-        items:
-          allOf:
-            - description: The army's items ids list
-            - $ref: '#/components/schemas/uuidArray'
+        #items:
+         # allOf:
+         #   - description: The army's items ids list
+         #   - $ref: '#/components/schemas/uuidArray'
         organisation:
           allOf:
             - description: The army's organisation
@@ -2220,7 +2254,106 @@ components:
           allOf:
             - description: The army's units ids list
             - $ref: '#/components/schemas/uuidArray'
-  
+    
+    effect:
+      description: Represents an effect
+      type: object
+      properties:
+        value:
+          description: The effect' value
+          type: number
+          example: -2
+        duration:
+          description: The effect's duration
+          type: string
+          example: Once
+        range:
+          description: The effect's range in inches
+          type: number
+          example: 15
+        modelRestrictions:
+          description: The effect's model restrictions
+          type: array
+          items: 
+            type: string
+            example: on foot
+        conditions:
+          description: The effects conditions
+          type: array
+          items:
+            type: string
+            example: on fire weakness
+        additionnalEffects:
+          description: The additionnal effects
+          type: array
+          items:
+            type: string
+            example: reroll dices
+          
+    effectsOnUnit:
+      description: An effect on a unit
+      type: object
+      properties:
+        adv:
+          $ref: '#/components/schemas/effect'
+        mar:
+          $ref: '#/components/schemas/effect'
+        dis:
+          $ref: '#/components/schemas/effect'
+        hp:
+          $ref: '#/components/schemas/effect'
+        def:
+          $ref: '#/components/schemas/effect'
+        res:
+          $ref: '#/components/schemas/effect'
+        arm:
+          $ref: '#/components/schemas/effect'
+        att:
+          $ref: '#/components/schemas/effect'
+        off:
+          $ref: '#/components/schemas/effect'
+        str:
+          $ref: '#/components/schemas/effect'
+        ap:
+          $ref: '#/components/schemas/effect'
+        agi:
+          $ref: '#/components/schemas/effect'
+        
+            
+    modifierObject:
+      description: Every object having an effect on units
+      type: object
+      properties:
+        name:
+          allOf:
+            - description: The modifier's name
+            - $ref: '#/components/schemas/name'
+        description:
+          allOf:
+            - description: The modifier's description
+            - $ref: '#/components/schemas/description'
+        type:
+          description: The modifier's type
+          type: string
+          example: Spell
+        category:
+          description: The modifier's category
+          type: string
+          example: Hereditary Spell
+        cost:
+          description: The modifier's cost
+          type: number
+          example: 50
+        limit:
+          $ref: '#/components/schemas/limit'
+        modelRestrictions:
+          description: The modifier's model restriction
+          type: array
+          items:
+            type: string
+        effects:
+          $ref: '#/components/schemas/effectsOnUnit'
+
   securitySchemes:
     bearerAuth:
       type: http
@@ -2308,7 +2441,7 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
-      
+    
 
 #security:
  # - bearerAuth: []
