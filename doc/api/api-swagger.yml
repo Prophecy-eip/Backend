@@ -539,9 +539,20 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/statisticObject'
       responses:
         200:
-          description: OK
+          description: The statistic's id
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/uuid'
+          
          # TODO: complete
       
   # read
@@ -557,6 +568,12 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
       responses:
+        200:
+          description: The statistics ids list
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/uuidArray'
         # TODO: complete
         
   /statistics/get-statistic/{statisticId}:
@@ -570,8 +587,13 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/statisticId'
-        # TODO: complete
       responses:
+        200:
+          description: The statistic's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/statisticObject'
         # TODO: complete
 
   # update    
@@ -586,6 +608,12 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/statisticId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/statisticObject'
       responses:
         200:
           description: OK
@@ -1789,6 +1817,10 @@ components:
       # format: uint
       example: 42
       
+    dateTime:
+      type: string
+      example: "YYYY-MM-DD/HH:MM"
+    
     date:
       type: string
       format: date
@@ -2444,7 +2476,39 @@ components:
         color:
           description: The tag's color in hexadecimal
           example: '#FFFFFF'
-          
+    
+    statisticObject:
+      description: A statistic's data
+      type: object
+      properties:
+        date:
+          allOf:  
+            - description: The game's date
+            - $ref: '#/components/schemas/date'
+        opponentsId:
+          allOf:
+            - description: The opponent's user id
+            - $ref: '#/components/schemas/uuid'
+        playersArmy:  
+          allOf:
+            - description: The player's army list
+            - $ref: '#/components/schemas/armyListObject'
+        opponentsArmy:
+          allOf:
+            - description: The opponents's army list
+            - $ref: '#/components/schemas/armyListObject'
+        playersScore:
+          description: The player's score
+          type: number
+          example: 15
+        opponentsScore:
+          description: The opponent's score
+          type: number
+          example: 5
+        official:
+          description: Describes if the game took place on a tournament
+          type: boolean
+          example: true
           
 
   securitySchemes:
