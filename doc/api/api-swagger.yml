@@ -291,6 +291,10 @@ paths:
       responses:
         200:
           description: Army list's id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuid'
         # TODO: complete
 
   # read
@@ -325,8 +329,13 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/listId'
-        # TODO
       responses:
+        200:
+          description: The list's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/armyListObject' 
         # TODO: complete
 
 
@@ -342,7 +351,12 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/listId'
-        # TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/armyListObject'
       responses:
         200:
           description: OK
@@ -361,7 +375,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/listId'
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -2336,6 +2349,10 @@ components:
         rules:
           allOf:
             - description: The list's rules
+            - $ref: '#/components/schemas/uuidArray'
+        tags:
+          allOf:
+            - description: The list's tags
             - $ref: '#/components/schemas/uuidArray'
           
           
