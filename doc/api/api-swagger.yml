@@ -282,10 +282,15 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
       requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/armyListObject'
         # TODO
       responses:
         200:
-          description: Army's id
+          description: Army list's id
         # TODO: complete
 
   # read
@@ -2293,6 +2298,50 @@ components:
             type: string
         effects:
           $ref: '#/components/schemas/effectsOnUnit'
+    
+    armyListObject:
+      description: An army list data
+      type: object
+      properties:
+        listName:
+          allOf:
+            - description: The list's name
+            - $ref: '#/components/schemas/name'
+        armyId:
+          allOf:
+            - description: The army's id
+            - $ref: '#/components/schemas/uuid'
+        units:
+          description: The list's units
+          type: array
+          items:
+            type: object
+            properties:
+              unitId:
+                allOf:
+                  - description: The unit's id
+                  - $ref: '#/components/schemas/uuid'
+              modifiersIds:
+                allOf:
+                  - description: The unit's modifier's id
+                  - $ref: '#/components/schemas/uuidArray'
+              modelsNumber:
+                description: The number of models
+                type: number
+                example: 5
+        modifiers:
+          allOf:
+            - description: The list's modifiers (spells, items, ...)
+            - $ref: '#/components/schemas/uuidArray'
+        rules:
+          allOf:
+            - description: The list's rules
+            - $ref: '#/components/schemas/uuidArray'
+          
+          
+                
+        
+      
 
   securitySchemes:
     bearerAuth:
