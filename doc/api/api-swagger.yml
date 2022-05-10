@@ -393,8 +393,19 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tagObject'
       responses:
+        200:  
+          description: The tag's id
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/uuid' 
         # TODO: complete
 
   # read
@@ -410,6 +421,12 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete (add tags ? ... in query)
       responses:
+        200:
+          description: The tags ids list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
         # TODO: complete
 
   /armies-lists/tag/get-tag/{tagId}:
@@ -422,8 +439,15 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
+        - $ref: '#/components/parametersSchemes/tagId'
       responses:
+        200:
+          description: The tag's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tagObject'
+          
         # TODO: complete
       
   # update
@@ -437,7 +461,14 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/tagId'
         # TODO: complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tagObject'
       responses: 
         200:
           description: OK
@@ -454,6 +485,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/tagId' 
         # TODO: complete
       responses:
         200:
@@ -1029,7 +1061,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/unitObject'
+         # TODO: complete
+ 
+  /armies/{armyId}/units/{unitId}/modifiers/get-modifiers:
+    get:
+      summary: Retrieves the unit's modifiers list
+      description: ""
+      tags:
+        - armies
+        - units
+        - modifiers
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/armyId'
+        - $ref: '#/components/parametersSchemes/unitId'
         # TODO: complete
+      responses:
+        200:
+          description: The modifiers ids list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
+      
+  
+  /armies/{armyId}/units/{unitId}/modifiers/get-modifier/{modifierId}:
+    get:
+      summary: Retrieves a modifier's data
+      description: ""
+      tags:
+        - armies
+        - units
+        - modifiers
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/armyId'
+        - $ref: '#/components/parametersSchemes/unitId'
+        - $ref: '#/components/parametersSchemes/modifierId'
+      responses:
+        200:
+          description: The modifier's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/modifierObject'
 
   # update
   # /armies/{armiyId}/units/update-unit/{unitId}:
@@ -2173,16 +2252,7 @@ components:
       description: The army's organisation
       type: array
       items:
-        type: object
-        properties:
-          name:
-            allOf:
-              - description: The organisation's name
-              - $ref: '#/components/schemas/name'
-          limit:
-            allOf:
-              - description: The category's limit
-              - $ref: '#/components/schemas/limit'
+        $ref: '#/components/schemas/unitCategory'
 
     armyObject:
       description: The army's data
@@ -2320,6 +2390,10 @@ components:
           allOf:
             - description: The list's name
             - $ref: '#/components/schemas/name'
+        points:
+          description: The list's points number
+          type: number
+          example: 500
         armyId:
           allOf:
             - description: The army's id
@@ -2354,11 +2428,24 @@ components:
           allOf:
             - description: The list's tags
             - $ref: '#/components/schemas/uuidArray'
+    
+    tagObject:
+      description: A tag's data
+      type: object
+      properties:
+        name:
+          allOf:
+            - description: The tag's name
+            - $ref: '#/components/schemas/name'
+        description:
+          allOf:
+            - description: The tag's description
+            - $ref: '#/components/schemas/description'
+        color:
+          description: The tag's color in hexadecimal
+          example: '#FFFFFF'
           
           
-                
-        
-      
 
   securitySchemes:
     bearerAuth:
@@ -2455,7 +2542,11 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
-    
-
-#security:
- # - bearerAuth: []
+        
+    tagId:
+      in: path
+      name: tagId
+      description: The tag's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
