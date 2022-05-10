@@ -31,12 +31,10 @@ tags:
     description: Everything about the locations
   - name: armies-lists
     description: Everything about the armies lists
-  - name: spells
-    description: Everything about the spells
+  - name: modifiers
+    description: Everything about the modifiers
   - name: rules
     description: Everything about the armies rules
-  - name: items
-    description: Everything about the armies items
   - name: organisation
     description: Everything about the armies organisation
 
@@ -1042,18 +1040,18 @@ paths:
   #       # TODO
 
 
-# SPELLS
+# MODIFIERS
   
   # create
   
   # read
-  /armies/{armyId}/spells/get-spells:
+  /armies/{armyId}/modifiers/get-modifiers:
     get:
       summary: Retrieves the army's spells ids list
       description: ""
       tags:
         - armies
-        - spells
+        - modifiers
       security:
         - bearerAuth: []
       parameters:
@@ -1069,32 +1067,27 @@ paths:
                 $ref: '#/components/schemas/uuidArray' 
         # TODO: complete
         
-  /armies/{armyId}/spells/get-spell/{spellId}:
+  /armies/{armyId}/modifiers/get-modifier/{modifierId}:
     get:
-      summary: Retrieves the spell's data
+      summary: Retrieves the modifier's data
       description: ""
       tags:
         - armies
-        - spells
+        - modifiers
       security:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-       # TODO: complet
+       # TODO: complete
         - $ref: '#/components/parametersSchemes/armyId'
-        - in: path
-          name: spellId
-          description: The spell's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/parametersSchemes/modifierId'
       responses:
         200:
-          description: The spell's data
+          description: The modifier's data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/spellObject'
+                $ref: '#/components/schemas/modifierObject'
         # TODO: complete
       
   # update
@@ -1160,65 +1153,6 @@ paths:
   
   # delete
 
-# ITEMS
-  # create
-  
-  # read
-  /armies/{armyId}/items/get-items:
-    get:
-      summary: Retrieves the army's items
-      description: ""
-      tags:
-        - armies
-        - items
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-        # TODO: complete
-      responses:
-        200:
-          description: The army's items ids list
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
-    
-  /armies/{armyId}/items/get-item/{itemId}:
-    get:
-      summary: Retrieves the item's data
-      description: ""
-      tags:
-        - armies
-        - items
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-        - in: path
-          name: itemId
-          description: The item's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-        # TODO: complete
-      responses:
-        200:
-          description: The item's data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/itemObject'
-        # TODO
-  
-  # update
-  
-  # delete
-
-
 # ORGANISATION
 
   # create
@@ -1238,6 +1172,12 @@ paths:
         - $ref: '#/components/parametersSchemes/armyId'
         # TODO: complete
       responses:
+        200:
+          description: The army's organisation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/armyOrganisation'
         # TODO: complete
   
   # update
@@ -2422,6 +2362,14 @@ components:
       in: path
       name: armyId
       description: The army's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+        
+    modifierId:
+      in: path
+      name: modifierId
+      description: The modifier's id
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
