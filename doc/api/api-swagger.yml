@@ -833,6 +833,12 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
       responses:
+        200:
+          description: Retrieves the user's teams
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
         # TODO: complete
 
   /teams/get-team/{teamId}:
@@ -848,6 +854,12 @@ paths:
         - $ref: '#/components/parametersSchemes/teamId'
         # TODO: complete
       responses:
+        200:
+          description: The team's informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/teamCredentials'
         # TODO: complete
         
   /teams/{teamId}/get-messages:
@@ -863,12 +875,20 @@ paths:
         - $ref: '#/components/parametersSchemes/teamId'
         # TODO: complete
       responses:
+        200:
+          description: The teams messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/messageObject'
         # TODO: complete
         
   # update
-  /teams/rename-team/{teamId}:
+  /teams/update-team/{teamId}:
     put:
-      summary: Renames a team
+      summary: Updates a team
       description: ""
       tags:
         - teams
@@ -878,6 +898,12 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
         # TODO: compelte
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/teamCredentials'
       responses:
         200:
           description: OK
@@ -896,6 +922,13 @@ paths:
         - $ref: '#/components/parametersSchemes/teamId'
         - $ref: '#/components/parametersSchemes/messageId'
         # TODO: complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              example: This is a message.
       responses:
         200:
           description: OK
@@ -913,11 +946,26 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
         - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
       responses:
         200:
           description: OK
         # TODO: complete
+  
+  /teams/{teamId}/remove-user/{userId}:
+    put:
+      summary: Removes a user from the team
+      description: ""
+      tags:
+        - teams
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/teamId'
+        - $ref: '#/components/parametersSchemes/userId'
+      responses:
+        200:
+          description: OK
       
   /teams/{teamId}/respond-to-invitation:
     put:
@@ -931,6 +979,14 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
         # TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              description: The user's response (true to accept and false to deny)
+              type: boolean
+              example: true
       responses:
         200:
           description: OK
@@ -966,7 +1022,6 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
         - $ref: '#/components/parametersSchemes/messageId'
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -2043,6 +2098,8 @@ components:
       description: A message's data
       type: object
       properties:
+        messageId:
+          $ref: '#/components/schemas/uuid'
         authorId:
           $ref: '#/components/schemas/uuid'
         message:
