@@ -497,7 +497,7 @@ paths:
 
   # read
   /prophecies/get-prophecy:
-    get:
+    post:
       summary: Retrieves a prophecy for the user
       description: ""
       tags:
@@ -507,7 +507,19 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/prophecyRequest'
       responses:
+        200:
+          description: The prophecy's data
+          content:
+            application/json:
+              schema:
+          
         # TODO: complete
 
   /prophecies/get-history:
@@ -522,6 +534,14 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
       responses:
+        200:
+          description: The prophecies history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/prophecyObject'
         # TODO: complete
 
 
@@ -1706,6 +1726,12 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/locationId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/locationObject'
       responses:
         200:
           description: OK
@@ -1875,6 +1901,30 @@ components:
         max:
           type: number
           example: 4
+          
+    address:
+      type: object
+      properties:
+        number:
+          allOf:
+            - description: The street's number
+            - $ref: '#/components/schemas/length'
+        street:
+          description: The street's name
+          type: string
+          example: "Rue Pasteur"
+        city:
+          description: A city name
+          type: string
+          example: Le Kremlin-Bicêtre
+        postalCode:
+          description: The city's postal code
+          type: number
+          example: 94270
+        country:
+          description: The coutry's name
+          type: string
+          example: France
       
     listRequest:
       description: Data requested on a list
@@ -1921,26 +1971,14 @@ components:
           $ref: '#/components/schemas/name'
         description:
           $ref: '#/components/schemas/description'
-        number:
-          # name: number
-          # definitions: The street's number
-          $ref: '#/components/schemas/length'
-        street:
-          description: The street's name
-          type: string
-          example: "Rue Pasteur"
-        city:
-          description: A city name
-          type: string
-          example: Le Kremlin-Bicêtre
-        postalCode:
-          description: The city's postal code
-          type: number
-          example: 94270
-        country:
-          description: The coutry's name
-          type: string
-          example: France
+        address:
+          allOf:
+            - description: The location's address
+            - $ref: '#/components/schemas/address'
+        website:
+          allOf:
+            - description: Thelocation's website
+          - $ref: '#/components/schemas/link'
   
     teamCredentials:
       description: A team's credentials
@@ -2509,6 +2547,41 @@ components:
           description: Describes if the game took place on a tournament
           type: boolean
           example: true
+    
+    prophecyRequest:
+      description: A prophecy request data
+      type: object
+      properties:
+        playersArmy:
+          allOf:
+            - description: The player's army list
+            - $ref: '#/components/schemas/armyListObject'
+        opponentsArmy:
+          allOf:
+            - description: The opponent's army list
+            - $ref: '#/components/schemas/armyListObject'
+
+          
+    prophecyObject:
+      description: A prophecy data
+      type: object
+      properties:
+        playersArmy:
+          allOf:
+            - description: The player's army list
+            - $ref: '#/components/schemas/armyListObject'
+        opponentsArmy:
+          allOf:
+            - description: The opponent's army list
+            - $ref: '#/components/schemas/armyListObject'
+        playersScore:
+          description: The player's predicted score
+          type: number
+          example: 15
+        opponentsScore:
+          description: The opponent's predicted score
+          type: number
+          example: 5
           
 
   securitySchemes:
