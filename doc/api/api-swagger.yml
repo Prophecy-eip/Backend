@@ -519,6 +519,7 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/prophecyObject'
           
         # TODO: complete
 
@@ -1679,12 +1680,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/listRequest'
       responses:
         200:
           description: The locations ids
@@ -1712,6 +1707,28 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/locationObject'
+        # TODO: complete
+  
+  /locations/{locationId}/events/get-events:
+    get:
+      summary: Restrieves the location's events list
+      description: ""
+      tags:
+        - locations
+        - events
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/locationId'
+        # TODO: complete
+      responses:
+        200:
+          description: The events ids list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
         # TODO: complete
 
   # update
@@ -1941,6 +1958,8 @@ components:
       description: Event data
       type: object
       properties:
+        ownerId:
+          $ref: '#/components/schemas/uuid'
         name:
           $ref: '#/components/schemas/name'
         description:
@@ -1953,6 +1972,8 @@ components:
           $ref: '#/components/schemas/time'
         link:
           $ref: '#/components/schemas/link'
+        address:
+          $ref: '#/components/schemas/address'
         locationId:
           $ref: '#/components/schemas/uuid'
       required:
@@ -1978,7 +1999,7 @@ components:
         website:
           allOf:
             - description: Thelocation's website
-          - $ref: '#/components/schemas/link'
+            - $ref: '#/components/schemas/link'
   
     teamCredentials:
       description: A team's credentials
