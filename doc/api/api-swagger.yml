@@ -1809,12 +1809,12 @@ components:
       description: Informations required to sign in
       type: object
       properties:
-        username:
-          $ref: '#/components/schemas/username'
+        email:
+          $ref: '#/components/schemas/email'
         password:
           $ref: '#/components/schemas/password'
       required:
-        - username
+        - email
         - password
         
     signUpCredentials:
@@ -1908,6 +1908,9 @@ components:
           description: The limit's value in percent
           type: number
           example: 42
+      required:
+        - type
+        - value
           
     interval:
       type: object
@@ -1918,6 +1921,9 @@ components:
         max:
           type: number
           example: 4
+      required:
+        - min
+        - max
           
     address:
       type: object
@@ -1942,18 +1948,13 @@ components:
           description: The coutry's name
           type: string
           example: France
+      required:
+        - number
+        - street
+        - city
+        - postalCode
+        - country
       
-    listRequest:
-      description: Data requested on a list
-      properties:
-        length:
-          $ref: '#/components/schemas/length'
-        flags:
-          type: array
-          items:
-            type: string
-            example: flag1
-            
     eventObject:
       description: Event data
       type: object
@@ -1977,6 +1978,7 @@ components:
         locationId:
           $ref: '#/components/schemas/uuid'
       required:
+        - ownerId
         - name
         - description
         - tag
@@ -2000,6 +2002,9 @@ components:
           allOf:
             - description: Thelocation's website
             - $ref: '#/components/schemas/link'
+      required:
+        - name
+        - address
   
     teamCredentials:
       description: A team's credentials
@@ -2007,8 +2012,10 @@ components:
       properties: 
         name: 
           $ref: '#/components/schemas/name'
-        desription: 
+        description: 
           $ref: '#/components/schemas/description'
+      required:
+        - name
           
     teamObject:
       description: A team's data
@@ -2018,12 +2025,19 @@ components:
           $ref: '#/components/schemas/name'
         description: 
           $ref: '#/components/schemas/description'
+        ownerId:
+          $ref: '#/components/schemas/uuid'
         messages:
           type: array
           items:
             $ref: '#/components/schemas/messageObject'
         members:
           $ref: '#/components/schemas/uuidArray'
+      required:
+        - name
+        - ownerId
+        - messages
+        - members
           
     messageObject:
       description: A message's data
@@ -2038,11 +2052,16 @@ components:
           $ref: '#/components/schemas/date'
         time:
           $ref: '#/components/schemas/time'
+      required:
+        - authorId
+        - message
+        - date
+        - time # TODO: change format
     
     unitGlobalStatistics: # TODO
       description: The unit's global statistics
       type: object
-      properties:
+      properties: # TODO: change numbers to string
         adv:
           description: 'Advance Rate: The distance the model can Advance Move in inches'
           type: number
@@ -2055,12 +2074,16 @@ components:
           description: 'Discipline: The model’s ability to stand and fight'
           type: number
           example: 9
+      required:
+        - adv
+        - mar
+        - dis
         # modelRules
     
     unitDefensiveStatistics: # TODO
       description: The unit's defensive statistics
       type: object
-      properties:
+      properties: # TODO: change numbers to string
         hp:
           description: 'Health Points: When the model loses this many Health Points, it is removed as a casualty'
           type: number
@@ -2077,15 +2100,20 @@ components:
           description: 'Armour: The innate Armour of the model'
           type: number
           example: 0
+      required:
+        - hp
+        - def
+        - res
+        - arm
     
     unitOffensiveStatistics: # TODO
       description: The unit's offensive statistics
       type: object
-      properties:
+      properties: # TODO: change numbers to string
         att:
           description: 'Attack Value: The number of times the model part can strike in a Round of Combat'
           type: number
-          example:
+          example: 3
         off:
           description: 'Offensive Skill: How good the model part is at scoring hits in melee'
           type: number
@@ -2093,17 +2121,23 @@ components:
         str:
           description: 'Strength: How easily the model part can wound enemy models'
           type: number
-          example:
+          example: 3
         ap:
           description: 'Armour Penetration: How well the model part can penetrate the Armour of enemy models'
           type: number
-          example:
+          example: 3
         agi:
           description: 'Agility: Model parts with a higher Agility strike first in melee'
           type: number
-          example:
+          example: 3
+      required:
+        - att
+        - off
+        - str
+        - ap
+        - agi
         
-    unitHeader:
+    unitHeader: # TODO: add required fields
       description: The header of a unit entry usually contains all the general information on the unit 
       type: object
       properties:
@@ -2169,6 +2203,10 @@ components:
           $ref: '#/components/schemas/unitDefensiveStatistics'
         offensive: # TODO: make map (see multipart models)
           $ref: '#/components/schemas/unitOffensiveStatistics'
+      required:
+        - global
+        - defensive
+        - offensive
     
     unitModelRules: # TODO
       description: In this part of the unit entry, the unit’s Model Rules are displayed
@@ -2189,35 +2227,6 @@ components:
           items:
             type: string
             example: Halberd
-      
-    # unitOptions: # TODO
-    #   description:
-    #   type: object
-    #   properties:
-    #     commandGroupOptions:
-    #       description:
-    #       type:
-    #       example:
-    #     unrestrictedOptions:
-    #       description:
-    #       type:
-    #       example:
-    #     restrictedOptions:
-    #       description:
-    #       type:
-    #       example:
-    #     modelRules:
-    #       description:
-    #       type:
-    #       example:
-    #     magicOptions:
-    #       description:
-    #       type:
-    #       example:
-    #     mountOptions:
-    #       description:
-      #type:
-       #   example:
     
     unitCategory:
       description: A unit category data
@@ -2226,17 +2235,12 @@ components:
         name:
           $ref: '#/components/schemas/name'
         limit:
-          description: The unit category's limit
-          type: object
-          properties:
-            type:
-              description: The limit's type
-              type: string
-              enum: ["Min", "Max", "No limit"]
-            value:
-              description: The limit's value in percent
-              type: number
-              example: 42
+          allOf:
+            - description: The unit category's limit
+            - $ref: '#/components/schemas/limit'
+      required:
+        - name
+        - limit
               
     unitObject:
       description: A unit's data
@@ -2249,47 +2253,16 @@ components:
         modelRules:
            $ref: '#/components/schemas/unitModelRules'
         options:
-          # $ref: '#/components/schemas/unitOptions'
           type: array
           items:
             $ref: '#/components/schemas/modifierObject'
-    
-    # spellObject:
-    #   description: A spell data
-    #   type: object
-    #   properties:
-    #     classification:
-    #       description: Spells are classified into the different categories Learned Spells, Attribute Spells, and Hereditary Spells by letters or numbers
-    #       type: string
-    #       example: 1
-    #     name:
-    #       description: The spell's name
-    #       type: string
-    #       example: Water Jet
-    #     castingValue:
-    #       description: The Casting Value is the minimum value you need to reach to succeed a Casting Attempt
-    #       type: number
-    #       example: 4
-    #     range: 
-    #       description: The spell's range in inches
-    #       type: number
-    #       example: 36
-    #     type:
-    #       description: The spell type describes how the spell’s targets have to be chosen
-    #       type: array
-    #       items: 
-    #         type: string
-    #       example: ["Damage", "Hex", "Missile"]
-    #     duration:
-    #       description: The duration of a spell determines how long the effects of the spell are applied
-    #       type: string
-    #       example: Instant
-    #     effect:
-    #       description: The effect of a spell defines what happens to the target of the spell when the spell is successfully cast
-    #       type: string
-    #       example: The target suffers D6 hits with Strength 4, Armour Penetration 0, and Magical Attacks
-    
-    ruleObject:
+      required:
+        - header
+        - characteristicProfiles
+        - modelRules
+        - options
+          
+    ruleObject: # TODO: add required fields
       description: A rule data
       type: object
       properties:
@@ -2316,28 +2289,6 @@ components:
                 allOf:
                   - description: The option's description
                   - $ref: '#/components/schemas/description'
-  #  itemObject:
-  #    description: An item's data
-  #    type: object
-  #    properties:
-  #       category:
-  #         description: The item's category
-  #         type: string
-  #         example: category
-  #       name:
-  #         allOf:
-  #           - description: The item's name
-  #           - $ref: '#/components/schemas/name'
-  #       cost:
-  #         description: The item's points cost
-  #         type: number
-  #         example: 42
-  #       modelRestriction:
-  #         description: The item's models restriction
-  #         type: string
-  #         example: Models without Ambush only.
-  #       enchantment:
-          
       
     armyOrganisation:
       description: The army's organisation
@@ -2373,6 +2324,12 @@ components:
           allOf:
             - description: The army's units ids list
             - $ref: '#/components/schemas/uuidArray'
+      required:
+        - name
+        - rules
+        - modifiers
+        - organisation
+        - units
     
     effect:
       description: Represents an effect
@@ -2408,6 +2365,10 @@ components:
           items:
             type: string
             example: reroll dices
+      required:
+        - value
+        - duration
+        - modelRestrictions
           
     effectsOnUnit:
       description: An effect on a unit
@@ -2472,6 +2433,14 @@ components:
             type: string
         effects:
           $ref: '#/components/schemas/effectsOnUnit'
+      required:
+        - name
+        - description
+        - type
+        - category
+        - cost
+        - limit
+        - effects
     
     armyListObject:
       description: An army list data
@@ -2519,6 +2488,13 @@ components:
           allOf:
             - description: The list's tags
             - $ref: '#/components/schemas/uuidArray'
+      required:
+        - listName
+        - points
+        - armyId
+        - units
+        - modifiers
+        - rules
     
     tagObject:
       description: A tag's data
@@ -2535,6 +2511,8 @@ components:
         color:
           description: The tag's color in hexadecimal
           example: '#FFFFFF'
+      required:
+        - name
     
     statisticObject:
       description: A statistic's data
@@ -2568,6 +2546,12 @@ components:
           description: Describes if the game took place on a tournament
           type: boolean
           example: true
+      required:
+        - playersArmy
+        - opponentsArmy
+        - playerSocre
+        - opponentsScore
+        - official
     
     prophecyRequest:
       description: A prophecy request data
@@ -2581,7 +2565,9 @@ components:
           allOf:
             - description: The opponent's army list
             - $ref: '#/components/schemas/armyListObject'
-
+      required:
+        - playersArmy
+        - opponentsArmy
           
     prophecyObject:
       description: A prophecy data
@@ -2603,6 +2589,11 @@ components:
           description: The opponent's predicted score
           type: number
           example: 5
+      required:
+        - playersArmy
+        - opponentsArmy
+        - playersScore
+        - opponentsScore
           
 
   securitySchemes:
