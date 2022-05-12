@@ -4,9 +4,6 @@ info:
     This is the Prophecy Api documentation
   version: 1.0.0
   title: "Prophecy Api"
-#  host: "localhost" # TODO: change
-#  basePath: /api
-  
 
 tags:
   - name: account
@@ -17,8 +14,8 @@ tags:
     description: Everything about the armies
   - name: prophecies
     description: Everything about the prophecies
-  - name: statistics
-    description: Everything about the statistics
+  - name: games
+    description: Everything about the games
   - name: settings
     description: Everything about the settings
   - name: users
@@ -35,8 +32,10 @@ tags:
     description: Everything about the modifiers
   - name: rules
     description: Everything about the armies rules
-  - name: organisation
-    description: Everything about the armies organisation
+  - name: profile
+    description: Everything about the profiles
+  - name: posts
+    description: Everything about the posts
 
 
 paths:
@@ -298,7 +297,7 @@ paths:
         # TODO: complete
 
   # read
-  /armies-lists/get-armies-lists:
+  /armies-lists/get-lists:
     get:
       summary: Retrieves the user's armies list
       description: ""
@@ -546,15 +545,15 @@ paths:
         # TODO: complete
 
 
-  # STATISTICS
+  # GAMES
 
   # create
-  /statistics/create-statistic:
+  /games/create-game:
     post:
-      summary: Creates a new statistic
+      summary: Creates a new game
       description: ""
       tags:
-        - statistics
+        - games
       security:
         - bearerAuth: []
       parameters:
@@ -565,10 +564,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/statisticObject'
+              $ref: '#/components/schemas/gameObject'
       responses:
         200:
-          description: The statistic's id
+          description: The game's id
           content:
             application/json: 
               schema:
@@ -577,12 +576,12 @@ paths:
          # TODO: complete
       
   # read
-  /statistics/get-statistics:
+  /games/get-games:
     get:
-      summary: Retrieves the user's statistics list
+      summary: Retrieves the user's games list
       description: ""
       tags:
-        - statistics
+        - games
       security:
         - bearerAuth: []
       parameters:
@@ -590,68 +589,68 @@ paths:
         # TODO: complete
       responses:
         200:
-          description: The statistics ids list
+          description: The game ids list
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/uuidArray'
         # TODO: complete
         
-  /statistics/get-statistic/{statisticId}:
+  /games/get-game/{gameId}:
     get:
       summary: Retrieves a statistic data
       description: ""
       tags:
-        - statistics
+        - games
       security:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/statisticId'
+        - $ref: '#/components/parametersSchemes/gameId'
       responses:
         200:
-          description: The statistic's data
+          description: The game's data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/statisticObject'
+                $ref: '#/components/schemas/gameObject'
         # TODO: complete
 
   # update    
-  /statistics/update-statistic/{statisticId}:
+  /games/update-game/{gameId}:
     put:
-      summary: Updates a statistic
+      summary: Updates a game
       description: ""
       tags:
-        - statistics
+        - games
       security:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/statisticId'
+        - $ref: '#/components/parametersSchemes/gameId'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/statisticObject'
+              $ref: '#/components/schemas/gameObject'
       responses:
         200:
           description: OK
         # TODO: complete
       
   # delete
-  /statistics/delete-statistic/{statisticId}:
+  /game/delete-game/{gameId}:
     delete:
-      summary: Deletes a statistic
+      summary: Deletes a game
       description: ""
       tags:
-        - statistics
+        - games
       security:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/statisticId'
+        - $ref: '#/components/parametersSchemes/gameId'
       responses:
         200:
           description: OK
@@ -719,6 +718,10 @@ paths:
         # TODO
       requestBody: # TODO
         required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/pictureContent'
       responses:
         200:
           description: OK
@@ -764,7 +767,244 @@ paths:
           description: OK
         # TODO: complete
       
-      
+# PROFILE
+  /account/profile/update-picture:
+    put:
+      summary: Updates the user's profile picture
+      description: ""
+      tags:
+        - account
+        - profile
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/pictureContent'
+      responses:
+        200:
+          description: OK
+      # TODO: complete
+  
+  /account/profile/armies-lists/share-list/{listId}:
+    put:
+      summary: Shares an army list
+      description: ""
+      tags:
+        - account
+        - profile
+        - armies-lists
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/listId'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+  
+  /account/profile/armies-lists/unshare-list/{listId}:
+    put:
+      summary: Unshares an army list
+      description: ""
+      tags:
+        - account
+        - profile
+        - armies-lists
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/listId'
+      responses:
+        200:
+          description: OK
+        # TODO
+  
+  /account/profile/games/share-game/{gameId}:
+    put:
+      summary: Shares a statistic
+      description: ""
+      tags:
+        - account
+        - profile
+        - games
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/gameId'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+  
+  /account/profile/games/unshare-game/{gameId}:
+    put:
+      summary: Unshares a statistic
+      description: ""
+      tags:
+        - account
+        - profile
+        - games
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/gameId'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+
+  /account/profile/posts/create-post:
+    post:
+      summary: Creates a post
+      description: ""
+      tags:
+        - account
+        - profile
+        - posts
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postObject'
+      responses:
+        200:
+          description: The post's id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuid'
+        # TODO: complete
+  
+  /account/profile/posts/update-post/{postId}:
+    put:
+      summary: Updates a post
+      description: ""
+      tags:
+        - account
+        - profile
+        - posts
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/postId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postObject'
+      responses:
+        200: 
+          description: OK
+        # TODO: complete
+  
+  /account/profile/posts/delete-post/{postId}:
+    delete:
+      summary: Deletes a post
+      description: ""
+      tags:
+        - account
+        - profile
+        - posts
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/postId'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+    
+  # /account/profile/
+  
+# USERS
+  /account/users/follow-user/{userId}:
+    put:
+      summary: Enables to follow a user
+      description: ""
+      tags:
+        - account
+        - users
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+        
+  
+  /account/users/unfollow-user/{userId}:
+    put:
+      summary: Enables to unfollow a user
+      description: ""
+      tags:
+        - account
+        - users
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+  
+  /account/users/block-user/{userId}:
+    put:
+      summary: Enables to block a user
+      description: ""
+      tags:
+        - account
+        - users
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
+      responses:
+        200:
+          description: OK
+  
+  /account/users/unblock-user/{userId}:
+    put:
+      summary: Enables to unblock a user
+      description: ""
+      tags:
+        - account
+        - users
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
+      responses:
+        200:
+          description: OK
+  
+  /account/users/get-blocked-users:
+    put:
+      summary: Retrieves the blocked users ids
+      description: ""
+      tags:
+        - account
+        - users
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
+      responses:
+        200:
+          description: The blocked users id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
+    
   # TEAMS
 
   # create
@@ -1365,7 +1605,6 @@ paths:
       description: ""
       tags:
         - armies
-        - organisation
       security:
         - bearerAuth: []
       parameters:
@@ -1393,7 +1632,7 @@ paths:
   # read
   /users/get-users:
     get:
-      summary: Retrieves a users list
+      summary: Retrieves a users ids list
       description: ""
       tags:
         - users
@@ -1403,11 +1642,17 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         # TODO: complete
       responses: 
+        200:
+          description: The users ids list
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/uuidArray'
         # TODO: complete
         
   /users/get-user/{userId}:
     get:
-      summary: Retrieves a user data
+      summary: Retrieves a user's informations
       description: ""
       tags:
         - users
@@ -1416,30 +1661,23 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
       responses:
+        200:
+          description: The user's informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userInformations'
+          
         # TODO: complete
         
-  /users/get-blocked-users:
-    get:
-      summary: Retrieves the blocked users list
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
-      responses:
-        # TODO: complete
-        
-  /users/{userId}/profile/statistics/get-shared-statistics:
+  /users/{userId}/profile/games/get-shared-games:
     put:
       summary: Retrieves the list of shared statistics
       description: ""
       tags:
         - users
+        - games
       security:
         - bearerAuth: []
       parameters:
@@ -1447,6 +1685,7 @@ paths:
         - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
+        200:
         # TODO: complete
         
   /users/{userId}/profile/armies/get-shared-armies:
@@ -1489,6 +1728,7 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/pictureId'
         # TODO: complete
       responses:
         # TODO: complete
@@ -1524,177 +1764,9 @@ paths:
         # TODO: complete
         
   #update
-  /users/follow-user/{userId}:
-    put:
-      summary: Follows a user
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
-      responses:
-        200:
-          description: OK
-        # TODO: complete
-
-  /users/unfollow-user/{userId}:
-    put:
-      summary: Unfollows a user
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
-      responses:
-        200: 
-          description: OK
-        # TODO: complete
-
-  /users/block-user/{userId}:
-    put:
-      summary: Blocks a user
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
-      responses:
-        200:
-          description: OK
-        # TODO: complete
-
-  /users/unblock-user/{userId}:
-    put:
-      summary: Unblocks a user
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
-      responses:
-        200:
-          description: OK
-        # TODO: complete
-
-  /users/profile/statistics/share-statistic/{statisticId}:
-    put:
-      summary: Shares a statistic
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/statisticId'
-        # TODO: complete
-      responses:
-        200:
-          description: OK
-        # TODO: complete
-
-  /users/profile/statistics/unshare-statistic/{statisticId}:
-    put:
-      summary: Unshares a statistic
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/statisticId'
-        # TODO: complete
-      responses:
-        200: 
-          description: OK
-        # TODO: complete
         
 
-  /users/profile/armies/share-army/{armyId}:
-    put:
-      summary: Shares an army list
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-        # TODO: complete
-      responses:
-        200:
-          description: OK
-        # TODO
-
-  /users/profile/armies/unshare-army/{armyId}:
-    put:
-      summary: Unshares an army list
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-        # TODO: complete
-      responses:
-        200:
-          description: OK
-        # TODO: complete
-
-  /users/profile/pictures/share-picture:
-    put:
-      summary: Shares a picture
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
-      responses:
-        200:
-          description: OK
-        # TODO
-
-  /users/profile/pictures/unshare-picture/{pictureId}:
-    delete:
-      summary: Unshares a picture
-      description: ""
-      tags:
-        - users
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
-      responses:
-        200:
-          description: OK
-        # TODO: complete
-
-
-  # LOCATIONS
+# LOCATIONS
 
   # create
   /locations/create-location:
@@ -1837,6 +1909,11 @@ servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/Victoire-Rabeau/Prophecy/1.0.0
+  - description: The local server
+    url: localhost
+    variables:
+      basePath: 
+        default: /api
 
 components:
   schemas:
@@ -2571,8 +2648,8 @@ components:
       required:
         - name
     
-    statisticObject:
-      description: A statistic's data
+    gameObject:
+      description: A game's data
       type: object
       properties:
         date:
@@ -2651,7 +2728,41 @@ components:
         - opponentsArmy
         - playersScore
         - opponentsScore
-          
+    
+    pictureContent:
+      description: A picture's content
+      type: string
+      
+    
+    postObject:
+      description: A post's data
+      type: object
+      properties:
+        description:
+          allOf:
+            - description: The post's description
+            - $ref: '#/components/schemas/description'
+        pictures:
+          description: The post's pictures
+          type: array
+          items:
+            $ref: '#/components/schemas/pictureContent'
+      required:
+        - description
+        - pictures
+
+    userInformations:
+      description: The user's informations
+      type: object
+      properties:
+        username:
+          allOf:
+            - description: The user's username
+            - $ref: '#/components/schemas/username'
+        profilePicture:
+          allOf:
+            - description: The user's profile picture
+            - $ref: '#/components/schemas/pictureContent'
 
   securitySchemes:
     bearerAuth:
@@ -2685,10 +2796,10 @@ components:
       schema:
         $ref: '#/components/schemas/uuid'
     
-    statisticId:
+    gameId:
       in: path
-      name: statisticId
-      description: The statistic's id
+      name: gameId
+      description: The game's id
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
@@ -2753,6 +2864,14 @@ components:
       in: path
       name: tagId
       description: The tag's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+        
+    postId:
+      in: path
+      name: postId
+      desctription: The post's id
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
