@@ -1668,16 +1668,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/userInformations'
-          
         # TODO: complete
         
   /users/{userId}/profile/games/get-shared-games:
-    put:
-      summary: Retrieves the list of shared statistics
+    get:
+      summary: Retrieves the list of shared games ids
       description: ""
       tags:
         - users
         - games
+        - profile
       security:
         - bearerAuth: []
       parameters:
@@ -1686,14 +1686,43 @@ paths:
         # TODO: complete
       responses:
         200:
+          description: The user's shared games ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
+  
+  /users/{userId}/profile/games/get-shared-game/{gameId}:
+    get:
+      summary: Retrieves a shared game's data
+      description: ""
+      tags:
+        - users
+        - profile
+        - games
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
+        - $ref: '#/components/parametersSchemes/gameId'
+      responses:
+        200:  
+          description: The game's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gameObject'
         # TODO: complete
         
-  /users/{userId}/profile/armies/get-shared-armies:
+  /users/{userId}/profile/armies-lists/get-shared-lists:
     get:
-      summary: Retrieves the shared armies list
+      summary: Retrieves the shared armies list ids
       description: ""
       tags:
         - users
+        - profile
+        - armies-lists
       security:
         - bearerAuth: []
       parameters:
@@ -1701,14 +1730,46 @@ paths:
         - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
+        200:
+          description: The user's shared armies lists ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
         # TODO: complete
-      
-  /users/{userId}/profile/pictures/get-shared-pictures:
+  
+  /users/{userId}/profile/armies-lists/get-shared-list/{listId}:
     get:
-      summary: Retreves the shared pictures list
+      summary: Retrieves a shared army list data
       description: ""
       tags:
         - users
+        - profile
+        - armies-lists
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/userId'
+        - $ref: '#/components/parametersSchemes/listId'
+        # TODO: complete
+      responses:
+        200:
+          description: The user's shared list's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/armyListObject'
+      
+  
+  /users/{userId}/profile/posts/get-posts:
+    get:
+      summary: Retreves the user's posts lists
+      description: ""
+      tags:
+        - users
+        - profile
+        - posts
       security:
         - bearerAuth: []
       parameters:
@@ -1716,9 +1777,15 @@ paths:
         - $ref: '#/components/parametersSchemes/userId'
         # TODO: complete
       responses:
+        200:
+          description: The user's posts ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
         # TODO: complete
       
-  /users/profile/pictures/get-sared-picture/{pictureId}:
+  /users/profile/pictures/get-post/{postId}:
     get:
       summary: Retrieves a shared picture data
       description: ""
@@ -1728,12 +1795,18 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/pictureId'
+        - $ref: '#/components/parametersSchemes/postId'
         # TODO: complete
       responses:
+        200:
+          description: The post's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/postObject'
         # TODO: complete
 
-  /users/{userId}/profile/followers/get-followers:
+  /users/{userId}/profile/get-followers:
     get:
       summary: Retrieves a user followers list
       description: ""
@@ -1744,11 +1817,16 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
       responses:
+        200:
+          description: The followers ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
         # TODO: complete
     
-  /users/{userId}/profile/followers/get-followed-users:
+  /users/{userId}/profile/get-followed-users:
     get:
       summary: Retrieves the followed users list
       description: ""
@@ -1759,8 +1837,13 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
       responses:
+        200:
+          description: The followed users ids
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
         # TODO: complete
         
   #update
