@@ -36,6 +36,8 @@ tags:
     description: Everything about the profiles
   - name: posts
     description: Everything about the posts
+  - name: statistics
+    description: Everything about the statistics
 
 
 paths:
@@ -844,7 +846,7 @@ paths:
   
   /account/profile/games/unshare-game/{gameId}:
     put:
-      summary: Unshares a statistic
+      summary: Unshares a game
       description: ""
       tags:
         - account
@@ -855,6 +857,42 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/gameId'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+  
+  /account/profile/statistics/share-statistic/{statisticId}:
+    put:
+      summary: Shares a statistic
+      description: ""
+      tags:
+        - account
+        - profile
+        - statistics
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/statisticId'
+      responses:
+        200:
+          description: OK
+        # TODO: complete
+
+  /account/profile/statistics/unshare-statistic/{statisticId}:
+    put:
+      summary: unshares a statistic
+      description: ""
+      tags:
+        - account
+        - profile
+        - statistics
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/statisticId'
       responses:
         200:
           description: OK
@@ -924,8 +962,6 @@ paths:
         200:
           description: OK
         # TODO: complete
-    
-  # /account/profile/
   
 # USERS
   /account/users/follow-user/{userId}:
@@ -943,7 +979,6 @@ paths:
           description: OK
         # TODO: complete
         
-  
   /account/users/unfollow-user/{userId}:
     put:
       summary: Enables to unfollow a user
@@ -1981,6 +2016,90 @@ paths:
           description: OK
         # TODO: complete
   
+# STATISTICS
+
+  /statistics/create-statistic:
+    post:
+      summary: Creates a statistic
+      description: ""
+      tags:
+        - statistics
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/statisticCredentials'
+      responses:
+        200:
+          description: The statistic's id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuid'
+        # TODO: complete
+        
+  /statistics/get-statistics:
+    get:
+      summary: Retrieves the statistics ids list
+      description: ""
+      tags:
+        - statistics
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'  
+      responses:
+        200:
+          description: The statistic's ids list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuidArray'
+        # TODO: complete
+  
+  
+  /statistics/get-statistic/{statisticId}:
+    get:
+      summary: Retrieves the statistic's data
+      description: ""
+      tags:
+        - statistics
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/statisticId'
+        # TODO: complete
+      responses:
+        200:
+          description: The statistic's data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/statisticObject'
+      # TODO: complete
+  
+  /statistics/delete-statistic/{statisticId}:
+    delete:
+      summary: Deletes a statistic
+      description: ""
+      tags:
+        - statistics
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/statisticId'
+        # TODO: complete
+      responses:
+        200:
+          description: OK
+      # TODO: complete
 
 
 # Added by API Auto Mocking Plugin
@@ -2846,7 +2965,41 @@ components:
           allOf:
             - description: The user's profile picture
             - $ref: '#/components/schemas/pictureContent'
-
+      required:
+        - username
+        - profilePicture
+    
+    statisticCredentials:
+      description: The statistic's credentials
+      type: object
+      properties:
+        type:
+          description: The statistic's type
+          type: string
+          enum: ['Winrate']
+        option:
+          description: The statistic's option
+          type: string
+          enum: ['Global', 'Official', 'Unofficial', 'On army list']
+        listId:
+          allOf:
+            - description: The army list's id(required only for the On army list option)
+            - $ref: '#/components/schemas/uuid'
+      required:
+        - type
+        - option
+    
+    statisticObject:
+      description: A statistic's data
+      type: object
+      properties:
+        credential:
+          $ref: '#/components/schemas/statisticCredentials'
+        value:
+          description: The statistic's value in percent
+          type: number
+          example: 42
+    
   securitySchemes:
     bearerAuth:
       type: http
@@ -2954,7 +3107,15 @@ components:
     postId:
       in: path
       name: postId
-      desctription: The post's id
+      description: The post's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+        
+    statisticId:
+      in: path
+      name: statisticId
+      description: The statistic's id
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
