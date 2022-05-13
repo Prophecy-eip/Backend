@@ -59,12 +59,14 @@ paths:
               $ref: '#/components/schemas/signInCredentials'
       responses:
         200:
-          description: Data received on connection success
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/connectionResponse'
-                
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+      
         # TODO: complete
         
   /account/sign-up:
@@ -81,12 +83,14 @@ paths:
             schema:
               $ref: '#/components/schemas/signUpCredentials'
       responses:
-        200:
-          description: Data received on connection success
+        201:
+          description: Account created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/connectionResponse'
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
         # TODO: complete
       
   /account/sign-out:
@@ -103,6 +107,9 @@ paths:
       responses:
         200:
           description: OK
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        
         # TODO: complete
 
   # EVENTS
@@ -116,7 +123,6 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: add parameters
       requestBody:
         required: true
         content:
@@ -126,13 +132,14 @@ paths:
       tags:
         - events
       responses:
-        200: 
-          description: New event's id
+        201: 
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuid'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
         
   /events/save-event/{eventId}:
     put:
@@ -148,7 +155,10 @@ paths:
       responses: 
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # read
   /events/get-events:
@@ -161,14 +171,25 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        #TODO: complete (add tags ?, locations ?)
+        - in: query
+          name: city
+          schema:
+            type: string
+        - in: query
+          name: locationId
+          schema:
+            $ref: '#/components/schemas/uuid'
       responses:
         200: 
-          description: An array of events id
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         # TODO: complete
         
   /events/get-event/{eventId}:
@@ -182,15 +203,17 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/eventId'
-        # TODO: complete
       responses:
         200:
-          description: An event object
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/eventObject'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   /events/get-saved-events:
     get:
@@ -202,15 +225,25 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete (add tags ? locations ? ... in query)
+        - in: query
+          name: city
+          schema:
+            type: string
+        - in: query
+          name: locationId
+          schema:
+            $ref: '#/components/schemas/uuid'
       responses: 
         200:
-          description: List of events ids
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # update
   /event/update-event/{eventId}:
@@ -233,7 +266,13 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
+        
         
   /events/unsave-event/{eventId}:
     put:
@@ -249,7 +288,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # delete
   /events/delete-event/{eventId}:
@@ -266,7 +308,12 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
 
   # ARMIES LISTS
@@ -290,13 +337,14 @@ paths:
               $ref: '#/components/schemas/armyListObject'
         # TODO
       responses:
-        200:
-          description: Army list's id
+        201:
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuid'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
 
   # read
   /armies-lists/get-lists:
@@ -309,7 +357,10 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete (add tags ? ... in query)
+        - in: query
+          name: tagId
+          schema:
+            $ref: '#/components/schemas/uuid'
       responses:
         200:
           description: The armies lists' ids
@@ -317,7 +368,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   /armies-lists/get-list/{listId}:
     get:
@@ -332,12 +386,15 @@ paths:
         - $ref: '#/components/parametersSchemes/listId'
       responses:
         200:
-          description: The list's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/armyListObject' 
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
 
   # update
@@ -361,7 +418,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
       
   # delete
 
@@ -379,7 +439,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # ARMIES LISTS TAGS
 
@@ -401,13 +464,14 @@ paths:
             schema:
               $ref: '#/components/schemas/tagObject'
       responses:
-        200:  
-          description: The tag's id
+        201:  
+          description: Created
           content:
             application/json:
               schema: 
                 $ref: '#/components/schemas/uuid' 
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
 
   # read
   /armies-lists/tags/get-tags:
@@ -420,15 +484,21 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete (add tags ? ... in query)
+        - in: query
+          name: name
+          schema:
+            $ref: '#/components/schemas/name'
       responses:
         200:
-          description: The tags ids list
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   /armies-lists/tag/get-tag/{tagId}:
     get:
@@ -443,13 +513,15 @@ paths:
         - $ref: '#/components/parametersSchemes/tagId'
       responses:
         200:
-          description: The tag's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/tagObject'
-          
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'  
       
   # update
   /armies-lists/tag/update-tag/{tagId}:
@@ -473,7 +545,10 @@ paths:
       responses: 
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # delete
   /armies-lists/tag/delete-tag/{tagId}:
@@ -491,7 +566,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
 
   # PROPHECIES
@@ -507,7 +585,6 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
       requestBody:
         required: true
         content:
@@ -516,13 +593,13 @@ paths:
               $ref: '#/components/schemas/prophecyRequest'
       responses:
         200:
-          description: The prophecy's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/prophecyObject'
-          
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
 
   /prophecies/get-history:
     get:
@@ -537,15 +614,17 @@ paths:
         # TODO: complete
       responses:
         200:
-          description: The prophecies history
+          description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/prophecyObject'
-        # TODO: complete
-
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # GAMES
 
@@ -560,7 +639,6 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
       requestBody:
         required: true
         content:
@@ -568,14 +646,14 @@ paths:
             schema:
               $ref: '#/components/schemas/gameObject'
       responses:
-        200:
-          description: The game's id
+        201:
+          description: Created
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/uuid'
-          
-         # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
       
   # read
   /games/get-games:
@@ -588,15 +666,32 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
+        - in: query
+          name: win
+          description: The user won the game
+          schema:
+            type: boolean
+        - in: query
+          name: listId
+          description: The army list's id
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - in: query
+          name: opponentId
+          description: The opponent's id
+          schema:
+            $ref: '#/components/schemas/uuid'
       responses:
         200:
-          description: The game ids list
+          description: OK
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   /games/get-game/{gameId}:
     get:
@@ -616,7 +711,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/gameObject'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # update    
   /games/update-game/{gameId}:
@@ -639,7 +737,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
       
   # delete
   /game/delete-game/{gameId}:
@@ -656,8 +757,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
-
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # SETTINGS
 
@@ -682,7 +785,9 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        
 
   /account/settings/update-username:
     put:
@@ -704,30 +809,8 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
-
-  /account/settings/update-profile-picture: # maybe in profile ?
-    put:
-      summary: Updates the user's profile picture
-      description: ""
-      tags:
-        - account
-        - settings
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        # TODO
-      requestBody: # TODO
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/pictureContent'
-      responses:
-        200:
-          description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
 
   /account/settings/update-email-address:
     put:
@@ -749,7 +832,8 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
 
   # delete
   /account/settings/delete-account:
@@ -767,7 +851,8 @@ paths:
       responses:
         200: 
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
       
 # PROFILE
   /account/profile/update-picture:
@@ -788,7 +873,12 @@ paths:
       responses:
         200:
           description: OK
-      # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
+        415:
+          $ref: '#/components/schemas/unsuportedResponse'
   
   /account/profile/armies-lists/share-list/{listId}:
     put:
@@ -806,7 +896,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /account/profile/armies-lists/unshare-list/{listId}:
     put:
@@ -824,7 +917,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /account/profile/games/share-game/{gameId}:
     put:
@@ -842,7 +938,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /account/profile/games/unshare-game/{gameId}:
     put:
@@ -860,7 +959,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /account/profile/statistics/share-statistic/{statisticId}:
     put:
@@ -878,7 +980,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   /account/profile/statistics/unshare-statistic/{statisticId}:
     put:
@@ -896,7 +1001,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   /account/profile/posts/create-post:
     post:
@@ -917,13 +1025,15 @@ paths:
             schema:
               $ref: '#/components/schemas/postObject'
       responses:
-        200:
-          description: The post's id
+        201:
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuid'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        
   
   /account/profile/posts/update-post/{postId}:
     put:
@@ -945,7 +1055,10 @@ paths:
       responses:
         200: 
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /account/profile/posts/delete-post/{postId}:
     delete:
@@ -961,7 +1074,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
 # USERS
   /account/users/follow-user/{userId}:
@@ -977,7 +1093,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   /account/users/unfollow-user/{userId}:
     put:
@@ -992,7 +1111,10 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /account/users/block-user/{userId}:
     put:
@@ -1007,6 +1129,10 @@ paths:
       responses:
         200:
           description: OK
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /account/users/unblock-user/{userId}:
     put:
@@ -1021,6 +1147,10 @@ paths:
       responses:
         200:
           description: OK
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /account/users/get-blocked-users:
     put:
@@ -1034,11 +1164,15 @@ paths:
         - $ref: '#/components/parametersSchemes/userId'
       responses:
         200:
-          description: The blocked users id
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
     
   # TEAMS
 
@@ -1060,13 +1194,14 @@ paths:
             schema:
               $ref: '#/components/schemas/teamObject'
       responses:
-        200:
-          description: The team's id
+        201:
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuid'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
         
   /teams/{teamId}/create-message:
     put:
@@ -1087,13 +1222,18 @@ paths:
             schema:
               $ref: '#/components/schemas/messageObject' # credentials
       responses:  
-        200:
-          description: The message's id
+        201:
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuid'
-        # TODO: complete  
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
       
   # read
   /teams/get-teams:
@@ -1106,15 +1246,17 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
       responses:
         200:
-          description: Retrieves the user's teams
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   /teams/get-team/{teamId}:
     get:
@@ -1127,15 +1269,17 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
-        # TODO: complete
       responses:
         200:
-          description: The team's informations
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/teamCredentials'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   /teams/{teamId}/get-messages:
     get:
@@ -1148,17 +1292,26 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
-        # TODO: complete
+        - in: query
+          name: number
+          description: The messages number
+          schema:
+            type: number
       responses:
         200:
-          description: The teams messages
+          description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/messageObject'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   # update
   /teams/update-team/{teamId}:
@@ -1172,7 +1325,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
-        # TODO: compelte
       requestBody:
         required: true
         content:
@@ -1182,8 +1334,13 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
-        
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
+
   /teams/{teamId}/update-message/{messageId}:
     put:
       summary: Updates a team's message
@@ -1196,7 +1353,6 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
         - $ref: '#/components/parametersSchemes/messageId'
-        # TODO: complete
       requestBody:
         required: true
         content:
@@ -1207,7 +1363,12 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   /teams/{teamId}/invite-user/{userId}:
     put:
@@ -1253,7 +1414,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
-        # TODO
       requestBody:
         required: true
         content:
@@ -1265,7 +1425,12 @@ paths:
       responses:
         200:
           description: OK
-        # TODO
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
           
     # delete
   /teams/delete-team/{teamId}:
@@ -1283,7 +1448,12 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
       
   /teams/{teamId}/delete-message/{messageId}:
     delete:
@@ -1300,7 +1470,12 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
 
 # ARMIES
@@ -1331,12 +1506,15 @@ paths:
         # TODO: add tags
       responses:
         200:
-          description: The armies ids list
+          description: OK
           content:
             application/json:
               schema: 
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /armies/{armyId}/get-name:
     get:
@@ -1351,12 +1529,15 @@ paths:
         - $ref: '#/components/parametersSchemes/armyId'
       responses:
         200:
-          description: The army's name
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/name'
-          # TODO
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   # update
   # /armies/update-army/{armyId}:
@@ -1409,16 +1590,18 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
         - $ref: '#/components/parametersSchemes/armyId'
       responses:
         200:
-          description: The units ids list
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: compete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   /armies/{armyId}/units/get-unit/{unitId}:
     get:
@@ -1435,12 +1618,15 @@ paths:
         - $ref: '#/components/parametersSchemes/unitId'
       responses:
         200:
-          description: The unit's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/unitObject'
-         # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
  
   /armies/{armyId}/units/{unitId}/modifiers/get-modifiers:
     get:
@@ -1459,11 +1645,15 @@ paths:
         # TODO: complete
       responses:
         200:
-          description: The modifiers ids list
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
       
   
   /armies/{armyId}/units/{unitId}/modifiers/get-modifier/{modifierId}:
@@ -1483,11 +1673,15 @@ paths:
         - $ref: '#/components/parametersSchemes/modifierId'
       responses:
         200:
-          description: The modifier's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/modifierObject'
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # update
   # /armies/{armiyId}/units/update-unit/{unitId}:
@@ -1523,7 +1717,7 @@ paths:
   # read
   /armies/{armyId}/modifiers/get-modifiers:
     get:
-      summary: Retrieves the army's spells ids list
+      summary: Retrieves the army's modifiers ids list
       description: ""
       tags:
         - armies
@@ -1536,12 +1730,15 @@ paths:
         - $ref: '#/components/parametersSchemes/armyId'
       responses:
         200:
-          description: The spells ids
+          description: OK
           content:
             application/json:
               schema: 
                 $ref: '#/components/schemas/uuidArray' 
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   /armies/{armyId}/modifiers/get-modifier/{modifierId}:
     get:
@@ -1554,17 +1751,19 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-       # TODO: complete
         - $ref: '#/components/parametersSchemes/armyId'
         - $ref: '#/components/parametersSchemes/modifierId'
       responses:
         200:
-          description: The modifier's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/modifierObject'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
       
   # update
   
@@ -1587,15 +1786,17 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/armyId'
-        # TODO: complete
       responses:
         200:
-          description: The army's rules ids list
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /armies/{armyId}/rules/get-rule/{ruleId}:
     get:
@@ -1618,12 +1819,15 @@ paths:
         # TODO: complete
       responses:
         200: 
-          description: The rule's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ruleObject'
-        # TODO
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   # update
   
@@ -1645,15 +1849,17 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/armyId'
-        # TODO: complete
       responses:
         200:
-          description: The army's organisation
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/armyOrganisation'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   # update
   
@@ -1678,12 +1884,15 @@ paths:
         # TODO: complete
       responses: 
         200:
-          description: The users ids list
+          description: OK
           content:
             application/json:
               schema: 
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   /users/get-user/{userId}:
     get:
@@ -1698,12 +1907,15 @@ paths:
         - $ref: '#/components/parametersSchemes/userId'
       responses:
         200:
-          description: The user's informations
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/userInformations'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   /users/{userId}/profile/games/get-shared-games:
     get:
@@ -1721,11 +1933,15 @@ paths:
         # TODO: complete
       responses:
         200:
-          description: The user's shared games ids
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /users/{userId}/profile/games/get-shared-game/{gameId}:
     get:
@@ -1743,12 +1959,15 @@ paths:
         - $ref: '#/components/parametersSchemes/gameId'
       responses:
         200:  
-          description: The game's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/gameObject'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   /users/{userId}/profile/armies-lists/get-shared-lists:
     get:
@@ -1763,15 +1982,17 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
       responses:
         200:
-          description: The user's shared armies lists ids
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /users/{userId}/profile/armies-lists/get-shared-list/{listId}:
     get:
@@ -1790,11 +2011,15 @@ paths:
         # TODO: complete
       responses:
         200:
-          description: The user's shared list's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/armyListObject'
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
       
   
   /users/{userId}/profile/posts/get-posts:
@@ -1813,12 +2038,15 @@ paths:
         # TODO: complete
       responses:
         200:
-          description: The user's posts ids
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
       
   /users/profile/pictures/get-post/{postId}:
     get:
@@ -1831,15 +2059,17 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/postId'
-        # TODO: complete
       responses:
         200:
-          description: The post's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/postObject'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   /users/{userId}/profile/get-followers:
     get:
@@ -1854,12 +2084,15 @@ paths:
         - $ref: '#/components/parametersSchemes/userId'
       responses:
         200:
-          description: The followers ids
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
     
   /users/{userId}/profile/get-followed-users:
     get:
@@ -1874,12 +2107,15 @@ paths:
         - $ref: '#/components/parametersSchemes/userId'
       responses:
         200:
-          description: The followed users ids
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   #update
         
@@ -1897,7 +2133,6 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
       requestBody:
         required: true
         content:
@@ -1905,13 +2140,16 @@ paths:
             schema:
               $ref: '#/components/schemas/locationObject'
       responses:
-        200:
-          description: The location's id
+        201:
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuid'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # read
   /locations/get-locations:
@@ -1924,15 +2162,22 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
+        - in: query
+          name: city
+          description: The city's name
+          schema:
+            $ref: '#/components/schemas/name'
       responses:
         200:
-          description: The locations ids
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   /locations/get-location/{locationId}:
     get:
@@ -1947,12 +2192,15 @@ paths:
         - $ref: '#/components/parametersSchemes/locationId'
       responses:
         200:
-          description: The location's data
+          description: OK
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/locationObject'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /locations/{locationId}/events/get-events:
     get:
@@ -1966,15 +2214,17 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/locationId'
-        # TODO: complete
       responses:
         200:
-          description: The events ids list
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # update
   /locations/update-location/{locationId}:
@@ -1997,7 +2247,12 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # delete
   /locations/delete-location/{locationId}:
@@ -2014,7 +2269,12 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
 # STATISTICS
 
@@ -2035,13 +2295,16 @@ paths:
             schema:
               $ref: '#/components/schemas/statisticCredentials'
       responses:
-        200:
-          description: The statistic's id
+        201:
+          description: Created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuid'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
         
   /statistics/get-statistics:
     get:
@@ -2055,12 +2318,15 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'  
       responses:
         200:
-          description: The statistic's ids list
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   
   /statistics/get-statistic/{statisticId}:
@@ -2077,12 +2343,15 @@ paths:
         # TODO: complete
       responses:
         200:
-          description: The statistic's data
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/statisticObject'
-      # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /statistics/delete-statistic/{statisticId}:
     delete:
@@ -2095,11 +2364,13 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/statisticId'
-        # TODO: complete
       responses:
         200:
           description: OK
-      # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
 
 # Added by API Auto Mocking Plugin
@@ -3000,6 +3271,30 @@ components:
           type: number
           example: 42
     
+# RESPONSES
+    
+    okResponse:
+      description: OK
+      
+    createdResponse:
+      description: Created
+    
+    badRequestResponse:
+      description: Bad request
+    
+    unauthorizedResponse:
+      description: Unauthorized
+    
+    forbiddenResponse:
+      description: Forbidden
+      
+    notFoundResponse:
+      description: Not found
+      
+    unsuportedResponse:
+      description: Unsuported Media Type
+      
+
   securitySchemes:
     bearerAuth:
       type: http
@@ -3119,3 +3414,4 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
+    
