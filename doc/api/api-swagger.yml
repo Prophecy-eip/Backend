@@ -64,13 +64,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/connectionResponse'
+        400:
+          description: Bad Request
         401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-      
-        # TODO: complete
+          description: | 
+            Unauthorized 
+            
+            The email address and/or the password is/are invalid
+        500:
+          description: Inernal Server Error (unable to connect to the database)
         
   /account/sign-up:
-    put:
+    post:
       summary: Enables the user to create an account
       description: ""
       tags: 
@@ -89,9 +94,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/connectionResponse'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        # TODO: complete
+        400:
+          description: Bad Request
+        409:
+          description: Conflict (the email address is already in use)
+        500:
+          description: Internal Server Error (unable to connect to the database)
       
   /account/sign-out:
     post:
@@ -103,14 +111,15 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: add parameters
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
-        
-        # TODO: complete
+        500:
+          description: Internal Server Error
 
   # EVENTS
 
@@ -138,8 +147,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuid'
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
+        422:
+          description: Unprocesable Entity
+        500:
+          description: Internal Server Error
         
   /events/save-event/{eventId}:
     put:
@@ -155,11 +170,15 @@ paths:
       responses: 
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
-
+        500:
+          description: Internal Server Error
+          
   # read
   /events/get-events:
     get:
@@ -186,11 +205,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
-        # TODO: complete
+        500:
+          description: Internal Server Error 
         
   /events/get-event/{eventId}:
     get:
@@ -210,10 +232,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/eventObject'
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
 
   /events/get-saved-events:
     get:
@@ -240,10 +266,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
 
   # update
   /event/update-event/{eventId}:
@@ -266,12 +296,16 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         403:
           $ref: '#/components/schemas/forbiddenResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
         
         
   /events/unsave-event/{eventId}:
@@ -288,10 +322,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
 
   # delete
   /events/delete-event/{eventId}:
@@ -335,7 +373,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/armyListObject'
-        # TODO
       responses:
         201:
           description: Created
@@ -535,7 +572,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/tagId'
-        # TODO: complete
       requestBody:
         required: true
         content:
@@ -562,7 +598,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/tagId' 
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -611,7 +646,6 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -785,8 +819,12 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
+        500:
+          description: Internal Server Error
         
 
   /account/settings/update-username:
@@ -809,8 +847,12 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
+        500:
+          description: Internal Server Error (unable to connect to the database)
 
   /account/settings/update-email-address:
     put:
@@ -832,8 +874,16 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
+        409:
+          description: Conflict (email address already in use)
+        422:
+          description: Unporcessable Entity (invalid email address)
+        500:
+          description: Internal Server Error (unable to connect to the database)
 
   # delete
   /account/settings/delete-account:
@@ -847,12 +897,15 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO
       responses:
         200: 
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
+        500:
+          description: Internal Server Error
       
 # PROFILE
   /account/profile/update-picture:
@@ -867,18 +920,22 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          image/png:
             schema:
               $ref: '#/components/schemas/pictureContent'
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
+        413:
+          description: Payload Too Large
         415:
           $ref: '#/components/schemas/unsuportedResponse'
+        500:
+          description: Internal Server Error
   
   /account/profile/armies-lists/share-list/{listId}:
     put:
@@ -896,10 +953,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
   /account/profile/armies-lists/unshare-list/{listId}:
     put:
@@ -917,10 +978,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bas Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
   /account/profile/games/share-game/{gameId}:
     put:
@@ -938,10 +1003,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
   /account/profile/games/unshare-game/{gameId}:
     put:
@@ -959,10 +1028,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
   /account/profile/statistics/share-statistic/{statisticId}:
     put:
@@ -1031,8 +1104,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuid'
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
+        413:
+          description: Payload Too Large
+        415:
+          description: Unsuported Media Type
+        500: 
+          description: Internal Server Error
         
   
   /account/profile/posts/update-post/{postId}:
@@ -1055,10 +1136,18 @@ paths:
       responses:
         200: 
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        413:
+          description: Payload Too Large
+        415:
+          description: Unsuported Media Type
+        500:
+          description: Internal Server Error
   
   /account/profile/posts/delete-post/{postId}:
     delete:
@@ -1074,10 +1163,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
 # USERS
   /account/users/follow-user/{userId}:
@@ -1093,10 +1186,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
         
   /account/users/unfollow-user/{userId}:
     put:
@@ -1111,10 +1208,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
   /account/users/block-user/{userId}:
     put:
@@ -1129,10 +1230,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
   /account/users/unblock-user/{userId}:
     put:
@@ -1147,13 +1252,17 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
   /account/users/get-blocked-users:
-    put:
+    get:
       summary: Retrieves the blocked users ids
       description: ""
       tags:
@@ -1169,10 +1278,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/uuidArray'
+        400:
+          description: Bad Request
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
     
   # TEAMS
 
@@ -1213,7 +1326,6 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
         - $ref: '#/components/parametersSchemes/teamId'
       requestBody:
         required: true
@@ -1385,7 +1497,12 @@ paths:
       responses:
         200:
           description: OK
-        # TODO: complete
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
   
   /teams/{teamId}/remove-user/{userId}:
     put:
@@ -1402,6 +1519,11 @@ paths:
       responses:
         200:
           description: OK
+        $ref: '#/components/schemas/unauthorizedResponse'
+        403:
+          $ref: '#/components/schemas/forbiddenResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
       
   /teams/{teamId}/respond-to-invitation:
     put:
@@ -1444,7 +1566,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/teamId'
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -1503,7 +1624,6 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: add tags
       responses:
         200:
           description: OK
@@ -1515,6 +1635,8 @@ paths:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
   /armies/{armyId}/get-name:
     get:
@@ -1642,7 +1764,6 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/armyId'
         - $ref: '#/components/parametersSchemes/unitId'
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -1726,7 +1847,6 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
         - $ref: '#/components/parametersSchemes/armyId'
       responses:
         200:
@@ -1816,7 +1936,6 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/uuid'
-        # TODO: complete
       responses:
         200: 
           description: OK
@@ -1828,6 +1947,8 @@ paths:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          decription: Internal Server Error
   
   # update
   
@@ -1881,7 +2002,12 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-        # TODO: complete
+        - in: query
+          name: username
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/username'
       responses: 
         200:
           description: OK
@@ -1930,7 +2056,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -2008,7 +2133,6 @@ paths:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/userId'
         - $ref: '#/components/parametersSchemes/listId'
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -2035,7 +2159,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/userId'
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -2340,7 +2463,6 @@ paths:
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
         - $ref: '#/components/parametersSchemes/statisticId'
-        # TODO: complete
       responses:
         200:
           description: OK
@@ -2393,7 +2515,7 @@ components:
     
     password:
       type: string
-      description: The user's password
+      description: The user's password (length up to 72 bytes)
       example: password
       
     username:
@@ -2467,17 +2589,17 @@ components:
       
     dateTime:
       type: string
-      example: "YYYY-MM-DD/HH:MM"
+      example: YYYY-MM-DDTHH:MM:SSZ
     
     date:
       type: string
       format: date
-      example: DD-MM-YYYY
+      example: YYYY-MM-DD
       
     time:
       type: string
       format: time
-      example: HH-MM-SS
+      example: THH:MM:SSZ
       
     link:
       type: string
@@ -2572,16 +2694,17 @@ components:
           $ref: '#/components/schemas/description'
         tag:
           $ref: '#/components/schemas/tag'
-        date:
-          $ref: '#/components/schemas/date'
-        time:
-          $ref: '#/components/schemas/time'
+        dateTime:
+          $ref: '#/components/schemas/dateTime'
         link:
           $ref: '#/components/schemas/link'
         address:
           $ref: '#/components/schemas/address'
         locationId:
           $ref: '#/components/schemas/uuid'
+        contact:
+          $ref: '#/components/schemas/contactInformations'
+          
       required:
         - ownerId
         - name
@@ -2591,6 +2714,16 @@ components:
         - time
         - locationId
         
+    contactInformations:
+      description: Contains a contact data
+      type: object
+      properties:
+        phone:
+          type: string
+          example: +33 (0) 12346789
+        emailAddress:
+          $ref: '#/components/schemas/emailAddress'
+  
     locationObject:
       description: Location data
       type: object
@@ -2607,6 +2740,8 @@ components:
           allOf:
             - description: Thelocation's website
             - $ref: '#/components/schemas/link'
+        contact:
+          $ref: '#/components/schemas/contactInformations'
       required:
         - name
         - address
@@ -2655,17 +2790,14 @@ components:
         message:
           type: string
           example: This is a message
-        date:
-          $ref: '#/components/schemas/date'
-        time:
-          $ref: '#/components/schemas/time'
+        dateTime:
+          $ref: '#/components/schemas/dateTime'
       required:
         - authorId
         - message
-        - date
-        - time # TODO: change format
+        - dateTime
     
-    unitGlobalStatistics: # TODO
+    unitGlobalStatistics:
       description: The unit's global statistics
       type: object
       properties: # TODO: change numbers to string
@@ -2685,57 +2817,60 @@ components:
         - adv
         - mar
         - dis
-        # modelRules
     
-    unitDefensiveStatistics: # TODO
+    unitDefensiveStatistics:
       description: The unit's defensive statistics
       type: object
-      properties: # TODO: change numbers to string
+      properties:
         hp:
           description: 'Health Points: When the model loses this many Health Points, it is removed as a casualty'
-          type: number
+          type: string
           example: 3
         def:
           description: 'Defensive Skill: How well the model avoids being hit in melee'
-          type: number
-          example: 6
+          type: string
+          example: 3D6
         res:
           description: 'Resilience: How easily the model withstands blows'
-          type: number
+          type: string
           example: 5
         arm:
           description: 'Armour: The innate Armour of the model'
-          type: number
+          type: string
           example: 0
+        argis:
+          description: Aegis is a Special Save. A model must reroll successful Aegis Saves against Divine Attacks
+          type: string
+          example: 3
       required:
         - hp
         - def
         - res
         - arm
     
-    unitOffensiveStatistics: # TODO
+    unitOffensiveStatistics:
       description: The unit's offensive statistics
       type: object
-      properties: # TODO: change numbers to string
+      properties:
         att:
           description: 'Attack Value: The number of times the model part can strike in a Round of Combat'
-          type: number
+          type: string
           example: 3
         off:
           description: 'Offensive Skill: How good the model part is at scoring hits in melee'
-          type: number
+          type: string
           example:
         str:
           description: 'Strength: How easily the model part can wound enemy models'
-          type: number
+          type: string
           example: 3
         ap:
           description: 'Armour Penetration: How well the model part can penetrate the Armour of enemy models'
-          type: number
+          type: string
           example: 3
         agi:
           description: 'Agility: Model parts with a higher Agility strike first in melee'
-          type: number
+          type: string
           example: 3
       required:
         - att
@@ -2744,7 +2879,7 @@ components:
         - ap
         - agi
         
-    unitHeader: # TODO: add required fields
+    unitHeader:
       description: The header of a unit entry usually contains all the general information on the unit 
       type: object
       properties:
@@ -2752,7 +2887,7 @@ components:
           description: This is the name of the unit that will be used e.g. when choosing the unit to perform an action like Charging, or when targeting the unit with a spell or a Shooting Attack
           type: string
           example:
-        armyCategories: # TODO
+        armyCategories:
           description: Every unit is part of an Army Category, like Characters, Core, or Special, which is important e.g. for building an army or for certain Model Rules
           type: array
           items:
@@ -2799,6 +2934,10 @@ components:
               allOf:
                 - description: The model's base size
                 - $ref: '#/components/schemas/size'
+        required:
+          - category
+          - name
+          - cost
     
     unitCharacteristicProfiles:
       description: The Characteristic Profiles of each unit entry contain the values of all of a unit’s Global, Defensive, and Offensive Characteristics
@@ -3005,6 +3144,8 @@ components:
           $ref: '#/components/schemas/effect'
         agi:
           $ref: '#/components/schemas/effect'
+        aegis:
+          $ref: '#/components/schemas/effect'
         
             
     modifierObject:
@@ -3205,6 +3346,8 @@ components:
     pictureContent:
       description: A picture's content
       type: string
+      format: binary
+      
       
     
     postObject:
@@ -3273,23 +3416,23 @@ components:
     
 # RESPONSES
     
-    okResponse:
-      description: OK
-      
-    createdResponse:
-      description: Created
-    
-    badRequestResponse:
-      description: Bad request
-    
     unauthorizedResponse:
-      description: Unauthorized
+      description: | 
+        Unauthorized
+        
+        The token is not valid
     
     forbiddenResponse:
-      description: Forbidden
-      
+      description: | 
+        Forbidden
+        
+        The user does'nt have the rights to access/update the data
+    
     notFoundResponse:
-      description: Not found
+      description: | 
+        Not found
+        
+        The requested data can't be found
       
     unsuportedResponse:
       description: Unsuported Media Type
@@ -3300,7 +3443,6 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      # in: header
   
   parametersSchemes:
     authorization:
@@ -3414,4 +3556,3 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
-    
