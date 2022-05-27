@@ -638,7 +638,7 @@ paths:
 
   /prophecies/get-history:
     get:
-      summary: Retrieves the prophecies histrory
+      summary: Retrieves the prophecies history
       description: ""
       tags:
         - prophecies
@@ -777,7 +777,7 @@ paths:
           $ref: '#/components/schemas/notFoundResponse'
       
   # delete
-  /game/delete-game/{gameId}:
+  /games/delete-game/{gameId}:
     delete:
       summary: Deletes a game
       description: ""
@@ -1519,7 +1519,8 @@ paths:
       responses:
         200:
           description: OK
-        $ref: '#/components/schemas/unauthorizedResponse'
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
         403:
           $ref: '#/components/schemas/forbiddenResponse'
         404:
@@ -2327,7 +2328,7 @@ paths:
   
   /locations/{locationId}/events/get-events:
     get:
-      summary: Restrieves the location's events list
+      summary: Retrieves the location's events list
       description: ""
       tags:
         - locations
