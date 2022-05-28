@@ -276,7 +276,7 @@ paths:
           description: Internal Server Error
 
   # update
-  /event/update-event/{eventId}:
+  /events/update-event/{eventId}:
     put:
       summary: Updates an event's informations
       description: ""
@@ -923,6 +923,27 @@ paths:
           image/png:
             schema:
               $ref: '#/components/schemas/pictureContent'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        413:
+          description: Payload Too Large
+        415:
+          $ref: '#/components/schemas/unsuportedResponse'
+        500:
+          description: Internal Server Error
+          
+  /account/profile/delete-picture:
+    put:
+      summary: Deletes the user's profile picture
+      description: ""
+      tags:
+        - account
+        - profile
       responses:
         200:
           description: OK
@@ -2171,6 +2192,7 @@ paths:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+  
       
   /users/profile/pictures/get-post/{postId}:
     get:
@@ -2475,6 +2497,29 @@ paths:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
+          
+  /statistics/update-statistic/{statisticId}:
+    put:
+      summary: Updates a statistic's data
+      description: ""
+      tags:
+        - statistics
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ef: '#/components/parametersSchemes/authorization'
+        - $ref: '#/components/parametersSchemes/statisticId'
+      responses:
+        200:
+          description: OK
+        401:
+          $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
+        500:
+          description: Internal Server Error
   
   /statistics/delete-statistic/{statisticId}:
     delete:
