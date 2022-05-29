@@ -4,7 +4,7 @@ const request = require("supertest");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const ip = "localhost";
+const ip = process.env.IP;
 const port = process.env.PORT;
 const url = `${ip}:${port}`;
 

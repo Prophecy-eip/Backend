@@ -1,0 +1,13 @@
+on: [ pull_request ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Run tests
+        run: |
+          printf "PORT=${{ secrets.PORT }}\nIP=${{ secrets.IP }}" > .env
+          npm install
+          ./run_tests.sh
