@@ -9,5 +9,6 @@ jobs:
 
       - name: Build server
         run: | 
-          echo "PORT=3000" > .env
+          echo "PORT=${{ secrets.PORT }}" > .env
           docker-compose -f docker-compose.yml up -d
+
