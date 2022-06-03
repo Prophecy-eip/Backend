@@ -12,7 +12,7 @@ describe("Basic test", () => {
     describe("GET /", () => {
         it("Sould return 200 with Hello World", async () => {
             const response = await request(url).get("/");
-            expect(response.statusCode).toBe(200);
+            expect(response.statusCode).toBe(300);
         });
     
     });

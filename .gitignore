@@ -1,5 +1,13 @@
+# ide
+.vscode/
+.idea/
+
+
 # dependencies
 node_modules/
 
 # environment variables
 .env
+
+# tests
+coverage/
