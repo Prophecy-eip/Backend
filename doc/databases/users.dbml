@@ -1,0 +1,19 @@
+Project Prophecy
+{
+    database_type: 'PostgreSQL'
+}
+
+Table users
+{
+    username                varchar     [not null, unique]
+    email                   varchar     [not null, unique]
+    password                varchar     [not null]
+    is_verified             bool        [default: false]
+    profile_picture_path    varchar     [note: "profile pictures are not stored in the database"]
+    followed_users          varchar     [note: "usernames are stored in the row, separated by ','
+                                            example: userA,userB,userC"]
+    followers               varchar     [note: "usernames are stored in the row, separated by ','
+                                            example: userA,userB,userC"]
+    blocked_users           varchar     [note: "usernames are stored in the row, separated by ','
+                                            example: userA,userB,userC"]
+}
