@@ -5,17 +5,23 @@ Project Prophecy_Users
 
 Table profile
 {
-    username                varchar             [not null, unique]
+    username                varchar             [pk, not null, unique]
     email                   varchar             [not null, unique]
-    password                varchar             [not null]
+    password                varbinary           [not null]
     is_verified             bool                [default: false]
     profile_picture_path    varchar             [note: "profile pictures are not stored in the database"]
-    followed_users          varchar             [note: "usernames are stored in the row, separated by ','
-                                                    example: userA,userB,userC"]
-    followers               varchar             [note: "usernames are stored in the row, separated by ','
-                                                    example: userA,userB,userC"]
-    blocked_users           varchar             [note: "usernames are stored in the row, separated by ','
-                                                    example: userA,userB,userC"]
+}
+
+Table followers
+{
+    followers               varchar             [pk, ref: > profile.username]
+    followee                varchar             [pk, ref: > profile.username]
+}
+
+Table blocked
+{
+    blocker                 varchar             [pk, ref: > profile.username]
+    blockee                 varchar             [pk, ref: > profile.username]
 }
 
 Enum shared_items_type
@@ -27,15 +33,16 @@ Enum shared_items_type
 
 Table shared_items
 {
-    username                varchar             [not null, unique]
+    owner                   varchar             [pk, ref: > profile.username, not null, unique]
     type                    shared_items_type   [not null]
     ids                     varchar             [note: "ids are stored in the row, separated by ','
                                                     example: intemA,itemB,itemC"]
 }
 
+
 Table posts
 {
-    username                varchar             [not null, unique]
+    owner                   varchar             [pk, ref: > profile.username, not null, unique]
     id                      varchar             [not null, unique]
     description             varchar             
     path_to_content         varchar             [not null, 
