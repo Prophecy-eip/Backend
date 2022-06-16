@@ -39,12 +39,11 @@ Table shared_items
                                                     example: intemA,itemB,itemC"]
 }
 
-
 Table posts
 {
     owner                   varchar             [pk, ref: > profile.username, not null, unique]
     id                      varchar             [not null, unique]
-    description             varchar             
-    path_to_content         varchar             [not null, 
-                                                note: "pictures are not stored in the database"]
+    content                 varchar             [not null, 
+                                                    note: "The content contains the post's message and the path to the pictures
+                                                    example: This is the post's mesage.\!path_to_posts_pictures"]
 }
