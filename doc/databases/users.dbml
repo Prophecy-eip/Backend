@@ -14,29 +14,33 @@ Table profile
 
 Table followers
 {
-    followers               varchar             [pk, ref: > profile.username]
-    followee                varchar             [pk, ref: > profile.username]
+    followers               varchar             [pk, ref: > profile.username, not null, unique]
+    followee                varchar             [pk, ref: > profile.username, not null, unique]
 }
 
 Table blocked
 {
-    blocker                 varchar             [pk, ref: > profile.username]
-    blockee                 varchar             [pk, ref: > profile.username]
+    blocker                 varchar             [pk, ref: > profile.username, not null, unique]
+    blockee                 varchar             [pk, ref: > profile.username, not null, unique]
 }
 
-Enum shared_items_type
-{
-    army_list
-    game
-    statistic
-}
-
-Table shared_items
+Table shared_armies
 {
     owner                   varchar             [pk, ref: > profile.username, not null, unique]
-    type                    shared_items_type   [not null]
-    ids                     varchar             [note: "ids are stored in the row, separated by ','
-                                                    example: intemA,itemB,itemC"]
+    id                      varchar             [pk]
+}
+
+Table shared_games
+{
+    owner                   varchar             [pk, ref: > profile.username, not null, unique]
+    id                      varchar             [pk, not null, unique]
+}
+
+
+Table shared_statisttics
+{
+    owner                   varchar             [pk, ref: > profile.username, not null, unique]
+    id                      varchar             [pk, not null, unique]
 }
 
 Table posts
