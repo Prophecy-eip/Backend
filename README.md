@@ -9,3 +9,9 @@ Run:
 ```bash
 docker-compose up
 ```
+
+## Documentation
+
+### API
+
+You can find the API documentation on [swagger](https://app.swaggerhub.com/apis/Victoire-Rabeau/Prophecy/1.0.0) or in the repository's [documentation](./doc/api/)
