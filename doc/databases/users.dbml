@@ -27,20 +27,20 @@ Table blocked
 Table shared_armies
 {
     owner                   varchar             [pk, ref: > profile.username, not null, unique]
-    id                      varchar             [pk]
+    id                      varchar             [not null, unique]
 }
 
 Table shared_games
 {
     owner                   varchar             [pk, ref: > profile.username, not null, unique]
-    id                      varchar             [pk, not null, unique]
+    id                      varchar             [not null, unique]
 }
 
 
 Table shared_statisttics
 {
     owner                   varchar             [pk, ref: > profile.username, not null, unique]
-    id                      varchar             [pk, not null, unique]
+    id                      varchar             [not null, unique]
 }
 
 Table posts
@@ -51,3 +51,4 @@ Table posts
                                                     note: "The content contains the post's message and the path to the pictures
                                                     example: This is the post's mesage.\!path_to_posts_pictures"]
 }
+
