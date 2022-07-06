@@ -1,0 +1,26 @@
+Project Prophecy_Activities
+{
+    database_type: 'PostgreSQL'
+}
+
+Table locations
+{
+    id              varchar     [pk, not null, unique]
+    owner           varchar     [pk, ref: > Prophecy_Users.profile.username, not null, unique]
+    name            varchar     [not null]
+    description     varchar
+    address         varchar     [not null]
+    website         varchar
+    email           varchar
+    phone           varchar
+}
+
+Table events
+{
+    location        varchar     [pk, ref: > locations.id, not null, unique]
+    organiser       varchar     [pk, ref > Prophecy_Users.profile.username, not null, unique]
+    name            varchar     [not null]
+    description     varchar
+    dateTime        varchar     [not null]
+    link            varchar
+}
