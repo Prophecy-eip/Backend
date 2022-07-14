@@ -7,8 +7,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build server
+      - name: install
+        run: |
+          printf "PORT=${{ secrets.PORT }}\nIP=${{ secrets.IP }}" > .env
+          yarn
+
+      - name: run
         run: | 
-          echo "PORT=${{ secrets.PORT }}" > .env
           docker-compose -f docker-compose.yml up -d
 
+      - name: unit tests
+        run: |
+          yarn test --coverage
