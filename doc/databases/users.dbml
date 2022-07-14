@@ -3,6 +3,12 @@ Project Prophecy_Users
     database_type: 'PostgreSQL'
 }
 
+Enum account_type_enum {
+    basic,
+    the 9th Age team,
+    organiser
+}
+
 Table profile
 {
     username                varchar             [pk, not null, unique]
@@ -10,6 +16,7 @@ Table profile
     password                varbinary           [not null]
     is_verified             bool                [default: false]
     profile_picture_path    varchar             [note: "profile pictures are not stored in the database"]
+    account_type            enum                [not null]
 }
 
 Table followers
@@ -36,7 +43,6 @@ Table shared_games
     id                      varchar             [not null, unique]
 }
 
-
 Table shared_statisttics
 {
     owner                   varchar             [pk, ref: > profile.username, not null, unique]
@@ -51,4 +57,26 @@ Table posts
                                                     note: "The content contains the post's message and the path to the pictures
                                                     example: This is the post's mesage.\!path_to_posts_pictures"]
 }
+
+Table games
+{
+    user            varchar     [pk, ref: > profile.username, not null, unique]
+    opponent        varchar     [pk, ref: > profile.username, unique]
+    "date"          date         
+    userArmy        varchar     [pk]
+    opponentArmy    varchar     [pk]
+    playerScore     int         [not null]
+    opponentScore   int         [not null]
+    official        bool        [not null]
+}
+
+Table prophecies
+{
+    owner           varchar     [pk, ref: > profile.username, not null, unique]
+    userArmy        varchar     [pk]
+    opponentArmy    varchar     [pk]
+    playerScore     int
+    opponentScore   int
+}
+
 

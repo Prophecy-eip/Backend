@@ -17,10 +17,12 @@ Table locations
 
 Table events
 {
-    location        varchar     [pk, ref: > locations.id, not null, unique]
-    organiser       varchar     [pk, ref > Prophecy_Users.profile.username, not null, unique]
+    id              varchar     [pk, not null]
+    location        varchar     [fk, ref: > locations.id, not null, unique]
+    organiser       varchar     [fk, ref > Prophecy_Users.profile.username, not null, unique]
     name            varchar     [not null]
     description     varchar
-    dateTime        varchar     [not null]
+    "date"          date        [not null]
+    "time"          time        [not null]
     link            varchar
 }
