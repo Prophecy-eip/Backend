@@ -17,12 +17,4 @@ jobs:
       - name: Run Unit Tests
         run: yarn test --coverage
 
-      - name: Check Coverage
-        uses: devmasx/coverage-check-action@v1.2.0
-        with:
-          type: lcov
-          result_path: coverage/lcov.info
-          min_coverage: 80
-          token: ${{ secrets.GITHUB_TOKEN }}
-
 
