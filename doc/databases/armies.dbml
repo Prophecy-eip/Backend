@@ -3,9 +3,11 @@ Project Prophecy_Activities
     database_type: 'PostgreSQL'
 }
 
-Table credentials
+Table armies
 {
-    name            varchar     [pk, unique, not null]
+    name            varchar     [pk, not null]
+    composition     varchar     [fk, not null]
+    units           varchar     [fk, not null]
 }
 
 Table composition
@@ -17,8 +19,8 @@ Table composition
 
 Table units
 {
-    army            varchar     [pk, ref: > credentials.name, not null]
-    name            varchar     [unique, not null]
+    army            varchar     [fk, ref: > credentials.name, not null]
+    name            varchar     [pk, unique, not null]
     height          varchar     [not null]
     type            varchar     [not null]
     base            varchar     [not null]
@@ -27,46 +29,45 @@ Table units
     adv             varchar
     mar             varchar     
     dis             varchar
-    globalRules     varchar     [pk, ref: < rules.name]
+    globalRules     varchar     [fk, ref: < rules.name]
     att             varchar
     off             varchar
     str             varchar
     ap              varchar
     agi             varchar
-    offensiveRules  varchar     [pk, ref: < rules.name]
+    offensiveRules  varchar     [fk, ref: < rules.name]
     hp              varchar
     def             varchar
     res             varchar
     arm             varchar
     aegis           varchar
-    defensiveRules  varchar     [pk, ref: < rules.name]
-    rules           varchar     [pk, ref: > rules.name]
-    modifiers       varchar     [pk, ref: > modifiers.name]
+    defensiveRules  varchar     [fk, ref: < rules.name]
+    rules           varchar     [fk, ref: > rules.name]
+    modifiers       varchar     [fk, ref: > modifiers.name]
 }
 
 Table rules
 {
     name            varchar     [pk, not null, unique]
     description     varchar
-    modifiers       varchar     [pk]
-    unit            varchar     [pk]
+    modifiers       varchar     [fk]
 }
 
 Table modifiers
 {
     name            varchar     [pk]
     cost            int         [not null]
-    adv             varchar
-    mar             varchar     
-    dis             varchar
-    att             varchar
-    off             varchar
-    str             varchar
-    ap              varchar
-    agi             varchar
-    hp              varchar
-    def             varchar
-    res             varchar
-    arm             varchar
-    aegis           varchar
+    advEffect       varchar
+    marEffect       varchar     
+    disEffect       varchar
+    attEffect       varchar
+    offEffect       varchar
+    strEffect       varchar
+    apEffect        varchar
+    agiEffect       varchar
+    hpEffect        varchar
+    defEffect       varchar
+    resEffect       varchar
+    armEffect       varchar
+    aegisEffect     varchar
 }
