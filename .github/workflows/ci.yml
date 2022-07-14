@@ -1,0 +1,20 @@
+on: [ pull_request ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup & Install
+        run: | 
+          printf "PORT=${{ secrets.PORT }}\nIP=${{ secrets.IP }}" > .env
+          yarn
+
+      - name: Build & Run Docker
+        run: docker-compose -f docker-compose.yml up -d
+
+      - name: Run Unit Tests
+        run: yarn test --coverage
+
+
