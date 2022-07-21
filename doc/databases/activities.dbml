@@ -19,7 +19,7 @@ Table events
 {
     id              varchar     [pk, not null]
     location        varchar     [fk, ref: > locations.id, not null, unique]
-    organiser       varchar     [fk, ref > Prophecy_Users.profile.username, not null, unique]
+    organiser       varchar     [fk, ref > Prophecy_Users.profile.username, not null]
     name            varchar     [not null]
     description     varchar
     date_time       timestamp   [not null]

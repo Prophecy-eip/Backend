@@ -16,6 +16,6 @@ Table messages
     id          varchar         [pk, not null, unique]
     team        varchar         [fk, not null]
     author      varchar         [fk, not null]
-    date_time   timestamp       [nor null]
+    date_time   timestamp       [not null]
     content     varchar         [not null]
 }

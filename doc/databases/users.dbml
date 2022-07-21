@@ -9,6 +9,8 @@ Enum account_type_enum {
     organiser
 }
 
+type
+
 Table profile
 {
     username                varchar             [pk, not null, unique]
@@ -31,22 +33,22 @@ Table blocked
     blockee                 varchar             [fk, ref: > profile.username, not null]
 }
 
-Table shared_armies
+Table shared_armies_litst
 {
     owner                   varchar             [fk, ref: > profile.username, not null]
-    id                      varchar             [not null, unique]
+    id                      varchar             [fk, ref: > armies_lists.id, not null, unique]
 }
 
 Table shared_games
 {
     owner                   varchar             [fk, ref: > profile.username, not null]
-    id                      varchar             [not null, unique]
+    id                      varchar             [fk, ref: > games.id, not null, unique]
 }
 
 Table shared_statisttics
 {
     owner                   varchar             [fk, ref: > profile.username, not null]
-    id                      varchar             [not null, unique]
+    id                      varchar             [fk, ref: > statistics.id, not null, unique]
 }
 
 Table posts
@@ -61,7 +63,7 @@ Table posts
 Table games
 {
     id              varchar     [pk, not null, unique]
-    user            varchar     [fk, ref: > profile.username, not null, unique]
+    user            varchar     [fk, ref: > profile.username, not null]
     opponent        varchar     [fk, ref: > profile.username, unique]
     "date"          date         
     userArmy        varchar     [fk]
@@ -69,6 +71,13 @@ Table games
     playerScore     int         [not null]
     opponentScore   int         [not null]
     official        bool        [not null]
+}
+
+Table armies_lists
+{
+    id              varchar     [pk, not null, unique]
+    owner           varchar     [fk, not null]
+    
 }
 
 Table prophecies
@@ -81,4 +90,9 @@ Table prophecies
     opponentScore   int
 }
 
-
+Table statistics
+{
+    id              varchar     [pk, not null, unique]
+    owner           varchar     [fk, not null]
+    data            varchar
+}
