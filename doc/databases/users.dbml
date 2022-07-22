@@ -45,7 +45,7 @@ Table shared_games
     id                      varchar             [fk, ref: > games.id, not null, unique]
 }
 
-Table shared_statisttics
+Table shared_statistics
 {
     owner                   varchar             [fk, ref: > profile.username, not null]
     id                      varchar             [fk, ref: > statistics.id, not null, unique]
@@ -54,7 +54,7 @@ Table shared_statisttics
 Table posts
 {
     id                      varchar             [pk, not null, unique]
-    owner                   varchar             [fk, ref: > profile.username, not null, unique]
+    owner                   varchar             [fk, ref: > profile.username, not null]
     content                 varchar             [not null, 
                                                     note: "The content contains the post's message and the path to the pictures
                                                     example: This is the post's mesage.\!path_to_posts_pictures"]
@@ -64,7 +64,7 @@ Table games
 {
     id              varchar     [pk, not null, unique]
     user            varchar     [fk, ref: > profile.username, not null]
-    opponent        varchar     [fk, ref: > profile.username, unique]
+    opponent        varchar     [fk, ref: > profile.username]
     "date"          date         
     userArmy        varchar     [fk]
     opponentArmy    varchar     [fk]
@@ -83,7 +83,7 @@ Table armies_lists
 Table prophecies
 {
     id              varchar     [pk, not nul, unique]
-    owner           varchar     [fk, ref: > profile.username, not null, unique]
+    owner           varchar     [fk, ref: > profile.username, not null]
     userArmy        varchar     [fk]
     opponentArmy    varchar     [fk]
     playerScore     int

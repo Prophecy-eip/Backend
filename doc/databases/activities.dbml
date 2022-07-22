@@ -6,7 +6,7 @@ Project Prophecy_Activities
 Table locations
 {
     id              varchar     [pk, not null, unique]
-    owner           varchar     [pk, ref: > Prophecy_Users.profile.username, not null, unique]
+    owner           varchar     [fk, ref: > Prophecy_Users.profile.username, not null]
     name            varchar     [not null]
     description     varchar
     address         varchar     [not null]
@@ -18,7 +18,7 @@ Table locations
 Table events
 {
     id              varchar     [pk, not null]
-    location        varchar     [fk, ref: > locations.id, not null, unique]
+    location        varchar     [fk, ref: > locations.id, not null]
     organiser       varchar     [fk, ref > Prophecy_Users.profile.username, not null]
     name            varchar     [not null]
     description     varchar
