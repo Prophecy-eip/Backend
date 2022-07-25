@@ -1,0 +1,73 @@
+Project Prophecy_Activities
+{
+    database_type: 'PostgreSQL'
+}
+
+Table armies
+{
+    name            varchar     [pk, not null]
+    composition     varchar     [fk, not null]
+    units           varchar     [fk, not null]
+}
+
+Table composition
+{
+    name            varchar     [not null]
+    limit           varchar     [not null]
+    type            varchar     [not null]
+}
+
+Table units
+{
+    army            varchar     [fk, ref: > credentials.name, not null]
+    name            varchar     [pk, unique, not null]
+    height          varchar     [not null]
+    type            varchar     [not null]
+    base            varchar     [not null]
+    cost            int         [not null]
+    extraModelCost  int            
+    adv             varchar
+    mar             varchar     
+    dis             varchar
+    globalRules     varchar     [fk, ref: < rules.name]
+    att             varchar
+    off             varchar
+    str             varchar
+    ap              varchar
+    agi             varchar
+    offensiveRules  varchar     [fk, ref: < rules.name]
+    hp              varchar
+    def             varchar
+    res             varchar
+    arm             varchar
+    aegis           varchar
+    defensiveRules  varchar     [fk, ref: < rules.name]
+    rules           varchar     [fk, ref: > rules.name]
+    modifiers       varchar     [fk, ref: > modifiers.name]
+}
+
+Table rules
+{
+    name            varchar     [pk, not null, unique]
+    description     varchar
+    modifiers       varchar     [fk]
+}
+
+Table modifiers
+{
+    name            varchar     [pk]
+    cost            int         [not null]
+    advEffect       varchar
+    marEffect       varchar     
+    disEffect       varchar
+    attEffect       varchar
+    offEffect       varchar
+    strEffect       varchar
+    apEffect        varchar
+    agiEffect       varchar
+    hpEffect        varchar
+    defEffect       varchar
+    resEffect       varchar
+    armEffect       varchar
+    aegisEffect     varchar
+}

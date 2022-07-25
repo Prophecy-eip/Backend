@@ -1,0 +1,21 @@
+Project Prophecy_Activities
+{
+    database_type: 'PostgreSQL'
+}
+
+Table teams
+{
+    id          varchar         [pk, unique, not null]
+    name        varchar         [not null]
+    chef        varchar         [not null, pk, ref: > Prophecy_Users.profile.username]
+    members     varchar         [not null, pk, ref: > Prophecy_Users.profile.username]
+}
+
+Table messages
+{
+    id          varchar         [pk, not null, unique]
+    team        varchar         [fk, not null]
+    author      varchar         [fk, not null]
+    date_time   timestamp       [not null]
+    content     varchar         [not null]
+}

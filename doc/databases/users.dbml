@@ -3,6 +3,14 @@ Project Prophecy_Users
     database_type: 'PostgreSQL'
 }
 
+Enum account_type_enum {
+    basic,
+    the 9th Age team,
+    organiser
+}
+
+type
+
 Table profile
 {
     username                varchar             [pk, not null, unique]
@@ -10,45 +18,81 @@ Table profile
     password                varbinary           [not null]
     is_verified             bool                [default: false]
     profile_picture_path    varchar             [note: "profile pictures are not stored in the database"]
+    account_type            enum                [not null]
 }
 
 Table followers
 {
-    followers               varchar             [pk, ref: > profile.username, not null, unique]
-    followee                varchar             [pk, ref: > profile.username, not null, unique]
+    followers               varchar             [fk, ref: > profile.username, not null]
+    followee                varchar             [fk, ref: > profile.username, not null]
 }
 
 Table blocked
 {
-    blocker                 varchar             [pk, ref: > profile.username, not null, unique]
-    blockee                 varchar             [pk, ref: > profile.username, not null, unique]
+    blocker                 varchar             [fk, ref: > profile.username, not null]
+    blockee                 varchar             [fk, ref: > profile.username, not null]
 }
 
-Table shared_armies
+Table shared_armies_litst
 {
-    owner                   varchar             [pk, ref: > profile.username, not null, unique]
-    id                      varchar             [not null, unique]
+    owner                   varchar             [fk, ref: > profile.username, not null]
+    id                      varchar             [fk, ref: > armies_lists.id, not null, unique]
 }
 
 Table shared_games
 {
-    owner                   varchar             [pk, ref: > profile.username, not null, unique]
-    id                      varchar             [not null, unique]
+    owner                   varchar             [fk, ref: > profile.username, not null]
+    id                      varchar             [fk, ref: > games.id, not null, unique]
 }
 
-
-Table shared_statisttics
+Table shared_statistics
 {
-    owner                   varchar             [pk, ref: > profile.username, not null, unique]
-    id                      varchar             [not null, unique]
+    owner                   varchar             [fk, ref: > profile.username, not null]
+    id                      varchar             [fk, ref: > statistics.id, not null, unique]
 }
 
 Table posts
 {
-    owner                   varchar             [pk, ref: > profile.username, not null, unique]
-    id                      varchar             [not null, unique]
+    id                      varchar             [pk, not null, unique]
+    owner                   varchar             [fk, ref: > profile.username, not null]
     content                 varchar             [not null, 
                                                     note: "The content contains the post's message and the path to the pictures
                                                     example: This is the post's mesage.\!path_to_posts_pictures"]
 }
 
+Table games
+{
+    id              varchar     [pk, not null, unique]
+    user            varchar     [fk, ref: > profile.username, not null]
+    opponent        varchar     [fk, ref: > profile.username]
+    "date"          date         
+    userArmy        varchar     [fk]
+    opponentArmy    varchar     [fk]
+    playerScore     int         [not null]
+    opponentScore   int         [not null]
+    official        bool        [not null]
+}
+
+Table armies_lists
+{
+    id              varchar     [pk, not null, unique]
+    owner           varchar     [fk, not null]
+    
+}
+
+Table prophecies
+{
+    id              varchar     [pk, not nul, unique]
+    owner           varchar     [fk, ref: > profile.username, not null]
+    userArmy        varchar     [fk]
+    opponentArmy    varchar     [fk]
+    playerScore     int
+    opponentScore   int
+}
+
+Table statistics
+{
+    id              varchar     [pk, not null, unique]
+    owner           varchar     [fk, not null]
+    data            varchar
+}
