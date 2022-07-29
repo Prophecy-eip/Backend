@@ -8,7 +8,7 @@ jobs:
 
       - name: Setup & Install
         run: | 
-          printf "PORT=${{ secrets.PORT }}\nIP=${{ secrets.IP }}" > .env
+          printf "SERVER_PORT=${{ secrets.SERVER_PORT }}\nIP=${{ secrets.IP }}\nPOSTGRES_DB=${{ secrets.POSTGRES_DB }}\nPOSTGRES_USER=${{ secrets.POSTGRES_USER }}\nPOSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}\nDATABASES_PORT=${{ secrets.DATABASES_PORT }}" > .env
           yarn
 
       - name: Build & Run Docker

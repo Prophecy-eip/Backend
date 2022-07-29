@@ -9,8 +9,6 @@ Enum account_type_enum {
     organiser
 }
 
-type
-
 Table profile
 {
     username                varchar             [pk, not null, unique]
@@ -21,19 +19,19 @@ Table profile
     account_type            enum                [not null]
 }
 
-Table followers
+Table followed
 {
     followers               varchar             [fk, ref: > profile.username, not null]
-    followee                varchar             [fk, ref: > profile.username, not null]
+    followed                varchar             [fk, ref: > profile.username, not null]
 }
 
 Table blocked
 {
     blocker                 varchar             [fk, ref: > profile.username, not null]
-    blockee                 varchar             [fk, ref: > profile.username, not null]
+    blocked                varchar             [fk, ref: > profile.username, not null]
 }
 
-Table shared_armies_litst
+Table shared_armies_lists
 {
     owner                   varchar             [fk, ref: > profile.username, not null]
     id                      varchar             [fk, ref: > armies_lists.id, not null, unique]
@@ -63,13 +61,13 @@ Table posts
 Table games
 {
     id              varchar     [pk, not null, unique]
-    user            varchar     [fk, ref: > profile.username, not null]
+    owner            varchar     [fk, ref: > profile.username, not null]
     opponent        varchar     [fk, ref: > profile.username]
     "date"          date         
-    userArmy        varchar     [fk]
-    opponentArmy    varchar     [fk]
-    playerScore     int         [not null]
-    opponentScore   int         [not null]
+    owner_list        varchar     [fk]
+    opponent_list    varchar     [fk]
+    player_score     int         [not null]
+    opponent_score   int         [not null]
     official        bool        [not null]
 }
 
@@ -84,8 +82,8 @@ Table prophecies
 {
     id              varchar     [pk, not nul, unique]
     owner           varchar     [fk, ref: > profile.username, not null]
-    userArmy        varchar     [fk]
-    opponentArmy    varchar     [fk]
+    user_list        varchar     [fk]
+    opponent_list    varchar     [fk]
     playerScore     int
     opponentScore   int
 }
@@ -94,5 +92,5 @@ Table statistics
 {
     id              varchar     [pk, not null, unique]
     owner           varchar     [fk, not null]
-    data            varchar
+    data            varchar     [ not null ]
 }
