@@ -1,5 +1,25 @@
 services:
-  server:
-    build: .
+  db:
+    build: ./databases
+    container_name: databases
     ports:
-      - "${PORT}:${PORT}"
+      - "${DATABASES_PORT}:${DATABASES_PORT}"
+    volumes:
+      - prophecy:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_DB"
+      - "POSTGRES_USER"
+      - "POSTGRES_PASSWORD"
+    env_file:
+      - ".env"
+
+  server:
+    depends_on:
+      - "db"
+    build: .
+    container_name: nestjs-server
+    command: ["yarn", "start"]
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+volumes:
+  prophecy:
