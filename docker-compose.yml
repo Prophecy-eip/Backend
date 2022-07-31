@@ -1,5 +1,34 @@
 services:
-  server:
-    build: .
+  db:
+    build: ./databases
+    container_name: databases
     ports:
-      - "${PORT}:${PORT}"
+      - "${DATABASES_PORT}:${DATABASES_PORT}"
+    volumes:
+      - prophecy:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_DB"
+      - "POSTGRES_USER"
+      - "POSTGRES_PASSWORD"
+  
+  db_viewer:
+    depends_on:
+      - "db"
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4
+    ports:
+      - "${PGADMIN_PORT}:${PGADMIN_LISTEN_PORT}"
+    environment:
+      - "PGADMIN_DEFAULT_EMAIL"
+      - "PGADMIN_DEFAULT_PASSWORD"
+
+  server:
+    depends_on:
+      - "db"
+    build: .
+    container_name: nestjs-server
+    command: ["yarn", "start"]
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+volumes:
+  prophecy:
