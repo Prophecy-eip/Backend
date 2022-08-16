@@ -2,9 +2,6 @@ import { Entity, Column, PrimaryColumn, BeforeInsert } from "typeorm";
 
 const bcrypt = require("bcrypt");
 
-const DB_NAME = "Prophecy_Users"
-const dbConfig = require("../config/db.config");
-
 export enum AccountType {
     player, 
     the_9th_Age_team, 
@@ -13,7 +10,7 @@ export enum AccountType {
 
 
 @Entity()
-export class ProfileEntity
+export class Profile
 {
     @PrimaryColumn()
     public username: string;
@@ -27,13 +24,13 @@ export class ProfileEntity
     @Column({ default: false})
     public is_verified: boolean;
 
-    @Column()
+    @Column({ default: "" })
     public profile_picture_path: string;
 
-    @Column()
+    @Column({ default: AccountType.player })
     public account_type: AccountType;
 
     @BeforeInsert() async hashPassword() {
-        this.password = await bcrypt.hashPassword(this.password, 10);
+        this.password = await bcrypt.hash(this.password, 10);
     }
 };
