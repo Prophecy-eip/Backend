@@ -10,18 +10,9 @@ services:
       - "POSTGRES_DB"
       - "POSTGRES_USER"
       - "POSTGRES_PASSWORD"
+    networks:
+      - prophecy
   
-  db_viewer:
-    depends_on:
-      - "db"
-    image: dpage/pgadmin4:latest
-    container_name: pgadmin4
-    ports:
-      - "${PGADMIN_PORT}:${PGADMIN_LISTEN_PORT}"
-    environment:
-      - "PGADMIN_DEFAULT_EMAIL"
-      - "PGADMIN_DEFAULT_PASSWORD"
-
   server:
     depends_on:
       - "db"
@@ -30,5 +21,10 @@ services:
     command: ["yarn", "start"]
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
+    networks:
+      - prophecy
 volumes:
+  prophecy:
+
+networks:
   prophecy:

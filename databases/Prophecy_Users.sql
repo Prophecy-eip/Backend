@@ -34,6 +34,13 @@ CREATE TABLE IF NOT EXISTS posts (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS armies_lists (
+    id      VARCHAR     NOT NULL UNIQUE,
+    owner   VARCHAR     NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (owner) REFERENCES profile(username)
+);
+
 CREATE TABLE IF NOT EXISTS games (
     id              VARCHAR     NOT NULL UNIQUE,
     owner           VARCHAR     NOT NULL,
@@ -49,13 +56,6 @@ CREATE TABLE IF NOT EXISTS games (
     FOREIGN KEY (opponent) REFERENCES profile(username),
     FOREIGN KEY (owner_list) REFERENCES armies_lists(id),
     FOREIGN KEY (opponent_list) REFERENCES armies_lists(id)
-);
-
-CREATE TABLE IF NOT EXISTS armies_lists (
-    id      VARCHAR     NOT NULL UNIQUE,
-    owner   VARCHAR     NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (owner) REFERENCES profile(username)
 );
 
 CREATE TABLE IF NOT EXISTS prophecies (
