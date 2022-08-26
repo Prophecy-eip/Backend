@@ -23,6 +23,17 @@ services:
       - "${SERVER_PORT}:${SERVER_PORT}"
     networks:
       - prophecy
+
+  tests:
+      depends_on:
+        - "db"
+        - "server"
+      image: backend_server
+      container_name: backend_tests
+      command: ["yarn", "test"]
+      ports:
+        - "${TESTS_PORT}"
+
 volumes:
   prophecy:
 
