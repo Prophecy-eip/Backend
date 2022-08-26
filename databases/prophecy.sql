@@ -1,5 +1,3 @@
-CREATE DATABASE Prophecy_Users;
-
 CREATE TYPE USER_ACCOUNT_TYPE AS ENUM ('player', 'the 9th Age team', 'organiser');
 
 CREATE TABLE IF NOT EXISTS profile (

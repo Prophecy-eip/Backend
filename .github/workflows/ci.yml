@@ -15,9 +15,8 @@ jobs:
       - name: Build & Run Docker
         run: | 
           docker-compose -f docker-compose.yml up -d db server
-          printf "DATABASES_IP=$(./scripts/get_database_ip.sh)" >> .env
 
       - name: Run Unit Tests
-        run: yarn test --coverage
+        run: yarn test
 
 
