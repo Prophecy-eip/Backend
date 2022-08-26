@@ -5,7 +5,7 @@ import { ProfileRepositoryService } from "./profile/profile-repository.service";
 @Controller("account")
 export class AccountController{
     constructor(
-        private readonly profilesRepositoryService: ProfileRepositoryService
+        private readonly profileRepositoryService: ProfileRepositoryService
     ) {}
 
     @Post("sign-up")
@@ -14,12 +14,12 @@ export class AccountController{
         if (username === undefined || username === "" || email === undefined || email === "" || password === undefined || password === "") {
             throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }
-        if (await this.profilesRepositoryService.exists(username, email)) {
+        if (await this.profileRepositoryService.exists(username, email)) {
             throw new HttpException("CONFLICT", HttpStatus.CONFLICT);
         } try {
-            const profile = await this.profilesRepositoryService.create({ username, email, password });
+            const profile = await this.profileRepositoryService.create({ username, email, password });
 
-            await this.profilesRepositoryService.save(profile);
+            await this.profileRepositoryService.save(profile);
         } catch (err) {
             throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }

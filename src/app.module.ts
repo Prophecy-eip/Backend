@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Profile } from './account/profile/profile.entity';
-
-import { ProfileModule } from './account/profile/profile.module';
-
 import * as dotenv from "dotenv";
+
+import { Profile } from './account/profile/profile.entity';
+import { ProfileModule } from './account/profile/profile.module';
 
 dotenv.config()
 
@@ -25,7 +24,7 @@ export const DB_DIALECT = "postgres"
       password: DB_PASSWORD,
       database: DB,
       entities: [Profile],
-      synchronize: true // TODO: remove
+      synchronize: true // TODO: remove on deployment
     }),
     ProfileModule
   ],
