@@ -1,14 +1,14 @@
 import {Body, Controller, HttpCode, HttpException, HttpStatus, Post, UseGuards, Request} from "@nestjs/common";
-import { PassportModule } from "@nestjs/passport";
 
 import { ProfileRepositoryService } from "./profile/profile-repository.service";
-import {AuthGuard} from "@nestjs/passport";
 import {LocalAuthGuard} from "./auth/local-auth.guard";
+import {AuthService} from "./auth/auth.service";
 
 @Controller("account")
 export class AccountController{
     constructor(
-        private readonly profileRepositoryService: ProfileRepositoryService
+        private readonly profileRepositoryService: ProfileRepositoryService,
+        private authService: AuthService,
     ) {}
 
     @Post("sign-up")
@@ -32,6 +32,6 @@ export class AccountController{
     @Post("sign-in")
     @HttpCode(HttpStatus.OK)
     async login(@Request() req) {
-        return req.profile;
+        return this.authService.login(req.user);
     }
 }

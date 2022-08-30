@@ -9,12 +9,12 @@ import {AccountModule} from "./account/account.module";
 
 dotenv.config()
 
-export const DB = process.env.POSTGRES_DB;
-export const DB_HOST = process.env.DATABASES_IP;
-export const DB_PORT: number = +process.env.DATABASES_PORT;
-export const DB_USERNAME = process.env.POSTGRES_USER;
-export const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
-export const DB_DIALECT = "postgres"
+const DB = process.env.POSTGRES_DB;
+const DB_HOST = process.env.DATABASES_IP;
+const DB_PORT: number = +process.env.DATABASES_PORT;
+const DB_USERNAME = process.env.POSTGRES_USER;
+const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
+const DB_DIALECT = "postgres"
 
 @Module({
   imports: [
@@ -28,7 +28,6 @@ export const DB_DIALECT = "postgres"
       entities: [Profile],
       synchronize: true // TODO: remove on deployment
     }),
-    // ProfileModule,
     AccountModule
   ],
 })
