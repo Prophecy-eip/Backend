@@ -4,6 +4,8 @@ import * as dotenv from "dotenv";
 
 import { Profile } from './account/profile/profile.entity';
 import { ProfileModule } from './account/profile/profile.module';
+import {AuthModule} from "./account/auth/auth.module";
+import {AccountModule} from "./account/account.module";
 
 dotenv.config()
 
@@ -26,7 +28,8 @@ export const DB_DIALECT = "postgres"
       entities: [Profile],
       synchronize: true // TODO: remove on deployment
     }),
-    ProfileModule
+    // ProfileModule,
+    AccountModule
   ],
 })
 export class AppModule {}
