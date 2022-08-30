@@ -7,9 +7,19 @@ import {Profile} from "./profile/profile.entity";
 import {AccountController} from "./account.controller";
 import {ProfileRepositoryService} from "./profile/profile-repository.service";
 import {TypeOrmModule} from "@nestjs/typeorm";
+import {JwtModule} from "@nestjs/jwt";
+import {jwtConstants} from "./auth/constants";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Profile]), ProfileModule, AuthModule],
+    imports: [
+        TypeOrmModule.forFeature([Profile]),
+        ProfileModule,
+        AuthModule,
+        JwtModule.register({
+            secret: jwtConstants.secret,
+            signOptions: { expiresIn: "7d" }
+        })
+    ],
     providers: [ProfileRepositoryService, AuthService],
     exports: [ProfileModule]
 })
