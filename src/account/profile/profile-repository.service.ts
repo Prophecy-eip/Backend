@@ -26,4 +26,13 @@ export class ProfileRepositoryService {
     save(profile: Profile): Promise<Profile> {
         return this.repository.save(profile);
     }
+
+    async findOne(id: string): Promise<Profile> {
+        const profile = await this.repository.findOneBy([{ username: id }]);
+
+        if (profile) {
+            return profile;
+        }
+        return await this.repository.findOneBy([{ email: id}]);
+    }
 }

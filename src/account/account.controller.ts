@@ -1,6 +1,9 @@
-import { Body, Controller, HttpCode, HttpException, HttpStatus, Post } from "@nestjs/common";
+import {Body, Controller, HttpCode, HttpException, HttpStatus, Post, UseGuards, Request} from "@nestjs/common";
+import { PassportModule } from "@nestjs/passport";
 
 import { ProfileRepositoryService } from "./profile/profile-repository.service";
+import {AuthGuard} from "@nestjs/passport";
+import {LocalAuthGuard} from "./auth/local-auth.guard";
 
 @Controller("account")
 export class AccountController{
@@ -23,5 +26,12 @@ export class AccountController{
         } catch (err) {
             throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @UseGuards(LocalAuthGuard)
+    @Post("sign-in")
+    @HttpCode(HttpStatus.OK)
+    async login(@Request() req) {
+        return req.profile;
     }
 }
