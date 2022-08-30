@@ -1,14 +1,13 @@
-import {Module} from "@nestjs/common";
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { JwtModule } from "@nestjs/jwt";
 
-import {ProfileModule} from "./profile/profile.module";
-import {AuthModule} from "./auth/auth.module";
-import {AuthService} from "./auth/auth.service";
-import {Profile} from "./profile/profile.entity";
-import {AccountController} from "./account.controller";
-import {ProfileRepositoryService} from "./profile/profile-repository.service";
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {JwtModule} from "@nestjs/jwt";
-import {jwtConstants} from "./auth/constants";
+import { ProfileModule } from "./profile/profile.module";
+import { AuthModule } from "./auth/auth.module";
+import { AuthService } from "./auth/auth.service";
+import { Profile } from "./profile/profile.entity";
+import { ProfileRepositoryService } from "./profile/profile-repository.service";
+import { jwtConstants } from "./auth/constants";
 
 @Module({
     imports: [
@@ -23,5 +22,4 @@ import {jwtConstants} from "./auth/constants";
     providers: [ProfileRepositoryService, AuthService],
     exports: [ProfileModule]
 })
-
 export class AccountModule {}
