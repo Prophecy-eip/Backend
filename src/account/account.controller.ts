@@ -1,14 +1,14 @@
-import {Body, Controller, HttpCode, HttpException, HttpStatus, Post, UseGuards, Request} from "@nestjs/common";
+import { Body, Controller, HttpCode, HttpException, HttpStatus, Post, UseGuards, Request } from "@nestjs/common";
 
 import { ProfileRepositoryService } from "./profile/profile-repository.service";
-import {LocalAuthGuard} from "./auth/local-auth.guard";
-import {AuthService} from "./auth/auth.service";
+import { LocalAuthGuard } from "./auth/local-auth.guard";
+import { AuthService } from "./auth/auth.service";
 
 @Controller("account")
 export class AccountController{
     constructor(
         private readonly profileRepositoryService: ProfileRepositoryService,
-        private authService: AuthService,
+        private readonly authService: AuthService,
     ) {}
 
     @Post("sign-up")

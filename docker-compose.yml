@@ -33,6 +33,8 @@ services:
       command: ["yarn", "test"]
       ports:
         - "${TESTS_PORT}"
+      networks:
+        - prophecy
 
 volumes:
   prophecy:

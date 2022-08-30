@@ -9,7 +9,7 @@ jobs:
 
       - name: Setup & Install
         run: | 
-          printf "SERVER_PORT=${{ secrets.SERVER_PORT }}\nIP=${{ secrets.IP }}\nPOSTGRES_DB=${{ secrets.POSTGRES_DB }}\nPOSTGRES_USER=${{ secrets.POSTGRES_USER }}\nPOSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}\nDATABASES_IP=${{ secrets.DATABASES_IP }}\nDATABASES_PORT=${{ secrets.DATABASES_PORT }}\nPGADMIN_PORT=${{ secrets.PGADMIN_PORT }}\nPGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}\nPGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}\nPGADMIN_LISTEN_ADDRESS=${{ secrets.PGADMIN_LISTEN_ADDRESS }}\nPGADMIN_LISTEN_PORT=${{ secrets.PGADMIN_LISTEN_PORT }}\nTESTS_PORT=${{ secrets.TESTS_PORT }}\n" > .env
+          printf "SERVER_PORT=${{ secrets.SERVER_PORT }}\nIP=${{ secrets.IP }}\nPOSTGRES_DB=${{ secrets.POSTGRES_DB }}\nPOSTGRES_USER=${{ secrets.POSTGRES_USER }}\nPOSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}\nDATABASES_IP=${{ secrets.DATABASES_IP }}\nDATABASES_PORT=${{ secrets.DATABASES_PORT }}\nPGADMIN_PORT=${{ secrets.PGADMIN_PORT }}\nPGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}\nPGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}\nPGADMIN_LISTEN_ADDRESS=${{ secrets.PGADMIN_LISTEN_ADDRESS }}\nPGADMIN_LISTEN_PORT=${{ secrets.PGADMIN_LISTEN_PORT }}\nJWT_SECRET=${{ secrets.JWT_SECRET }}\nTESTS_PORT=${{ secrets.TESTS_PORT }}\n" > .env
           yarn
 
       - name: Build & Run Docker

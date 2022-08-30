@@ -1,11 +1,9 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import * as dotenv from "dotenv";
 
-import { Profile } from './account/profile/profile.entity';
-import { ProfileModule } from './account/profile/profile.module';
-import {AuthModule} from "./account/auth/auth.module";
-import {AccountModule} from "./account/account.module";
+import { Profile } from "./account/profile/profile.entity";
+import { AccountModule } from "./account/account.module";
 
 dotenv.config()
 
