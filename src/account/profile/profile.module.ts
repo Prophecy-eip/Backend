@@ -3,13 +3,13 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { JwtService } from "@nestjs/jwt";
 
 import { Profile } from "./profile.entity";
-import { ProfileRepositoryService } from "./profile-repository.service";
+import { ProfileService } from "./profile.service";
 import { AccountController } from "../account.controller";
 import { AuthService } from "../auth/auth.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Profile])],
-    providers: [ProfileRepositoryService, AuthService, JwtService],
+    providers: [ProfileService, AuthService, JwtService],
     controllers: [AccountController],
 })
 export class ProfileModule {}

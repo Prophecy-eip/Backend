@@ -2,15 +2,15 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from "bcrypt";
 import { JwtService, JwtSignOptions } from "@nestjs/jwt";
 
-import { ProfileRepositoryService } from "../profile/profile-repository.service";
+import { ProfileService } from "../profile/profile.service";
 import { Profile } from "../profile/profile.entity";
 import { jwtConstants } from "./constants";
 
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly profileService: ProfileRepositoryService,
-        private readonly jwtService: JwtService
+        private readonly profileService: ProfileService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async validateProfile(id: string, password: string): Promise<Profile> {

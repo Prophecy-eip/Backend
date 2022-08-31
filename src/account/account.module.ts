@@ -6,7 +6,7 @@ import { ProfileModule } from "./profile/profile.module";
 import { AuthModule } from "./auth/auth.module";
 import { AuthService } from "./auth/auth.service";
 import { Profile } from "./profile/profile.entity";
-import { ProfileRepositoryService } from "./profile/profile-repository.service";
+import { ProfileService } from "./profile/profile.service";
 import { jwtConstants } from "./auth/constants";
 
 @Module({
@@ -19,7 +19,7 @@ import { jwtConstants } from "./auth/constants";
             signOptions: { expiresIn: "7d" }
         })
     ],
-    providers: [ProfileRepositoryService, AuthService],
+    providers: [ProfileService, AuthService],
     exports: [ProfileModule]
 })
 export class AccountModule {}
