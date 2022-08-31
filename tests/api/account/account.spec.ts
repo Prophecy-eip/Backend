@@ -7,13 +7,9 @@ import {response} from "express";
 
 const SIGNUP_ROUTE: string = "/account/sign-up";
 const SIGNIN_ROUTE: string = "/account/sign-in";
+const SIGNOUT_ROUTE: string = "/account/sign-out";
 
-class SignInCredentials {
-    username: string;
-    password: string;
-}
-
-describe("Account Controller", () => {
+describe("Account Route", () => {
     let app: INestApplication;
 
     beforeAll(async () => {
@@ -251,5 +247,33 @@ describe("Account Controller", () => {
                 username: "username",
             });
         expect(response.status === HttpStatus.BAD_REQUEST);
+    });
+
+    /**
+     * SIGN OUT
+     */
+
+    it("sign-out: Logout with valid token", async () => {
+        const response = await request(app.getHttpServer())
+           .post(SIGNIN_ROUTE)
+           .send({
+               username: "email@prophecy.com",
+               password: "password"
+           });
+        const token = response.body.access_token;
+
+        return request(app.getHttpServer())
+            .post(SIGNOUT_ROUTE)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(HttpStatus.OK);
+    });
+
+    it("sign-out: Logout with invalid token", async () => {
+        const token = "token";
+
+        return request(app.getHttpServer())
+            .post(SIGNOUT_ROUTE)
+            .set("Authorization", `Bearer ${token}`)
+            .expect(HttpStatus.UNAUTHORIZED);
     });
 })

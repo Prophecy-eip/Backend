@@ -1,13 +1,14 @@
 import { Body, Controller, HttpCode, HttpException, HttpStatus, Post, UseGuards, Request } from "@nestjs/common";
 
-import { ProfileRepositoryService } from "./profile/profile-repository.service";
-import { LocalAuthGuard } from "./auth/local-auth.guard";
+import { ProfileService } from "./profile/profile.service";
+import { LocalAuthGuard } from "./auth/guards/local-auth.guard";
 import { AuthService } from "./auth/auth.service";
+import { JwtAuthGuard } from "./auth/guards/jwt-auth.guard";
 
 @Controller("account")
 export class AccountController{
     constructor(
-        private readonly profileRepositoryService: ProfileRepositoryService,
+        private readonly profileRepositoryService: ProfileService,
         private readonly authService: AuthService,
     ) {}
 
@@ -34,4 +35,9 @@ export class AccountController{
     async login(@Request() req) {
         return this.authService.login(req.user);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Post("sign-out")
+    @HttpCode(HttpStatus.OK)
+    async logout(@Request() req) {}
 }

@@ -1,4 +1,4 @@
-import {Inject, Injectable} from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -6,7 +6,7 @@ import { Profile } from "./profile.entity"
 import { ProfileDTO } from "./profile.dto"
 
 @Injectable()
-export class ProfileRepositoryService {
+export class ProfileService {
     constructor(
         @InjectRepository(Profile)
         private repository: Repository<Profile>,
