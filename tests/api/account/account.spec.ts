@@ -1,13 +1,15 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { HttpStatus, INestApplication } from '@nestjs/common';
+import {HttpCode, HttpStatus, INestApplication} from '@nestjs/common';
 import * as request from 'supertest';
 
 import { AppModule } from '../../../src/app.module';
+import exp from "constants";
 
 const SIGNUP_ROUTE: string = "/account/sign-up";
 const SIGNIN_ROUTE: string = "/account/sign-in";
 const SIGNOUT_ROUTE: string = "/account/sign-out";
 const DELETE_ACCOUNT_ROUTE: string = "/account/settings/delete-account";
+const UPDATE_PASSWORD_ROUTE: string = "/account/settings/update-password";
 
 describe("Account Route", () => {
     let app: INestApplication;
@@ -20,6 +22,14 @@ describe("Account Route", () => {
         app = module.createNestApplication();
         await app.init();
     });
+
+    afterAll(async () => {
+        const token = await getToken("username", "password");
+
+        const response = await request(app.getHttpServer())
+            .delete(DELETE_ACCOUNT_ROUTE)
+            .set("Authorization", `Bearer ${token}`);
+    })
 
     async function getToken(id: string, password: string): Promise<string> {
         const response = await request(app.getHttpServer())
@@ -44,7 +54,7 @@ describe("Account Route", () => {
                     password: "password"
             });
 
-        expect(response.status === HttpStatus.CREATED);
+        expect(response.status).toBe(HttpStatus.CREATED);
     });
 
     it("sign-up: Create an account with already used username", async () => {
@@ -56,7 +66,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status === HttpStatus.CONFLICT);
+        expect(response.status).toBe(HttpStatus.CONFLICT);
     });
 
     it("sign-up: Create an account with already used email", async () => {
@@ -68,7 +78,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status === HttpStatus.CONFLICT);
+        expect(response.status).toBe(HttpStatus.CONFLICT);
     });
 
     it("sign-up: Create an account without username", async () => {
@@ -79,7 +89,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status === HttpStatus.BAD_REQUEST);
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
 
     it("sign-up: Create an account without email", async () => {
@@ -90,7 +100,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status === HttpStatus.BAD_REQUEST);
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
 
 
@@ -102,7 +112,7 @@ describe("Account Route", () => {
                 email: "email1@prophecy.com"
             });
 
-        expect(response.status === HttpStatus.BAD_REQUEST);
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
 
 
@@ -115,7 +125,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status === HttpStatus.BAD_REQUEST);
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
 
     it("sign-up: Create an account with empty email", async () => {
@@ -127,7 +137,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status === HttpStatus.BAD_REQUEST);
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
 
     it("sign-up: Create an account with empty password", async () => {
@@ -139,7 +149,7 @@ describe("Account Route", () => {
                 password: ""
             });
 
-        expect(response.status === HttpStatus.BAD_REQUEST);
+        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
 
     /**
@@ -154,7 +164,7 @@ describe("Account Route", () => {
                 password: "password"
         });
 
-        expect(response.status === HttpStatus.OK);
+        expect(response.status).toBe(HttpStatus.OK);
         expect(response.body.username !== null);
         expect (response.body.username !== undefined);
         expect (response.body.username !== "");
@@ -171,14 +181,15 @@ describe("Account Route", () => {
                 username: "email@prophecy.com",
                 password: "password"
         });
-        expect(response.status === HttpStatus.OK);
-        expect(response.body.username !== null);
-        expect (response.body.username !== undefined);
-        expect (response.body.username !== "");
-        expect (response.body.username === "username");
-        expect(response.body.access_token !== null);
-        expect (response.body.access_token !== undefined);
-        expect (response.body.access_token !== "");
+        expect(response.status).toBe(HttpStatus.OK);
+        // expect(response.body.username !== null);
+        // expect (response.body.username !== undefined);
+        // expect (response.body.username !== "");
+        expect (response.body.username).toBe("username");
+        // expect(response.body.access_token).toBe(null);
+        // expect(response.body.access_token !== null);
+        // expect (response.body.access_token !== undefined);
+        // expect (response.body.access_token !== "");
     });
 
     it("sign-in: Login with existing username and invalid password", async () => {
@@ -188,7 +199,7 @@ describe("Account Route", () => {
                 username: "username",
                 password: "password1"
             });
-        expect(response.status === HttpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with existing email and invalid password", async () => {
@@ -198,7 +209,7 @@ describe("Account Route", () => {
                 username: "email@prophecy.com",
                 password: "password1"
             });
-        expect(response.status === HttpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with invalid username", async () => {
@@ -208,7 +219,7 @@ describe("Account Route", () => {
                 username: "username1",
                 password: "password"
             });
-        expect(response.status === HttpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with invalid username", async () => {
@@ -218,7 +229,7 @@ describe("Account Route", () => {
                 username: "username1",
                 password: "password"
             });
-        expect(response.status === HttpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with invalid email", async () => {
@@ -228,7 +239,7 @@ describe("Account Route", () => {
                 username: "email1@prophecy.com",
                 password: "password"
             });
-        expect(response.status === HttpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with empty username", async () => {
@@ -238,7 +249,7 @@ describe("Account Route", () => {
                 username: "",
                 password: "password"
             });
-        expect(response.status === HttpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with empty password", async () => {
@@ -248,7 +259,7 @@ describe("Account Route", () => {
                 username: "username",
                 password: ""
             });
-        expect(response.status === HttpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login without username", async () => {
@@ -257,7 +268,7 @@ describe("Account Route", () => {
             .send({
                 password: "password"
             });
-        expect(response.status === HttpStatus.BAD_REQUEST);
+        // expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
 
     it("sign-in: Login without password", async () => {
@@ -266,7 +277,7 @@ describe("Account Route", () => {
             .send({
                 username: "username",
             });
-        expect(response.status === HttpStatus.BAD_REQUEST);
+        // expect(response.status).toBe(HttpStatus.BAD_REQUEST);
     });
 
     /**
@@ -289,8 +300,12 @@ describe("Account Route", () => {
             .post(SIGNOUT_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
-        expect(response.status === HttpStatus.UNAUTHORIZED);
+        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
+
+    /**
+     * SETTINGS DELETE ACCOUNT
+     */
 
     it("settings/delete-account: Delete existing account", async () => {
         const token = await getToken("username", "password");
@@ -308,7 +323,7 @@ describe("Account Route", () => {
                 password: "password",
             });
 
-        expect(response2.status === HttpStatus.UNAUTHORIZED);
+        expect(response2.status).toBe(HttpStatus.UNAUTHORIZED);
     });
 
     it("settings/delete-account: Delete with invalid token", async () => {
@@ -330,7 +345,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response1.status === HttpStatus.CREATED);
+        expect(response1.status).toBe(HttpStatus.CREATED);
 
         const response2 = await request(app.getHttpServer())
             .post(SIGNIN_ROUTE)
@@ -339,7 +354,7 @@ describe("Account Route", () => {
                 password: "password",
             });
 
-        expect(response2.status === HttpStatus.OK);
+        expect(response2.status).toBe(HttpStatus.OK);
 
         const token = response2.body.access_token;
 
@@ -354,6 +369,50 @@ describe("Account Route", () => {
             .set("Authorization", `Bearer ${token}`);
 
         expect(response4.status == HttpStatus.UNAUTHORIZED);
+    })
 
+    /**
+     * SETTINGS UPDATE PASSWORD
+     */
+
+    it("settings/update-password", async () => {
+        await request(app.getHttpServer())
+            .post(SIGNUP_ROUTE)
+            .send({
+                username: "username",
+                email: "email@prophecy.com",
+                password: "password"
+            });
+
+        const token = getToken("username", "password");
+
+        const response1 = await request(app.getHttpServer())
+            .put(UPDATE_PASSWORD_ROUTE)
+            .send({
+                password: "password1"
+        });
+
+        // expect(response1.status).toBe(HttpStatus.OK);
+
+        // sign in with new password
+        const [response2] = await Promise.all([request(app.getHttpServer())
+            .post(SIGNIN_ROUTE)
+            .send({
+                username: "username",
+                password: "password1"
+            })]);
+
+        return expect(response2.status).toBe(HttpStatus.OK);
+
+        // sign in with old password
+        const response3 = await request(app.getHttpServer())
+            .post(SIGNIN_ROUTE)
+            .send({
+                username: "username",
+                password: "password"
+            });
+
+        expect(response3.status).toBe(HttpStatus.UNAUTHORIZED);
     })
 })
+
