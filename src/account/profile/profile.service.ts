@@ -35,4 +35,12 @@ export class ProfileService {
         }
         return await this.repository.findOneBy([{ email: id}]);
     }
+
+    async findOneByUsername(username: string): Promise<Profile> {
+        return await this.repository.findOneBy([{ username: username }]);
+    }
+
+    async delete(username: string): Promise<void> {
+        await this.repository.delete(username);
+    }
 }
