@@ -13,10 +13,10 @@ export class ProfileService {
     ) {}
 
     async exists(username: string, email: string): Promise<boolean> {
-        return (await this.repository.findOneBy([
-            { username },
-            { email },
-        ])) !== null;
+        let p = await this.repository.findOneBy([
+            { username: username },
+        ]);
+        return p !== null && p.email === email;
     }
 
     async create(profileDto: ProfileDTO): Promise<Profile> {
@@ -42,5 +42,17 @@ export class ProfileService {
 
     async delete(username: string): Promise<void> {
         await this.repository.delete(username);
+    }
+
+    async updateUsername(oldUsername: string, newUsername: string) {
+        await this.repository.update({ username: oldUsername },  { username: newUsername });
+    }
+
+    async updateEmail(username: string, newEmail: string) {
+        await this.repository.update({ username: username },  { email: newEmail });
+    }
+
+    async updatePassword(username: string, newPassword: string) {
+        await this.repository.update({username: username}, {password: newPassword});
     }
 }

@@ -30,7 +30,7 @@ services:
         - "server"
       image: backend_server
       container_name: backend_tests
-      command: ["yarn", "test"]
+      command: ["yarn", "test", "--coverage"]
       ports:
         - "${TESTS_PORT}"
       networks:
