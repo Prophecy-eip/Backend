@@ -1,12 +1,11 @@
-import {Test} from "@nestjs/testing";
-import {TypeOrmModule} from "@nestjs/typeorm";
+import { Test } from "@nestjs/testing";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import * as dotenv from "dotenv";
 import * as bcrypt from "bcrypt";
 
-import {AccountType, Profile} from "../../../src/account/profile/profile.entity";
-import {ProfileService} from "../../../src/account/profile/profile.service";
-import {ProfileModule} from "../../../src/account/profile/profile.module";
-import common_1 from "@nestjs/common";
+import { AccountType, Profile } from "../../../src/account/profile/profile.entity";
+import { ProfileService } from "../../../src/account/profile/profile.service";
+import { ProfileModule } from "../../../src/account/profile/profile.module";
 
 
 dotenv.config()
@@ -18,13 +17,13 @@ const DB_USERNAME = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DIALECT = "postgres"
 
-const username = "username";
-const email = "email@prophecy.com"
-const password = "password";
+const USERNAME = "username";
+const EMAIL = "email@prophecy.com"
+const PASSWORD = "password";
 
-const username1 = "username1";
-const email1 = "email1@prophecy.com";
-const password1 = "password1";
+const USERNAME1 = "username1";
+const EMAIL1 = "email1@prophecy.com";
+const PASSWORD1 = "password1";
 
 function initDefaultProfile(username: string, email: string, password: string): Profile {
     const profile = new Profile();
@@ -58,87 +57,87 @@ describe("ProfileService", () => {
 
         service = moduleRef.get<ProfileService>(ProfileService);
 
-        try { await service.delete(username); } catch (err) {}
-        try { await service.delete(username1); } catch (err) {}
+        try { await service.delete(USERNAME); } catch (err) {}
+        try { await service.delete(USERNAME1); } catch (err) {}
     })
 
     afterEach(async () => {
-        try { await service.delete(username); } catch (err) {}
-        try { await service.delete(username1); } catch (err) {}
+        try { await service.delete(USERNAME); } catch (err) {}
+        try { await service.delete(USERNAME1); } catch (err) {}
     });
 
 
     it("Create profile from service", async () => {
-        const created = await service.create({username, email, password});
+        const created = await service.create({username: USERNAME, email: EMAIL, password: PASSWORD});
 
-        expect(created.username).toEqual(username);
-        expect(created.password).toEqual(password);
-        expect(created.email).toEqual(email);
+        expect(created.username).toEqual(USERNAME);
+        expect(created.password).toEqual(PASSWORD);
+        expect(created.email).toEqual(EMAIL);
     });
 
     it("Save profile", async () => {
-        const created = await service.create({ username, email, password });
+        const created = await service.create({ username: USERNAME, email: EMAIL, password: PASSWORD });
         const saved = await service.save(created);
 
-        expect(saved.username).toBe(username);
-        expect(saved.email).toBe(email);
+        expect(saved.username).toBe(USERNAME);
+        expect(saved.email).toBe(EMAIL);
     });
 
     it("Check if existing profile exists", async () => {
-        const created = await service.create({ username, email, password });
+        const created = await service.create({ username: USERNAME, email: EMAIL, password: PASSWORD });
         const saved = await service.save(created);
-        const exists: boolean = await service.exists(username, email);
+        const exists: boolean = await service.exists(USERNAME, EMAIL);
 
         expect(exists).toBe(true);
     });
 
     it("Check if existing profile with invalid email exists", async () => {
-        const created = await service.create({ username, email, password });
+        const created = await service.create({ username: USERNAME, email: EMAIL, password: PASSWORD });
         const saved = await service.save(created);
-        const exists: boolean = await service.exists(username, email);
+        const exists: boolean = await service.exists(USERNAME, EMAIL);
 
         expect(exists).toBe(true);
     });
 
     it ("Update username", async () => {
-        const created = await service.create({username, email, password});
+        const created = await service.create({username: USERNAME, email: EMAIL, password: PASSWORD});
         let saved = await service.save(created);
-        const exists: boolean = await service.exists(username, email);
+        const exists: boolean = await service.exists(USERNAME, EMAIL);
 
         expect(exists).toBe(true);
 
-        await service.updateUsername(username, username1);
-        const updated: boolean = await service.exists(username1, email);
-        const oldExists: boolean = await service.exists(username, email);
+        await service.updateUsername(USERNAME, USERNAME1);
+        const updated: boolean = await service.exists(USERNAME1, EMAIL);
+        const oldExists: boolean = await service.exists(USERNAME, EMAIL);
         expect(updated).toBe(true);
         expect(oldExists).toBe(false);
     });
 
     it("Update email", async () => {
-        const created = await service.create({ username, email, password });
+        const created = await service.create({ username: USERNAME, email: EMAIL, password: PASSWORD });
         let saved = await service.save(created);
-        const exists: boolean = await service.exists(username, email);
+        const exists: boolean = await service.exists(USERNAME, EMAIL);
 
         expect(exists).toBe(true);
 
-        await service.updateEmail(username, email1);
-        const updated: boolean = await service.exists(username, email1);
-        const oldExists: boolean = await service.exists(username, email);
+        await service.updateEmail(USERNAME, EMAIL1);
+        const updated: boolean = await service.exists(USERNAME, EMAIL1);
+        const oldExists: boolean = await service.exists(USERNAME, EMAIL);
         expect(updated).toBe(true);
         expect(oldExists).toBe(false);
     });
 
     it("Update password", async () => {
-        const created = await service.create({ username, email, password });
+        const created = await service.create({ username: USERNAME, email: EMAIL, password: PASSWORD });
         let saved = await service.save(created);
-        const exists: boolean = await service.exists(username, email);
+        const exists: boolean = await service.exists(USERNAME, EMAIL);
 
         expect(exists).toBe(true);
-        await service.updatePassword(username, password1);
-        const newProfile = await service.findOne(username);
+        await service.updatePassword(USERNAME, PASSWORD1);
+        const newProfile = await service.findOne(USERNAME);
         let updated: boolean;
 
-        await bcrypt.compare(password1, newProfile.password).then((result) => {
+        await bcrypt.compare(PASSWORD1, newProfile.password).then((result) => {
             updated = result
         });
         expect(updated).toEqual(true);
