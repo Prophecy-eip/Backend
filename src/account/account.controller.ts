@@ -98,11 +98,13 @@ export class AccountController{
     @HttpCode(HttpStatus.OK)
     async updateUsername(@Request() req, @Body("username") newUsername: string) {
         const username = req.user.username;
-        const profile = await this.profileService.findOneByUsername(username);
 
         if (!this.isFieldValid(newUsername)) {
             throw new BadRequestException()
         }
         await this.profileService.updateUsername(username, newUsername);
+        return {
+            username: newUsername,
+        };
     }
 }
