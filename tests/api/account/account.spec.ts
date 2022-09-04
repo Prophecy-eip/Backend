@@ -638,6 +638,8 @@ describe("Account Route", () => {
             });
 
         expect(response1.status).toEqual(HttpStatus.OK);
+        expect(response1.body.username).toBeDefined();
+        expect(response1.body.username).toEqual(USERNAME1);
 
         // trying to sign in with old username
         const response2 = await request(app.getHttpServer())
@@ -658,6 +660,16 @@ describe("Account Route", () => {
             });
 
         expect(response3.status).toEqual(HttpStatus.OK);
+
+        // try to update email with old token
+        const response4 = await request(app.getHttpServer())
+            .put(UPDATE_EMAIL_ROUTE)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                email: EMAIL1
+        });
+
+        expect(response4.status).toEqual(HttpStatus.OK);
     });
 
     it("settings/update-username: Update username with empty username", async () => {
