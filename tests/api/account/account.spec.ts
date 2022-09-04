@@ -11,6 +11,14 @@ const SIGNOUT_ROUTE: string = "/account/sign-out";
 const DELETE_ACCOUNT_ROUTE: string = "/account/settings/delete-account";
 const UPDATE_PASSWORD_ROUTE: string = "/account/settings/update-password";
 
+const username = "username";
+const email = "email@prophecy.com";
+const password = "password";
+
+const username1 = "username1";
+const email1 = "email1@prophecy.com";
+const password1 = "password1";
+
 describe("Account Route", () => {
     let app: INestApplication;
 
@@ -23,10 +31,16 @@ describe("Account Route", () => {
         await app.init();
     });
 
-    afterAll(async () => {
-        const token = await getToken("username", "password");
+    afterEach(async () => {
+        let token = await getToken(username, password);
 
-        const response = await request(app.getHttpServer())
+        await request(app.getHttpServer())
+            .delete(DELETE_ACCOUNT_ROUTE)
+            .set("Authorization", `Bearer ${token}`);
+
+        token = await getToken(username1, password);
+
+        await request(app.getHttpServer())
             .delete(DELETE_ACCOUNT_ROUTE)
             .set("Authorization", `Bearer ${token}`);
     })
@@ -41,6 +55,16 @@ describe("Account Route", () => {
         return response.body.access_token;
     }
 
+    async function signUp(username, email, password) {
+        return request(app.getHttpServer())
+            .post(SIGNUP_ROUTE)
+            .send({
+                username: "username",
+                email: "email@prophecy.com",
+                password: "password"
+            });
+    }
+
     /**
      * SIGN UP
      */
@@ -49,36 +73,48 @@ describe("Account Route", () => {
         const response = await request(app.getHttpServer())
             .post(SIGNUP_ROUTE)
             .send({
-                    username: "username",
-                    email: "email@prophecy.com",
-                    password: "password"
+                    username: username,
+                    email: email,
+                    password: password
             });
 
-        expect(response.status).toBe(HttpStatus.CREATED);
+        expect(response.status).toEqual(HttpStatus.CREATED);
     });
 
     it("sign-up: Create an account with already used username", async () => {
+        // creating a first account
+        const r = await signUp(username, email, password)
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // creating a second account with the same username
         const response = await request(app.getHttpServer())
             .post(SIGNUP_ROUTE)
             .send({
-                username: "username",
-                email: "email1@prophecy.com",
-                password: "password"
+                username: username,
+                email: email1,
+                password: password
             });
 
-        expect(response.status).toBe(HttpStatus.CONFLICT);
+        expect(response.status).toEqual(HttpStatus.CONFLICT);
     });
 
     it("sign-up: Create an account with already used email", async () => {
+        // creating a first account
+        const r = await signUp(username, email, password)
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // creating a second account with the same email address
         const response = await request(app.getHttpServer())
             .post(SIGNUP_ROUTE)
             .send({
-                username: "username1",
-                email: "email@prophecy.com",
-                password: "password"
+                username: username1,
+                email: email,
+                password: password
             });
 
-        expect(response.status).toBe(HttpStatus.CONFLICT);
+        expect(response.status).toEqual(HttpStatus.CONFLICT);
     });
 
     it("sign-up: Create an account without username", async () => {
@@ -89,7 +125,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
     it("sign-up: Create an account without email", async () => {
@@ -100,7 +136,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
 
@@ -112,7 +148,7 @@ describe("Account Route", () => {
                 email: "email1@prophecy.com"
             });
 
-        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
 
@@ -125,7 +161,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
     it("sign-up: Create an account with empty email", async () => {
@@ -137,7 +173,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
     it("sign-up: Create an account with empty password", async () => {
@@ -149,7 +185,7 @@ describe("Account Route", () => {
                 password: ""
             });
 
-        expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
     /**
@@ -157,89 +193,97 @@ describe("Account Route", () => {
      */
 
     it("sign-in: Login with existing username and valid password", async () => {
+        // creating account
+        const r = await signUp(username, email, password);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // logging in
         const response = await request(app.getHttpServer())
             .post(SIGNIN_ROUTE)
             .send({
-                username: "username",
-                password: "password"
+                username: username,
+                password: password
         });
 
-        expect(response.status).toBe(HttpStatus.OK);
+        expect(response.status).toEqual(HttpStatus.OK);
         expect(response.body.username !== null);
         expect (response.body.username !== undefined);
         expect (response.body.username !== "");
-        expect (response.body.username === "username");
+        expect (response.body.username === username);
         expect(response.body.access_token !== null);
         expect (response.body.access_token !== undefined);
         expect (response.body.access_token !== "");
     });
 
     it("sign-in: Login with existing email and valid password", async () => {
+        // creating account
+        const r = await signUp(username, email, password);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // logging in
         const response = await request(app.getHttpServer())
             .post(SIGNIN_ROUTE)
             .send({
                 username: "email@prophecy.com",
                 password: "password"
         });
-        expect(response.status).toBe(HttpStatus.OK);
-        // expect(response.body.username !== null);
-        // expect (response.body.username !== undefined);
-        // expect (response.body.username !== "");
-        expect (response.body.username).toBe("username");
-        // expect(response.body.access_token).toBe(null);
-        // expect(response.body.access_token !== null);
-        // expect (response.body.access_token !== undefined);
-        // expect (response.body.access_token !== "");
+        expect(response.status).toEqual(HttpStatus.OK);
+        expect(response.body.username).toBeDefined();
+        expect (response.body.username).toEqual(username);
+        expect (response.body.access_token).toBeDefined();
     });
 
     it("sign-in: Login with existing username and invalid password", async () => {
+        // creating account
+        const r = await signUp(username, email, password);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+        // logging in with invalid password
         const response = await request(app.getHttpServer())
             .post(SIGNIN_ROUTE)
             .send({
-                username: "username",
-                password: "password1"
+                username: username,
+                password: password1
             });
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with existing email and invalid password", async () => {
+        // creating account
+        const r = await signUp(username, email, password);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // logging in with invalid password
         const response = await request(app.getHttpServer())
             .post(SIGNIN_ROUTE)
             .send({
-                username: "email@prophecy.com",
-                password: "password1"
+                username: email,
+                password: password1
             });
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with invalid username", async () => {
         const response = await request(app.getHttpServer())
             .post(SIGNIN_ROUTE)
             .send({
-                username: "username1",
-                password: "password"
+                username: username1,
+                password: password
             });
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
-    });
-
-    it("sign-in: Login with invalid username", async () => {
-        const response = await request(app.getHttpServer())
-            .post(SIGNIN_ROUTE)
-            .send({
-                username: "username1",
-                password: "password"
-            });
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with invalid email", async () => {
         const response = await request(app.getHttpServer())
             .post(SIGNIN_ROUTE)
             .send({
-                username: "email1@prophecy.com",
-                password: "password"
+                username: email1,
+                password: password
             });
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with empty username", async () => {
@@ -249,7 +293,7 @@ describe("Account Route", () => {
                 username: "",
                 password: "password"
             });
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login with empty password", async () => {
@@ -259,7 +303,7 @@ describe("Account Route", () => {
                 username: "username",
                 password: ""
             });
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login without username", async () => {
@@ -268,7 +312,7 @@ describe("Account Route", () => {
             .send({
                 password: "password"
             });
-        // expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     it("sign-in: Login without password", async () => {
@@ -277,7 +321,7 @@ describe("Account Route", () => {
             .send({
                 username: "username",
             });
-        // expect(response.status).toBe(HttpStatus.BAD_REQUEST);
+        expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     /**
@@ -285,12 +329,20 @@ describe("Account Route", () => {
      */
 
     it("sign-out: Logout with valid token", async () => {
-        const token = await getToken("username", "password");
+        // creating account
+        const r = await signUp(username, email, password);
 
-        return request(app.getHttpServer())
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // retrieving token
+        const token = await getToken(username, password);
+
+        // logging out
+        const response = await request(app.getHttpServer())
             .post(SIGNOUT_ROUTE)
-            .set("Authorization", `Bearer ${token}`)
-            .expect(HttpStatus.OK);
+            .set("Authorization", `Bearer ${token}`);
+
+        expect(response.status).toEqual(HttpStatus.OK);
     });
 
     it("sign-out: Logout with invalid token", async () => {
@@ -300,7 +352,7 @@ describe("Account Route", () => {
             .post(SIGNOUT_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
-        expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     /**
@@ -323,7 +375,7 @@ describe("Account Route", () => {
                 password: "password",
             });
 
-        expect(response2.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response2.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     it("settings/delete-account: Delete with invalid token", async () => {
@@ -345,7 +397,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response1.status).toBe(HttpStatus.CREATED);
+        expect(response1.status).toEqual(HttpStatus.CREATED);
 
         const response2 = await request(app.getHttpServer())
             .post(SIGNIN_ROUTE)
@@ -354,7 +406,7 @@ describe("Account Route", () => {
                 password: "password",
             });
 
-        expect(response2.status).toBe(HttpStatus.OK);
+        expect(response2.status).toEqual(HttpStatus.OK);
 
         const token = response2.body.access_token;
 
@@ -392,7 +444,7 @@ describe("Account Route", () => {
                 password: "password1"
         });
 
-        // expect(response1.status).toBe(HttpStatus.OK);
+        expect(response1.status).toEqual(HttpStatus.OK);
 
         // sign in with new password
         const [response2] = await Promise.all([request(app.getHttpServer())
@@ -402,7 +454,7 @@ describe("Account Route", () => {
                 password: "password1"
             })]);
 
-        return expect(response2.status).toBe(HttpStatus.OK);
+        return expect(response2.status).toEqual(HttpStatus.OK);
 
         // sign in with old password
         const response3 = await request(app.getHttpServer())
@@ -412,7 +464,7 @@ describe("Account Route", () => {
                 password: "password"
             });
 
-        expect(response3.status).toBe(HttpStatus.UNAUTHORIZED);
+        expect(response3.status).toEqual(HttpStatus.UNAUTHORIZED);
     })
 })
 
