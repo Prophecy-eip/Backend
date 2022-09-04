@@ -43,7 +43,7 @@ export class AccountController{
     @UseGuards(LocalAuthGuard)
     @Post("sign-in")
     @HttpCode(HttpStatus.OK)
-    async login(@Request() req, @Body("username") id: string, @Body("password") password: string) {
+    async login(@Request() req) {
         return this.authService.login(req.user);
     }
 
