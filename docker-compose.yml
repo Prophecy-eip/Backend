@@ -1,7 +1,7 @@
 services:
   db:
-    build: ./databases
-    container_name: databases
+    build: ./database
+    container_name: database
     ports:
       - "${DATABASES_PORT}:${DATABASES_PORT}"
     volumes:

@@ -9,6 +9,7 @@ const SIGNIN_ROUTE: string = "/account/sign-in";
 const SIGNOUT_ROUTE: string = "/account/sign-out";
 const DELETE_ACCOUNT_ROUTE: string = "/account/settings/delete-account";
 const UPDATE_PASSWORD_ROUTE: string = "/account/settings/update-password";
+const UPDATE_EMAIL_ROUTE: string = "/account/settings/update-email-address";
 
 const USERNAME = "username";
 const EMAIL = "email@prophecy.com";
@@ -529,6 +530,88 @@ describe("Account Route", () => {
             .put(UPDATE_PASSWORD_ROUTE)
             .set("Authorization", `Bearer ${token}`)
             .send({});
+
+        expect(response1.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    /**
+     * UPDATE EMAIL ADDRESS
+     */
+
+    it("settings/update-email-address: Update email", async () => {
+        const r = await signUp(USERNAME, EMAIL, PASSWORD);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // retrieving token
+        const token = await getToken(USERNAME, PASSWORD);
+
+        // updating email
+        const response1 = await request(app.getHttpServer())
+            .put(UPDATE_EMAIL_ROUTE)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                email: EMAIL1
+            });
+
+        expect(response1.status).toEqual(HttpStatus.OK);
+
+        // trying to sign in with the old email
+        const response2 = await request(app.getHttpServer())
+            .post(SIGNIN_ROUTE)
+            .send({
+                username: EMAIL,
+                password: PASSWORD
+            });
+
+        expect(response2.status).toEqual(HttpStatus.UNAUTHORIZED);
+
+        // trying to sign in with the new email
+        const response3 = await request(app.getHttpServer())
+            .post(SIGNIN_ROUTE)
+            .send({
+                username: EMAIL1,
+                password: PASSWORD
+            });
+
+        expect(response3.status).toEqual(HttpStatus.OK);
+        expect(response3.body.username).toBeDefined();
+        expect(response3.body.username).toEqual(USERNAME);
+    });
+
+    it("settings/update-email-address: Update email with empty email", async () => {
+        const r = await signUp(USERNAME, EMAIL, PASSWORD);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // retrieving token
+        const token = await getToken(USERNAME, PASSWORD);
+
+        // updating email
+        const response1 = await request(app.getHttpServer())
+            .put(UPDATE_EMAIL_ROUTE)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                email: ""
+            });
+
+        expect(response1.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("settings/update-email-address: Update email without email", async () => {
+        const r = await signUp(USERNAME, EMAIL, PASSWORD);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // retrieving token
+        const token = await getToken(USERNAME, PASSWORD);
+
+        // updating email
+        const response1 = await request(app.getHttpServer())
+            .put(UPDATE_EMAIL_ROUTE)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+            });
 
         expect(response1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
