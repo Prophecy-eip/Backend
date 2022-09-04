@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, PrimaryColumn } from "typeorm";
+import {AfterUpdate, BeforeInsert, Column, Entity, PrimaryColumn} from "typeorm";
 import { hash } from "bcrypt";
 
 export enum AccountType {

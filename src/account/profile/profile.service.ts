@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { hash } from "bcrypt";
 
 import { Profile } from "./profile.entity"
 import { ProfileDTO } from "./profile.dto"
@@ -60,6 +61,8 @@ export class ProfileService {
     }
 
     async updatePassword(username: string, newPassword: string) {
-        await this.repository.update({username: username}, {password: newPassword});
+        const pwd: string = await hash(newPassword, 10);
+
+        await this.repository.update({username: username}, {password: pwd});
     }
 }

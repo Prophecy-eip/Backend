@@ -1,12 +1,12 @@
-import {Test, TestingModule} from "@nestjs/testing";
+import {Test} from "@nestjs/testing";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
+import * as dotenv from "dotenv";
+import * as bcrypt from "bcrypt";
 
 import {AccountType, Profile} from "../../../src/account/profile/profile.entity";
 import {ProfileService} from "../../../src/account/profile/profile.service";
-
-import * as dotenv from "dotenv";
 import {ProfileModule} from "../../../src/account/profile/profile.module";
+import common_1 from "@nestjs/common";
 
 
 dotenv.config()
@@ -127,4 +127,20 @@ describe("ProfileService", () => {
         expect(updated).toBe(true);
         expect(oldExists).toBe(false);
     });
+
+    it("Update password", async () => {
+        const created = await service.create({ username, email, password });
+        let saved = await service.save(created);
+        const exists: boolean = await service.exists(username, email);
+
+        expect(exists).toBe(true);
+        await service.updatePassword(username, password1);
+        const newProfile = await service.findOne(username);
+        let updated: boolean;
+
+        await bcrypt.compare(password1, newProfile.password).then((result) => {
+            updated = result
+        });
+        expect(updated).toEqual(true);
+    })
 })
