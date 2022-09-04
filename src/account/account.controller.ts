@@ -79,4 +79,17 @@ export class AccountController{
         }
         await this.profileService.updatePassword(username, password);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Put("settings/update-email-address")
+    @HttpCode(HttpStatus.OK)
+    async updateEmail(@Request() req, @Body("email") email: string) {
+        const username = req.user.username;
+        const profile = await this.profileService.findOneByUsername(username);
+
+        if (email === undefined || email === null || email === "") {
+            throw new BadRequestException()
+        }
+        await this.profileService.updateEmail(username, email);
+    }
 }
