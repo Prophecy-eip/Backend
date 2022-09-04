@@ -29,7 +29,7 @@ export class AccountController{
         if (username === undefined || username === "" || email === undefined || email === "" || password === undefined || password === "") {
             throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }
-        if (await this.profileService.exists(username, email)) {
+        if (await this.profileService.credentialsAlreadyInUse(username, email)) {
             throw new ConflictException();
         } try {
             const profile = await this.profileService.create({ username, email, password });
@@ -43,7 +43,7 @@ export class AccountController{
     @UseGuards(LocalAuthGuard)
     @Post("sign-in")
     @HttpCode(HttpStatus.OK)
-    async login(@Request() req) {
+    async login(@Request() req, @Body("username") id: string, @Body("password") password: string) {
         return this.authService.login(req.user);
     }
 

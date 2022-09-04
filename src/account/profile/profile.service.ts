@@ -19,6 +19,13 @@ export class ProfileService {
         return p !== null && p.email === email;
     }
 
+    async credentialsAlreadyInUse(username: string, email: string): Promise<boolean> {
+        return await this.repository.findOneBy([
+            { username: username },
+            {email: email}
+        ]) !== null;
+    }
+
     async create(profileDto: ProfileDTO): Promise<Profile> {
         return this.repository.create({ ...profileDto });
     }
