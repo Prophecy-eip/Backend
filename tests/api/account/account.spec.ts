@@ -10,6 +10,7 @@ const SIGNOUT_ROUTE: string = "/account/sign-out";
 const DELETE_ACCOUNT_ROUTE: string = "/account/settings/delete-account";
 const UPDATE_PASSWORD_ROUTE: string = "/account/settings/update-password";
 const UPDATE_EMAIL_ROUTE: string = "/account/settings/update-email-address";
+const UPDATE_USERNAME_ROUTE: string = "/account/settings/update-username";
 
 const USERNAME = "username";
 const EMAIL = "email@prophecy.com";
@@ -612,6 +613,85 @@ describe("Account Route", () => {
             .set("Authorization", `Bearer ${token}`)
             .send({
             });
+
+        expect(response1.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    /**
+     * UPDATE USERNAME
+     */
+
+    it("settings/update-username: Update username", async () => {
+        const r = await signUp(USERNAME, EMAIL, PASSWORD);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // retrieving token
+        const token = await getToken(USERNAME, PASSWORD);
+
+        // updating username
+        const response1 = await request(app.getHttpServer())
+            .put(UPDATE_USERNAME_ROUTE)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                username: USERNAME1
+            });
+
+        expect(response1.status).toEqual(HttpStatus.OK);
+
+        // trying to sign in with old username
+        const response2 = await request(app.getHttpServer())
+            .post(SIGNIN_ROUTE)
+            .send({
+                username: USERNAME,
+                password: PASSWORD
+            });
+
+        expect(response2.status).toEqual(HttpStatus.UNAUTHORIZED);
+
+        // logging in with the new username
+        const response3 = await request(app.getHttpServer())
+            .post(SIGNIN_ROUTE)
+            .send({
+                username: USERNAME1,
+                password: PASSWORD
+            });
+
+        expect(response3.status).toEqual(HttpStatus.OK);
+    });
+
+    it("settings/update-username: Update username with empty username", async () => {
+        const r = await signUp(USERNAME, EMAIL, PASSWORD);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // retrieving token
+        const token = await getToken(USERNAME, PASSWORD);
+
+        // updating username
+        const response1 = await request(app.getHttpServer())
+            .put(UPDATE_USERNAME_ROUTE)
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                username: ""
+            });
+
+        expect(response1.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("settings/update-username: Update username without username", async () => {
+        const r = await signUp(USERNAME, EMAIL, PASSWORD);
+
+        expect(r.status).toEqual(HttpStatus.CREATED);
+
+        // retrieving token
+        const token = await getToken(USERNAME, PASSWORD);
+
+        // updating username
+        const response1 = await request(app.getHttpServer())
+            .put(UPDATE_USERNAME_ROUTE)
+            .set("Authorization", `Bearer ${token}`)
+            .send({});
 
         expect(response1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
