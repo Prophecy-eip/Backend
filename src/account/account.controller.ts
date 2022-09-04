@@ -68,7 +68,8 @@ export class AccountController{
     @Put("settings/update-password")
     @HttpCode(HttpStatus.OK)
     async updatePassword(@Request() req, @Body("password") password: string) {
-        const profile = await this.profileService.findOneByUsername(req.user.username);
+        const username = req.user.username;
+        const profile = await this.profileService.findOneByUsername(username);
 
         if (profile === null) {
             throw new UnauthorizedException();
@@ -76,7 +77,6 @@ export class AccountController{
         if (password === null || password === undefined || password === "") {
             throw new BadRequestException()
         }
-        profile.password = password;
-        await this.profileService.save(profile);
+        await this.profileService.updatePassword(username, password);
     }
 }

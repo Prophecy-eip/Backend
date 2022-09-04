@@ -81,7 +81,10 @@
     },
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/**/*.(t|j)s"
+      "src/**/*.(t|j)s",
+      "!src/**/*.dto.(t|j)s",
+      "!src/main.(t|j)s"
+
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
