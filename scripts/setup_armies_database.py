@@ -1,67 +1,191 @@
 #!/usr/bin/env python3
 
-from re import sub
-import xml.etree.ElementTree as ET
 import sys
 
+from bs4 import BeautifulSoup, ResultSet
 from numpy import array
 
-## UTILS
 
 ##
-# @brief Formats a tag by removing the prefix
+# @class Link represents the <infoLink> flag
 #
 
-def formatTag(tag: str):
-    return tag.split('}', 1)[1]
+class Link:
+    _name: str = ""
+    _id: str = ""
+    _type: str = ""
+    _modifiers: array(str, []) = []
 
-##
-# @brief Finds a sub element with a specific tag
-#
+    def __init__(self, link):
+        self._name = link["name"]
+        self._id = link["targetid"]
+        self._type = link["type"]
+        try:
+            modifiers = link.find("modifiers").find_all("modifier")
+            for m in modifiers:
+                self._modifiers.append(m.getText())
+        except:
+            self._modifiers = []
+    
+    ##
+    # @brief Method used to print the Link content (used for debug)
+    #
 
-def findSubelemByTag(elem: ET.Element, tag: str) -> ET.Element | None:
-    foud: ET.Element | None = None
+    def print(self):
+        print("NAME:", self._name, "\tID:", self._id, "\tTYPE:", self._type)
+        print("--- modifiers ---")
+        for m in self._modifiers:
+            print("  ", m)
+        print("")
 
-    for subelem in elem:
-        if formatTag(subelem.tag) == tag:
-            return subelem
-        else :
-            found = findSubelemByTag(subelem, tag)
-        if found != None:
-            return found
+class Condition:
+    _field: str = ""
+    _value: str = ""
+    _percentValue: str = ""
+    _type: str = ""
 
-##
-# @brief Finds out if an element has the specified attribute
-# @return true if was found, false otherwise
-#
+    def __init__(self, condition):
+        self._field = condition["field"]
+        self._value = condition["value"]
+        self._percentValue = condition["percentvalue"]
+        self._type = condition["type"]
 
-def hasAttrib(elem: ET.Element, attrib: str) -> bool:
-    try:
-        a = elem.attrib[attrib]
-        return True
-    except:
-        return False
+    def print(self):
+        print("FIELD:", self._field, "\tVALUE:", self._value, "\tPERCENT:", self._percentValue, "\tTYPE:", self._type, "\n")
 
-##
-# @brief Finds a sub element with a specific name
-#
+class Rule:
+    # id: str
+    _name: str
+    _description: str
 
-def findSubElemByName(elem: ET.Element, name: str) -> ET.Element | None :
-    found: ET.Element | None = None
+    def __init__(self, rule):
+        self._name = rule["name"]
+        self._description = rule.find("description").getText()
 
-    for subelem in elem:
-        if hasAttrib(subelem, "name") == False:
-            return findSubElemByName(subelem, name)
-        # print("expected: ", name)
-        # print("current: ", subelem.attrib["name"])
-        if subelem.attrib["name"] == name:
-            return subelem
-        else :
-            found = findSubElemByName(subelem, name) 
-        if found != None:
-            print("")
-            return found
+    def print(self):
+        print("NAME:", self._name)
+        print("DESCRIPTION:", self._description, "\n")
+
+class Option:
+    pass
+
+class Option:
+    _unitId: str = ""
+    _id: str = ""
+    _name: str = ""
+    _type: str = ""
+    _parentId: str = ""
+
+    _modifiers: array(Condition, []) = []
+
+    _constraints: array(Condition, []) = []
+
+    _rules: array(Rule, []) = []
+
+    _cost: str = ""
+
+    _subOptions: array(Option, []) = []
+
+    _links: array(Link, []) = []
+
+    def __init__(self, option, unitId: str):
+        self._unitId = unitId
+        self._name = option["name"]
+        self._id = option["id"]
+        self._type = option["type"]
+
+        try:
+            modifiers = option.find("modifiers").find_all("modifier")
+            for m in modifiers:
+                for c in m.find("conditions").find_all("condition"):
+                    self._modifiers.append(Condition(c))
+        except:
+            pass
         
+        try:
+            for c in option.find("constraints").find_all("constraint"):
+                self._constraints.append(Condition(c))
+        except:
+            pass
+
+        # print(option)
+        try:
+            for r in option.find("rules").find_all("rule"):
+                self._rules.append(Rule(r))
+        except:
+            pass
+    
+        self._cost = option.find("costs").find("cost")["value"] + " " + option.find("costs").find("cost")["name"]
+
+#  TODO: try to add selection entry group
+        # try:
+        #         groups: ResultSet = option.find("selectionentrygroups").find_all("selectionentrygroup")
+                
+        #         print("+++\n", groups, "\n+++++")
+
+        #         print(groups.__len__())
+        #         for opt in groups:
+        #             try:
+        #                 opt = Option(opt, unitId)
+        #                 self._subOptions.append(opt)
+        #                 opt.print()
+        #             except:
+        #                 pass
+        # except:
+        #     pass
+
+        try:
+            for l in option.find("entrylinks").find_all("entrylink"):
+                self._links.append(Link(l))
+        except:
+            pass
+    
+    def print(self):
+        print("NAME:", self._name, "\tID:", self._id, "\tTYPE:", self._type, "\tCOST:", self._cost)
+        print("--- modifiers ---")
+        for m in self._modifiers:
+            m.print()
+        print("--- constraints ---")
+        for c in self._constraints:
+            c.print()
+        print("--- rules --")
+        for r in self._rules:
+            r.print()
+        print("--- suboptions ---")
+        for o in self._subOptions:
+            o.print()
+        print("--- links ---")
+        for l in self._links:
+            l.print()
+
+class Item:
+    _name: str = ""
+    _id: str = ""
+
+    def __init__(self, item):
+        self._name = ""
+
+class SpecialItemsCategory:
+    _name: str = ""
+    _id: str = ""
+    _isCollective: str = ""
+
+    _constraints: array(Condition, []) = []
+
+    _items: array(Item, []) = []
+
+    def __init__(self, entry):
+        self._id = entry["id"]
+        self._name = entry["name"]
+        self._isCollective = entry["collective"]
+        
+        for c in entry.find("constraints").find_all("constraint"):
+            self._constraints.append(Condition(c))
+        
+        for item in entry.find("selectionentrygroups").find_all("selectionentrygroup"):
+            self._items.append(Item(item))
+
+
 ##
 # @class Unit
 # @brief Represents a Unit object
@@ -81,54 +205,65 @@ class Unit:
     _adv: str = ""
     _mar: str = ""
     _dis: str = ""
-    _globalRules: array(str, [])
+    _globalRules: str = ""
 
     _hp: str = ""
     _def: str = ""
     _res: str = ""
     _arm: str = ""
-    _defensiveRulenes: array(str, [])
+    _defensiveRules: str = ""
 
     _att: str = ""
     _off: str = ""
     _str: str = ""
     _ap: str = ""
     _agi: str = ""
-    _offensiveRules: array(str, [])
-
+    _offensiveRules: str = ""
+    
+    _links: array(Link, []) = []
+    _options: array(Option, []) = []
     # options: array(Option, [])
 
-    def __init__(self, elem: ET.Element):
-        self._id = elem.attrib["id"]
-        self._name = elem.attrib["name"]
-
-        profiles = findSubelemByTag(elem, "profiles")
+    def __init__(self, selection):
+        self._id = selection["id"]
+        self._name = selection["name"]
+        self._cost = selection.find("costs", recursive=False).find("cost")["value"] + " " + selection.find("costs", recursive=False).find("cost")["name"]
+        
+        # profiles
+        profiles: ResultSet = selection.find("profiles").find_all("profile")
         for profile in profiles:
-            name: str = profile.attrib["name"]
-            # characteristics = findSubelemByTag(profile, "characteristics")
+            name: str = profile["name"]
+            c = profile.find("characteristics")
             if name.find("Global") != -1:
-                self._adv = findSubElemByName(profile, "Adv").text
-                self._mar = findSubElemByName(profile, "Mar").text
-                self._dis = findSubElemByName(profile, "Dis").text
-                # TODO: Add rules
+                self._adv = c.find("characteristic", {"name": "Adv"}).getText()
+                self._mar = c.find("characteristic", {"name": "Mar"}).getText()
+                self._dis =  c.find("characteristic", {"name": "Dis"}).getText()
+                self._globalRules = c.find("characteristic", {"name": "Rules"}).getText()
             if name.find("Defensive") != -1:
-                self._hp = findSubElemByName(profile, "HP").text
-                self._def = findSubElemByName(profile, "Def").text
-                self._res = findSubElemByName(profile, "Res").text
-                self._arm = findSubElemByName(profile, "Arm").text
-                # TODO: Add rules
+                self._hp =  c.find("characteristic", {"name": "HP"}).getText()
+                self._def =  c.find("characteristic", {"name": "Def"}).getText()
+                self._res =  c.find("characteristic", {"name": "Res"}).getText()
+                self._arm =  c.find("characteristic", {"name": "Arm"}).getText()
+                self._defensiveRules = c.find("characteristic", {"name": "Rules"}).getText()
             if name.find("Offensive") != -1:
-                self._att = findSubElemByName(profile, "Att").text
-                self._off = findSubElemByName(profile, "Off").text
-                self._str = findSubElemByName(profile, "Str").text
-                self._ap = findSubElemByName(profile, "AP").text
-                self._agi = findSubElemByName(profile, "Agi").text
-                # TODO: Add rules
+                self._att = c.find("characteristic", {"name": "Att"}).getText()
+                self._off = c.find("characteristic", {"name": "Off"}).getText()
+                self._str = c.find("characteristic", {"name": "Str"}).getText()
+                self._ap = c.find("characteristic", {"name": "AP"}).getText()
+                self._agi = c.find("characteristic", {"name": "Agi"}).getText()
+                self._offensiveRules = c.find("characteristic", {"name": "Rules"}).getText()
             if name.find("Size") != -1:
-                self._height = findSubElemByName(profile, "Height").text
-                self._type = findSubElemByName(profile, "Type").text
-                self._base = findSubElemByName(profile, "Base").text
+                self._height = c.find("characteristic", {"name": "Height"}).getText()
+                self._type = c.find("characteristic", {"name": "Type"}).getText()
+                self._base = c.find("characteristic", {"name": "Base"}).getText()
+        
+        # infoLinks
+        links: ResultSet = selection.find("infolinks").find_all("infolink")
+        for link in links:
+            self._links.append(Link(link))
 
+        # categoryLinks
+        self._categoryId = selection.find("categorylinks").find("categorylink")["targetid"]
     ##
     # @brief Enables unit print (used for debug)
     # 
@@ -140,140 +275,56 @@ class Unit:
         print("COST:", self._cost)
         print("SIZE:\t\theight:", self._height, "\ttype:", self._type, "\t\tbase:", self._base)
         print("GLOBAL:\t\tadv:", self._adv, "\tmar:", self._mar, "\tdis:", self._dis)
-        # print("GOBAL RULES:" self._globalRules)
+        print("GOBAL RULES:", self._globalRules)
         print("DEFENSIVE:\thp:", self._hp, "\t\tdef:", self._def, "\t\tres:", self._res, "\t\tarm:", self._arm)
+        print("DEFENSIVE RULES:", self._defensiveRules)
         print("OFFENSIVE:\tatt:", self._att, "\t\toff:", self._off, "\t\tstr:", self._str, "\t\tap:", self._ap, "\t\tagi: ", self._agi)
-
-class Option:
-    id: str
-    name: str
-
-    cost: str
-
-class UnitType:
-    id: str
-    name: str
-    limit: str
-
-class Rule:
-    id: str
-    name: str
-    description: str
-
-class Army:
-    _organisation: list = []
-    _units: list = []
-
-    def addUnit(self, unit: Unit):
-        self._units.append(unit)
-
-##
-# @brief Manages force entries (army organisation)
-#
-
-def forceEntries(elem: ET.Element, army: Army) -> Army:
-    for subelem in elem:
-        if formatTag(subelem.tag) == "categoryLink":
-            print("id:", subelem.attrib["id"])
-            print("name:", subelem.attrib["name"])
-            for subsubelem in subelem:
-                for subsubsubelem in subsubelem:
-                    if formatTag(subsubsubelem.tag) == "constraint":
-                        print("limit: ", subsubsubelem.attrib["type"], subsubsubelem.attrib["value"])
-        army = forceEntries(subelem, army)
-    return army
-
-##
-# @brief Fills the army with a new unit
-#
-
-def unit(elem: ET.Element, army: Army) -> Army:
-    print("==== UNIT ====")
-    unit: Unit = Unit(elem)
-
-    unit.print()
-    army._units.append(unit)
-
-    for subElem in elem:
-        army = selectionEntries(subElem, army)
-        # army = fillArmy(subElem, army)
-    # profiles = findSubelemByTag(elem, "profiles")
-    # for profile in profiles:
-    #     # print(profile.attrib["name"])
-    #     characteristics = findSubelemByTag(profile, "characteristics")
-    #     for c in characteristics:
-    #         print("", end="")
-    #         # print(" ", c.attrib["name"], c.text)
-    return army
-
-##
-# @brief Fills the army with a new rule
-#
-
-def rule(elem: ET.Element, army: Army) -> Army:
-    print("==== RULE ====")
-    return army
-
-## 
-# @brief Fills the army with a new upgrade (option)
-#  
-
-def upgrade(elem: ET.Element, army: Army) -> Army:
-    print("==== UPGRADE ====")
-    return army
-
-##
-# @brief Manages the selection entries tags
-# selection entries contain units, rules, options, ... definitions
-#
-
-def selectionEntries(elem: ET.Element, army: Army) -> Army:
-    for subelem in elem:
-        tag = formatTag(subelem.tag)
-        print("\n\n", tag, "\n")
-        if tag == "selectionEntry":
-            type = subelem.attrib["type"]
-            print("\n\n", type, "\n")
-            if type == "unit":
-                army = unit(subelem, army)
-            if type == "rule":
-                army = rule(subelem)
-            if type == "upgrade":
-                army = upgrade(subelem, army)
-    return army
-
-##
-# @brief Fills the army by parsing the document
-#
-
-def fillArmy(elem: ET.Element, army: Army) -> Army:
+        print("OFFENSIVE RULES:", self._offensiveRules)
+        print("--- links ---")
+        for l in self._links:
+            l.print()
+        print("--- options ---")
+        for o in self._options:
+            o.print()
     
-    tag = formatTag(elem.tag)
-    if tag == "forceEntries": # army organisation
-        print("==== FORCE ENTRIES ====")
-        army = forceEntries(elem, army)
-    elif tag == "selectionEntries": # unit/rule/...
-        print ("==== SELECTION ENTRIES ====")
-        army = selectionEntries(elem,army)
-    else :
-        for subelem in elem:
-            army = fillArmy(subelem, army) 
+    def linkOption(self, opt: Option):
+        self._options.append(opt)
 
-    return army
+def manageSelectionEntries(selections: ResultSet):
 
+    for s in selections:
+        unit: Unit = Unit(s)
+        print("___")
+        options: ResultSet = s.find("selectionentries", recursive=False).find_all("selectionentry")
+        # missing stuff
+        for o in options:
+            option: Option = Option(o, unit._id)
+            # option.print()
+            unit.linkOption(option)
+            # option.print()
+        unit.print()
+        # print("cost:\n", cost["value"])
+
+
+def parseFile(soup: BeautifulSoup):
+    catalogue = soup.find("catalogue")#.findAll("categoryEntries", recursive=False)
+    # TODO: add force entries
+    manageSelectionEntries(catalogue.find("selectionentries", recursive=False).find_all("selectionentry", recursive=False))
+    
+    
+        
 def main():
     args = sys.argv
-    
     for filename in args:
-        army: Army = Army()
         if (filename == args[0]):
             continue
-        tree = ET.parse(filename)
-        root = tree.getroot()
-
-        for elem in root:
-            army = fillArmy(elem, army)
-        
+        content = []
+        with open(filename, "r") as file:
+            content = file.readlines()
+            content = "".join(content)
+        soup = BeautifulSoup(content, features="lxml")
+        army = parseFile(soup)
+#         army: Army = Army()
 
 
 if __name__ == "__main__":

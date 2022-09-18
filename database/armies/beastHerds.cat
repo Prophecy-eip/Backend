@@ -80,9 +80,11 @@
           </modifiers>
         </infoLink>
       </infoLinks>
+      <!-- target id links to the category (here is character) -->
       <categoryLinks>
         <categoryLink id="2882-dc7d-bc6f-d203" name="New CategoryLink" hidden="false" targetId="953d-22cd-7ee1-36dc" primary="true"/>
       </categoryLinks>
+      <!-- DONE -->
       <selectionEntries>
         <selectionEntry id="95b7-96da-f2d3-a028" name="Hunting Call" hidden="false" collective="false" import="true" type="upgrade">
           <modifiers>
@@ -92,27 +94,34 @@
               </conditions>
             </modifier>
           </modifiers>
+      <!-- DONE -->
           <constraints>
             <constraint field="selections" scope="parent" value="1.0" percentValue="false" shared="true" includeChildSelections="false" includeChildForces="false" id="4958-19a7-e4fa-0762" type="max"/>
           </constraints>
+      <!-- DONE -->
           <rules>
             <rule id="a4e5-04e2-31c1-fa2e" name="Hunting Call" hidden="false">
               <description>If a Beast Lord with this upgrade is the General, Ambush rolls of 1-2 for units with one or more models with Pack Tactics may be rerolled. Unless the owning player has the first Player Turn, Ambush rolls for such units must be made starting from the controlling player’s Player Turn 1 (but still at the end of step 2 of the Movement Phase Sequence).</description>
             </rule>
           </rules>
+      <!-- DONE -->
           <costs>
             <cost name="pts" typeId="24fd-8af8-0c78-001c" value="25.0"/>
           </costs>
+      <!-- DONE -->
         </selectionEntry>
+        <!-- TODO -->
         <selectionEntry id="87ba-62bf-1fa9-74c1" name="Special Equipment" hidden="false" collective="false" import="true" type="upgrade">
           <constraints>
             <constraint field="selections" scope="parent" value="1.0" percentValue="false" shared="true" includeChildSelections="true" includeChildForces="false" id="937e-0fa0-a9ad-c1f7" type="max"/>
           </constraints>
           <selectionEntryGroups>
+          <!-- Special items -->
             <selectionEntryGroup id="3c3a-8bf2-1ee3-60e1" name="Special Equipment" hidden="false" collective="false" import="true">
               <constraints>
                 <constraint field="24fd-8af8-0c78-001c" scope="parent" value="200.0" percentValue="false" shared="true" includeChildSelections="true" includeChildForces="false" id="0c52-35ae-3512-c601" type="max"/>
               </constraints>
+          <!-- option links for special equipment -->
               <selectionEntryGroups>
                 <selectionEntryGroup id="2704-96cd-d91f-9c59" name="Weapon Enchantment" hidden="false" collective="false" import="true">
                   <constraints>
@@ -369,6 +378,7 @@
       </entryLinks>
       <costs>
         <cost name="pts" typeId="24fd-8af8-0c78-001c" value="180.0"/>
+        <!-- DONE (cost only) -->
       </costs>
     </selectionEntry>
     <selectionEntry id="28ff-8f65-ae1a-f291" name="Beast Chieftain" hidden="false" collective="false" import="true" type="unit">
