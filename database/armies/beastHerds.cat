@@ -3426,6 +3426,7 @@
         <cost name="pts" typeId="24fd-8af8-0c78-001c" value="45.0"/>
       </costs>
     </selectionEntry>
+    <!-- ~= DONE ? -->
     <selectionEntry id="ab5b-5716-8b72-8982" name="Razortusk Chariot" hidden="false" collective="false" import="true" type="unit">
       <modifiers>
         <modifier type="set" field="854c-a3f8-1a56-5e6e" value="8.0">
@@ -4122,6 +4123,7 @@ Range 8′′, Shots 1, Str 4, AP 0, Area Attack (3×3), Reload!, hits automatic
       </costs>
     </selectionEntry>
   </selectionEntries>
+  <!-- ~DONE -->
   <sharedSelectionEntries>
     <selectionEntry id="2660-c88a-bf3d-3113" name="Greater Totem Bearer" hidden="false" collective="false" import="true" type="upgrade">
       <constraints>

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 import sys
+from typing import Dict
 
 from bs4 import BeautifulSoup, ResultSet
+from dotenv import set_key
 from numpy import array
 
 
@@ -38,6 +40,20 @@ class Link:
             print("  ", m)
         print("")
 
+class Cost:
+    _name: str = ""
+    _value: str = ""
+
+    def __init__(self, cost):
+        self._name = cost["name"]
+        self._value = cost["value"]
+
+    def toString(self) -> str:
+        return self._value + " " + self._name 
+
+    def print(self):
+        print(self.toString())
+
 class Condition:
     _field: str = ""
     _value: str = ""
@@ -49,6 +65,13 @@ class Condition:
         self._value = condition["value"]
         self._percentValue = condition["percentvalue"]
         self._type = condition["type"]
+
+    def toString(self) -> str:
+        s: str = self._field + " " + self._type + " " + self._value
+
+        if self._percentValue == "true":
+            s += " %"
+        return s
 
     def print(self):
         print("FIELD:", self._field, "\tVALUE:", self._value, "\tPERCENT:", self._percentValue, "\tTYPE:", self._type, "\n")
@@ -65,6 +88,21 @@ class Rule:
     def print(self):
         print("NAME:", self._name)
         print("DESCRIPTION:", self._description, "\n")
+
+class Modifier:
+    _type: str = ""
+    _value: str = ""
+    _conditions: array(str, [])
+
+    def __init__(self, modifier):
+        self._type = modifier["type"]
+        self._value = modifier["value"]
+
+        try:
+            for c in modifier.find("conditions").find_all("condition"):
+                self._conditions.append(Condition(c))
+        except:
+            pass
 
 class Option:
     pass
@@ -119,18 +157,14 @@ class Option:
 
 #  TODO: try to add selection entry group
         # try:
-        #         groups: ResultSet = option.find("selectionentrygroups").find_all("selectionentrygroup")
-                
-        #         print("+++\n", groups, "\n+++++")
+        #     groups: ResultSet = option.find("selectionentrygroups").find_all("selectionentrygroup")
 
-        #         print(groups.__len__())
-        #         for opt in groups:
-        #             try:
-        #                 opt = Option(opt, unitId)
-        #                 self._subOptions.append(opt)
-        #                 opt.print()
-        #             except:
-        #                 pass
+        #     for opt in groups:
+        #         for o in opt.find("selectionentrygroups").find_all("selectionentrygroup"): 
+        #             print(o)    
+        #             self._subOptions.append(Option(o))
+        #             # for z in x:
+        #             #     print(z["name"])
         # except:
         #     pass
 
@@ -161,9 +195,38 @@ class Option:
 class Item:
     _name: str = ""
     _id: str = ""
+    _isCollective: str = ""
+    _type: str = ""
+
+    _constraints: array(Condition, []) = []
+
+    _links: array(Link, []) = []
+
+    _cost: Cost
 
     def __init__(self, item):
-        self._name = ""
+        self._name = item["name"]
+        self._id = item["id"]
+        self._type = item["type"]
+        # constraints
+        try:
+            for c in item.find("constraints").find_all("constraint"):
+                self._constraints.append(Condition(c))
+        except:
+            pass
+        # links
+        try:
+            for l in item.find("infolinks").find_all("infolink"):
+                self._links.append(Link(l))
+        except:
+            pass
+        #cost
+        try:
+            self._cost = Cost(item.find("costs").find("cost"))
+        except:
+            pass
+
+    
 
 class SpecialItemsCategory:
     _name: str = ""
@@ -179,11 +242,100 @@ class SpecialItemsCategory:
         self._name = entry["name"]
         self._isCollective = entry["collective"]
         
-        for c in entry.find("constraints").find_all("constraint"):
-            self._constraints.append(Condition(c))
-        
+        try:
+            for c in entry.find("constraints").find_all("constraint"):
+                self._constraints.append(Condition(c))
+        except:
+            pass
         for item in entry.find("selectionentrygroups").find_all("selectionentrygroup"):
             self._items.append(Item(item))
+
+
+class Profile:
+    _id: str = ""
+    _name: str = ""
+    _type: str = ""
+    _characteristics: dict = None
+
+    def __init__(self, profile):
+        self._characteristics = dict()
+        self._name = profile["name"]
+        self._id = profile["id"]
+        self._type = profile["typename"]
+
+        for c in profile.find("characteristics", recursive=False).find_all("characteristic", recursive=False):
+            self._characteristics[c["name"]] = c.getText()
+    
+    def print(self):
+        print("NAME:", self._name, "\tID:", self._id, "\tTYPE:", self._type)
+        print("--- characteristics ---")
+        print(self._characteristics)
+
+class Upgrade:
+    _id: str = ""
+    _name: str = ""
+    _collective: str = ""
+
+    _constraints: array(Condition, []) = []
+
+    _links: array(Link, []) = []
+
+    _cost: Cost
+
+    _modifiers: array(Modifier, []) = []
+
+    _profiles: array(Profile, []) = []
+    
+    _rules: array(Rule, []) = []
+
+    _specialItemsCategories: array(SpecialItemsCategory, []) = []
+
+
+    def __init__(self, upgrade):
+        self._name = upgrade["name"]
+        self._id = upgrade["id"]
+        self._collective = upgrade["collective"]
+        # constraints
+        try:
+            for c in upgrade.find("constraints").find_all("constraint"):
+                self._constraint.apend(Condition(c))
+        except:
+            pass 
+        # links
+        try:
+            for l in upgrade.find("infolinks").find_all("infolink"):
+                self._links.append(Link(l))
+        except:
+            pass
+        # cost
+        try:
+            self._cost = Cost(upgrade.find("costs").find("cost"))
+        except:
+            pass
+        # modifiers
+        try:
+            for m in upgrade.find("modifiers").find_all("modifier"):
+                self._modifiers.append(Modifier(m))
+        except:
+            pass
+        # profiles
+        try:
+            for p in upgrade.find("profiles").find_all("profile"):
+                self._profiles.append(Profile(p))
+        except:
+            pass
+        # rules
+        try:
+            for r in upgrade.find("rules").find_all("rule"):
+                self._rules.append(Rule(r))
+        except:
+            pass
+        # selection entry groups
+        try:
+            for c in upgrade.find("selectionentrygroups").find_all("selectionentrygroup"):
+                self._specialItemsCategories.append(SpecialItemsCategory(c))
+        except:
+            pass
 
 
 ##
@@ -198,65 +350,18 @@ class Unit:
 
     _cost: str = ""
     
-    _height: str = ""
-    _type: str = ""
-    _base: str = ""
-
-    _adv: str = ""
-    _mar: str = ""
-    _dis: str = ""
-    _globalRules: str = ""
-
-    _hp: str = ""
-    _def: str = ""
-    _res: str = ""
-    _arm: str = ""
-    _defensiveRules: str = ""
-
-    _att: str = ""
-    _off: str = ""
-    _str: str = ""
-    _ap: str = ""
-    _agi: str = ""
-    _offensiveRules: str = ""
-    
     _links: array(Link, []) = []
     _options: array(Option, []) = []
-    # options: array(Option, [])
+    _profiles: array(Profile, []) = []
 
     def __init__(self, selection):
         self._id = selection["id"]
         self._name = selection["name"]
         self._cost = selection.find("costs", recursive=False).find("cost")["value"] + " " + selection.find("costs", recursive=False).find("cost")["name"]
-        
         # profiles
         profiles: ResultSet = selection.find("profiles").find_all("profile")
-        for profile in profiles:
-            name: str = profile["name"]
-            c = profile.find("characteristics")
-            if name.find("Global") != -1:
-                self._adv = c.find("characteristic", {"name": "Adv"}).getText()
-                self._mar = c.find("characteristic", {"name": "Mar"}).getText()
-                self._dis =  c.find("characteristic", {"name": "Dis"}).getText()
-                self._globalRules = c.find("characteristic", {"name": "Rules"}).getText()
-            if name.find("Defensive") != -1:
-                self._hp =  c.find("characteristic", {"name": "HP"}).getText()
-                self._def =  c.find("characteristic", {"name": "Def"}).getText()
-                self._res =  c.find("characteristic", {"name": "Res"}).getText()
-                self._arm =  c.find("characteristic", {"name": "Arm"}).getText()
-                self._defensiveRules = c.find("characteristic", {"name": "Rules"}).getText()
-            if name.find("Offensive") != -1:
-                self._att = c.find("characteristic", {"name": "Att"}).getText()
-                self._off = c.find("characteristic", {"name": "Off"}).getText()
-                self._str = c.find("characteristic", {"name": "Str"}).getText()
-                self._ap = c.find("characteristic", {"name": "AP"}).getText()
-                self._agi = c.find("characteristic", {"name": "Agi"}).getText()
-                self._offensiveRules = c.find("characteristic", {"name": "Rules"}).getText()
-            if name.find("Size") != -1:
-                self._height = c.find("characteristic", {"name": "Height"}).getText()
-                self._type = c.find("characteristic", {"name": "Type"}).getText()
-                self._base = c.find("characteristic", {"name": "Base"}).getText()
-        
+        for p in profiles:
+            self._profiles.append(Profile(p))
         # infoLinks
         links: ResultSet = selection.find("infolinks").find_all("infolink")
         for link in links:
@@ -269,17 +374,14 @@ class Unit:
     # 
 
     def print(self):
+        print("\n===== UNIT =====")
         print("NAME:", self._name)
         print("ID:  ", self._id)
         print("CATEGORY: ", self._categoryId)
         print("COST:", self._cost)
-        print("SIZE:\t\theight:", self._height, "\ttype:", self._type, "\t\tbase:", self._base)
-        print("GLOBAL:\t\tadv:", self._adv, "\tmar:", self._mar, "\tdis:", self._dis)
-        print("GOBAL RULES:", self._globalRules)
-        print("DEFENSIVE:\thp:", self._hp, "\t\tdef:", self._def, "\t\tres:", self._res, "\t\tarm:", self._arm)
-        print("DEFENSIVE RULES:", self._defensiveRules)
-        print("OFFENSIVE:\tatt:", self._att, "\t\toff:", self._off, "\t\tstr:", self._str, "\t\tap:", self._ap, "\t\tagi: ", self._agi)
-        print("OFFENSIVE RULES:", self._offensiveRules)
+        print("--- profiles ---")
+        for p in self._profiles:
+            p.print()
         print("--- links ---")
         for l in self._links:
             l.print()
@@ -295,21 +397,33 @@ def manageSelectionEntries(selections: ResultSet):
     for s in selections:
         unit: Unit = Unit(s)
         print("___")
-        options: ResultSet = s.find("selectionentries", recursive=False).find_all("selectionentry")
-        # missing stuff
-        for o in options:
-            option: Option = Option(o, unit._id)
-            # option.print()
-            unit.linkOption(option)
-            # option.print()
+        try:
+            options: ResultSet = s.find("selectionentries", recursive=False).find_all("selectionentry")
+            # missing stuff
+            for o in options:
+                option: Option = Option(o, unit._id)
+                unit.linkOption(option)
+        except:
+            pass
         unit.print()
-        # print("cost:\n", cost["value"])
+
+def manageSharedSelectionEntries(entries: ResultSet) -> array(Upgrade, []):
+    upgrades: array(Upgrade, []) = []
+
+    for e in entries:
+        upgrades.append(Upgrade(e))
+    return upgrades
 
 
 def parseFile(soup: BeautifulSoup):
     catalogue = soup.find("catalogue")#.findAll("categoryEntries", recursive=False)
     # TODO: add force entries
     manageSelectionEntries(catalogue.find("selectionentries", recursive=False).find_all("selectionentry", recursive=False))
+    a: array(Upgrade) = manageSharedSelectionEntries(catalogue.find("sharedselectionentries", recursive=False).find_all("selectionentry", recursive=False))
+    for x in a:
+        print(x._name)
+        for i in x._specialItemsCategories:
+            print("  " + i._name)
     
     
         
