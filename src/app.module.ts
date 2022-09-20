@@ -5,6 +5,11 @@ import * as dotenv from "dotenv";
 import { Profile } from "./account/profile/profile.entity";
 import { AccountModule } from "./account/account.module";
 
+import { Army } from "./army/army.entity"
+import { Organisation } from "./army/organisation/organisation.entity";
+import { ArmyModule } from "./army/army.module"
+import { Unit } from "./army/unit/unit.entity";
+
 dotenv.config()
 
 const DB = process.env.POSTGRES_DB;
@@ -23,10 +28,11 @@ const DB_DIALECT = "postgres"
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB,
-      entities: [Profile],
+      entities: [Profile, Army, Organisation, Unit],
       synchronize: true // TODO: remove on deployment
     }),
-    AccountModule
+    AccountModule,
+    ArmyModule
   ],
 })
 export class AppModule {}

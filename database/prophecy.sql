@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS shared_games (
     FOREIGN KEY (owner) REFERENCES profile(username),
     FOREIGN KEY (id) REFERENCES games(id)
 );
+
 CREATE TABLE IF NOT EXISTS shared_statistics
 (
     owner VARCHAR NOT NULL,

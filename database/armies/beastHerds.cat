@@ -4404,6 +4404,7 @@ Range 8′′, Shots 1, Str 4, AP 0, Area Attack (3×3), Reload!, hits automatic
         <cost name="pts" typeId="24fd-8af8-0c78-001c" value="0.0"/>
       </costs>
     </selectionEntry>
+    <!-- DONE -->
     <selectionEntry id="4337-49ca-c304-0749" name="Ancestral Carvings" hidden="false" collective="false" import="true" type="upgrade">
       <modifiers>
         <modifier type="set" field="f61e-b98f-887c-4756" value="2.0">
@@ -4525,6 +4526,7 @@ Range 8′′, Shots 1, Str 4, AP 0, Area Attack (3×3), Reload!, hits automatic
     </selectionEntry>
   </sharedSelectionEntries>
   <sharedSelectionEntryGroups>
+  <!-- DONE ?-->
     <selectionEntryGroup id="132c-23d5-89a7-9455" name="Totem Bearer" hidden="false" collective="false" import="true">
       <constraints>
         <constraint field="selections" scope="parent" value="1.0" percentValue="false" shared="true" includeChildSelections="false" includeChildForces="false" id="0110-7e54-9fb2-46b7" type="max"/>
