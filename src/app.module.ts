@@ -8,8 +8,8 @@ import { AccountModule } from "./account/account.module";
 dotenv.config()
 
 const DB = process.env.POSTGRES_DB;
-const DB_HOST = process.env.DATABASES_IP;
-const DB_PORT: number = +process.env.DATABASES_PORT;
+const DB_HOST = process.env.DATABASE_IP;
+const DB_PORT: number = +process.env.DATABASE_PORT;
 const DB_USERNAME = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DIALECT = "postgres"

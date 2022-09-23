@@ -11,10 +11,8 @@ In order to launch the database and the server, you need to provide the followin
 - `POSTGRES_PASSWORD`: The database's password
 - `DATABASE_IP`: The database's ip address
 - `DATABASE_PORT`: The database's port
-- `JWT_SECRET`: The secret kew for the server's jwt
-
-*optional*: 
-- `TESTS_PORT` if you want to run the unit tests
+- `JWT_SECRET`: The secret key for the server's jwt
+- `TESTS_PORT` To run the unit tests
 
 ### Launching the database
 
