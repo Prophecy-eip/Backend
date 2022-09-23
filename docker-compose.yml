@@ -3,7 +3,7 @@ services:
     build: ./database
     container_name: database
     ports:
-      - "${DATABASES_PORT}:${DATABASES_PORT}"
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
     volumes:
       - prophecy:/var/lib/postgresql/data
     environment:
@@ -32,7 +32,7 @@ services:
       container_name: backend_tests
       command: ["yarn", "test", "--coverage"]
       ports:
-        - "${TESTS_PORT}"
+        - "${TESTS_PORT}:${TESTS_PORT}"
       networks:
         - prophecy
 
