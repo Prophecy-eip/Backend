@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import {Column, Entity, JoinColumn, OneToOne, OneToMany, PrimaryColumn, ManyToOne} from "typeorm";
 
 import { Army } from "../army.entity";
-import { Organisation } from "../organisation/organisation.entity";
+import {UnitCategory} from "../unit-category/unit-category.entity";
+import {UnitProfile} from "./unit-profile/unit-profile.entity";
 
 @Entity("units")
 export class Unit {
@@ -11,14 +12,16 @@ export class Unit {
     @Column()
     public name: string;
 
-    // @OneToOne((type) => Army)
-    // @JoinColumn({name: "army_id", referencedColumnName: "id"})
-    // @Column()
-    // public army: Army;
-    //
-    // @OneToOne((type) => Organisation)
-    // @JoinColumn({name: "organisation_id", referencedColumnName: "id"})
-    // @Column()
-    // public organisation: Organisation
+    @OneToOne((type) => Army)
+    @JoinColumn({name: "army", referencedColumnName: "id"})
+    @Column({type: "varchar"})
+    public army: Army;
+
+    @OneToMany(() => UnitCategory, (category) => category.units)
+    @JoinColumn({name: "category", referencedColumnName: "id"})
+    @Column({type: "varchar"})
+    public category: UnitCategory;
+
+    @ManyToOne( () => UnitProfile)
     
 }

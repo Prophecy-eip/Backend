@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from lib2to3.pgen2.token import PERCENT
-from logging import error
 import sys
-from typing import Dict
 
 from bs4 import BeautifulSoup, ResultSet
-from dotenv import set_key
 from numpy import array
+
+import psycopg2
+from configparser import ConfigParser
+
 
 NAME: str = "name"
 VALUE: str = "value"
@@ -71,7 +71,13 @@ FORCE_ENTRY: str = "forceentry"
 
 SHARED_SELECTION_ENTRY_GROUPS: str = "sharedselectionentrygroups"
 
+SHARED_RULES: str = "sharedrules"
 
+SHARED_PROFILES: str = "sharedprofiles"
+
+
+ARMIES_TABLE: str = "armies"
+RULES_TABLE: str = "rules"
 
 ##
 # @class Link represents the <infoLink> flag
@@ -143,16 +149,26 @@ class Condition:
 
 class Rule:
     # id: str
-    _name: str
-    _description: str
+    __name: str = ""
+    __description: str = ""
 
-    def __init__(self, rule):
-        self._name = rule[NAME]
-        self._description = rule.find(DESCRIPTION).getText()
+    def __init__(self, rule: ResultSet):
+        self.__name = rule[NAME]
+        self.__description = rule.find(DESCRIPTION).getText()
+
+    def getName(self) -> str:
+        return self.__name
+
+    def getDescription(self) -> str:
+        return self.__description
 
     def print(self):
         print("NAME:", self._name)
         print("DESCRIPTION:", self._description, "\n")
+
+    def save(self, connexion, cursor):
+        cursor.execute(f"""INSERT INTO {RULES_TABLE} ({NAME}, {DESCRIPTION}) VALUES (%s,%s)""", (self.__name, self.__description))
+        connexion.commit()
 
 class Modifier:
     _type: str = ""
@@ -429,7 +445,6 @@ class Upgrade:
                 for s in selec.find_all(SELECTION_ENTRY_GROUP):
                     self._specialItemsCategories.append(SpecialItemsCategory(s))
         except:
-            print("special item exception")
             pass
 
     def print(self):
@@ -525,50 +540,131 @@ class UnitCategory:
     def print(self):
         print("NAME:", self._name, "\tID:", self._id)
 
+class UpgradeCategory:
+    _id: str = ""
+    _name: str = ""
+    _collective: str = ""
+    _constraints: array(Condition) = []
+    _upgrades: array(Upgrade) = []
+    _links: array(Link) = []
 
-def manageCategoryLinks(categories: ResultSet) -> array(UnitCategory):
-    arr: array(UnitCategory) = []
-
-    for c in categories:
-        arr.append(UnitCategory(c))
-    return arr
-
-
-def manageSelectionEntries(selections: ResultSet):
-    for s in selections:
-        unit: Unit = Unit(s)
-        print("___")
+    def __init__(self, category):
+        # print("\n\n\nCATEGORY\n", category, "\n\n\n")
+        self._id = category[ID]
+        self._name = category[NAME]
+        self._collective = category[COLLECTIVE]
+        for c in category.find(CONSTRAINTS).find_all(CONSTRAINT):
+            self._constraints.append(Condition(c))
+        # upgrades
         try:
-            options: ResultSet = s.find(SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY)
-            # missing stuff
-            for o in options:
-                option: Option = Option(o, unit._id)
-                unit.linkOption(option)
+            for u in category.find(SELECTION_ENTRIES).find_all(SELECTION_ENTRY):
+                self._upgrades.append(Upgrade(u))
         except:
             pass
-        unit.print()
+        # links
+        try:
+            for l in category.find(ENTRY_LINKS).find_all(ENTRY_LINK):
+                self._links.append(Link(l))
+        except:
+            pass
 
-def manageSharedSelectionEntries(entries: ResultSet) -> array(Upgrade, []):
-    upgrades: array(Upgrade, []) = []
+    def print(self):
+        print("NAME:", self._name, "\tID:", self._id, "\tCOLLECTIVE:", self._collective)
+        print("--- constraints ---")
+        for c in self._constraints:
+            c.print()
+        print("--- upgrades ---")
+        for u in self._upgrades:
+            u.print()
 
-    for e in entries:
-        upgrades.append(Upgrade(e))
-    return upgrades
+class Army:
+    __name: str = ""
+    __id: str = ""
 
-def manageSharedSelectionEntryGroups(groups: ResultSet):
-    print()
+    __organisation: array(UnitCategory) = []
+    __units: array(Unit) = []
+    __rules: array(Rule) = []
+    __options: array(Option) = []
+    __upgradeCategories: array(UpgradeCategory) = []
+    __upgrades: array(Upgrade) = []
+    __profiles: array(Profile) = []
 
-def parseFile(soup: BeautifulSoup):
-    catalogue = soup.find(CATALOGUE)
-    categories: array(UnitCategory) = manageCategoryLinks(catalogue.find(FORCE_ENTRIES).find(FORCE_ENTRY).find(CATEGORY_LINKS).find_all(CATEGORY_LINK))
-    for c in categories:
-        c.print()
-    manageSelectionEntries(catalogue.find(SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY, recursive=False))
-    upgrades: array(Upgrade) = manageSharedSelectionEntries(catalogue.find(SHARED_SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY, recursive=False))
+    def __init__(self, soup: BeautifulSoup):
+        catalogue = soup.find(CATALOGUE)
+        self.__id = catalogue[ID]
+        self.__name = catalogue[NAME]
+        self.__manageCategoryLinks(catalogue.find(FORCE_ENTRIES).find(FORCE_ENTRY).find(CATEGORY_LINKS).find_all(CATEGORY_LINK))
+        self.__manageSelectionEntries(catalogue.find(SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY, recursive=False))
+        self.__manageSharedSelectionEntries(catalogue.find(SHARED_SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY, recursive=False))
+        self.__manageSharedSelectionEntryGroups(catalogue.find(SHARED_SELECTION_ENTRY_GROUPS, recursive=False).find_all(SELECTION_ENTRY_GROUP))
+        self.__manageSharedRules(catalogue.find(SHARED_RULES).find_all(RULE))
+        self.__manageSharedProfiles(catalogue.find(SHARED_PROFILES).find_all(PROFILE))
 
-    for x in upgrades:
-        x.print()
-    
+    def __manageCategoryLinks(self, categories: ResultSet):
+        for c in categories:
+            self.__organisation.append(UnitCategory(c))
+
+    def __manageSelectionEntries(self, selections: ResultSet):
+        for s in selections:
+            self.__units.append(Unit(s))
+            try:
+                options: ResultSet = s.find(SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY)
+                # missing stuff
+                for o in options:
+                    self.__options.append(Option(o))
+            except:
+                pass
+
+    def __manageSharedSelectionEntries(self, entries: ResultSet):
+        for e in entries:
+            self.__upgrades.append(Upgrade(e))
+
+    def __manageSharedSelectionEntryGroups(self, groups: ResultSet):
+        for c in groups:
+            self.__upgradeCategories.append(UpgradeCategory(c))
+
+    def __manageSharedRules(self, rules: ResultSet):
+        for r in rules:
+            self.__rules.append(Rule(r))
+
+    def __manageSharedProfiles(self, profiles: ResultSet):
+        for p in profiles:
+            self.__profiles.append(Profile(p))
+
+    def print(self):
+        print("ARMY", self.__name, f"({self.__id})")
+
+
+    def __config(elf, filename="database.ini", section="postgresql"):
+        parser = ConfigParser()
+        db = {}
+
+        parser.read(filename)
+        if parser.has_section(section):
+            params = parser.items(section)
+            for param in params:
+                db[param[0]] = param[1]
+        else:
+            raise Exception('Section {0} not found in the {1} file'.format(section, filename))
+        return db
+
+    def save(self):   
+        print(f"Saving {self.__name} in database...")
+        try:
+            params = self.__config()
+            connexion = psycopg2.connect(**params)
+            cursor = connexion.cursor()
+            cursor.execute(f"""INSERT INTO {ARMIES_TABLE} ({ID}, {NAME}) VALUES (%s,%s)""", (self.__id, self.__name))
+            connexion.commit()
+            for r in self.__rules:
+                r.save(connexion, cursor)
+
+        except:
+            raise Exception("an error occured")
+        finally:
+            connexion.close()
+        
+
         
 def main():
     args = sys.argv
@@ -580,7 +676,8 @@ def main():
             content = file.readlines()
             content = "".join(content)
         soup = BeautifulSoup(content, features="lxml")
-        army = parseFile(soup)
+        army: Army = Army(soup)
+        army.save()
 
 
 if __name__ == "__main__":

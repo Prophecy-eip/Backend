@@ -8,6 +8,7 @@ node_modules/
 
 # environment variables
 .env
+scripts/armies_database/database.ini
 
 # tests
 coverage/
@@ -15,3 +16,4 @@ coverage/
 # build
 build/
 dist/
+

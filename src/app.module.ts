@@ -6,9 +6,10 @@ import { Profile } from "./account/profile/profile.entity";
 import { AccountModule } from "./account/account.module";
 
 import { Army } from "./army/army.entity"
-import { Organisation } from "./army/organisation/organisation.entity";
 import { ArmyModule } from "./army/army.module"
 import { Unit } from "./army/unit/unit.entity";
+import { UnitCategory} from "./army/unit-category/unit-category.entity";
+import {Rule} from "./army/rule/rule.entity";
 
 dotenv.config()
 
@@ -28,7 +29,7 @@ const DB_DIALECT = "postgres"
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB,
-      entities: [Profile, Army, Organisation, Unit],
+      entities: [Profile, Army, UnitCategory, Unit, Rule],
       synchronize: true // TODO: remove on deployment
     }),
     AccountModule,

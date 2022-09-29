@@ -4527,6 +4527,7 @@ Range 8′′, Shots 1, Str 4, AP 0, Area Attack (3×3), Reload!, hits automatic
   </sharedSelectionEntries>
   <sharedSelectionEntryGroups>
   <!-- DONE ?-->
+  <!-- here -->
     <selectionEntryGroup id="132c-23d5-89a7-9455" name="Totem Bearer" hidden="false" collective="false" import="true">
       <constraints>
         <constraint field="selections" scope="parent" value="1.0" percentValue="false" shared="true" includeChildSelections="false" includeChildForces="false" id="0110-7e54-9fb2-46b7" type="max"/>
@@ -4575,6 +4576,7 @@ Range 8′′, Shots 1, Str 4, AP 0, Area Attack (3×3), Reload!, hits automatic
         </selectionEntry>
       </selectionEntries>
     </selectionEntryGroup>
+    <!-- DONE -->
     <selectionEntryGroup id="64c2-b1ab-159f-e6f7" name="BH Armour Enchantments" hidden="false" collective="false" import="true">
       <constraints>
         <constraint field="selections" scope="parent" value="1.0" percentValue="false" shared="true" includeChildSelections="false" includeChildForces="false" id="db54-d156-923f-ea31" type="max"/>
