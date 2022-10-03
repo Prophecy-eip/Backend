@@ -29,7 +29,7 @@ ___
 - [ ] Rule
 - [ ] Other:
 
-## Description
+## Detailed description
 *Description of the error*
 
 ## Expected
