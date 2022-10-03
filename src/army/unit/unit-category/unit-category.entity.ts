@@ -18,6 +18,9 @@ export class UnitCategory {
     @Column({ type: "varchar"})
     public army: Army
 
+    @Column({name: "target_id"})
+    public targetId: string
+
     // @ManyToOne(() => Unit, (unit) => unit.category)
     // // @JoinColumn({name: "units", referencedColumnName: "id"})
     // public units: Unit[]

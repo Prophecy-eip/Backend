@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import profile
-import sys
+import glob
+import os
+import shutil
 
 from bs4 import BeautifulSoup, ResultSet
 from numpy import array
@@ -13,6 +14,9 @@ import json
 
 import uuid
 
+import git
+
+REPOSITORY_NAME: str = "The-9th-Age"
 
 NAME: str = "name"
 VALUE: str = "value"
@@ -101,18 +105,19 @@ OWNER: str = "owner"
 class Link:
     _name: str = ""
     _id: str = ""
+    _targetId: str = ""
     _type: str = ""
     _modifiers: array(str, []) = []
 
     def __init__(self, link):
         self._name = link[NAME]
-        self._id = link[TARGET_ID]
+        self._id = link[ID]
+        self._targetId = link[TARGET_ID]
         self._type = link[TYPE]
-        try:
-            modifiers = link.find(MODIFIERS).find_all(MODIFIER)
-            for m in modifiers:
+        try: 
+            for m in link.find(MODIFIERS).find_all(MODIFIER):
                 self._modifiers.append(m.getText())
-        except:
+        except (AttributeError):
             self._modifiers = []
     
     ##
@@ -163,13 +168,17 @@ class Condition:
         print("FIELD:", self._field, "\tVALUE:", self._value, "\tPERCENT:", self._percentValue, "\tTYPE:", self._type, "\n")
 
 class Rule:
-    # id: str
+    __id: str = ""
     __name: str = ""
     __description: str = ""
 
     def __init__(self, rule: ResultSet):
+        self.__id = str(uuid.uuid4())
         self.__name = rule[NAME]
         self.__description = rule.find(DESCRIPTION).getText()
+
+    def getId(self) -> str:
+        return self.__id
 
     def getName(self) -> str:
         return self.__name
@@ -183,9 +192,9 @@ class Rule:
 
     def save(self, connexion, cursor):
         try:
-            cursor.execute(f"""INSERT INTO {RULES_TABLE} ({NAME}, {DESCRIPTION}) VALUES (%s,%s)""", (self.__name, self.__description))
+            cursor.execute(f"""INSERT INTO {RULES_TABLE} (id, {NAME}, {DESCRIPTION}) VALUES (%s,%s,%s)""", (self.__id, self.__name, self.__description))
             connexion.commit()
-        except (psycopg2.errors.UniqueViolation):
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
 
 class Modifier:
@@ -206,7 +215,7 @@ class Modifier:
         try:
             for c in modifier.find(CONDITIONS).find_all(CONDITION):
                 self._conditions.append(Condition(c))
-        except:
+        except (AttributeError):
             pass
     
     def save(self, connection, cursor):
@@ -217,7 +226,7 @@ class Modifier:
             conditions: str = json.dumps(conditionsArr)
             cursor.execute(f"INSERT INTO {MODIFIERS_TABLE} (id, type, value, field, conditions) VALUES (%s,%s,%s,%s,%s)", (self._id, self._type, self._value, self._field, conditions))
             connection.commit()
-        except (psycopg2.errors.UniqueViolation):
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
 
 class Option:
@@ -255,24 +264,22 @@ class Option:
         self._type = option[TYPE]
 
         try:
-            # modifiers = option.find(MODIFIERS).find_all(MODIFIER)
             for m in option.find(MODIFIERS).find_all(MODIFIER):
-                # for c in m.find(CONDITIONS).find_all(CONDITION):
                 self._modifiers.append(Modifier(m))
-        except:
+        except (AttributeError):
             pass
         
         try:
             for c in option.find(CONSTRAINTS).find_all(CONSTRAINT):
                 self._constraints.append(Condition(c))
-        except:
+        except (AttributeError):
             pass
 
         # print(option)
         try:
             for r in option.find(RULES).find_all(RULE):
                 self._rules.append(Rule(r))
-        except:
+        except (AttributeError):
             pass
     
         self._cost = Cost(option.find(COSTS).find(COST))
@@ -293,7 +300,7 @@ class Option:
         try:
             for l in option.find(ENTRY_LINKS).find_all(ENTRY_LINK):
                 self._links.append(Link(l))
-        except:
+        except (AttributeError):
             pass
     
     def print(self):
@@ -327,7 +334,7 @@ class Option:
             modifiers: str = json.dumps(modifiersArr)
             cursor.execute(f"INSERT INTO {OPTIONS_TABLE} (id, name, type, limits, cost, modifiers) VALUES (%s,%s,%s,%s,%s,%s)", (self._id, self._name, self._type, limits, self._cost.toString(), modifiers))
             connection.commit()
-        except (psycopg2.errors.UniqueViolation):
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
 
 class Item:
@@ -350,24 +357,24 @@ class Item:
         try:
             for c in item.find(CONSTRAINTS).find_all(CONSTRAINT):
                 self._constraints.append(Condition(c))
-        except:
+        except (AttributeError):
             pass
         # links
         try:
             for l in item.find(INFOLINKS).find_all(INFOLINK):
                 self._links.append(Link(l))
-        except:
+        except (AttributeError):
             pass
         #cost
         try:
             self._cost = Cost(item.find(COSTS).find(COST))
-        except:
+        except (AttributeError):
             pass
 
         try:
             for s in item.find(SELECTION_ENTRIES).find_all(SELECTION_ENTRY):
                 print(s[NAME])
-        except:
+        except (AttributeError):
             pass
 
     def print(self):
@@ -400,7 +407,7 @@ class SpecialItemsCategory:
         try:
             for c in entry.find(CONSTRAINTS).find_all(CONSTRAINT):
                 self._constraints.append(Condition(c))
-        except:
+        except (AttributeError):
             pass
         for item in entry.find(SELECTION_ENTRY_GROUPS).find_all(SELECTION_ENTRY_GROUP):
             self._items.append(Item(item))
@@ -443,7 +450,7 @@ class Profile:
             characteristics = json.dumps(self.__characteristics)
             cursor.execute(f"INSERT INTO {UNIT_PROFILES_TABLE} ({ID}, {NAME}, {CHARACTERISTICS}, {IS_SHARED}, {OWNER}) VALUES (%s,%s,%s,%s,%s)", (self.__id, self.__name, characteristics, isShared, ownerId))
             connection.commit()
-        except (psycopg2.errors.UniqueViolation):
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
             
 class Upgrade:
@@ -474,43 +481,43 @@ class Upgrade:
         try:
             for c in upgrade.find(CONSTRAINTS).find_all(CONSTRAINT):
                 self._constraint.apend(Condition(c))
-        except:
+        except (AttributeError):
             pass 
         # links
         try:
             for l in upgrade.find(INFOLINKS).find_all(INFOLINK):
                 self._links.append(Link(l))
-        except:
+        except (AttributeError):
             pass
         # cost
         try:
             self._cost = Cost(upgrade.find(COSTS).find(COST))
-        except:
+        except (AttributeError):
             pass
         # modifiers
         try:
             for m in upgrade.find(MODIFIERS).find_all(MODIFIER):
                 self._modifiers.append(Modifier(m))
-        except:
+        except (AttributeError):
             pass
         # profiles
         try:
             for p in upgrade.find(PROFILES).find_all(PROFILE):
                 self._profiles.append(Profile(p))
-        except:
+        except (AttributeError):
             pass
         # rules
         try:
             for r in upgrade.find(RULES).find_all(RULE):
                 self._rules.append(Rule(r))
-        except:
+        except (AttributeError):
             pass
         # selection entry groups
         try:
             for selec in upgrade.find_all(SELECTION_ENTRY_GROUPS):
                 for s in selec.find_all(SELECTION_ENTRY_GROUP):
                     self._specialItemsCategories.append(SpecialItemsCategory(s))
-        except:
+        except (AttributeError):
             pass
 
     def print(self):
@@ -559,18 +566,23 @@ class Unit:
         self._name = selection[NAME]
         self._cost = Cost(selection.find(COSTS, recursive=False).find(COST))
         # profiles
-        profiles: ResultSet = selection.find(PROFILES).find_all(PROFILE)
-        for p in profiles:
-            self._profiles.append(Profile(p))
+        print(" ", self._name) # TODO: remove
+        try:
+            for p in selection.find(PROFILES).find_all(PROFILE):
+                self._profiles.append(Profile(p))
+        except (AttributeError):
+            pass
         # infoLinks
-        links: ResultSet = selection.find(INFOLINKS).find_all(INFOLINK)
-        for link in links:
-            self._links.append(Link(link))
+        try:
+            for link in selection.find(INFOLINKS).find_all(INFOLINK):
+                self._links.append(Link(link))
+        except (AttributeError):
+            pass
         # options
         try:
             for s in selection.find(SELECTION_ENTRIES).find_all(SELECTION_ENTRY):
                 self._options.append(Option(s, self._id))
-        except:
+        except (AttributeError):
             pass
         # categoryLinks
         self._categoryId = selection.find(CATEGORY_LINKS).find(CATEGORY_LINK)[TARGET_ID]
@@ -612,23 +624,26 @@ class Unit:
             options: str = json.dumps(optionsArr)
             cursor.execute(f"INSERT INTO {UNITS_TABLE} (id, name, army, category, cost, options, profiles) VALUES (%s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, armyId, self._categoryId, self._cost.toString(), options, profiles))
             connection.commit()
-        except (psycopg2.errors.UniqueViolation):
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
 
 
 class UnitCategory:
-    __id: str = "" # targetid
+    __id: str = "" 
+    __targetId: str = ""
     __name: str = ""
     __constraints: array(Condition) = None
 
     def __init__(self, category):   
-        self.__constraints = [  ]
-        self.__id = category[TARGET_ID]
+        self.__constraints = []
+
+        self.__id = category[ID]
+        self.__targetId = category[TARGET_ID]
         self.__name = category[NAME]
         try:
             for c in category.find(CONSTRAINTS).find_all(CONSTRAINT):
                 self.__constraints.append(Condition(c))
-        except:
+        except (AttributeError):
             pass
 
     def print(self):
@@ -640,9 +655,9 @@ class UnitCategory:
             for c in self.__constraints:
                 arr.append(c.toString())
             constraints = json.dumps(arr)
-            cursor.execute("INSERT INTO unit_categories (id, name, limits, army) VALUES (%s,%s,%s,%s)", (self.__id, self.__name, constraints, armyId))
+            cursor.execute("INSERT INTO unit_categories (id, name, limits, army, target_id) VALUES (%s,%s,%s,%s,%s)", (self.__id, self.__name, constraints, armyId, self.__targetId))
             connexion.commit()
-        except (psycopg2.errors.UniqueViolation):
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
 
 class UpgradeCategory:
@@ -666,13 +681,13 @@ class UpgradeCategory:
         try:
             for u in category.find(SELECTION_ENTRIES).find_all(SELECTION_ENTRY):
                 self._upgrades.append(Upgrade(u))
-        except:
+        except (AttributeError):
             pass
         # links
         try:
             for l in category.find(ENTRY_LINKS).find_all(ENTRY_LINK):
                 self._links.append(Link(l))
-        except:
+        except (AttributeError):
             pass
 
     def print(self):
@@ -692,7 +707,7 @@ class UpgradeCategory:
             limits: str = json.dumps(arr)
             cursor.execute(f"INSERT INTO {UPGRADE_CATEGORIES_TABLE} (id, name, is_collective, limits, army) VALUES (%s, %s, %s, %s, %s)", (self.__id, self.__name, self.__collective, limits, armyId))
             connection.commit()
-        except (psycopg2.errors.UniqueViolation):
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
 
 
@@ -703,7 +718,7 @@ class Army:
     __organisation: array(UnitCategory) = [] # saved
     __units: array(Unit) = []
     __rules: array(Rule) = [] # saved
-    __options: array(Option) = []
+    __options: array(Option) = [] # TODO: save
     __upgradeCategories: array(UpgradeCategory) = [] # saved
     __upgrades: array(Upgrade) = []
     __profiles: array(Profile) = [] # saved
@@ -722,10 +737,22 @@ class Army:
         self.__name = catalogue[NAME]
         self.__manageCategoryLinks(catalogue.find(FORCE_ENTRIES).find(FORCE_ENTRY).find(CATEGORY_LINKS).find_all(CATEGORY_LINK))
         self.__manageSelectionEntries(catalogue.find(SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY, recursive=False))
-        self.__manageSharedSelectionEntries(catalogue.find(SHARED_SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY, recursive=False))
-        self.__manageSharedSelectionEntryGroups(catalogue.find(SHARED_SELECTION_ENTRY_GROUPS, recursive=False).find_all(SELECTION_ENTRY_GROUP))
-        self.__manageSharedRules(catalogue.find(SHARED_RULES).find_all(RULE))
-        self.__manageSharedProfiles(catalogue.find(SHARED_PROFILES).find_all(PROFILE))
+        try:
+            self.__manageSharedSelectionEntries(catalogue.find(SHARED_SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY, recursive=False))
+        except (AttributeError):
+            pass
+        try:
+            self.__manageSharedSelectionEntryGroups(catalogue.find(SHARED_SELECTION_ENTRY_GROUPS, recursive=False).find_all(SELECTION_ENTRY_GROUP))
+        except (AttributeError):
+            pass
+        try:
+            self.__manageSharedRules(catalogue.find(SHARED_RULES).find_all(RULE))
+        except (AttributeError):
+            pass
+        try:
+            self.__manageSharedProfiles(catalogue.find(SHARED_PROFILES).find_all(PROFILE))
+        except (AttributeError):
+            pass
 
     def __manageCategoryLinks(self, categories: ResultSet):
         for c in categories:
@@ -733,14 +760,21 @@ class Army:
 
     def __manageSelectionEntries(self, selections: ResultSet):
         for s in selections:
-            self.__units.append(Unit(s))
-            try:
-                options: ResultSet = s.find(SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY)
-                # missing stuff
-                for o in options:
-                    self.__options.append(Option(o))
-            except:
-                pass
+            type = s["type"]
+            print("    Type:", type)
+            if type == "unit":
+                unit: Unit = Unit(s)
+                self.__units.append(unit)
+                try:
+                    options: ResultSet = s.find(SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY)
+                    # missing stuff
+                    for o in options:
+                        self.__options.append(Option(o, unit._id))
+                except (AttributeError):
+                    pass
+            if type == "upgrade":
+                self.__upgrades.append(Upgrade(s))
+            
 
     def __manageSharedSelectionEntries(self, entries: ResultSet):
         for e in entries:
@@ -794,19 +828,29 @@ class Army:
             for u in self.__units:
                 print(u._name)
                 u.save(connexion, cursor, self.__id)
-
-        except (psycopg2.errors.UniqueViolation):
+            print("Done!")
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
-        except:
-            raise Exception("an error occured")
+        # except:
+        #     raise Exception("an error occured")
         finally:
             connexion.close()
         
 def main():
-    args = sys.argv
-    for filename in args:
-        if (filename == args[0]):
-            continue
+
+    dirpath = f"./{REPOSITORY_NAME}"
+
+    if os.path.exists(dirpath):
+        shutil.rmtree(dirpath)
+
+    print(f"Cloning {REPOSITORY_NAME } repository...")
+    git.Git(".").clone("https://github.com/BSData/The-9th-Age.git")
+    print("Repository succesfully cloned!")
+
+    filenames = [f for f in glob.glob(f"./{REPOSITORY_NAME}/*.cat")]
+    
+    for filename in filenames:
+        print(filename)
         content = []
         with open(filename, "r") as file:
             content = file.readlines()
