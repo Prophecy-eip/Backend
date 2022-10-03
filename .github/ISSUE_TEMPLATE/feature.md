@@ -15,6 +15,10 @@ assignees:
 - [ ] Database
 - [ ] Other:
 
-## What is expected from the feature
+## Detailed description
+*What is expected from the feature*
+
+## What currently exists (if relevant)
+
 
 ## Notes
