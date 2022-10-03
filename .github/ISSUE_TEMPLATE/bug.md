@@ -7,7 +7,7 @@ assignees:
 
 ---
 
-**Before reporting a bug, please check that someone did not report the same bug as yours**
+**Before reporting a bug, please check that someone did not report a similar one**
 
 ## Detailed bug description
 *What is broken*
