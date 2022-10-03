@@ -41,4 +41,4 @@ You can find the database's documentation [here](./doc/databases/).
 ## Bug report / Feature request
 To report a bug or request a new feature, create a new issue [here](https://github.com/Prophecy-eip/Backend/issues/new/choose) and use the correct template.
 
-**Before submitting an issue, please check that someone did not report the same as yours.**
+**Before submitting an issue, please check that someone did not report a similar one.**
