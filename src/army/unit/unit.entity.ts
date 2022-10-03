@@ -12,15 +12,15 @@ export class Unit {
     @Column()
     public name: string;
 
-    @OneToOne((type) => Army)
-    @JoinColumn({name: "army", referencedColumnName: "id"})
+    // @OneToMany((type) => Army)
+    // @JoinColumn({name: "army", referencedColumnName: "id"})
     @Column({type: "varchar"})
-    public army: Army;
+    public army: string;
 
-    @OneToOne((type) => UnitCategory)
-    @JoinColumn({name: "category", referencedColumnName: "id"})
+    // @OneToOne((type) => UnitCategory)
+    // @JoinColumn({name: "category", referencedColumnName: "id"})
     @Column({type: "varchar"})
-    public category: UnitCategory;
+    public category: string;
 
     @Column()
     public cost: string;

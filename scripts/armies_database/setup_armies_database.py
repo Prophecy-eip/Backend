@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import profile
 import sys
 
 from bs4 import BeautifulSoup, ResultSet
@@ -9,6 +10,8 @@ import psycopg2
 from configparser import ConfigParser
 
 import json
+
+import uuid
 
 
 NAME: str = "name"
@@ -83,6 +86,9 @@ RULES_TABLE: str = "rules"
 UNIT_CATEGORIES_TABLE: str = "unit_categories"
 UNIT_PROFILES_TABLE: str = "unit_profiles"
 UPGRADE_CATEGORIES_TABLE: str = "upgrade_categories"
+UNITS_TABLE: str = "units"
+OPTIONS_TABLE: str = "options"
+MODIFIERS_TABLE: str = "modifiers"
 
 ARMY: str = "army"
 IS_SHARED: str = "is_shared"
@@ -183,12 +189,16 @@ class Rule:
             pass
 
 class Modifier:
+    _id: str = ""
     _type: str = ""
     _value: str = ""
     _field: str = ""
-    _conditions: array(str, [])
+    _conditions: array(Condition) = []
 
     def __init__(self, modifier):
+        self._conditions = []
+
+        self._id = str(uuid.uuid4())
         self._type = modifier[TYPE]
         self._value = modifier[VALUE]
         self._field = modifier[FIELD]
@@ -197,6 +207,17 @@ class Modifier:
             for c in modifier.find(CONDITIONS).find_all(CONDITION):
                 self._conditions.append(Condition(c))
         except:
+            pass
+    
+    def save(self, connection, cursor):
+        try:
+            conditionsArr: array(str) = []
+            for c in self._conditions:
+                conditionsArr.append(c.toString())
+            conditions: str = json.dumps(conditionsArr)
+            cursor.execute(f"INSERT INTO {MODIFIERS_TABLE} (id, type, value, field, conditions) VALUES (%s,%s,%s,%s,%s)", (self._id, self._type, self._value, self._field, conditions))
+            connection.commit()
+        except (psycopg2.errors.UniqueViolation):
             pass
 
 class Option:
@@ -209,29 +230,35 @@ class Option:
     _type: str = ""
     _parentId: str = ""
 
-    _modifiers: array(Condition, []) = []
+    _modifiers: array(Modifier, []) = []
 
     _constraints: array(Condition, []) = []
 
     _rules: array(Rule, []) = []
 
-    _cost: str = ""
+    _cost: Cost
 
     _subOptions: array(Option, []) = []
 
     _links: array(Link, []) = []
 
     def __init__(self, option, unitId: str):
+
+        self._modifiers = []
+        self._constraints = []
+        self._rules = []
+        self._links = []
+
         self._unitId = unitId
         self._name = option[NAME]
         self._id = option[ID]
         self._type = option[TYPE]
 
         try:
-            modifiers = option.find(MODIFIERS).find_all(MODIFIER)
-            for m in modifiers:
-                for c in m.find(CONDITIONS).find_all(CONDITION):
-                    self._modifiers.append(Condition(c))
+            # modifiers = option.find(MODIFIERS).find_all(MODIFIER)
+            for m in option.find(MODIFIERS).find_all(MODIFIER):
+                # for c in m.find(CONDITIONS).find_all(CONDITION):
+                self._modifiers.append(Modifier(m))
         except:
             pass
         
@@ -248,7 +275,7 @@ class Option:
         except:
             pass
     
-        self._cost = option.find(COSTS).find(COST)[VALUE] + " " + option.find(COSTS).find(COST)[NAME]
+        self._cost = Cost(option.find(COSTS).find(COST))
 
 #  TODO: try to add selection entry group
         # try:
@@ -270,7 +297,7 @@ class Option:
             pass
     
     def print(self):
-        print("NAME:", self._name, "\tID:", self._id, "\tTYPE:", self._type, "\tCOST:", self._cost)
+        print("NAME:", self._name, "\tID:", self._id, "\tTYPE:", self._type, "\tCOST:", self._cost.toString())
         print("--- modifiers ---")
         for m in self._modifiers:
             m.print()
@@ -286,6 +313,22 @@ class Option:
         print("--- links ---")
         for l in self._links:
             l.print()
+
+    def save(self, connection, cursor):
+        try:
+            limitsArr: array(str) = []
+            modifiersArr: array(str) = []
+            for c in self._constraints:
+                limitsArr.append(c.toString())
+            for m in self._modifiers:
+                m.save(connection, cursor)
+                modifiersArr.append(m._id)
+            limits: str = json.dumps(limitsArr)
+            modifiers: str = json.dumps(modifiersArr)
+            cursor.execute(f"INSERT INTO {OPTIONS_TABLE} (id, name, type, limits, cost, modifiers) VALUES (%s,%s,%s,%s,%s,%s)", (self._id, self._name, self._type, limits, self._cost.toString(), modifiers))
+            connection.commit()
+        except (psycopg2.errors.UniqueViolation):
+            pass
 
 class Item:
     _name: str = ""
@@ -387,6 +430,9 @@ class Profile:
         for c in profile.find(CHARACTERISTICS, recursive=False).find_all(CHARACTERISTIC, recursive=False):
             self.__characteristics[c[NAME]] = c.getText()
     
+    def getId(self) -> str:
+        return self.__id
+
     def print(self):
         print("NAME:", self.__name, "\tID:", self.__id, "\tTYPE:", self.__type)
         print("--- characteristics ---")
@@ -499,16 +545,19 @@ class Unit:
     _name: str = ""
     _categoryId: str = ""
 
-    _cost: str = ""
+    _cost: Cost
     
     _links: array(Link, []) = []
-    _options: array(Option, []) = []
-    _profiles: array(Profile, []) = []
+    _options: array(Option, []) = [] # saved
+    _profiles: array(Profile, []) = [] # saved
 
     def __init__(self, selection):
+        self._links = []
+        self._options = []
+        self._profiles = []
         self._id = selection[ID]
         self._name = selection[NAME]
-        self._cost = selection.find(COSTS, recursive=False).find(COST)[VALUE] + " " + selection.find(COSTS, recursive=False).find(COST)[NAME]
+        self._cost = Cost(selection.find(COSTS, recursive=False).find(COST))
         # profiles
         profiles: ResultSet = selection.find(PROFILES).find_all(PROFILE)
         for p in profiles:
@@ -517,6 +566,12 @@ class Unit:
         links: ResultSet = selection.find(INFOLINKS).find_all(INFOLINK)
         for link in links:
             self._links.append(Link(link))
+        # options
+        try:
+            for s in selection.find(SELECTION_ENTRIES).find_all(SELECTION_ENTRY):
+                self._options.append(Option(s, self._id))
+        except:
+            pass
         # categoryLinks
         self._categoryId = selection.find(CATEGORY_LINKS).find(CATEGORY_LINK)[TARGET_ID]
     
@@ -542,6 +597,24 @@ class Unit:
     
     def linkOption(self, opt: Option):
         self._options.append(opt)
+
+    def save(self, connection, cursor, armyId):
+        try:
+            profilesArr: array(str) = []
+            optionsArr: array(str) = []
+            for p in self._profiles:
+                p.save(connection, cursor, self._id)
+                profilesArr.append(p.getId())
+            for o in self._options:
+                o.save(connection, cursor)
+                optionsArr.append(o._id)
+            profiles: str = json.dumps(profilesArr)
+            options: str = json.dumps(optionsArr)
+            cursor.execute(f"INSERT INTO {UNITS_TABLE} (id, name, army, category, cost, options, profiles) VALUES (%s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, armyId, self._categoryId, self._cost.toString(), options, profiles))
+            connection.commit()
+        except (psycopg2.errors.UniqueViolation):
+            pass
+
 
 class UnitCategory:
     __id: str = "" # targetid
@@ -718,6 +791,9 @@ class Army:
                 p.save(connexion, cursor, self.__id, isShared=True)
             for c in self.__upgradeCategories:
                 c.save(connexion, cursor, self.__id)
+            for u in self.__units:
+                print(u._name)
+                u.save(connexion, cursor, self.__id)
 
         except (psycopg2.errors.UniqueViolation):
             pass
