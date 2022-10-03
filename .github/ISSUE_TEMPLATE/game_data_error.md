@@ -33,6 +33,6 @@ ___
 *Description of the error*
 
 ## Expected
-*What you expect**
+*What you expect*
 
 ## Notes
