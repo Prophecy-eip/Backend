@@ -8,6 +8,8 @@ from numpy import array
 import psycopg2
 from configparser import ConfigParser
 
+import json
+
 
 NAME: str = "name"
 VALUE: str = "value"
@@ -78,6 +80,13 @@ SHARED_PROFILES: str = "sharedprofiles"
 
 ARMIES_TABLE: str = "armies"
 RULES_TABLE: str = "rules"
+UNIT_CATEGORIES_TABLE: str = "unit_categories"
+UNIT_PROFILES_TABLE: str = "unit_profiles"
+UPGRADE_CATEGORIES_TABLE: str = "upgrade_categories"
+
+ARMY: str = "army"
+IS_SHARED: str = "is_shared"
+OWNER: str = "owner"
 
 ##
 # @class Link represents the <infoLink> flag
@@ -167,8 +176,11 @@ class Rule:
         print("DESCRIPTION:", self._description, "\n")
 
     def save(self, connexion, cursor):
-        cursor.execute(f"""INSERT INTO {RULES_TABLE} ({NAME}, {DESCRIPTION}) VALUES (%s,%s)""", (self.__name, self.__description))
-        connexion.commit()
+        try:
+            cursor.execute(f"""INSERT INTO {RULES_TABLE} ({NAME}, {DESCRIPTION}) VALUES (%s,%s)""", (self.__name, self.__description))
+            connexion.commit()
+        except (psycopg2.errors.UniqueViolation):
+            pass
 
 class Modifier:
     _type: str = ""
@@ -361,25 +373,33 @@ class SpecialItemsCategory:
 
 
 class Profile:
-    _id: str = ""
-    _name: str = ""
-    _type: str = ""
-    _characteristics: dict = None
+    __id: str = ""
+    __name: str = ""
+    __type: str = ""
+    __characteristics: dict = None
 
     def __init__(self, profile):
-        self._characteristics = dict()
-        self._name = profile[NAME]
-        self._id = profile[ID]
-        self._type = profile[TYPENAME]
+        self.__characteristics = dict()
+        self.__name = profile[NAME]
+        self.__id = profile[ID]
+        self.__type = profile[TYPENAME]
 
         for c in profile.find(CHARACTERISTICS, recursive=False).find_all(CHARACTERISTIC, recursive=False):
-            self._characteristics[c[NAME]] = c.getText()
+            self.__characteristics[c[NAME]] = c.getText()
     
     def print(self):
-        print("NAME:", self._name, "\tID:", self._id, "\tTYPE:", self._type)
+        print("NAME:", self.__name, "\tID:", self.__id, "\tTYPE:", self.__type)
         print("--- characteristics ---")
-        print(self._characteristics)
+        print(self.__characteristics)
 
+    def save(self, connection, cursor, ownerId, isShared = False):
+        try:
+            characteristics = json.dumps(self.__characteristics)
+            cursor.execute(f"INSERT INTO {UNIT_PROFILES_TABLE} ({ID}, {NAME}, {CHARACTERISTICS}, {IS_SHARED}, {OWNER}) VALUES (%s,%s,%s,%s,%s)", (self.__id, self.__name, characteristics, isShared, ownerId))
+            connection.commit()
+        except (psycopg2.errors.UniqueViolation):
+            pass
+            
 class Upgrade:
     _id: str = ""
     _name: str = ""
@@ -524,35 +544,49 @@ class Unit:
         self._options.append(opt)
 
 class UnitCategory:
-    _id: str = "" # targetid
-    _name: str = ""
-    _constraints: array(Condition) = []
+    __id: str = "" # targetid
+    __name: str = ""
+    __constraints: array(Condition) = None
 
-    def __init__(self, category):
-        self._id = category[TARGET_ID]
-        self._name = category[NAME]
+    def __init__(self, category):   
+        self.__constraints = [  ]
+        self.__id = category[TARGET_ID]
+        self.__name = category[NAME]
         try:
             for c in category.find(CONSTRAINTS).find_all(CONSTRAINT):
-                self._constraints.append(Condition(c))
+                self.__constraints.append(Condition(c))
         except:
             pass
 
     def print(self):
         print("NAME:", self._name, "\tID:", self._id)
 
+    def save(self, connexion, cursor, armyId: str):
+        try:
+            arr: array(str) = []
+            for c in self.__constraints:
+                arr.append(c.toString())
+            constraints = json.dumps(arr)
+            cursor.execute("INSERT INTO unit_categories (id, name, limits, army) VALUES (%s,%s,%s,%s)", (self.__id, self.__name, constraints, armyId))
+            connexion.commit()
+        except (psycopg2.errors.UniqueViolation):
+            pass
+
 class UpgradeCategory:
-    _id: str = ""
-    _name: str = ""
-    _collective: str = ""
-    _constraints: array(Condition) = []
-    _upgrades: array(Upgrade) = []
-    _links: array(Link) = []
+    __id: str = ""
+    __name: str = ""
+    __collective: str = ""
+    _constraints: array(Condition) = None
+    _upgrades: array(Upgrade) = None
+    _links: array(Link) = None
 
     def __init__(self, category):
-        # print("\n\n\nCATEGORY\n", category, "\n\n\n")
-        self._id = category[ID]
-        self._name = category[NAME]
-        self._collective = category[COLLECTIVE]
+        self._constraints = []
+        self._upgrades = []
+        self._links = []
+        self.__id = category[ID]
+        self.__name = category[NAME]
+        self.__collective = category[COLLECTIVE]
         for c in category.find(CONSTRAINTS).find_all(CONSTRAINT):
             self._constraints.append(Condition(c))
         # upgrades
@@ -569,7 +603,7 @@ class UpgradeCategory:
             pass
 
     def print(self):
-        print("NAME:", self._name, "\tID:", self._id, "\tCOLLECTIVE:", self._collective)
+        print("NAME:", self.__name, "\tID:", self.__id, "\tCOLLECTIVE:", self.__collective)
         print("--- constraints ---")
         for c in self._constraints:
             c.print()
@@ -577,19 +611,39 @@ class UpgradeCategory:
         for u in self._upgrades:
             u.print()
 
+    def save(self, connection, cursor, armyId):
+        try:
+            arr: array(str) = []
+            for c in self._constraints:
+                arr.append(c.toString())
+            limits: str = json.dumps(arr)
+            cursor.execute(f"INSERT INTO {UPGRADE_CATEGORIES_TABLE} (id, name, is_collective, limits, army) VALUES (%s, %s, %s, %s, %s)", (self.__id, self.__name, self.__collective, limits, armyId))
+            connection.commit()
+        except (psycopg2.errors.UniqueViolation):
+            pass
+
+
 class Army:
     __name: str = ""
     __id: str = ""
 
-    __organisation: array(UnitCategory) = []
+    __organisation: array(UnitCategory) = [] # saved
     __units: array(Unit) = []
-    __rules: array(Rule) = []
+    __rules: array(Rule) = [] # saved
     __options: array(Option) = []
-    __upgradeCategories: array(UpgradeCategory) = []
+    __upgradeCategories: array(UpgradeCategory) = [] # saved
     __upgrades: array(Upgrade) = []
-    __profiles: array(Profile) = []
+    __profiles: array(Profile) = [] # saved
 
     def __init__(self, soup: BeautifulSoup):
+        self.__organisation = []
+        self.__units = []
+        self.__rules = []
+        self.__options = []
+        self.__upgradeCategories = []
+        self.__upgradeCategories = []
+        self.__upgrades = []
+        self.__profiles = []
         catalogue = soup.find(CATALOGUE)
         self.__id = catalogue[ID]
         self.__name = catalogue[NAME]
@@ -658,13 +712,19 @@ class Army:
             connexion.commit()
             for r in self.__rules:
                 r.save(connexion, cursor)
+            for c in self.__organisation:
+                c.save(connexion, cursor, self.__id)
+            for p in self.__profiles:
+                p.save(connexion, cursor, self.__id, isShared=True)
+            for c in self.__upgradeCategories:
+                c.save(connexion, cursor, self.__id)
 
+        except (psycopg2.errors.UniqueViolation):
+            pass
         except:
             raise Exception("an error occured")
         finally:
             connexion.close()
-        
-
         
 def main():
     args = sys.argv
@@ -678,7 +738,6 @@ def main():
         soup = BeautifulSoup(content, features="lxml")
         army: Army = Army(soup)
         army.save()
-
 
 if __name__ == "__main__":
     main()

@@ -1,20 +1,20 @@
 import { Column, Entity, JoinColumn, OneToOne, OneToMany, PrimaryColumn } from "typeorm";
 import {Unit} from "../unit.entity";
 
-@Entity("units_profiles")
+@Entity("unit_profiles")
 export class UnitProfile {
     @PrimaryColumn()
+    public id: string;
+
+    @Column()
     public name: string;
 
     @Column()
-    public data: string;
+    public characteristics: string;
 
     @Column()
-    public isShared: boolean;
+    public is_shared: boolean;
 
-    @OneToMany(() => Unit, (unit) => unit.profiles)
     @Column()
-    public unit: Unit;
-
-
+    public owner: string;
 }

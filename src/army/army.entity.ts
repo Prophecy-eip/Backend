@@ -1,5 +1,5 @@
 import {Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, OneToOne, PrimaryColumn} from "typeorm"
-import {UnitCategory} from "./unit-category/unit-category.entity";
+import {UnitCategory} from "./unit/unit-category/unit-category.entity";
 import {Rule} from "./rule/rule.entity";
 import {Unit} from "./unit/unit.entity";
 
@@ -13,7 +13,7 @@ export class Army {
     public name: string;
 
     @OneToMany(() => UnitCategory, (category) => category.army)
-    @JoinColumn({name: "units_categories", referencedColumnName: "id"})
+    @JoinColumn({name: "unit_categories", referencedColumnName: "id"})
     public units_categories: UnitCategory[]
 
     // @ManyToOne(() => Rule)
