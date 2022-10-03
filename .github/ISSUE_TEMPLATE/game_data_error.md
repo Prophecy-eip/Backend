@@ -7,7 +7,7 @@ assignees:
 
 ___
 
-** Before submitting the issue, please check that someone did not request the same update**
+** Before submitting the issue, please check that someone did not request a similar one**
 
 ## Game
 - [ ] The 9th Age
