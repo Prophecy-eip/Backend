@@ -7,7 +7,7 @@ assignees:
 
 ---
 
-**Before requesting a feature, please check that someone did not request the same feature as yours**
+**Before requesting a feature, please check that someone did not request a similar one**
 
 ## Feature emplacement
 - [ ] Server
