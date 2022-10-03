@@ -28,7 +28,7 @@ assignees:
 - [ ] Rule
 - [ ] Other:
 
-## Description
+## Detailed description
 *What is missing*
 
 ## Notes
