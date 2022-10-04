@@ -4,6 +4,7 @@ import glob
 import os
 from select import select
 import shutil
+import string
 
 from bs4 import BeautifulSoup, ResultSet
 from numpy import array
@@ -95,11 +96,16 @@ UNITS_TABLE: str = "units"
 OPTIONS_TABLE: str = "options"
 MODIFIERS_TABLE: str = "modifiers"
 UPGRADES_TABLE: str = "upgrades"
+SPECIAL_ITEMS_TABLE: str = "special_items"
+SPECIAL_ITEM_CATEGORIES_TABLE: str = "special_item_categories"
 
 ARMY: str = "army"
 IS_SHARED: str = "is_shared"
 OWNER: str = "owner"
 
+
+class Army:
+    pass
 
 ### UTILS
 
@@ -250,13 +256,13 @@ class Modifier:
             for c in self._conditions:
                 conditionsArr.append(c.toString())
             conditions: str = json.dumps(conditionsArr)
-            cursor.execute(f"INSERT INTO {MODIFIERS_TABLE} (id, type, value, field, conditions) VALUES (%s,%s,%s,%s,%s)", (self._id, self._type, self._value, self._field, conditions))
+            cursor.execute(f"INSERT INTO {MODIFIERS_TABLE} (id, type, value, field, limits) VALUES (%s,%s,%s,%s,%s)", (self._id, self._type, self._value, self._field, conditions))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
 
-class Option:
-    pass
+# class Option:
+#     pass
 
 class Option:
     _unitId: str = ""
@@ -273,7 +279,7 @@ class Option:
 
     _cost: Cost
 
-    _subOptions: array(Option, []) = []
+    # _subOptions: array(Option, []) = []
 
     _links: array(Link, []) = []
 
@@ -354,7 +360,7 @@ class Option:
             for c in self._constraints:
                 limitsArr.append(c.toString())
             for m in self._modifiers:
-                m.save(connection, cursor)
+                # m.save(connection, cursor)
                 modifiersArr.append(m._id)
             limits: str = json.dumps(limitsArr)
             modifiers: str = json.dumps(modifiersArr)
@@ -412,9 +418,17 @@ class Item:
         for l in self._links:
             l.print()
         self._cost.print()
-        
 
-    
+    def save(self, connection, cursor, categoryId: str):
+        try:
+            limitsArr: array(str) = []
+            for l in self._constraints:
+                limitsArr.append(l.toString())
+            limits = json.dumps(limitsArr)
+            cursor.execute(f"INSERT INTO {SPECIAL_ITEMS_TABLE} ({ID}, {NAME}, is_collective, type, limits, cost, category) VALUES (%s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, self._isCollective, self._type, limits, self._cost.toString(), categoryId))
+            connection.commit()
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
+            pass   
 
 class SpecialItemsCategory: # TODO: save
     _name: str = ""
@@ -447,7 +461,18 @@ class SpecialItemsCategory: # TODO: save
         for i in self._items:
             i.print()
 
-
+    def save(self, connection, cursor, armyId: str):
+        try:
+            items = saveArrayAndGetIdsWithId(connection, cursor, self._id)
+            limitsArr: array(str) = []
+            for l in self._constraints:
+                limitsArr.append(l.toString())
+            limits = json.dumps(limitsArr)
+            cursor.execute(f"INSERT INTO {SPECIAL_ITEM_CATEGORIES_TABLE} ({ID}, {NAME}, is_collective, limits, items, army) VALUES (%s, %s, %s, %s, %s, %s)", (self._id, self._name, self._isCollective, limits, items, armyId))
+            connection.commit()
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
+            pass   
+        
 class Profile:
     __id: str = ""
     __name: str = ""
@@ -574,13 +599,13 @@ class Upgrade:
             for c in self._constraints:
                 conditionsArr.append(c.toString())
             for p in self._profiles:
-                p.save(connection, cursor, self._id, "upgrade")
+                # p.save(connection, cursor, self._id, "upgrade")
                 profilesArr.append(p.getId())
             conditions: str = json.dumps(conditionsArr)
-            modifiers: str = saveArrayAndGetIds(self._modifiers, connection, cursor)
+            modifiers: str = "" #saveArrayAndGetIds(self._modifiers, connection, cursor)
             profiles: str = json.dumps(profilesArr)
             rules: str = saveArrayAndGetIds(self._rules, connection, cursor)
-            cursor.execute(f"INSERT INTO {UPGRADES_TABLE} (id, name, is_collective, conditions, cost, modifiers, profiles, rules, army) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, self._collective, conditions, self._cost.toString(), modifiers, profiles, rules, armyId))
+            cursor.execute(f"INSERT INTO {UPGRADES_TABLE} (id, name, is_collective, limits, cost, modifiers, profiles, rules, army) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, self._collective, conditions, self._cost.toString(), modifiers, profiles, rules, armyId))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
@@ -660,7 +685,7 @@ class Unit:
                 p.save(connection, cursor, self._id, "unit")
                 profilesArr.append(p.getId())
             for o in self._options:
-                o.save(connection, cursor)
+                # o.save(connection, cursor)
                 optionsArr.append(o._id)
             profiles: str = json.dumps(profilesArr)
             options: str = json.dumps(optionsArr)

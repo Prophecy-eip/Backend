@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, OneToOne, OneToMany, PrimaryColumn, ManyToOne} from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("modifiers")
 export class Modifier {
@@ -15,5 +15,5 @@ export class Modifier {
     public field: string;
 
     @Column()
-    public conditions: string;
+    public limits: string;
 }

@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, OneToOne, OneToMany, PrimaryColumn, ManyToOne} from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("upgrade_categories")
 export class UpgradeCategory {

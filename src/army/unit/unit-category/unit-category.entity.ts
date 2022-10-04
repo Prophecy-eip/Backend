@@ -1,6 +1,4 @@
-import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn} from "typeorm";
-import {Army} from "../../army.entity";
-import {Unit} from "../unit.entity";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("unit_categories")
 export class UnitCategory {
@@ -13,16 +11,9 @@ export class UnitCategory {
     @Column({ type: "varchar" })
     public limits: string;
 
-    @OneToMany(() => Army, (army) => army.units_categories)
-    @JoinColumn({name: "army", referencedColumnName: "id"})
     @Column({ type: "varchar"})
-    public army: Army
+    public army: string;
 
     @Column({name: "target_id"})
-    public targetId: string
-
-    // @ManyToOne(() => Unit, (unit) => unit.category)
-    // // @JoinColumn({name: "units", referencedColumnName: "id"})
-    // public units: Unit[]
-
+    public targetId: string;
 }
