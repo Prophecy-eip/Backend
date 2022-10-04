@@ -1,0 +1,6 @@
+GitPython
+beautifulsoup4
+numpy
+psycopg2-binary
+configparser
+lxml

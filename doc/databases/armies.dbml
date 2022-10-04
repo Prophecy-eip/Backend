@@ -5,7 +5,8 @@ Project Prophecy_Activities
 
 Table armies
 {
-    name            varchar     [pk, not null]
+    id              varchar     [pk, not null, unique]
+    name            varchar     [not null]
     composition     varchar     [fk, not null]
     units           varchar     [fk, not null]
 }

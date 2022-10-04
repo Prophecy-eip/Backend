@@ -28,6 +28,11 @@ Once you provided the required environment variables and started the database, y
 docker-compose up --build server
 ```
 
+### Filling the armies tables
+
+Once the database and the server are launched, it is possible to fill the database by following [the instructions](./scripts/armies_database/FillTheDatabase.md)
+
+
 ## Documentation
 
 ### API

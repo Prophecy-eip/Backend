@@ -7,7 +7,7 @@ export enum AccountType {
     ORGANISER
 }
 
-@Entity("profile")
+@Entity("profiles")
 export class Profile {
     @PrimaryColumn()
     public username: string;
