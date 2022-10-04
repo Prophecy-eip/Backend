@@ -15,6 +15,9 @@ export class UnitProfile {
     @Column()
     public is_shared: boolean;
 
-    @Column()
-    public owner: string;
+    @Column({name: "owner_id"})
+    public ownerId: string;
+
+    @Column({name: "owner_type"})
+    public ownerType: string;
 }

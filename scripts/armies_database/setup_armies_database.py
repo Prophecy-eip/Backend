@@ -2,6 +2,7 @@
 
 import glob
 import os
+from select import select
 import shutil
 
 from bs4 import BeautifulSoup, ResultSet
@@ -93,10 +94,32 @@ UPGRADE_CATEGORIES_TABLE: str = "upgrade_categories"
 UNITS_TABLE: str = "units"
 OPTIONS_TABLE: str = "options"
 MODIFIERS_TABLE: str = "modifiers"
+UPGRADES_TABLE: str = "upgrades"
 
 ARMY: str = "army"
 IS_SHARED: str = "is_shared"
 OWNER: str = "owner"
+
+
+### UTILS
+
+def saveArrayAndGetIds(arr, connection, cursor) -> str:
+    idsArr: array(str) = []
+
+    for i in arr:
+        i.save(connection, cursor)
+        idsArr.append(i.getId())
+    return json.dumps(idsArr)
+
+def saveArrayAndGetIdsWithId(arr, connection, cursor, id: str) -> str:
+    idsArr: array(str) = []
+
+    for i in arr:
+        i.save(connection, cursor, id)
+        idsArr.append(i.getId())
+    return json.dumps(idsArr)    
+
+###
 
 ##
 # @class Link represents the <infoLink> flag
@@ -218,6 +241,9 @@ class Modifier:
         except (AttributeError):
             pass
     
+    def getId(self) -> str:
+        return self._id
+
     def save(self, connection, cursor):
         try:
             conditionsArr: array(str) = []
@@ -390,7 +416,7 @@ class Item:
 
     
 
-class SpecialItemsCategory:
+class SpecialItemsCategory: # TODO: save
     _name: str = ""
     _id: str = ""
     _isCollective: str = ""
@@ -445,10 +471,10 @@ class Profile:
         print("--- characteristics ---")
         print(self.__characteristics)
 
-    def save(self, connection, cursor, ownerId, isShared = False):
+    def save(self, connection, cursor, ownerId: str, ownerType: str, isShared: bool = False):
         try:
             characteristics = json.dumps(self.__characteristics)
-            cursor.execute(f"INSERT INTO {UNIT_PROFILES_TABLE} ({ID}, {NAME}, {CHARACTERISTICS}, {IS_SHARED}, {OWNER}) VALUES (%s,%s,%s,%s,%s)", (self.__id, self.__name, characteristics, isShared, ownerId))
+            cursor.execute(f"INSERT INTO {UNIT_PROFILES_TABLE} ({ID}, {NAME}, {CHARACTERISTICS}, {IS_SHARED}, owner_id, owner_type) VALUES (%s, %s, %s, %s, %s, %s)", (self.__id, self.__name, characteristics, isShared, ownerId, ownerType))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
@@ -540,7 +566,24 @@ class Upgrade:
             r.print()
         for s in self._specialItemsCategories:
             s.print()
-    
+
+    def save(self, connection, cursor, armyId: str):
+        try:
+            conditionsArr: array(str)  = []
+            profilesArr: array(str) = []
+            for c in self._constraints:
+                conditionsArr.append(c.toString())
+            for p in self._profiles:
+                p.save(connection, cursor, self._id, "upgrade")
+                profilesArr.append(p.getId())
+            conditions: str = json.dumps(conditionsArr)
+            modifiers: str = saveArrayAndGetIds(self._modifiers, connection, cursor)
+            profiles: str = json.dumps(profilesArr)
+            rules: str = saveArrayAndGetIds(self._rules, connection, cursor)
+            cursor.execute(f"INSERT INTO {UPGRADES_TABLE} (id, name, is_collective, conditions, cost, modifiers, profiles, rules, army) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, self._collective, conditions, self._cost.toString(), modifiers, profiles, rules, armyId))
+            connection.commit()
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
+            pass
 
 ##
 # @class Unit
@@ -566,7 +609,6 @@ class Unit:
         self._name = selection[NAME]
         self._cost = Cost(selection.find(COSTS, recursive=False).find(COST))
         # profiles
-        print(" ", self._name) # TODO: remove
         try:
             for p in selection.find(PROFILES).find_all(PROFILE):
                 self._profiles.append(Profile(p))
@@ -610,12 +652,12 @@ class Unit:
     def linkOption(self, opt: Option):
         self._options.append(opt)
 
-    def save(self, connection, cursor, armyId):
+    def save(self, connection, cursor, armyId: str):
         try:
             profilesArr: array(str) = []
             optionsArr: array(str) = []
             for p in self._profiles:
-                p.save(connection, cursor, self._id)
+                p.save(connection, cursor, self._id, "unit")
                 profilesArr.append(p.getId())
             for o in self._options:
                 o.save(connection, cursor)
@@ -718,7 +760,7 @@ class Army:
     __organisation: array(UnitCategory) = [] # saved
     __units: array(Unit) = []
     __rules: array(Rule) = [] # saved
-    __options: array(Option) = [] # TODO: save
+    __options: array(Option) = [] # saved
     __upgradeCategories: array(UpgradeCategory) = [] # saved
     __upgrades: array(Upgrade) = []
     __profiles: array(Profile) = [] # saved
@@ -761,7 +803,7 @@ class Army:
     def __manageSelectionEntries(self, selections: ResultSet):
         for s in selections:
             type = s["type"]
-            print("    Type:", type)
+            # print("    Type:", type)
             if type == "unit":
                 unit: Unit = Unit(s)
                 self.__units.append(unit)
@@ -822,11 +864,14 @@ class Army:
             for c in self.__organisation:
                 c.save(connexion, cursor, self.__id)
             for p in self.__profiles:
-                p.save(connexion, cursor, self.__id, isShared=True)
+                p.save(connexion, cursor, self.__id, "army", isShared=True)
             for c in self.__upgradeCategories:
                 c.save(connexion, cursor, self.__id)
             for u in self.__units:
-                print(u._name)
+                u.save(connexion, cursor, self.__id)
+            for o in self.__options:
+                o.save(connexion, cursor)
+            for u in self.__upgrades:
                 u.save(connexion, cursor, self.__id)
             print("Done!")
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
@@ -850,14 +895,14 @@ def main():
     filenames = [f for f in glob.glob(f"./{REPOSITORY_NAME}/*.cat")]
     
     for filename in filenames:
-        print(filename)
+        print(f"Reading {filename}...")
         content = []
         with open(filename, "r") as file:
             content = file.readlines()
             content = "".join(content)
         soup = BeautifulSoup(content, features="lxml")
         army: Army = Army(soup)
-        army.save()
+        army.save()     
 
 if __name__ == "__main__":
     main()

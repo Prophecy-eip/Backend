@@ -11,9 +11,10 @@ import { Unit } from "./army/unit/unit.entity";
 import { UnitCategory} from "./army/unit/unit-category/unit-category.entity";
 import { Rule } from "./army/rule/rule.entity";
 import { UnitProfile } from "./army/unit/unit-profile/unit-profile.entity";
-import { UpgradeCategory } from "./army/upgrade-category/upgrade-category.entity";
+import { UpgradeCategory } from "./army/upgrade/upgrade-category/upgrade-category.entity";
 import { Option } from "./army/option/option.entity";
 import { Modifier } from "./army/modifier/modifier.entity";
+import {Upgrade} from "./army/upgrade/upgrade.entity";
 
 dotenv.config()
 
@@ -33,7 +34,7 @@ const DB_DIALECT = "postgres"
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB,
-      entities: [Profile, Army, UnitCategory, Unit, Rule, UnitProfile, UpgradeCategory, Option, Modifier],
+      entities: [Profile, Army, UnitCategory, Unit, Rule, UnitProfile, UpgradeCategory, Option, Modifier, Upgrade, UpgradeCategory],
       synchronize: true // TODO: remove on deployment
     }),
     AccountModule,
