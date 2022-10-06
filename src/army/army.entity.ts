@@ -9,7 +9,7 @@ export class Army {
     @Column()
     public name: string;
 
-    @OneToMany(() => UnitCategory, (category) => category.army)
-    @JoinColumn({name: "unit_categories", referencedColumnName: "id"})
-    public unitCategories: UnitCategory[]
+    // @OneToMany(() => UnitCategory, (category) => category.army)
+    // @JoinColumn({name: "unit_categories", referencedColumnName: "id"})
+    // public unitCategories: UnitCategory[]
 }
