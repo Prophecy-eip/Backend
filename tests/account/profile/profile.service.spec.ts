@@ -141,5 +141,5 @@ describe("ProfileService", () => {
             updated = result
         });
         expect(updated).toEqual(true);
-    })
-})
+    });
+});

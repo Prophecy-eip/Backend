@@ -12,6 +12,8 @@ import { Modifier } from "./modifier/modifier.entity";
 import { Upgrade } from "./upgrade/upgrade.entity";
 import { SpecialItemCategory } from "./special-item/special-item-category/special-item-category.entity";
 import { SpecialItem } from "./special-item/special-item.entity";
+import { ArmyService } from "./army.service";
+import {ArmyController} from "./army.controller";
 
 @Module({
     imports: [
@@ -30,7 +32,8 @@ import { SpecialItem } from "./special-item/special-item.entity";
             SpecialItem
         ])
     ],
-    providers: [],
-    exports: []
+    providers: [ArmyService],
+    exports: [],
+    controllers: [ArmyController]
 })
 export class ArmyModule {}
