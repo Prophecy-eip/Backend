@@ -891,6 +891,10 @@ paths:
       responses:
         200:
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/username'
         400:
           description: Bad Request
         401:
@@ -1680,7 +1684,7 @@ paths:
   #       # TODO
 
   # read
-  /armies/get-armies:
+  /armies/lookup:
     get:
       summary: Retrieves the armies ids
       description: ""
@@ -1696,7 +1700,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/uuidArray'
+                type: array
+                items:
+                  $ref: '#/components/schemas/armyCredentials'
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
@@ -3167,6 +3173,14 @@ components:
         - modifiers
         - organisation
         - units
+
+    armyCredentials:
+      type: object
+      properties:
+        id:
+          - $ref: '#/components/schemas/uuid'
+        name:
+          - $ref: '#/components/schemas/name'
 
     effect:
       description: Represents an effect

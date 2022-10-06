@@ -10,12 +10,15 @@ jobs:
       - name: Setup & Install
         run: | 
           printf "SERVER_PORT=${{ secrets.SERVER_PORT }}\nPOSTGRES_DB=${{ secrets.POSTGRES_DB }}\nPOSTGRES_USER=${{ secrets.POSTGRES_USER }}\nPOSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}\nDATABASE_IP=${{ secrets.DATABASES_IP }}\nDATABASE_PORT=${{ secrets.DATABASES_PORT }}\nPGADMIN_PORT=${{ secrets.PGADMIN_PORT }}\nPGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}\nPGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}\nPGADMIN_LISTEN_ADDRESS=${{ secrets.PGADMIN_LISTEN_ADDRESS }}\nPGADMIN_LISTEN_PORT=${{ secrets.PGADMIN_LISTEN_PORT }}\nJWT_SECRET=${{ secrets.JWT_SECRET }}\nTESTS_PORT=${{ secrets.TESTS_PORT }}\n" > .env
-          printf "[postgresql]\nhost=${{ secrets.DATABASE_IP_OUT_DOCKER }}\ndatabase=prophecy${{ secrets.POSTGRES_DB }}\nuser=${{ secrets.POSTGRES_USER }}\npassword=${{ secrets.POSTGRES_PASSWORD }}" > ./scripts/armies_database/database.ini
+          printf "[postgresql]\nhost=${{ secrets.DATABASE_IP_OUT_DOCKER }}\ndatabase=${{ secrets.POSTGRES_DB }}\nuser=${{ secrets.POSTGRES_USER }}\npassword=${{ secrets.POSTGRES_PASSWORD }}\n" > ./scripts/armies_database/database.ini
+          sudo apt install python3
+          pip install -r ./scripts/armies_database/requirements.txt
 
       - name: Build & Run Docker
         run: | 
-          docker-compose -f docker-compose.yml up -d db
-          docker-compose -f docker-compose.yml up -d server
+          docker-compose -f docker-compose.yml up --build -d db
+          docker-compose -f docker-compose.yml up --build -d server
+          cd ./scripts/armies_database/ && ./setup_armies_database.py
 
       - name: Run Unit Tests
         run: docker-compose -f docker-compose.yml up tests
