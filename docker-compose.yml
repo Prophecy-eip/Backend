@@ -36,6 +36,14 @@ services:
       networks:
         - prophecy
 
+  script_setup_armies:
+#      depends_on:
+#        - "db"
+#        - "server"
+      build: ./scripts/armies_database/
+      networks:
+        - prophecy
+
 volumes:
   prophecy:
 

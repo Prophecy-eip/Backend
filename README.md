@@ -30,8 +30,12 @@ docker-compose up --build server
 
 ### Filling the armies tables
 
-Once the database and the server are launched, it is possible to fill the database by following [the instructions](./scripts/armies_database/FillTheDatabase.md)
+Once the database and the server are launched, it is possible to fill the database with armies data.
 
+Follow the [instructions](./scripts/armies_database/FillTheDatabase.md) to set up, and run:
+```shell
+docker-compose up --build script_setup_armies 
+```
 
 ## Documentation
 
