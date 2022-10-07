@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryColumn} from "typeorm";
+import {Army} from "../../army.entity";
 
 @Entity("unit_categories")
 export class UnitCategory {
@@ -12,6 +13,8 @@ export class UnitCategory {
     public limits: string;
 
     @Column({ type: "varchar"})
+    @ManyToOne(() => Army, (army) => army.unitCategories)
+    @JoinColumn({ name: "armies", referencedColumnName: "id" })
     public army: string;
 
     @Column({name: "target_id"})
