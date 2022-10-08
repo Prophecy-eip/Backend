@@ -17,3 +17,9 @@ def saveArrayAndGetIdsWithId(arr, connection, cursor, id: str) -> str:
         i.save(connection, cursor, id)
         idsArr.append(i.getId())
     return json.dumps(idsArr)   
+
+def entityExists(entityId: str, existing: array(str)) -> bool:
+    for id in existing:
+        if entityId == id:
+            return True
+    return False

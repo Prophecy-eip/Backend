@@ -1,4 +1,4 @@
-export class ModifierDTO {
+export class ModifierDto {
     id: string;
     type: string;
     value: string;

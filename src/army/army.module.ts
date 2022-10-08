@@ -17,6 +17,7 @@ import {ArmyController} from "./army.controller";
 import {UnitService} from "./unit/unit.service";
 import {UnitCategoryService} from "./unit/unit-category/unit-category.service";
 import {UnitProfileService} from "./unit/unit-profile/unit-profile.service";
+import {OptionService} from "./option/option.service";
 
 @Module({
     imports: [
@@ -35,7 +36,7 @@ import {UnitProfileService} from "./unit/unit-profile/unit-profile.service";
             SpecialItem
         ])
     ],
-    providers: [ArmyService, UnitService, UnitCategoryService, UnitProfileService],
+    providers: [ArmyService, UnitService, UnitCategoryService, UnitProfileService, OptionService],
     exports: [],
     controllers: [ArmyController]
 })

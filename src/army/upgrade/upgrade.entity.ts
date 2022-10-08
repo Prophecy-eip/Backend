@@ -26,6 +26,4 @@ export class Upgrade {
     @Column()
     public rules: string;
 
-    @Column()
-    public army: string;
 }

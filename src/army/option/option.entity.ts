@@ -19,4 +19,7 @@ export class Option {
 
     @Column()
     public modifiers: string;
+
+    @Column()
+    public rules: string;
 }
