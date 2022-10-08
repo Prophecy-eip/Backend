@@ -121,3 +121,4 @@ class Option:
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
+

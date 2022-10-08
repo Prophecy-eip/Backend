@@ -13,8 +13,8 @@ export class UnitCategory {
     public limits: string;
 
     @Column({ type: "varchar"})
-    @ManyToOne(() => Army, (army) => army.unitCategories)
-    @JoinColumn({ name: "armies", referencedColumnName: "id" })
+    // @ManyToOne(() => Army, (army) => army.unitCategories)
+    // @JoinColumn({ name: "armies", referencedColumnName: "id" })
     public army: string;
 
     @Column({name: "target_id"})

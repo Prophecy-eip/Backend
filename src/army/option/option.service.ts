@@ -14,11 +14,8 @@ export class OptionService {
     async findFromIds(ids: string[]): Promise<Option[]> {
         let options: Option[] = []
 
-        console.log(ids);
         for (const id of ids) {
-            console.log(id);
             const o = await this.repository.findOneBy([{id: id}]);
-            console.log(o);
             options.push(await this.repository.findOneBy([{id: id}]))
         }
         return options;

@@ -18,7 +18,6 @@ export class UnitDTO {
         options.forEach((option) => {
             this.options.push(new OptionDTO(option))
         });
-        console.log(options)
     }
 
     id: string;
