@@ -21,11 +21,11 @@ class Option:
     __name: str = ""
     __type: str = ""
 
-    _modifiers: array(Modifier, []) = []
+    _modifiers: array(str) = []
 
-    _constraints: array(Condition, []) = []
+    _constraints: array(Condition) = []
 
-    _rules: array(str, []) = []
+    _rules: array(str) = []
 
     _cost: Cost
 
@@ -47,7 +47,9 @@ class Option:
 
         try:
             for m in option.find(MODIFIERS).find_all(MODIFIER):
-                self._modifiers.append(Modifier(m))
+                modifier: Modifier = Modifier(m)
+                army.addModifier(modifier)
+                self._modifiers.append(modifier.getId())
         except (AttributeError):
             pass
         
@@ -110,14 +112,10 @@ class Option:
     def save(self, connection, cursor):
         try:
             limitsArr: array(str) = []
-            modifiersArr: array(str) = []
             for c in self._constraints:
                 limitsArr.append(c.toString())
-            for m in self._modifiers:
-                # m.save(connection, cursor)
-                modifiersArr.append(m._id)
             limits: str = json.dumps(limitsArr)
-            modifiers: str = json.dumps(modifiersArr)
+            modifiers: str = json.dumps(self._modifiers)
             rules: str = json.dumps(self._rules)
             cursor.execute(f"INSERT INTO {OPTIONS_TABLE} (id, name, type, limits, cost, modifiers, rules) VALUES (%s, %s, %s, %s, %s, %s, %s)", (self.__id, self.__name, self.__type, limits, self._cost.toString(), modifiers, rules))
             connection.commit()

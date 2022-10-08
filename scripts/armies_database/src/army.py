@@ -25,7 +25,7 @@ EXISTING_UPGRADE_CATEGORIES: array(str) = []
 EXISTING_UNITS: array(str) = []
 EXISTING_OPTIONS: array(str) = []
 EXISTING_UPGRADES: array(str) = []
-
+EXISTING_MODIFIERS: array(str) = []
 
 class Army:
     __name: str = ""
@@ -193,6 +193,8 @@ class Army:
                 u.save(connexion, cursor)
             for c in self.__itemCategories:
                 c.save(connexion, cursor, self.__id)
+            for m in self.__modifiers:
+                m.save(connexion, cursor)
             print("Done!")
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
@@ -208,7 +210,8 @@ class Army:
         self.__rulesIds.append(rule.getId())
     
     def addModifier(self, modifier: Modifier):
-        self.__modifiers.append(modifier)
+        if helper.entityExists(modifier.getId(), EXISTING_MODIFIERS) == False:
+            self.__modifiers.append(modifier)
 
     def addItemCategory(self, category: SpecialItemsCategory):
         self.__itemCategories.append(category)
