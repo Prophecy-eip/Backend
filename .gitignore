@@ -19,3 +19,5 @@ dist/
 
 # db init
 scripts/armies_database/The-9th-Age/
+scripts/armies_database/src/The-9th-Age/
+*pycache*
