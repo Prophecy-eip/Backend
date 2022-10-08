@@ -1,4 +1,6 @@
 from ast import Break
+import json
+from unicodedata import category
 from bs4 import BeautifulSoup, ResultSet
 from numpy import array
 import psycopg2
@@ -45,6 +47,14 @@ class Army:
     __itemCategories: array(SpecialItemsCategory) = []
     __items: array(Item) = []
 
+    __unitCategoryIds: array(str) = []
+    __rulesIds: array(str) = []
+    __upgradeCategoryIds: array(str) = []
+    __itemCategoryIds: array(str) = []
+    __unitsIds: array(str) = []
+    __upgradesIds: array(str) = []
+    __itemsIds: array(str) = []
+
     def __init__(self, soup: BeautifulSoup):
         self.__organisation = []
         self.__units = []
@@ -56,6 +66,12 @@ class Army:
         self.__modifiers = []
         self.__itemCategories = []
         self.__items = []
+        self.__unitCategoryIds = []
+        self.__rulesIds = []
+        self.__itemCategoryIds = []
+        self.__unitsIds = []
+        self.__upgradesIds = []
+        self.__itemsIds = []
         catalogue = soup.find(CATALOGUE)
         self.__id = catalogue[ID]
         self.__name = catalogue[NAME]
@@ -80,7 +96,10 @@ class Army:
 
     def __manageCategoryLinks(self, categories: ResultSet):
         for c in categories:
-            self.__organisation.append(UnitCategory(c))
+            cat: UnitCategory = UnitCategory(c)
+            self.__organisation.append(cat)
+            self.__unitCategoryIds.append(cat.getId())
+
 
     def __manageSelectionEntries(self, selections: ResultSet):
         for s in selections:
@@ -92,6 +111,7 @@ class Army:
                 if helper.entityExists(unit.getId(), EXISTING_UNITS) == False:
                     self.__units.append(unit)
                     EXISTING_UNITS.append(unit.getId())
+                self.__unitsIds.append(unit.getId())
                 try:
                     options: ResultSet = s.find(SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY)
                     # missing stuff
@@ -104,18 +124,10 @@ class Army:
                     pass
             if type == "upgrade":
                 self.addUpgrade(Upgrade(s, self))
-                # upgrade: Upgrade = Upgrade(s, self)
-                # if helper.entityExists(upgrade.getId(), EXISTING_UPGRADES) == False:
-                #     self.__upgrades.append(upgrade)
-                #     EXISTING_UPGRADES.append(upgrade.getId())
             
-
     def __manageSharedSelectionEntries(self, entries: ResultSet):
         for e in entries:
             self.addUpgrade(Upgrade(e, self))
-            # if helper.entityExists(upgrade.getId(), EXISTING_UPGRADES) == False:
-            #         self.__upgrades.append(upgrade)
-            #         EXISTING_UPGRADES.append(upgrade.getId())
 
     def __manageSharedSelectionEntryGroups(self, groups: ResultSet):
         for c in groups:
@@ -123,8 +135,8 @@ class Army:
             if helper.entityExists(cat.getId(), EXISTING_UPGRADE_CATEGORIES) == False:
                 self.__upgradeCategories.append(cat)
                 EXISTING_UPGRADE_CATEGORIES.append(cat.getId())
+            self.__upgradeCategoryIds.append(cat.getId())
             
-
     def __manageSharedRules(self, rules: ResultSet):
         for r in rules:
             self.__rules.append(Rule(r))
@@ -156,7 +168,14 @@ class Army:
             params = self.__config("../database.ini")
             connexion = psycopg2.connect(**params)
             cursor = connexion.cursor()
-            cursor.execute(f"""INSERT INTO {ARMIES_TABLE} ({ID}, {NAME}) VALUES (%s,%s)""", (self.__id, self.__name))
+            unitCategories: str = json.dumps(self.__unitCategoryIds)
+            rules: str = json.dumps(self.__rulesIds)
+            upgradeCategories: str = json.dumps(self.__upgradeCategoryIds) 
+            specialItemCategories: str = json.dumps(self.__itemCategoryIds)
+            units: str = json.dumps(self.__unitsIds)
+            upgrades: str = json.dumps(self.__upgradesIds)
+            items: str = json.dumps(self.__itemsIds)
+            cursor.execute(f"""INSERT INTO {ARMIES_TABLE} ({ID}, {NAME}, unit_categories, rules, upgrade_categories, special_item_categories, units, upgrades, items) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s)""", (self.__id, self.__name, unitCategories, rules, upgradeCategories, specialItemCategories, units, upgrades, items))
             connexion.commit()
             for r in self.__rules:
                 r.save(connexion, cursor)
@@ -172,6 +191,8 @@ class Army:
                 o.save(connexion, cursor)
             for u in self.__upgrades:
                 u.save(connexion, cursor)
+            for c in self.__itemCategories:
+                c.save(connexion, cursor, self.__id)
             print("Done!")
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
@@ -179,19 +200,23 @@ class Army:
             connexion.close()
 
     def addRule(self, rule: Rule):
+
         for r in self.__rules:
             if r.getId() == rule.getId():
                 return
         self.__rules.append(rule)
+        self.__rulesIds.append(rule.getId())
     
     def addModifier(self, modifier: Modifier):
         self.__modifiers.append(modifier)
 
     def addItemCategory(self, category: SpecialItemsCategory):
         self.__itemCategories.append(category)
+        self.__itemCategoryIds.append(category.getId())
 
     def addItem(self, item: Item):
         self.__items.append(item)
+        self.__itemsIds.append(item.getId())
 
     def addProfile(self, profile: UnitProfile):
         if helper.entityExists(profile.getId(), EXISTING_PROFILES) == False:
@@ -202,3 +227,10 @@ class Army:
         if helper.entityExists(upgrade.getId(), EXISTING_UPGRADES) == False:
             self.__upgrades.append(upgrade)
             EXISTING_UPGRADES.append(upgrade.getId())
+        self.__upgradesIds.append(upgrade.getId())
+    
+    def addUpgradeCategory(self, category: UpgradeCategory):
+        if helper.entityExists(category.getId(), EXISTING_UPGRADE_CATEGORIES) == False:
+            self.__upgradeCategories.append(category)
+            EXISTING_UPGRADE_CATEGORIES.append(category.getId())
+        self.__upgradeCategoryIds.append(category.getId())
