@@ -81,8 +81,9 @@ class Upgrade:
         # selection entry groups
         try:
             for selec in upgrade.find_all(SELECTION_ENTRY_GROUPS):
-                for s in selec.find_all(SELECTION_ENTRY_GROUP):
-                    army.addItemCategory(SpecialItemsCategory(s, army))
+                for s in selec.find_all(SELECTION_ENTRY_GROUP, recursive=False):
+                    army.addUpgradeCatgegory(s)
+                    # army.addItemCategory(SpecialItemsCategory(s, army))
         except (AttributeError):
             pass
 
