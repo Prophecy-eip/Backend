@@ -8,4 +8,4 @@ COPY . /scripts/armies/
 
 RUN pip install -r requirements.txt
 
-CMD ["./setup_armies_database.py"]
+CMD ["./src/setup_armies_database.py"]
