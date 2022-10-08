@@ -8,6 +8,9 @@ from condition import Condition
 from link import Link
 from cost import Cost
 
+class Army:
+    pass
+
 class Item:
     _name: str = ""
     _id: str = ""
@@ -78,7 +81,7 @@ class SpecialItemsCategory: # TODO: save
 
     _items: array(Item, []) = []
 
-    def __init__(self, entry):
+    def __init__(self, entry, army: Army):
         self._id = entry[ID]
         self._name = entry[NAME]
         self._isCollective = entry[COLLECTIVE]

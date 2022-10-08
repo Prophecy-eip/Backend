@@ -9,6 +9,9 @@ from rule import Rule
 from cost import Cost
 from link import Link
 
+class Army:
+    pass
+
 # class Option:
 #     pass
 
@@ -22,7 +25,7 @@ class Option:
 
     _constraints: array(Condition, []) = []
 
-    _rules: array(Rule, []) = []
+    _rules: array(str, []) = []
 
     _cost: Cost
 
@@ -30,7 +33,7 @@ class Option:
 
     _links: array(Link, []) = []
 
-    def __init__(self, option, unitId: str):
+    def __init__(self, option, army: Army):
 
         self._modifiers = []
         self._constraints = []
@@ -57,10 +60,11 @@ class Option:
         # print(option)
         try:
             for r in option.find(RULES).find_all(RULE):
-                self._rules.append(Rule(r))
+                rule: Rule = Rule(r)
+                army.addRule(rule)
+                self._rules.append(rule.getId())
         except (AttributeError):
             pass
-    
         self._cost = Cost(option.find(COSTS).find(COST))
 
 #  TODO: try to add selection entry group
@@ -114,7 +118,8 @@ class Option:
                 modifiersArr.append(m._id)
             limits: str = json.dumps(limitsArr)
             modifiers: str = json.dumps(modifiersArr)
-            cursor.execute(f"INSERT INTO {OPTIONS_TABLE} (id, name, type, limits, cost, modifiers) VALUES (%s,%s,%s,%s,%s,%s)", (self.__id, self.__name, self.__type, limits, self._cost.toString(), modifiers))
+            rules: str = json.dumps(self._rules)
+            cursor.execute(f"INSERT INTO {OPTIONS_TABLE} (id, name, type, limits, cost, modifiers, rules) VALUES (%s, %s, %s, %s, %s, %s, %s)", (self.__id, self.__name, self.__type, limits, self._cost.toString(), modifiers, rules))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
