@@ -1,6 +1,7 @@
-import {AfterLoad, Column, Entity, PrimaryColumn} from "typeorm";
+import {AfterLoad, Column, Entity, ManyToMany, PrimaryColumn} from "typeorm";
 
 import { ParserHelper } from "../../../helper/parser.helper";
+import {Army} from "../../army.entity";
 
 @Entity("unit_profiles")
 export class UnitProfile {
@@ -15,7 +16,6 @@ export class UnitProfile {
 
     @Column({ name: "is_shared" })
     public isShared: boolean;
-
     // @Column({ name: "owner_id" })
     // public ownerId: string;
     //

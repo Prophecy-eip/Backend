@@ -3,6 +3,8 @@ import { UnitDTO } from "./unit/unit.dto";
 import { UnitCategory } from "./unit/unit-category/unit-category.entity";
 import { Rule } from "./rule/rule.entity";
 import { Unit } from "./unit/unit.entity";
+import {UpgradeCategory} from "./upgrade/upgrade-category/upgrade-category.entity";
+import {Upgrade} from "./upgrade/upgrade.entity";
 
 export class ArmyDTO {
     constructor(army: Army, unitCategories: UnitCategory[], units: UnitDTO[], rules: Rule[]) {
@@ -18,4 +20,6 @@ export class ArmyDTO {
     unitCategories: UnitCategory[]
     units: UnitDTO [];
     rules: Rule[]
+    upgradeCategories: UpgradeCategory[]
+    upgrades: Upgrade[]
 }
