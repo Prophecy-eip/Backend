@@ -117,6 +117,9 @@ class UnitCategory:
         except (AttributeError):
             pass
 
+    def getId(self) -> str:
+        return self.__id
+
     def print(self):
         print("NAME:", self._name, "\tID:", self._id)
 

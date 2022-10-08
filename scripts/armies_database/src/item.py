@@ -51,6 +51,9 @@ class Item:
         except (AttributeError):
             pass
 
+    def getId(self) -> str:
+        return self._id
+
     def print(self):
         print("NAME:", self._name, "\tID:", self._isCollective, "\tTYPE:", self._type)
         print("--- constraints ---")
@@ -86,14 +89,21 @@ class SpecialItemsCategory: # TODO: save
         self._name = entry[NAME]
         self._isCollective = entry[COLLECTIVE]
         
+
         try:
             for c in entry.find(CONSTRAINTS).find_all(CONSTRAINT):
                 self._constraints.append(Condition(c))
         except (AttributeError):
             pass
-        for item in entry.find(SELECTION_ENTRY_GROUPS).find_all(SELECTION_ENTRY_GROUP):
-            self._items.append(Item(item))
+        try:
+            for item in entry.find(SELECTION_ENTRY_GROUPS).find_all(SELECTION_ENTRY_GROUP):
+                self._items.append(Item(item))
+        except:
+            pass
     
+    def getId(self) -> str:
+        return self._id
+
     def print(self):
         print("NAME:", self._name, "\tID:", self._id, "\tCOLLECTIVE:", self._isCollective)
         print("--- constraints ---")
