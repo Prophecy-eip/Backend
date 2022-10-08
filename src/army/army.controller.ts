@@ -29,7 +29,6 @@ export class ArmyController {
     @HttpCode(HttpStatus.OK)
     async lookup() {
         const a =  await this.armyService.getAll();
-        console.log(a);
         return(a);
     }
 
@@ -45,8 +44,8 @@ export class ArmyController {
         const unitsDTO: UnitDTO[] = []
         for (const unit of units) {
             // const profiles: UnitProfile[] = await this.unitProfileService.findByOwner(unit.id);
-            console.log(unit.options)
-            console.log(unit.optionsIds)
+            // console.log(unit.options)
+            // console.log(unit.optionsIds)
             const profiles: UnitProfile[] = await this.unitProfileService.findByIdArray(unit.profileIds)
             const options: Option[] = await this.optionService.findFromIds(unit.optionsIds);
             // console.log(unit.options);

@@ -8,15 +8,11 @@ from configparser import ConfigParser
 
 import helper
 from global_strings import * 
-# from link import Link
-# from cost import Cost
-# from condition import Condition
 from rule import Rule
 from modifier import Modifier
 from option import Option
 from item import Item, SpecialItemsCategory
 from profile import UnitProfile
-# from scripts.armies_database.src.helper import entityExits
 from upgrade import Upgrade, UpgradeCategory
 from unit import Unit, UnitCategory
 
@@ -104,7 +100,6 @@ class Army:
     def __manageSelectionEntries(self, selections: ResultSet):
         for s in selections:
             type = s["type"]
-            # print("    Type:", type)
             if type == "unit":
                 unit: Unit = Unit(s, self)
                 

@@ -1,5 +1,7 @@
-import {AfterLoad, Column, Entity, PrimaryColumn} from "typeorm";
+import {AfterLoad, Column, Entity, ManyToMany, PrimaryColumn} from "typeorm";
 import {ParserHelper} from "../../helper/parser.helper";
+import {Army} from "../army.entity";
+import {JoinTable} from "typeorm";
 
 @Entity("units")
 export class Unit {
@@ -27,6 +29,17 @@ export class Unit {
     public optionsIds: string[];
 
     public profileIds: string[];
+
+    // @ManyToMany(() => Army, (army) => army.units)
+    // @JoinTable({ name: "armies_units",
+    //     joinColumn: {
+    //         name: "armies",
+    //         referencedColumnName: "id"
+    //     }, inverseJoinColumn: {
+    //         name: "units",
+    //         referencedColumnName: "id"
+    // }})
+    // public armies: Army[];
 
     @AfterLoad()
     private loadIds() {
