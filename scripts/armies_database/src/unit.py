@@ -1,3 +1,5 @@
+from copyreg import constructor
+import uuid
 from numpy import array
 import psycopg2
 import json
@@ -5,9 +7,12 @@ import json
 from cost import Cost
 from link import Link
 from option import Option
-from profile import Profile
+from profile import UnitProfile
 from global_strings import *
 from condition import Condition
+
+class Army:
+    pass
 
 ##
 # @class Unit
@@ -22,10 +27,10 @@ class Unit:
     _cost: Cost
     
     _links: array(Link, []) = []
-    _options: array(Option, []) = [] # saved
-    _profiles: array(Profile, []) = [] # saved
+    _options: array(str, []) = [] # saved
+    _profiles: array(str, []) = [] # saved
 
-    def __init__(self, selection):
+    def __init__(self, selection, army: Army):
         self._links = []
         self._options = []
         self._profiles = []
@@ -35,7 +40,9 @@ class Unit:
         # profiles
         try:
             for p in selection.find(PROFILES).find_all(PROFILE):
-                self._profiles.append(Profile(p))
+                profile: UnitProfile = UnitProfile(p)
+                army.addProfile(profile)
+                self._profiles.append(profile.getId())
         except (AttributeError):
             pass
         # infoLinks
@@ -47,7 +54,10 @@ class Unit:
         # options
         try:
             for s in selection.find(SELECTION_ENTRIES).find_all(SELECTION_ENTRY):
-                self._options.append(Option(s, self._id))
+                option: Option = Option(s, army)
+                army.addOption(option)
+                print(option.getId())
+                self._options.append(option.getId())
         except (AttributeError):
             pass
         # categoryLinks
@@ -76,18 +86,13 @@ class Unit:
     def linkOption(self, opt: Option):
         self._options.append(opt)
 
+    def getId(self) -> str:
+        return self._id
+
     def save(self, connection, cursor, armyId: str):
         try:
-            profilesArr: array(str) = []
-            optionsArr: array(str) = []
-            for p in self._profiles:
-                p.save(connection, cursor, self._id, "unit")
-                profilesArr.append(p.getId())
-            for o in self._options:
-                # o.save(connection, cursor)
-                optionsArr.append(o._id)
-            profiles: str = json.dumps(profilesArr)
-            options: str = json.dumps(optionsArr)
+            profiles: str = json.dumps(self._profiles)
+            options: str = json.dumps(self._options)
             cursor.execute(f"INSERT INTO {UNITS_TABLE} (id, name, army, category, cost, options, profiles) VALUES (%s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, armyId, self._categoryId, self._cost.toString(), options, profiles))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
@@ -103,7 +108,7 @@ class UnitCategory:
     def __init__(self, category):   
         self.__constraints = []
 
-        self.__id = category[ID]
+        self.__id = str(uuid.uuid4()) # category[ID]
         self.__targetId = category[TARGET_ID]
         self.__name = category[NAME]
         try:

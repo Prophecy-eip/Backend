@@ -11,7 +11,18 @@ export class UnitProfileService {
         private repository: Repository<UnitProfile>
     ) {}
 
-    async findByOwner(ownerId: string): Promise<UnitProfile[]> {
-        return this.repository.findBy([{ ownerId: ownerId}])
+
+    async findByIdArray(ids: string[]): Promise<UnitProfile[]> {
+        let profiles: UnitProfile[] = []
+
+        for (const id of ids) {
+            const p = await this.repository.findOneBy([{ id: id }]);
+
+            if (p === null) {
+                continue;
+            }
+            profiles.push(p);
+        }
+        return profiles;
     }
 }

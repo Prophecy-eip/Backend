@@ -6,11 +6,14 @@ from condition import Condition
 from link import Link
 from cost import Cost
 from modifier import Modifier
-from profile import Profile
+from profile import UnitProfile
 from rule import Rule
 from item import SpecialItemsCategory
 from global_strings import *
 import helper
+
+class Army:
+    pass
 
 class Upgrade:
     _id: str = ""
@@ -25,14 +28,14 @@ class Upgrade:
 
     _modifiers: array(Modifier, []) = []
 
-    _profiles: array(Profile, []) = []
+    _profiles: array(str, []) = []
     
-    _rules: array(Rule, []) = []
+    _rules: array(str, []) = []
 
-    _specialItemsCategories: array(SpecialItemsCategory, []) = []
+    # _specialItemsCategories: array(SpecialItemsCategory, []) = []
 
 
-    def __init__(self, upgrade):
+    def __init__(self, upgrade, army: Army):
         self._name = upgrade[NAME]
         self._id = upgrade[ID]
         self._collective = upgrade[COLLECTIVE]
@@ -62,22 +65,29 @@ class Upgrade:
         # profiles
         try:
             for p in upgrade.find(PROFILES).find_all(PROFILE):
-                self._profiles.append(Profile(p))
+                profile: UnitProfile = UnitProfile(p)
+                army.addProfile(UnitProfile(p))
+                self._profiles.append(profile.getId())
         except (AttributeError):
             pass
         # rules
         try:
             for r in upgrade.find(RULES).find_all(RULE):
-                self._rules.append(Rule(r))
+                rule: Rule = Rule(r)
+                army.addRule(rule)
+                self._rules.append(rule.getId())
         except (AttributeError):
             pass
         # selection entry groups
         try:
             for selec in upgrade.find_all(SELECTION_ENTRY_GROUPS):
                 for s in selec.find_all(SELECTION_ENTRY_GROUP):
-                    self._specialItemsCategories.append(SpecialItemsCategory(s))
+                    army.addItemCategory(SpecialItemsCategory(s, army))
         except (AttributeError):
             pass
+
+    def getId(self) -> str:
+        return self._id        
 
     def print(self):
         print("NAME:", self._name, "\tID:", self._id, "\tCOLLECTIVE:", self._collective)
@@ -100,20 +110,18 @@ class Upgrade:
         for s in self._specialItemsCategories:
             s.print()
 
-    def save(self, connection, cursor, armyId: str):
+    def save(self, connection, cursor):
         try:
             conditionsArr: array(str)  = []
-            profilesArr: array(str) = []
             for c in self._constraints:
                 conditionsArr.append(c.toString())
-            for p in self._profiles:
-                # p.save(connection, cursor, self._id, "upgrade")
-                profilesArr.append(p.getId())
+
             conditions: str = json.dumps(conditionsArr)
             modifiers: str = "" #saveArrayAndGetIds(self._modifiers, connection, cursor)
-            profiles: str = json.dumps(profilesArr)
-            rules: str = helper.saveArrayAndGetIds(self._rules, connection, cursor)
-            cursor.execute(f"INSERT INTO {UPGRADES_TABLE} (id, name, is_collective, limits, cost, modifiers, profiles, rules, army) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, self._collective, conditions, self._cost.toString(), modifiers, profiles, rules, armyId))
+            profiles: str = json.dumps(self._profiles)
+            # rules: str = helper.saveArrayAndGetIds(self._rules, connection, cursor)
+            rules: str = json.dumps(self._rules)
+            cursor.execute(f"INSERT INTO {UPGRADES_TABLE} (id, name, is_collective, limits, cost, modifiers, profiles, rules) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, self._collective, conditions, self._cost.toString(), modifiers, profiles, rules))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
@@ -137,11 +145,11 @@ class UpgradeCategory:
         for c in category.find(CONSTRAINTS).find_all(CONSTRAINT):
             self._constraints.append(Condition(c))
         # upgrades
-        try:
-            for u in category.find(SELECTION_ENTRIES).find_all(SELECTION_ENTRY):
-                self._upgrades.append(Upgrade(u))
-        except (AttributeError):
-            pass
+        # try:
+        #     # for u in category.find(SELECTION_ENTRIES).find_all(SELECTION_ENTRY):
+        #     #     self._upgrades.append(Upgrade(u))
+        # except (AttributeError):
+        #     pass
         # links
         try:
             for l in category.find(ENTRY_LINKS).find_all(ENTRY_LINK):
@@ -157,6 +165,9 @@ class UpgradeCategory:
         print("--- upgrades ---")
         for u in self._upgrades:
             u.print()
+
+    def getId(self) -> str:
+        return self.__id
 
     def save(self, connection, cursor, armyId):
         try:

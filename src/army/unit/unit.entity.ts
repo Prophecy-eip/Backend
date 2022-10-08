@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import {AfterLoad, Column, Entity, PrimaryColumn} from "typeorm";
+import {ParserHelper} from "../../helper/parser.helper";
 
 @Entity("units")
 export class Unit {
@@ -22,4 +23,15 @@ export class Unit {
 
     @Column({type: "varchar", name: "profiles"})
     public profiles: string;
+
+    public optionsIds: string[];
+
+    public profileIds: string[];
+
+    @AfterLoad()
+    private loadIds() {
+        this.optionsIds = ParserHelper.stringToArray(this.options);
+        this.profileIds = ParserHelper.stringToArray(this.profiles);
+    }
+
 }
