@@ -75,7 +75,7 @@ class Item:
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass   
 
-class SpecialItemsCategory: # TODO: save
+class SpecialItemsCategory:
     _name: str = ""
     _id: str = ""
     _isCollective: str = ""
@@ -88,6 +88,7 @@ class SpecialItemsCategory: # TODO: save
         self._id = entry[ID]
         self._name = entry[NAME]
         self._isCollective = entry[COLLECTIVE]
+        print(self._name)
         
 
         try:
@@ -115,12 +116,11 @@ class SpecialItemsCategory: # TODO: save
 
     def save(self, connection, cursor):
         try:
-            items = helper.saveArrayAndGetIdsWithId(connection, cursor, self._id)
             limitsArr: array(str) = []
             for l in self._constraints:
                 limitsArr.append(l.toString())
             limits = json.dumps(limitsArr)
-            cursor.execute(f"INSERT INTO {SPECIAL_ITEM_CATEGORIES_TABLE} ({ID}, {NAME}, is_collective, limits, items) VALUES (%s, %s, %s, %s, %s)", (self._id, self._name, self._isCollective, limits, items))
+            cursor.execute(f"INSERT INTO {SPECIAL_ITEM_CATEGORIES_TABLE} ({ID}, {NAME}, is_collective, limits) VALUES (%s, %s, %s, %s)", (self._id, self._name, self._isCollective, limits))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass   

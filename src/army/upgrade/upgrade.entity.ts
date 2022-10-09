@@ -4,7 +4,6 @@ import {UnitProfile} from "../unit/unit-profile/unit-profile.entity";
 import {Rule} from "../rule/rule.entity";
 import {ParserHelper} from "../../helper/parser.helper";
 import {ProphecyDatasource} from "../../database/prophecy.datasource";
-import {Profile} from "../../account/profile/profile.entity";
 
 @Entity("upgrades")
 export class Upgrade {
