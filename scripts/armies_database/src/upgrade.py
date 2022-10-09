@@ -157,7 +157,7 @@ class UpgradeCategory:
         #     #     self._upgrades.append(Upgrade(u))
         # except (AttributeError):
         #     pass
-        # links
+        # links 
         try:
             for l in category.find(ENTRY_LINKS).find_all(ENTRY_LINK):
                 self._links.append(Link(l))

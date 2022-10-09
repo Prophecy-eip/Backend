@@ -13,7 +13,4 @@ export class SpecialItemCategory {
 
     @Column()
     public limits: string;
-
-    @Column()
-    public items: string;
 }
