@@ -16,7 +16,4 @@ export class SpecialItemCategory {
 
     @Column()
     public items: string;
-
-    @Column()
-    public army: string;
 }

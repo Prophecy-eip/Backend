@@ -11,7 +11,4 @@ export class UnitService {
         private repository: Repository<Unit>
     ) {}
 
-    async findAllByArmy(armyId: string): Promise<Unit[]> {
-        return await this.repository.findBy([{ army: armyId }]);
-    }
 }

@@ -102,11 +102,6 @@ class Army:
             type = s["type"]
             if type == "unit":
                 unit: Unit = Unit(s, self)
-                
-                if helper.entityExists(unit.getId(), EXISTING_UNITS) == False:
-                    self.__units.append(unit)
-                    EXISTING_UNITS.append(unit.getId())
-                self.__unitsIds.append(unit.getId())
                 try:
                     options: ResultSet = s.find(SELECTION_ENTRIES, recursive=False).find_all(SELECTION_ENTRY)
                     # missing stuff
@@ -115,8 +110,13 @@ class Army:
                         if helper.entityExists(option.getId(), EXISTING_OPTIONS) == False:
                             self.__options.append(option)
                             EXISTING_OPTIONS.append(option.getId())
+                        unit.linkOption(option.getId())                        
                 except (AttributeError):
                     pass
+                if helper.entityExists(unit.getId(), EXISTING_UNITS) == False:
+                    self.__units.append(unit)
+                    EXISTING_UNITS.append(unit.getId())
+                self.__unitsIds.append(unit.getId())
             if type == "upgrade":
                 self.addUpgrade(Upgrade(s, self))
             
@@ -175,19 +175,19 @@ class Army:
             for r in self.__rules:
                 r.save(connexion, cursor)
             for c in self.__organisation:
-                c.save(connexion, cursor, self.__id)
+                c.save(connexion, cursor)
             for p in self.__profiles:
                 p.save(connexion, cursor)
             for c in self.__upgradeCategories:
-                c.save(connexion, cursor, self.__id)
+                c.save(connexion, cursor)
             for u in self.__units:
-                u.save(connexion, cursor, self.__id)
+                u.save(connexion, cursor)
             for o in self.__options:
                 o.save(connexion, cursor)
             for u in self.__upgrades:
                 u.save(connexion, cursor)
             for c in self.__itemCategories:
-                c.save(connexion, cursor, self.__id)
+                c.save(connexion, cursor)
             for m in self.__modifiers:
                 m.save(connexion, cursor)
             print("Done!")

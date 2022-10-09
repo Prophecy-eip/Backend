@@ -4,7 +4,7 @@ export class UnitProfileDTO {
     constructor(profile: UnitProfile) {
         this.id = profile.id;
         this.name = profile.name;
-        this.characteristics = Object.fromEntries(profile.parsedCharacteristics);
+        this.characteristics = Object.fromEntries(profile.characteristics);
     }
 
     id: string;
