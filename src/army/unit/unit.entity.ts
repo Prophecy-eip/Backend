@@ -1,7 +1,9 @@
-import {AfterLoad, Column, Entity, ManyToMany, PrimaryColumn} from "typeorm";
-import {ParserHelper} from "../../helper/parser.helper";
-import {Army} from "../army.entity";
-import {JoinTable} from "typeorm";
+import { AfterLoad, Column, Entity, PrimaryColumn } from "typeorm";
+
+import { ParserHelper } from "../../helper/parser.helper";
+import { Option } from "../option/option.entity";
+import { UnitProfile } from "./unit-profile/unit-profile.entity";
+import { ProphecyDatasource } from "../../database/prophecy.datasource";
 
 @Entity("units")
 export class Unit {
@@ -11,40 +13,39 @@ export class Unit {
     @Column()
     public name: string;
 
-    @Column({type: "varchar"})
-    public army: string;
-
-    @Column({type: "varchar"})
+    @Column({ type: "varchar" })
     public category: string;
 
     @Column()
     public cost: string;
 
-    @Column()
-    public options: string;
+    @Column({ name: "options" })
+    private optionsIds: string;
 
     @Column({type: "varchar", name: "profiles"})
-    public profiles: string;
+    private profilesIds: string;
 
-    public optionsIds: string[];
-
-    public profileIds: string[];
-
-    // @ManyToMany(() => Army, (army) => army.units)
-    // @JoinTable({ name: "armies_units",
-    //     joinColumn: {
-    //         name: "armies",
-    //         referencedColumnName: "id"
-    //     }, inverseJoinColumn: {
-    //         name: "units",
-    //         referencedColumnName: "id"
-    // }})
-    // public armies: Army[];
+    public options: Option[] = []
+    public profiles: UnitProfile[] = []
 
     @AfterLoad()
-    private loadIds() {
-        this.optionsIds = ParserHelper.stringToArray(this.options);
-        this.profileIds = ParserHelper.stringToArray(this.profiles);
-    }
+    private async loadEntities() {
+        let dataSource: ProphecyDatasource = new ProphecyDatasource();
+        const optionsIds: string[] = ParserHelper.stringToArray(this.optionsIds);
+        const profilesIds: string[] = ParserHelper.stringToArray(this.profilesIds);
 
+        await dataSource.initialize();
+        for (const id of optionsIds) {
+            const o: Option = await dataSource.getRepository(Option).findOneBy([{ id: id }]);
+            if (o === null)
+                continue;
+            this.options.push(o)
+        }
+        for (const id of profilesIds) {
+            const p: UnitProfile = await dataSource.getRepository(UnitProfile).findOneBy([{ id: id }]);
+            if (p === null)
+                continue;
+            this.profiles.push(p);
+        }
+    }
 }

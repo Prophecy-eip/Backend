@@ -113,14 +113,14 @@ class SpecialItemsCategory: # TODO: save
         for i in self._items:
             i.print()
 
-    def save(self, connection, cursor, armyId: str):
+    def save(self, connection, cursor):
         try:
             items = helper.saveArrayAndGetIdsWithId(connection, cursor, self._id)
             limitsArr: array(str) = []
             for l in self._constraints:
                 limitsArr.append(l.toString())
             limits = json.dumps(limitsArr)
-            cursor.execute(f"INSERT INTO {SPECIAL_ITEM_CATEGORIES_TABLE} ({ID}, {NAME}, is_collective, limits, items, army) VALUES (%s, %s, %s, %s, %s, %s)", (self._id, self._name, self._isCollective, limits, items, armyId))
+            cursor.execute(f"INSERT INTO {SPECIAL_ITEM_CATEGORIES_TABLE} ({ID}, {NAME}, is_collective, limits, items) VALUES (%s, %s, %s, %s, %s)", (self._id, self._name, self._isCollective, limits, items))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass   

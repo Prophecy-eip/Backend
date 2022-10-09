@@ -26,7 +26,7 @@ class Upgrade:
 
     _cost: Cost
 
-    _modifiers: array(Modifier, []) = []
+    _modifiers: array(str, []) = []
 
     _profiles: array(str, []) = []
     
@@ -36,6 +36,12 @@ class Upgrade:
 
 
     def __init__(self, upgrade, army: Army):
+        self._constraints = []
+        self._links = []
+        self._modifiers = []
+        self._profiles = []
+        self._rules = []
+
         self._name = upgrade[NAME]
         self._id = upgrade[ID]
         self._collective = upgrade[COLLECTIVE]
@@ -59,7 +65,9 @@ class Upgrade:
         # modifiers
         try:
             for m in upgrade.find(MODIFIERS).find_all(MODIFIER):
-                self._modifiers.append(Modifier(m))
+                modifier: Modifier = Modifier(m)
+                army.addModifier(modifier)
+                self._modifiers.append(modifier.getId())
         except (AttributeError):
             pass
         # profiles
@@ -116,11 +124,9 @@ class Upgrade:
             conditionsArr: array(str)  = []
             for c in self._constraints:
                 conditionsArr.append(c.toString())
-
             conditions: str = json.dumps(conditionsArr)
-            modifiers: str = "" #saveArrayAndGetIds(self._modifiers, connection, cursor)
+            modifiers: str = json.dumps(self._modifiers)
             profiles: str = json.dumps(self._profiles)
-            # rules: str = helper.saveArrayAndGetIds(self._rules, connection, cursor)
             rules: str = json.dumps(self._rules)
             cursor.execute(f"INSERT INTO {UPGRADES_TABLE} (id, name, is_collective, limits, cost, modifiers, profiles, rules) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, self._collective, conditions, self._cost.toString(), modifiers, profiles, rules))
             connection.commit()
@@ -170,13 +176,13 @@ class UpgradeCategory:
     def getId(self) -> str:
         return self.__id
 
-    def save(self, connection, cursor, armyId):
+    def save(self, connection, cursor):
         try:
             arr: array(str) = []
             for c in self._constraints:
                 arr.append(c.toString())
             limits: str = json.dumps(arr)
-            cursor.execute(f"INSERT INTO {UPGRADE_CATEGORIES_TABLE} (id, name, is_collective, limits, army) VALUES (%s, %s, %s, %s, %s)", (self.__id, self.__name, self.__collective, limits, armyId))
+            cursor.execute(f"INSERT INTO {UPGRADE_CATEGORIES_TABLE} (id, name, is_collective, limits) VALUES (%s, %s, %s, %s)", (self.__id, self.__name, self.__collective, limits))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass

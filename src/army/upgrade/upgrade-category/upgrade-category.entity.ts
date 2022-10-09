@@ -13,7 +13,4 @@ export class UpgradeCategory {
 
     @Column()
     public limits: string
-
-    @Column({ type: "varchar"})
-    public army: string
 }

@@ -83,17 +83,17 @@ class Unit:
         for o in self._options:
             o.print()
     
-    def linkOption(self, opt: Option):
-        self._options.append(opt)
+    def linkOption(self, optId: str):
+        self._options.append(optId)
 
     def getId(self) -> str:
         return self._id
 
-    def save(self, connection, cursor, armyId: str):
+    def save(self, connection, cursor):
         try:
             profiles: str = json.dumps(self._profiles)
             options: str = json.dumps(self._options)
-            cursor.execute(f"INSERT INTO {UNITS_TABLE} (id, name, army, category, cost, options, profiles) VALUES (%s, %s, %s, %s, %s, %s, %s)", (self._id, self._name, armyId, self._categoryId, self._cost.toString(), options, profiles))
+            cursor.execute(f"INSERT INTO {UNITS_TABLE} (id, name, category, cost, options, profiles) VALUES (%s, %s, %s, %s, %s, %s)", (self._id, self._name, self._categoryId, self._cost.toString(), options, profiles))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
@@ -123,14 +123,14 @@ class UnitCategory:
     def print(self):
         print("NAME:", self._name, "\tID:", self._id)
 
-    def save(self, connexion, cursor, armyId: str):
+    def save(self, connection, cursor):
         try:
             arr: array(str) = []
             for c in self.__constraints:
                 arr.append(c.toString())
             constraints = json.dumps(arr)
-            cursor.execute("INSERT INTO unit_categories (id, name, limits, army, target_id) VALUES (%s,%s,%s,%s,%s)", (self.__id, self.__name, constraints, armyId, self.__targetId))
-            connexion.commit()
+            cursor.execute("INSERT INTO unit_categories (id, name, limits, target_id) VALUES (%s,%s,%s,%s)", (self.__id, self.__name, constraints, self.__targetId))
+            connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
 

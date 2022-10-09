@@ -8,6 +8,9 @@ import { Upgrade } from "../army/upgrade/upgrade.entity";
 import { UpgradeCategory } from "../army/upgrade/upgrade-category/upgrade-category.entity";
 import { SpecialItemCategory } from "../army/special-item/special-item-category/special-item-category.entity";
 import { SpecialItem } from "../army/special-item/special-item.entity";
+import {Option} from "../army/option/option.entity";
+import {UnitProfile} from "../army/unit/unit-profile/unit-profile.entity";
+import {Modifier} from "../army/modifier/modifier.entity";
 
 dotenv.config()
 
@@ -27,7 +30,18 @@ export class ProphecyDatasource extends DataSource {
             username: DB_USERNAME,
             password: DB_PASSWORD,
             database: DB,
-            entities: [UnitCategory, Unit, Rule, Upgrade, UpgradeCategory, SpecialItemCategory, SpecialItem]
+            entities: [
+                UnitCategory,
+                Unit,
+                Rule,
+                Upgrade,
+                UpgradeCategory,
+                SpecialItemCategory,
+                SpecialItem,
+                Option,
+                UnitProfile,
+                Modifier,
+            ]
         });
     }
 }
