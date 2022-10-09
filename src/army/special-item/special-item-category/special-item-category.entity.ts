@@ -13,4 +13,7 @@ export class SpecialItemCategory {
 
     @Column()
     public limits: string;
+
+    @Column({ name: "items" })
+    public itemsIds: string;
 }
