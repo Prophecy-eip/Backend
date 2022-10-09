@@ -39,20 +39,6 @@ export class ArmyController {
         if (army === null) {
             throw new NotFoundException();
         }
-        const unitCategories: UnitCategory[] = await this.unitCategoryService.findAllByArmy(id);
-        const units: Unit[] = await this.unitService.findAllByArmy(id);
-        const unitsDTO: UnitDTO[] = []
-        for (const unit of units) {
-            // const profiles: UnitProfile[] = await this.unitProfileService.findByOwner(unit.id);
-            // console.log(unit.options)
-            // console.log(unit.optionsIds)
-            const profiles: UnitProfile[] = await this.unitProfileService.findByIdArray(unit.profileIds)
-            const options: Option[] = await this.optionService.findFromIds(unit.optionsIds);
-            // console.log(unit.options);
-            unitsDTO.push(new UnitDTO(unit, profiles, options));
-            // ParserHelper.stringToArray(unit.options);
-        }
-        // console.log(unitsDTO);
-        return new ArmyDTO(army, unitCategories, unitsDTO, []);
+        return new ArmyDTO(army);
     }
 }

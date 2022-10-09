@@ -1,7 +1,6 @@
-import {AfterLoad, Column, Entity, ManyToMany, PrimaryColumn} from "typeorm";
+import {AfterLoad, Column, Entity, PrimaryColumn} from "typeorm";
 
 import { ParserHelper } from "../../../helper/parser.helper";
-import {Army} from "../../army.entity";
 
 @Entity("unit_profiles")
 export class UnitProfile {
@@ -11,21 +10,16 @@ export class UnitProfile {
     @Column()
     public name: string;
 
-    @Column()
-    public characteristics: string;
+    @Column({ name: "characteristics" })
+    private rawCharacteristics: string;
 
     @Column({ name: "is_shared" })
     public isShared: boolean;
-    // @Column({ name: "owner_id" })
-    // public ownerId: string;
-    //
-    // @Column({ name: "owner_type" })
-    // public ownerType: string;
 
-    public parsedCharacteristics: Map<string, string>;
+    public characteristics: Map<string, string>;
 
     @AfterLoad()
     private parseCharacteristics() {
-        this.parsedCharacteristics = ParserHelper.stringToMap(this.characteristics);
+        this.characteristics = ParserHelper.stringToMap(this.rawCharacteristics);
     }
 }

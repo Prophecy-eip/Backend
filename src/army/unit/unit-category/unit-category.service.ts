@@ -11,7 +11,4 @@ export class UnitCategoryService {
         private repository: Repository<UnitCategory>
     ) {}
 
-    async findAllByArmy(armyId: string): Promise<UnitCategory[]> {
-        return await this.repository.findBy([{ army: armyId }]);
-    }
 }
