@@ -22,6 +22,7 @@ EXISTING_UNITS: array(str) = []
 EXISTING_OPTIONS: array(str) = []
 EXISTING_UPGRADES: array(str) = []
 EXISTING_MODIFIERS: array(str) = []
+EXISTING_ITEM_CATEGORIES: array(str) = []
 
 class Army:
     __name: str = ""
@@ -127,9 +128,9 @@ class Army:
     def __manageSharedSelectionEntryGroups(self, groups: ResultSet):
         for c in groups:
             cat: SpecialItemsCategory = SpecialItemsCategory(c, self)
-            # if helper.entityExists(cat.getId(), EXISTING_UPGRADE_CATEGORIES) == False:
-            self.__itemCategories.append(cat)
-                # EXISTING_UPGRADE_CATEGORIES.append(cat.getId())
+            if helper.entityExists(cat.getId(), EXISTING_ITEM_CATEGORIES) == False:
+                self.__itemCategories.append(cat)
+                EXISTING_ITEM_CATEGORIES.append(cat.getId())
             self.__upgradeCategoryIds.append(cat.getId())
             
     def __manageSharedRules(self, rules: ResultSet):

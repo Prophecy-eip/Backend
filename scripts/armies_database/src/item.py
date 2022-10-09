@@ -24,6 +24,9 @@ class Item:
     _cost: Cost
 
     def __init__(self, item):
+        self._constraints = []
+        self._links = []
+
         self._name = item[NAME]
         self._id = item[ID]
         self._type = item[TYPE]
@@ -82,23 +85,29 @@ class SpecialItemsCategory:
 
     _constraints: array(Condition, []) = []
 
-    _items: array(Item, []) = []
+    _items: array(str, []) = []
 
     def __init__(self, entry, army: Army):
+        self._constraints = []
+        self._items = []
+
         self._id = entry[ID]
         self._name = entry[NAME]
         self._isCollective = entry[COLLECTIVE]
-        print(self._name)
-        
 
         try:
             for c in entry.find(CONSTRAINTS).find_all(CONSTRAINT):
                 self._constraints.append(Condition(c))
         except (AttributeError):
             pass
+        # try:
+        #     for item in entry.find(SELECTION_ENTRY_GROUPS).find_all(SELECTION_ENTRY_GROUP):
+        #         self._items.append(Item(item))
+        # except:
+        #     pass
         try:
-            for item in entry.find(SELECTION_ENTRY_GROUPS).find_all(SELECTION_ENTRY_GROUP):
-                self._items.append(Item(item))
+            for link in entry.find(ENTRY_LINKS).find_all(ENTRY_LINK):
+                self._items.append(link[TARGET_ID])
         except:
             pass
     
@@ -110,9 +119,9 @@ class SpecialItemsCategory:
         print("--- constraints ---")
         for c in self._constraints:
             c.print()
-        print("--- items ---")
-        for i in self._items:
-            i.print()
+        # print("--- items ---")
+        # for i in self._items:
+        #     i.print()
 
     def save(self, connection, cursor):
         try:
@@ -120,7 +129,8 @@ class SpecialItemsCategory:
             for l in self._constraints:
                 limitsArr.append(l.toString())
             limits = json.dumps(limitsArr)
-            cursor.execute(f"INSERT INTO {SPECIAL_ITEM_CATEGORIES_TABLE} ({ID}, {NAME}, is_collective, limits) VALUES (%s, %s, %s, %s)", (self._id, self._name, self._isCollective, limits))
+            items: str = json.dumps(self._items)
+            cursor.execute(f"INSERT INTO {SPECIAL_ITEM_CATEGORIES_TABLE} ({ID}, {NAME}, is_collective, limits, items) VALUES (%s, %s, %s, %s, %s)", (self._id, self._name, self._isCollective, limits, items))
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass   
