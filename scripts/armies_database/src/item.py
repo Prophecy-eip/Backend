@@ -100,11 +100,6 @@ class SpecialItemsCategory:
                 self._constraints.append(Condition(c))
         except (AttributeError):
             pass
-        # try:
-        #     for item in entry.find(SELECTION_ENTRY_GROUPS).find_all(SELECTION_ENTRY_GROUP):
-        #         self._items.append(Item(item))
-        # except:
-        #     pass
         try:
             for link in entry.find(ENTRY_LINKS).find_all(ENTRY_LINK):
                 self._items.append(link[TARGET_ID])
@@ -119,9 +114,6 @@ class SpecialItemsCategory:
         print("--- constraints ---")
         for c in self._constraints:
             c.print()
-        # print("--- items ---")
-        # for i in self._items:
-        #     i.print()
 
     def save(self, connection, cursor):
         try:
