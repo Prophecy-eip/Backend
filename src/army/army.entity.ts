@@ -64,13 +64,15 @@ export class Army {
             this.units.push(await dataSource.getRepository(Unit).findOneBy([ { id: id }]));
         for (const id of rulesIds)
             this.rules.push(await dataSource.getRepository(Rule).findOneBy([{ id: id }]));
-        for (const id of upgradeCategoriesIds)
-            this.upgradeCategories.push(await dataSource.getRepository(UpgradeCategory).findOneBy([{ id: id }]));
-        for (const id of upgradesIds)
+        for (const id of upgradeCategoriesIds) {
+            console.log(id)
+            this.upgradeCategories.push(await dataSource.getRepository(UpgradeCategory).findOneBy([{id: id}]));
+        }for (const id of upgradesIds)
             this.upgrades.push(await dataSource.getRepository(Upgrade).findOneBy([{ id: id }]));
         for (const id of specialItemCategoriesIds)
-            this.specialItemCategories.push(await dataSource.getRepository(SpecialItemCategory).findOneBy([{ id: id}]));
+            this.specialItemCategories.push(await dataSource.getRepository(SpecialItemCategory).findOneBy([{id: id}]));
         for (const id of specialItemsIds)
             this.specialItems.push(await dataSource.getRepository(SpecialItem).findOneBy([{ id: id }]));
+        console.log(this.upgradeCategories)
     }
 }

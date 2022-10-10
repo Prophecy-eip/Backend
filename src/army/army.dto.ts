@@ -10,6 +10,7 @@ import { Option } from "./option/option.entity";
 import {SpecialItemCategory} from "./special-item/special-item-category/special-item-category.entity";
 import {SpecialItem} from "./special-item/special-item.entity";
 import {UpgradeDTO} from "./upgrade/upgrade.dto";
+import {SpecialItemCategoryDTO} from "./special-item/special-item-category/special-item-category.dto";
 
 export class ArmyDTO {
     constructor(army: Army) {
@@ -17,12 +18,13 @@ export class ArmyDTO {
         this.name = army.name;
         this.unitCategories = army.unitCategories;
         this.rules = army.rules;
-        for (let i = 0; i < army.units.length; i++)
-            this.units.push(new UnitDTO(army.units[i]));
+        for (const unit of army.units)
+            this.units.push(new UnitDTO(unit));
         this.upgradeCategories = army.upgradeCategories;
-        for (let i = 0; i < army.upgrades.length; i++)
-            this.upgrades .push(new UpgradeDTO(army.upgrades[i]));
-        this.specialItemCategories = army.specialItemCategories;
+        for (const upgrade of army.upgrades)
+            this.upgrades .push(new UpgradeDTO(upgrade));
+        for (const category of army.specialItemCategories)
+            this.specialItemCategories.push(new SpecialItemCategoryDTO(category))
         this.specialItems = army.specialItems;
     }
 
@@ -33,7 +35,7 @@ export class ArmyDTO {
     rules: Rule[] = [];
     upgradeCategories: UpgradeCategory[] = [];
     upgrades: UpgradeDTO[] = [];
-    specialItemCategories: SpecialItemCategory[] = [];
+    specialItemCategories: SpecialItemCategoryDTO[] = [];
     specialItems: SpecialItem[] = [];
     options: Option[] = []
 }

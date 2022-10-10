@@ -69,6 +69,7 @@ class Army:
         self.__unitsIds = []
         self.__upgradesIds = []
         self.__itemsIds = []
+        self.__upgradeCategoryIds = []
         catalogue = soup.find(CATALOGUE)
         self.__id = catalogue[ID]
         self.__name = catalogue[NAME]
@@ -129,9 +130,9 @@ class Army:
         for c in groups:
             cat: SpecialItemsCategory = SpecialItemsCategory(c, self)
             if helper.entityExists(cat.getId(), EXISTING_ITEM_CATEGORIES) == False:
-                self.__itemCategories.append(cat)
+                self.addItemCategory(cat)
                 EXISTING_ITEM_CATEGORIES.append(cat.getId())
-            self.__upgradeCategoryIds.append(cat.getId())
+            self.__itemCategories.append(cat.getId())
             
     def __manageSharedRules(self, rules: ResultSet):
         for r in rules:
