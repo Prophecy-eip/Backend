@@ -1,5 +1,4 @@
-import {Column, Entity, JoinColumn, ManyToOne, PrimaryColumn} from "typeorm";
-import {Army} from "../../army.entity";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity("unit_categories")
 export class UnitCategory {

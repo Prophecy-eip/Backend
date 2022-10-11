@@ -132,7 +132,7 @@ class Army:
             if helper.entityExists(cat.getId(), EXISTING_ITEM_CATEGORIES) == False:
                 self.addItemCategory(cat)
                 EXISTING_ITEM_CATEGORIES.append(cat.getId())
-            self.__itemCategories.append(cat.getId())
+            self.__itemCategoriesIds.append(cat.getId())
             
     def __manageSharedRules(self, rules: ResultSet):
         for r in rules:

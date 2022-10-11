@@ -2,9 +2,9 @@ import { Test } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import * as dotenv from "dotenv";
 
-import {Army} from "../../src/army/army.entity";
-import {ArmyService} from "../../src/army/army.service";
-import {ArmyModule} from "../../src/army/army.module";
+import { Army } from "../../src/army/army.entity";
+import { ArmyService } from "../../src/army/army.service";
+import { ArmyModule } from "../../src/army/army.module";
 
 dotenv.config()
 
@@ -36,10 +36,10 @@ describe("ArmyService", () => {
         service = moduleRef.get<ArmyService>(ArmyService);
     });
 
-    it("Retrieve all armies", async () => {
-        const armies: Army [] = await service.getAll();
-
-        expect(armies).toBeDefined()
-        expect(armies.length).toBeGreaterThan(0);
-    });
+    // it("Retrieve all armies", async () => {
+    //     const armies: Army [] = await service.getAll();
+    //
+    //     expect(armies).toBeDefined()
+    //     expect(armies.length).toBeGreaterThan(0);
+    // });
 })

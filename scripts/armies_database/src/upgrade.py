@@ -32,8 +32,6 @@ class Upgrade:
     
     _rules: array(str, []) = []
 
-    # _specialItemsCategories: array(SpecialItemsCategory, []) = []
-
 
     def __init__(self, upgrade, army: Army):
         self._constraints = []
@@ -91,7 +89,6 @@ class Upgrade:
             for selec in upgrade.find_all(SELECTION_ENTRY_GROUPS):
                 for s in selec.find_all(SELECTION_ENTRY_GROUP, recursive=False):
                     army.addUpgradeCatgegory(s)
-                    # army.addItemCategory(SpecialItemsCategory(s, army))
         except (AttributeError):
             pass
 
@@ -151,13 +148,6 @@ class UpgradeCategory:
         self.__collective = category[COLLECTIVE]
         for c in category.find(CONSTRAINTS).find_all(CONSTRAINT):
             self._constraints.append(Condition(c))
-        # upgrades
-        # try:
-        #     # for u in category.find(SELECTION_ENTRIES).find_all(SELECTION_ENTRY):
-        #     #     self._upgrades.append(Upgrade(u))
-        # except (AttributeError):
-        #     pass
-        # links 
         try:
             for l in category.find(ENTRY_LINKS).find_all(ENTRY_LINK):
                 self._links.append(Link(l))

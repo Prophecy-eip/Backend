@@ -1,4 +1,4 @@
-import {AfterLoad, Column, Entity, PrimaryColumn} from "typeorm";
+import { AfterLoad, Column, Entity, PrimaryColumn } from "typeorm";
 
 import { ParserHelper } from "../../../helper/parser.helper";
 

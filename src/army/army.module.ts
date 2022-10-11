@@ -13,11 +13,11 @@ import { Upgrade } from "./upgrade/upgrade.entity";
 import { SpecialItemCategory } from "./special-item/special-item-category/special-item-category.entity";
 import { SpecialItem } from "./special-item/special-item.entity";
 import { ArmyService } from "./army.service";
-import {ArmyController} from "./army.controller";
-import {UnitService} from "./unit/unit.service";
-import {UnitCategoryService} from "./unit/unit-category/unit-category.service";
-import {UnitProfileService} from "./unit/unit-profile/unit-profile.service";
-import {OptionService} from "./option/option.service";
+import { ArmyController } from "./army.controller";
+import { UnitService } from "./unit/unit.service";
+import { UnitCategoryService } from "./unit/unit-category/unit-category.service";
+import { UnitProfileService } from "./unit/unit-profile/unit-profile.service";
+import { OptionService } from "./option/option.service";
 
 @Module({
     imports: [

@@ -1,7 +1,7 @@
 import { Modifier } from "../modifier/modifier.entity";
-import {UnitProfileDTO} from "../unit/unit-profile/unit-profile.dto";
-import {Rule} from "../rule/rule.entity";
-import {Upgrade} from "./upgrade.entity";
+import { UnitProfileDTO } from "../unit/unit-profile/unit-profile.dto";
+import { Rule } from "../rule/rule.entity";
+import { Upgrade } from "./upgrade.entity";
 
 export class UpgradeDTO {
     constructor(upgrade: Upgrade) {
@@ -11,8 +11,8 @@ export class UpgradeDTO {
         this.limits = upgrade.limits;
         this.cost = upgrade.cost;
         this.modifiers = upgrade.modifiers;
-        for (let i = 0; i < upgrade.profiles.length; i++)
-            this.profiles.push(new UnitProfileDTO(upgrade.profiles[i]));
+        for (const profile of upgrade.profiles)
+            this.profiles.push(new UnitProfileDTO(profile));
         this.rules = upgrade.rules;
     }
 
