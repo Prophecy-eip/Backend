@@ -1,6 +1,6 @@
 import { UnitProfileDTO } from "./unit-profile/unit-profile.dto";
 import { Unit } from "./unit.entity";
-import { Option } from "../option/option.entity";
+import { OptionDTO } from "../option/option.dto";
 
 export class UnitDTO {
     constructor(unit: Unit) {
@@ -8,9 +8,10 @@ export class UnitDTO {
         this.name = unit.name;
         this.category = unit.category;
         this.cost = unit.cost;
-        for (let i = 0; i < unit.profiles.length; i++)
-            this.profiles.push(new UnitProfileDTO(unit.profiles[i]));
-        this.options = unit.options;
+        for (const profile of unit.profiles)
+            this.profiles.push(new UnitProfileDTO(profile));
+        for (const option of unit.options)
+            this.options.push(new OptionDTO(option));
     }
 
     id: string;
@@ -18,5 +19,5 @@ export class UnitDTO {
     profiles: UnitProfileDTO[] = [];
     category: string;
     cost: string;
-    options: Option[] = [];
+    options: OptionDTO[] = [];
 }

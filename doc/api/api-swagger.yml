@@ -1690,10 +1690,6 @@ paths:
       description: ""
       tags:
         - armies
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
       responses:
         200:
           description: OK
@@ -1710,354 +1706,21 @@ paths:
         500:
           description: Internal Server Error
 
-  /armies/{armyId}/get-name:
+  /armies/{armyId}:
     get:
-      summary: Retrieves the army's name
+      summary: Retrieves an army's data
       description: ""
       tags:
         - armies
-      security:
-        - bearerAuth: []
       parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
+        - $ref: "#/components/parametersSchemes/armyId"
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/name'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
-  # update
-  # /armies/update-army/{armyId}:
-  #   put:
-  #     summary: Updates an army data
-  #     description: ""
-  #     tags:
-  #       - armies
-  #     parameters: []
-  #       # TODO
-  #     responses:
-  #       # TODO
-
-  # delete
-  # /armies/delete-army/{armyId}:
-  #   delete:
-  #     summary: Deletes an army
-  #     description: ""
-  #     tags:
-  #       - armies
-  #     parameters: []
-  #       # TODO
-  #     responses:
-  #       # TODO
-
-  # UNITS
-
-  # create
-  # /armies/{armyId}/units/create-unit:
-  #   post:
-  #     summary: Creates a unit
-  #     description: ""
-  #     tags:
-  #       - armies
-  #       - units
-  #     parameter: []
-  #       # TODO
-  #     responses:
-  #       # TODO
-
-  # read
-  /armies/{armyId}/units/get-units:
-    get:
-      summary: Retrieves the army's units list
-      description: ""
-      tags:
-        - armies
-        - units
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/uuidArray'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
-  /armies/{armyId}/units/get-unit/{unitId}:
-    get:
-      summary: Retrieves a unit data
-      description: ""
-      tags:
-        - armies
-        - units
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-        - $ref: '#/components/parametersSchemes/unitId'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/unitObject'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
-  /armies/{armyId}/units/{unitId}/modifiers/get-modifiers:
-    get:
-      summary: Retrieves the unit's modifiers list
-      description: ""
-      tags:
-        - armies
-        - units
-        - modifiers
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-        - $ref: '#/components/parametersSchemes/unitId'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/uuidArray'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
-
-  /armies/{armyId}/units/{unitId}/modifiers/get-modifier/{modifierId}:
-    get:
-      summary: Retrieves a modifier's data
-      description: ""
-      tags:
-        - armies
-        - units
-        - modifiers
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-        - $ref: '#/components/parametersSchemes/unitId'
-        - $ref: '#/components/parametersSchemes/modifierId'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/modifierObject'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
-  # update
-  # /armies/{armiyId}/units/update-unit/{unitId}:
-  #   put:
-  #     summary: Updates a unit
-  #     description: ""
-  #     tags:
-  #       - armies
-  #       - units
-  #     parameters: []
-  #       # TODO
-  #     responses:
-  #       # TODO
-
-  # delete
-  # /armies/{armyId}/units/delete-unit/{unitId}:
-  #   delete:
-  #     summary: Deletes a unit
-  #     description: ""
-  #     tags:
-  #       - armies
-  #       - units
-  #     parameters: []
-  #       # TODO
-  #     responses:
-  #       # TODO
-
-
-  # MODIFIERS
-
-  # create
-
-  # read
-  /armies/{armyId}/modifiers/get-modifiers:
-    get:
-      summary: Retrieves the army's modifiers ids list
-      description: ""
-      tags:
-        - armies
-        - modifiers
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/uuidArray'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
-  /armies/{armyId}/modifiers/get-modifier/{modifierId}:
-    get:
-      summary: Retrieves the modifier's data
-      description: ""
-      tags:
-        - armies
-        - modifiers
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-        - $ref: '#/components/parametersSchemes/modifierId'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/modifierObject'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
-  # update
-
-  # delete
-
-  # RULES
-
-  # create
-
-  # read
-  /armies/{armyId}/rules/get-rules:
-    get:
-      summary: Retrieves the army's rules
-      description: ""
-      tags:
-        - armies
-        - rules
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/uuidArray'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
-  /armies/{armyId}/rules/get-rule/{ruleId}:
-    get:
-      summary: Retrieves the rule's data
-      description: ""
-      tags:
-        - armies
-        - rules
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-        - in: path
-          name: ruleId
-          description: The rule's id
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ruleObject'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-        500:
-          description: Internal Server Error
-
-  # update
-
-  # delete
-
-  # ORGANISATION
-
-  # create
-
-  # read
-  /armies/{armyId}/get-organisation:
-    get:
-      summary: Retrieves the army's organisation
-      description: ""
-      tags:
-        - armies
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/armyId'
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/armyOrganisation'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
-  # update
-
-  # delete
-
+                $ref: '#/components/schemas/armyObject'
 
   # USERS
 
@@ -3071,67 +2734,39 @@ components:
             type: string
             example: Halberd
 
-    unitCategory:
-      description: A unit category data
-      type: object
-      properties:
-        name:
-          $ref: '#/components/schemas/name'
-        limit:
-          allOf:
-            - description: The unit category's limit
-            - $ref: '#/components/schemas/limit'
-      required:
-        - name
-        - limit
-
     unitObject:
       description: A unit's data
       type: object
       properties:
-        header:
-          $ref: '#/components/schemas/unitHeader'
-        characteristicProfiles:
-          $ref: '#/components/schemas/unitCharacteristicProfiles'
-        modelRules:
-          $ref: '#/components/schemas/unitModelRules'
+        profiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/unitProfile'
         options:
           type: array
           items:
             $ref: '#/components/schemas/modifierObject'
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          $ref: '#/components/schemas/name'
+        category:
+          $ref: '#/components/schemas/uuid'
+        cost:
+          type: string
       required:
         - header
         - characteristicProfiles
         - modelRules
         - options
 
-    ruleObject: # TODO: add required fields
-      description: A rule data
-      type: object
-      properties:
-        category:
-          description: The rule's category
-          type: string
-          example: category
-        name:
-          $ref: '#/components/schemas/name'
-        description:
-          allOf:
-            - description: The rule's description
-            - $ref: '#/components/schemas/description'
-        options:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                description: THhe description's name
-                type: string
-                example: name
-              description:
-                allOf:
-                  - description: The option's description
-                  - $ref: '#/components/schemas/description'
+    unitProfile:
+      id:
+        $ref: '#/components/schemas/uuid'
+      name:
+        $ref: '#/components/schemas/name'
+      characteristics:
+        type: object
 
     armyOrganisation:
       description: The army's organisation
@@ -3143,36 +2778,134 @@ components:
       description: The army's data
       type: object
       properties:
+        id:
+          $ref: "#/components/schemas/uuid"
         name:
           allOf:
             - description: The army's name
             - $ref: '#/components/schemas/name'
-        rules:
-          allOf:
-            - description: The army's rules ids list
-            - $ref: '#/components/schemas/uuidArray'
-        modifiers:
-          allOf:
-            - description: The army's modifiers ids list
-            - $ref: '#/components/schemas/uuidArray'
-          #items:
-          # allOf:
-          #   - description: The army's items ids list
-          #   - $ref: '#/components/schemas/uuidArray'
-        organisation:
-          allOf:
-            - description: The army's organisation
-            - $ref: '#/components/schemas/armyOrganisation'
+        unitCategories:
+          type: array
+          items:
+            $ref: "#/components/schemas/unitCategory"
         units:
-          allOf:
-            - description: The army's units ids list
-            - $ref: '#/components/schemas/uuidArray'
+          type: array
+          items:
+            $ref: '#/components/schemas/unitObject'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ruleObject'
+        upgradeCategories:
+          type: array
+          items:
+            $ref: '#/components/schemas/unitCategory'
+        upgrades:
+          type: array
+          items:
+            $ref: '#/components/schemas/upgradeObject'
+        specialItemCategories:
+          type: array
+          items:
+            $ref: '#/components/schemas/specialItemCategory'
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/optionObject'
       required:
         - name
+        - id
         - rules
-        - modifiers
-        - organisation
+        - unitCategories
         - units
+        - upgradeCategories
+        - upgrades
+        - specialIemCategories
+        - options
+
+    optionObject:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          $ref: '#/components/schemas/name'
+        type:
+          type: string
+        cost:
+          type: string
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ruleObject'
+        modifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/modifierObject'
+
+    specialItemCategory:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/uuid"
+        name:
+          $ref: "#/components/schemas/name"
+        isCollective:
+          type: boolean
+        limits:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/upgradeObject"
+
+    upgradeObject:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/uuid"
+        name:
+          $ref: "#/components/schemas/name"
+        isCollective:
+          type: boolean
+        limits:
+          type: string
+        cost:
+          type: string
+        modifiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/modifierObject"
+        profiles:
+          type: array
+          items:
+            $ref: "#/components/schemas/unitProfile"
+        rules:
+          type: array
+          items:
+            $ref: "#/components/schemas/ruleObject"
+
+    ruleObject:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/uuid"
+        name:
+          $ref: "#/components/schemas/name"
+        description:
+          $ref: "#/components/schemas/description"
+
+    unitCategory:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/uuid"
+        name:
+          $ref: '#/components/schemas/name'
+        limits:
+          type: string
+        targetId:
+          $ref: '#/components/schemas/armyCredentials'
 
     armyCredentials:
       type: object
@@ -3254,46 +2987,18 @@ components:
 
 
     modifierObject:
-      description: Every object having an effect on units
       type: object
       properties:
-        name:
-          allOf:
-            - description: The modifier's name
-            - $ref: '#/components/schemas/name'
-        description:
-          allOf:
-            - description: The modifier's description
-            - $ref: '#/components/schemas/description'
+        id:
+          $ref: "#/components/schemas/uuid"
         type:
-          description: The modifier's type
           type: string
-          example: Spell
-        category:
-          description: The modifier's category
+        value:
           type: string
-          example: Hereditary Spell
-        cost:
-          description: The modifier's cost
-          type: number
-          example: 50
-        limit:
-          $ref: '#/components/schemas/limit'
-        modelRestrictions:
-          description: The modifier's model restriction
-          type: array
-          items:
-            type: string
-        effects:
-          $ref: '#/components/schemas/effectsOnUnit'
-      required:
-        - name
-        - description
-        - type
-        - category
-        - cost
-        - limit
-        - effects
+        field:
+          type: string
+        limits:
+          type: string
 
     armyListObject:
       description: An army list data
