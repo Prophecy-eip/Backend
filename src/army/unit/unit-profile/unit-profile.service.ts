@@ -11,7 +11,6 @@ export class UnitProfileService {
         private repository: Repository<UnitProfile>
     ) {}
 
-
     async findByIdArray(ids: string[]): Promise<UnitProfile[]> {
         let profiles: UnitProfile[] = []
 

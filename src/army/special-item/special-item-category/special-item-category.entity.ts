@@ -1,7 +1,7 @@
-import {AfterLoad, Column, Entity, PrimaryColumn} from "typeorm";
-import {Upgrade} from "../../upgrade/upgrade.entity";
-import {ParserHelper} from "../../../helper/parser.helper";
-import {ProphecyDatasource} from "../../../database/prophecy.datasource";
+import { AfterLoad, Column, Entity, PrimaryColumn } from "typeorm";
+import { Upgrade } from "../../upgrade/upgrade.entity";
+import { ParserHelper } from "../../../helper/parser.helper";
+import { ProphecyDatasource } from "../../../database/prophecy.datasource";
 
 @Entity("special_item_categories")
 export class SpecialItemCategory {
@@ -24,15 +24,16 @@ export class SpecialItemCategory {
 
     @AfterLoad()
     private async loadEntities() {
-        let dataSource: ProphecyDatasource = new ProphecyDatasource();
         const itemsIds: string[] = ParserHelper.stringToArray(this.itemsIds);
+        let dataSource: ProphecyDatasource = new ProphecyDatasource();
 
-        await dataSource.initialize()
+        await dataSource.initialize();
         for (const id of itemsIds) {
             const i: Upgrade = await dataSource.getRepository(Upgrade).findOneBy([{ id: id }]);
             if (i === null)
                 continue;
             this.items.push(i);
         }
+        await dataSource.destroy();
     }
 }

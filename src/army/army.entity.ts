@@ -1,16 +1,26 @@
-import {AfterLoad, Column, DataSource, Entity, JoinColumn, ManyToMany, OneToMany, PrimaryColumn} from "typeorm"
-import {Unit} from "./unit/unit.entity";
-import {Rule} from "./rule/rule.entity";
-import {ParserHelper} from "../helper/parser.helper";
-import {ProphecyDatasource} from "../database/prophecy.datasource";
-import {UnitCategory} from "./unit/unit-category/unit-category.entity";
-import {UpgradeCategory} from "./upgrade/upgrade-category/upgrade-category.entity";
-import {Upgrade} from "./upgrade/upgrade.entity";
-import {SpecialItemCategory} from "./special-item/special-item-category/special-item-category.entity";
-import {SpecialItem} from "./special-item/special-item.entity";
+import {
+    AfterLoad,
+    Column,
+    Entity,
+    PrimaryColumn,
+} from "typeorm"
+
+import { Unit } from "./unit/unit.entity";
+import { Rule } from "./rule/rule.entity";
+import { ParserHelper } from "../helper/parser.helper";
+import { ProphecyDatasource } from "../database/prophecy.datasource";
+import { UnitCategory}  from "./unit/unit-category/unit-category.entity";
+import { UpgradeCategory } from "./upgrade/upgrade-category/upgrade-category.entity";
+import { Upgrade } from "./upgrade/upgrade.entity";
+import { SpecialItemCategory } from "./special-item/special-item-category/special-item-category.entity";
+import { SpecialItem } from "./special-item/special-item.entity";
 
 @Entity("armies")
 export class Army {
+
+    constructor(
+    ) {}
+
     @PrimaryColumn()
     public id: string;
 
@@ -64,15 +74,14 @@ export class Army {
             this.units.push(await dataSource.getRepository(Unit).findOneBy([ { id: id }]));
         for (const id of rulesIds)
             this.rules.push(await dataSource.getRepository(Rule).findOneBy([{ id: id }]));
-        for (const id of upgradeCategoriesIds) {
-            console.log(id)
+        for (const id of upgradeCategoriesIds)
             this.upgradeCategories.push(await dataSource.getRepository(UpgradeCategory).findOneBy([{id: id}]));
-        }for (const id of upgradesIds)
+        for (const id of upgradesIds)
             this.upgrades.push(await dataSource.getRepository(Upgrade).findOneBy([{ id: id }]));
         for (const id of specialItemCategoriesIds)
             this.specialItemCategories.push(await dataSource.getRepository(SpecialItemCategory).findOneBy([{id: id}]));
         for (const id of specialItemsIds)
             this.specialItems.push(await dataSource.getRepository(SpecialItem).findOneBy([{ id: id }]));
-        console.log(this.upgradeCategories)
+        await dataSource.destroy();
     }
 }

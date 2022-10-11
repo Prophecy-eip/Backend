@@ -1,7 +1,5 @@
 import { UnitProfileDTO } from "./unit-profile/unit-profile.dto";
-import { OptionDTO } from "../option/option.dto";
 import { Unit } from "./unit.entity";
-import { UnitProfile } from "./unit-profile/unit-profile.entity";
 import { Option } from "../option/option.entity";
 
 export class UnitDTO {
@@ -14,7 +12,6 @@ export class UnitDTO {
             this.profiles.push(new UnitProfileDTO(unit.profiles[i]));
         this.options = unit.options;
     }
-
 
     id: string;
     name: string;

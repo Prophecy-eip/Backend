@@ -1,5 +1,5 @@
-import {Injectable} from "@nestjs/common";
-import {Repository} from "typeorm";
+import { Injectable } from "@nestjs/common";
+import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { UnitCategory } from "./unit-category.entity";
@@ -10,5 +10,4 @@ export class UnitCategoryService {
         @InjectRepository(UnitCategory)
         private repository: Repository<UnitCategory>
     ) {}
-
 }

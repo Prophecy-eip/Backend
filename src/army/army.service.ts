@@ -1,5 +1,5 @@
-import {Injectable} from "@nestjs/common";
-import {Repository} from "typeorm";
+import { Injectable } from "@nestjs/common";
+import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { Army } from "./army.entity";
@@ -15,6 +15,7 @@ export class ArmyService {
         let query = this.repository
             .createQueryBuilder("armies")
             .select("armies");
+
         return await query.getMany();
     }
 
@@ -22,4 +23,3 @@ export class ArmyService {
         return await this.repository.findOneBy([{ id: id }]);
     }
 }
-
