@@ -30,9 +30,9 @@ export class Unit {
 
     @AfterLoad()
     private async loadEntities() {
-        let dataSource: ProphecyDatasource = new ProphecyDatasource();
         const optionsIds: string[] = ParserHelper.stringToArray(this.optionsIds);
         const profilesIds: string[] = ParserHelper.stringToArray(this.profilesIds);
+        let dataSource: ProphecyDatasource = new ProphecyDatasource();
 
         await dataSource.initialize();
         for (const id of optionsIds) {
@@ -47,5 +47,6 @@ export class Unit {
                 continue;
             this.profiles.push(p);
         }
+        await dataSource.destroy();
     }
 }

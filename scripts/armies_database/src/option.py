@@ -12,11 +12,7 @@ from link import Link
 class Army:
     pass
 
-# class Option:
-#     pass
-
 class Option:
-    # __unitId: str = ""
     __id: str = ""
     __name: str = ""
     __type: str = ""
@@ -29,8 +25,6 @@ class Option:
 
     _cost: Cost
 
-    # _subOptions: array(Option, []) = []
-
     _links: array(Link, []) = []
 
     def __init__(self, option, army: Army):
@@ -40,7 +34,6 @@ class Option:
         self._rules = []
         self._links = []
 
-        # self.__unitId = unitId
         self.__name = option[NAME]
         self.__id = option[ID]
         self.__type = option[TYPE]
@@ -59,7 +52,6 @@ class Option:
         except (AttributeError):
             pass
 
-        # print(option)
         try:
             for r in option.find(RULES).find_all(RULE):
                 rule: Rule = Rule(r)
@@ -68,19 +60,6 @@ class Option:
         except (AttributeError):
             pass
         self._cost = Cost(option.find(COSTS).find(COST))
-
-#  TODO: try to add selection entry group
-        # try:
-        #     groups: ResultSet = option.find(SELECTION_ENTRY_GROUPS).find_all(SELECTION_ENTRY_GROUP)
-
-        #     for opt in groups:
-        #         for o in opt.find(SELECTION_ENTRY_GROUPS).find_all(SELECTION_ENTRY_GROUP): 
-        #             print(o)    
-        #             self._subOptions.append(Option(o))
-        #             # for z in x:
-        #             #     print(z[NAME])
-        # except:
-        #     pass
 
         try:
             for l in option.find(ENTRY_LINKS).find_all(ENTRY_LINK):
@@ -121,4 +100,3 @@ class Option:
             connection.commit()
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
             pass
-

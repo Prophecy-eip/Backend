@@ -1,9 +1,10 @@
-import {AfterLoad, Column, Entity, PrimaryColumn} from "typeorm";
-import {Modifier} from "../modifier/modifier.entity";
-import {UnitProfile} from "../unit/unit-profile/unit-profile.entity";
-import {Rule} from "../rule/rule.entity";
-import {ParserHelper} from "../../helper/parser.helper";
-import {ProphecyDatasource} from "../../database/prophecy.datasource";
+import { AfterLoad, Column, Entity, PrimaryColumn } from "typeorm";
+
+import { Modifier } from "../modifier/modifier.entity";
+import { UnitProfile } from "../unit/unit-profile/unit-profile.entity";
+import { Rule } from "../rule/rule.entity";
+import { ParserHelper } from "../../helper/parser.helper";
+import { ProphecyDatasource } from "../../database/prophecy.datasource";
 
 @Entity("upgrades")
 export class Upgrade {
@@ -43,23 +44,24 @@ export class Upgrade {
         let dataSource: ProphecyDatasource = new ProphecyDatasource();
 
         await dataSource.initialize();
-        for (let id of modifiersIds) {
+        for (const id of modifiersIds) {
             const m: Modifier = await dataSource.getRepository(Modifier).findOneBy({id: id});
             if (m === null)
                 continue;
             this.modifiers.push(m)
         }
-        for (let id of profilesIds) {
+        for (const id of profilesIds) {
             const p: UnitProfile = await dataSource.getRepository(UnitProfile).findOneBy({id: id});
             if (p === null)
                 continue
             this.profiles.push(p);
         }
-        for (let id of rulesIds) {
+        for (const id of rulesIds) {
             const r: Rule = await dataSource.getRepository(Rule).findOneBy({id: id});
             if (r === null)
                 continue;
             this.rules.push(r);
         }
+        await dataSource.destroy();
     }
 }

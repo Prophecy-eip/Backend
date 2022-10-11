@@ -1,5 +1,5 @@
 import { UpgradeDTO } from "../../upgrade/upgrade.dto";
-import {SpecialItemCategory} from "./special-item-category.entity";
+import { SpecialItemCategory } from "./special-item-category.entity";
 
 export class SpecialItemCategoryDTO {
     constructor(category: SpecialItemCategory) {

@@ -11,4 +11,16 @@ export class UnitService {
         private repository: Repository<Unit>
     ) {}
 
+    async findFromIds(ids: string[]): Promise<Unit[]> {
+        let array: Unit[] = [];
+
+        for (const id of ids) {
+            const u: Unit = await this.repository.findOneBy([{ id: id }]);
+
+            if (u === null)
+                continue;
+            array.push(u)
+        }
+        return array;
+    }
 }

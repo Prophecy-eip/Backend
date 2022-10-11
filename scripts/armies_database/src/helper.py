@@ -1,7 +1,6 @@
 from numpy import array
 import json
 
-
 def saveArrayAndGetIds(arr, connection, cursor) -> str:
     idsArr: array(str) = []
 

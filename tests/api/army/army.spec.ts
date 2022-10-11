@@ -9,6 +9,8 @@ let app: INestApplication;
 const ARMIES = "/armies";
 const LOOKUP_ROOT = ARMIES + "/lookup";
 
+const FAKE_ID: string = "fakeId";
+
 describe("Account Route", () => {
 
     beforeAll(async () => {
@@ -20,11 +22,39 @@ describe("Account Route", () => {
         await app.init();
     });
 
-    it("lookup: Retrieve army credentials", async () => {
-        const response = await request(app.getHttpServer())
-            .get(LOOKUP_ROOT)
+    // it("lookup: Retrieve army credentials", async () => {
+    //     const response = await request(app.getHttpServer())
+    //         .get(LOOKUP_ROOT);
+    //
+    //     expect(response.status).toEqual(HttpStatus.OK);
+    //     expect(response.body).toBeDefined();
+    // });
 
-        expect(response.status).toEqual(HttpStatus.OK);
-        expect(response.body).toBeDefined();
+    // it(":id: Retrieve existing army's data", async () => {
+    //     const credentials = await request(app.getHttpServer())
+    //         .get(LOOKUP_ROOT);
+    //     const id: string = credentials.body[0].id;
+    //     const name: string = credentials.body[0].name;
+    //     const response = await request(app.getHttpServer())
+    //         .get(`/armies/${id}`);
+    //
+    //     expect(response.status).toEqual(HttpStatus.OK);
+    //     expect(response.body).toBeDefined();
+    //     expect(response.body.name).toEqual(name);
+    //     expect(response.body.id).toEqual(id);
+    //     expect(response.body.unitCategories).toBeDefined();
+    //     expect(response.body.units).toBeDefined();
+    //     expect(response.body.rules).toBeDefined();
+    //     expect(response.body.upgradeCategories).toBeDefined();
+    //     expect(response.body.upgrades).toBeDefined();
+    //     expect(response.body.specialItemCategories).toBeDefined();
+    //     expect(response.body.options).toBeDefined();
+    // });
+
+    it(":id: Try to retrieve not existing army's data", async () => {
+        const response = await request(app.getHttpServer())
+            .get(`/armies/${FAKE_ID}`);
+
+        expect(response.status).toEqual(HttpStatus.NOT_FOUND);
     });
 });
