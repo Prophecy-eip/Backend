@@ -14,10 +14,6 @@ import { SpecialItemCategory } from "./special-item/special-item-category/specia
 import { SpecialItem } from "./special-item/special-item.entity";
 import { ArmyService } from "./army.service";
 import { ArmyController } from "./army.controller";
-import { UnitService } from "./unit/unit.service";
-import { UnitCategoryService } from "./unit/unit-category/unit-category.service";
-import { UnitProfileService } from "./unit/unit-profile/unit-profile.service";
-import { OptionService } from "./option/option.service";
 
 @Module({
     imports: [
@@ -36,7 +32,7 @@ import { OptionService } from "./option/option.service";
             SpecialItem
         ])
     ],
-    providers: [ArmyService, UnitService, UnitCategoryService, UnitProfileService, OptionService],
+    providers: [ArmyService],
     exports: [],
     controllers: [ArmyController]
 })
