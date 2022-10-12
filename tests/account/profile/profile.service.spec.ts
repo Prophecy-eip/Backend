@@ -31,9 +31,9 @@ function initDefaultProfile(username: string, email: string, password: string): 
     profile.username = username;
     profile.email = email;
     profile.password = password;
-    profile.is_verified = false;
-    profile.account_type = AccountType.PLAYER;
-    profile.profile_picture_path = "";
+    profile.isVerified = false;
+    profile.accountType = AccountType.PLAYER;
+    profile.profilePicturePath = "";
     return profile;
 }
 

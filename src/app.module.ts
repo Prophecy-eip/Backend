@@ -17,6 +17,8 @@ import { Modifier } from "./army/modifier/modifier.entity";
 import { Upgrade } from "./army/upgrade/upgrade.entity";
 import { SpecialItemCategory } from "./army/special-item/special-item-category/special-item-category.entity";
 import { SpecialItem } from "./army/special-item/special-item.entity";
+import { ArmyList } from "./army-list/army-list.entity";
+import { ArmyListUnit } from "./army-list/army-list-unit/army-list-unit.entity";
 
 dotenv.config()
 
@@ -49,7 +51,9 @@ const DB_DIALECT = "postgres"
         Upgrade,
         UpgradeCategory,
         SpecialItemCategory,
-        SpecialItem
+        SpecialItem,
+        ArmyList,
+        ArmyListUnit
       ],
       synchronize: true // TODO: remove on deployment
     }),
