@@ -11,6 +11,8 @@ import { Option } from "../army/option/option.entity";
 import { UnitProfile } from "../army/unit/unit-profile/unit-profile.entity";
 import { Modifier } from "../army/modifier/modifier.entity";
 import { Unit } from "../army/unit/unit.entity";
+import { ArmyList } from "../army-list/army-list.entity";
+import { ArmyListUnit } from "../army-list/army-list-unit/army-list-unit.entity";
 
 dotenv.config()
 
@@ -41,6 +43,8 @@ export class ProphecyDatasource extends DataSource {
                 Option,
                 UnitProfile,
                 Modifier,
+                ArmyList,
+                ArmyListUnit,
             ]
         });
     }

@@ -55,7 +55,7 @@ const DB_DIALECT = "postgres"
         ArmyList,
         ArmyListUnit
       ],
-      synchronize: true // TODO: remove on deployment
+      synchronize: false
     }),
     AccountModule,
     ArmyModule

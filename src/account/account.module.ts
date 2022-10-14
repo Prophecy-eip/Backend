@@ -8,10 +8,11 @@ import { AuthService } from "./auth/auth.service";
 import { Profile } from "./profile/profile.entity";
 import { ProfileService } from "./profile/profile.service";
 import { jwtConstants } from "./auth/constants";
+import { ArmyList } from "../army-list/army-list.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Profile]),
+        TypeOrmModule.forFeature([Profile, ArmyList]),
         ProfileModule,
         AuthModule,
         JwtModule.register({

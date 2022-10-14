@@ -6,6 +6,7 @@ import * as bcrypt from "bcrypt";
 import { AccountType, Profile } from "../../../src/account/profile/profile.entity";
 import { ProfileService } from "../../../src/account/profile/profile.service";
 import { ProfileModule } from "../../../src/account/profile/profile.module";
+import { ArmyList } from "../../../src/army-list/army-list.entity";
 
 
 dotenv.config()
@@ -49,7 +50,7 @@ describe("ProfileService", () => {
                 username: DB_USERNAME,
                 password: DB_PASSWORD,
                 database: DB,
-                entities: [Profile],
+                entities: [Profile, ArmyList],
                 synchronize: true,
             }),
             ProfileModule],
