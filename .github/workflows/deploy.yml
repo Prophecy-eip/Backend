@@ -1,0 +1,32 @@
+name: "Deploy"
+on:
+  push:
+    branches:
+      - master
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      permissions:
+        id-token: write
+        contents: read
+      steps:
+        - name: "Checkout"
+          uses: actions/checkout@v3
+        - name: "Configure AWS credentials"
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
+        - name: Build, tag, and push docker image to Amazon ECR
+          env:
+            REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            REPOSITORY: 032910807353.dkr.ecr.us-east-1.amazonaws.com
+          run: |
+            docker build -t $REPOSITORY/prophecy_backend:v0.$GITHUB_RUN_NUMBER.0 .
+            docker push $REPOSITORY/prophecy_backend:v$GITHUB_RUN_NUMBER.0.0
+            docker build -t $REPOSITORY/prophecy_database:v0.$GITHUB_RUN_NUMBER.0 ./database/
+            docker push $REPOSITORY/prophecy_database:v$GITHUB_RUN_NUMBER.0.0
