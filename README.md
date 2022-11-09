@@ -12,13 +12,25 @@ In order to launch the database and the server, you need to provide the followin
 - `DATABASE_IP`: The database's ip address
 - `DATABASE_PORT`: The database's port
 - `JWT_SECRET`: The secret key for the server's jwt
-- `TESTS_PORT` To run the unit tests
+- `TESTS_PORT`: To run the unit tests
+- `MIGRATION_PORT`: The port used for database migrations
 
 ### Launching the database
 
 Once you provided the required environment variables, you can launch the database by running:
 ```bash
 docker-compose up --build db
+```
+
+### Running database migrations
+To set up or update the database, you might need to run migrations
+```bash
+docker-compose up --build run_migration
+```
+
+You can revert the migration by running:
+```bash
+docker-compose up revert_migration
 ```
 
 ### Launching the server

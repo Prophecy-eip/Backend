@@ -13,8 +13,8 @@ export class ArmyController {
     @Get("lookup")
     @HttpCode(HttpStatus.OK)
     async lookup() {
-        // const a =  await this.armyService.getAll();
-        // return(a);
+        const a =  await this.armyService.getAll();
+        return(a);
     }
 
     @Get(":id")

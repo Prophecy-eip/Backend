@@ -25,8 +25,8 @@ export class Profile {
     @Column({ name: "profile_picture_path", default: "" })
     public profilePicturePath: string;
 
-    @Column({ name: "account_type", default: AccountType.PLAYER })
-    public accountType: AccountType;
+    @Column({ name: "account_type", default: "player" })
+    public accountType: string = "player";
 
     // @Column({ name: "army_lists", nullable: true, type: "varchar" })
     // @ManyToOne(() => ArmyList, (list) => list.owner)

@@ -56,7 +56,6 @@ const MODIFIERS_TABLE: Table = new Table({
         }, {
             name: "limits",
             type: "varchar",
-            isArray: true,
         }
     ]
 });
@@ -120,7 +119,9 @@ const SPECIAL_ITEM_CATEGORIES_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true
+            isPrimary: true,
+            isUnique: true,
+            isNullable: false,
         }, {
             name: "name",
             type: "varchar",
@@ -143,7 +144,9 @@ const SPECIAL_ITEMS_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true
+            isPrimary: true,
+            isUnique: true,
+            isNullable: false,
         }, {
             name: "name",
             type: "varchar",
@@ -166,7 +169,7 @@ const SPECIAL_ITEMS_TABLE: Table = new Table({
     ]
 });
 
-const UNIT_CATEGORIES_TABLE: Table= new Table({
+const UNIT_CATEGORIES_TABLE: Table = new Table({
     name: "unit_categories",
     columns: [
         {
@@ -174,6 +177,7 @@ const UNIT_CATEGORIES_TABLE: Table= new Table({
             type: "varchar",
             isPrimary: true,
             isUnique: true,
+            isNullable: false,
         }, {
             name: "name",
             type: "varchar",
@@ -181,7 +185,7 @@ const UNIT_CATEGORIES_TABLE: Table= new Table({
             name: "limits",
             type: "varchar",
         }, {
-            name: "targetId",
+            name: "target_id",
             type: "varchar",
         }
     ]
@@ -195,6 +199,7 @@ const UNIT_PROFILES_TABLE: Table = new Table({
             type: "varchar",
             isPrimary: true,
             isUnique: true,
+            isNullable: false
         }, {
             name: "name",
             type: "varchar",
@@ -216,6 +221,7 @@ const UNITS_TABLE: Table = new Table({
             type: "varchar",
             isPrimary: true,
             isUnique: true,
+            isNullable: false,
         }, {
             name: "name",
             type: "varchar",
@@ -243,6 +249,7 @@ const UPGRADE_CATEGORIES_TABLE: Table = new Table({
             type: "varchar",
             isPrimary: true,
             isUnique: true,
+            isNullable: false,
         }, {
             name: "name",
             type: "varchar",
@@ -265,6 +272,7 @@ const UPGRADES_TABLE: Table = new Table({
             type: "varchar",
             isPrimary: true,
             isUnique: true,
+            isNullable: false,
         }, {
             name: "name",
             type: "varchar",
@@ -290,6 +298,43 @@ const UPGRADES_TABLE: Table = new Table({
     ]
 });
 
+const ARMIES_TABLE: Table = new Table({
+    name: "armies",
+    columns: [
+        {
+            name: "id",
+            type: "varchar",
+            isPrimary: true,
+            isUnique: true,
+            isNullable: false,
+        }, {
+            name: "name",
+            type: "varchar"
+        }, {
+            name: "unit_categories",
+            type: "varchar"
+        }, {
+            name: "rules",
+            type: "varchar"
+        }, {
+            name: "upgrade_categories",
+            type: "varchar"
+        }, {
+            name: "special_item_categories",
+            type: "varchar"
+        }, {
+            name: "units",
+            type: "varchar"
+        }, {
+            name: "upgrades",
+            type: "varchar"
+        }, {
+            name: "items",
+            type: "varchar"
+        },
+    ]
+});
+
 const ARMY_LIST_UNITS_TABLE: Table = new Table({
     name: "army_list_units",
     columns: [
@@ -298,6 +343,7 @@ const ARMY_LIST_UNITS_TABLE: Table = new Table({
             type: "varchar",
             isPrimary: true,
             isUnique: true,
+            isNullable: false,
         }, {
             name: "unit",
             type: "varchar", // TODO: foreign key
@@ -319,6 +365,7 @@ const ARMY_LISTS_TABLE: Table = new Table({
             type: "varchar",
             isPrimary: true,
             isUnique: true,
+            isNullable: false,
         }, {
             name: "name",
             type: "varchar",
@@ -361,6 +408,7 @@ export class Initialization1667924495954 implements MigrationInterface {
         await queryRunner.createTable(UNITS_TABLE, true);
         await queryRunner.createTable(UPGRADE_CATEGORIES_TABLE, true);
         await queryRunner.createTable(UPGRADES_TABLE, true);
+        await queryRunner.createTable(ARMIES_TABLE, true);
         // army lists
         await queryRunner.createTable(ARMY_LIST_UNITS_TABLE, true);
         await queryRunner.createTable(ARMY_LISTS_TABLE, true);
@@ -379,6 +427,7 @@ export class Initialization1667924495954 implements MigrationInterface {
         await queryRunner.dropTable(UNITS_TABLE, true);
         await queryRunner.dropTable(UPGRADE_CATEGORIES_TABLE, true);
         await queryRunner.dropTable(UPGRADES_TABLE, true);
+        await queryRunner.dropTable(ARMIES_TABLE, true);
         // army lists
         await queryRunner.dropTable(ARMY_LIST_UNITS_TABLE, true);
         await queryRunner.dropTable(ARMY_LISTS_TABLE, true);

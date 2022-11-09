@@ -18,8 +18,7 @@ import { SpecialItem } from "./special-item/special-item.entity";
 @Entity("armies")
 export class Army {
 
-    constructor(
-    ) {}
+    constructor() {}
 
     @PrimaryColumn()
     public id: string;

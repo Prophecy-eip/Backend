@@ -12,15 +12,31 @@ services:
       - "POSTGRES_PASSWORD"
     networks:
       - prophecy
-  
+
   server:
-    depends_on:
-      - "db"
     build: .
     container_name: nestjs-server
     command: ["yarn", "start"]
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
+    networks:
+      - prophecy
+
+  run_migration:
+    image: backend_server
+    build: .
+    command: ["yarn",  "run", "typeorm", "migration:run", "-d", "src/database/migration/ormconfig.ts"]
+    ports:
+      - "${MIGRATION_PORT}:${MIGRATION_PORT}"
+    networks:
+      - prophecy
+
+  revert_migration:
+    image: backend_server
+    build: .
+    command: ["yarn",  "run", "typeorm", "migration:revert", "-d", "src/database/migration/ormconfig.ts"]
+    ports:
+      - "${MIGRATION_PORT}:${MIGRATION_PORT}"
     networks:
       - prophecy
 
