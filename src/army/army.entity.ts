@@ -55,8 +55,7 @@ export class Army {
     public specialItemCategories: SpecialItemCategory[] = [];
     public specialItems: SpecialItem[] = []
 
-    @AfterLoad()
-    private async loadEntities() {
+    public async load() {
         let dataSource: ProphecyDatasource = new ProphecyDatasource()
         const unitCategoriesIds: string[] = ParserHelper.stringToArray(this.unitCategoriesIds);
         const unitsIds: string[] = ParserHelper.stringToArray(this.unitsIds);
