@@ -28,10 +28,10 @@ export class Profile {
     @Column({ name: "account_type", default: AccountType.PLAYER })
     public accountType: AccountType;
 
-    @Column({ name: "army_lists", nullable: true, type: "varchar" })
-    @ManyToOne(() => ArmyList, (list) => list.owner)
-    @JoinColumn({ name: "army_lists", referencedColumnName: "id" })
-    public armyLists: ArmyList[];
+    // @Column({ name: "army_lists", nullable: true, type: "varchar" })
+    // @ManyToOne(() => ArmyList, (list) => list.owner)
+    // @JoinColumn({ name: "army_lists", referencedColumnName: "id" })
+    // public armyLists: ArmyList[];
 
     @BeforeInsert()
     private async hashPassword() {

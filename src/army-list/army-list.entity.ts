@@ -14,10 +14,10 @@ export class ArmyList {
     @Column()
     public name: string;
 
-    @Column({ type: "varchar" })
-    @OneToMany(() => Profile, (profile) => profile.armyLists)
-    @JoinColumn({ name: "profiles", referencedColumnName: "id" })
-    public owner: Profile;
+    // @Column({ type: "varchar" })
+    // @OneToMany(() => Profile, (profile) => profile.armyLists)
+    // @JoinColumn({ name: "profiles", referencedColumnName: "id" })
+    // public owner: Profile;
 
     @Column({ type: "varchar" })
     @JoinColumn({ name: "armies", referencedColumnName: "id"})

@@ -1,8 +1,6 @@
 FROM python:latest
 
-WORKDIR /scripts/armies/
-
-COPY . /scripts/armies/
+COPY . .
 
 RUN pip install -r requirements.txt
 

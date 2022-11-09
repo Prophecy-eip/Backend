@@ -20,6 +20,8 @@ import { SpecialItem } from "./army/special-item/special-item.entity";
 import { ArmyList } from "./army-list/army-list.entity";
 import { ArmyListUnit } from "./army-list/army-list-unit/army-list-unit.entity";
 
+import { Initialization1667924495954 } from "./database/migration/1667924495954-Initialization";
+
 dotenv.config()
 
 const DB = process.env.POSTGRES_DB;
@@ -38,7 +40,7 @@ const DB_DIALECT = "postgres"
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB,
-      migrations: [],
+      migrations: [Initialization1667924495954],
       entities: [
         Profile,
         Army,

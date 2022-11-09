@@ -45,7 +45,7 @@ export class ProphecyDatasource extends DataSource {
                 Modifier,
                 ArmyList,
                 ArmyListUnit,
-            ]
+            ],
         });
     }
 }
