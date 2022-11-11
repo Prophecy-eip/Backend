@@ -353,6 +353,15 @@ const ARMY_LIST_UNITS_TABLE: Table = new Table({
         }, {
             name: "upgrades",
             type: "varchar", // TODO: create new table for association
+        },  {
+            name: "number",
+            type: "int",
+            default: 1,
+            isNullable: false
+        }, {
+            name: "formation",
+            type: "varchar",
+            isNullable: false,
         },
     ]
 });

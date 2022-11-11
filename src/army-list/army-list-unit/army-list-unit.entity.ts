@@ -19,4 +19,10 @@ export class ArmyListUnit {
     @Column({ type: "varchar" })
     @JoinColumn({ name: "upgrades", referencedColumnName: "id" })
     public upgrades: Upgrade[]
+
+    @Column({ type: "int" })
+    public number: number;
+
+    @Column({ type: "varchar" })
+    public formation: string;
 }

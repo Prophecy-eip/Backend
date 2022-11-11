@@ -19,6 +19,7 @@ import { SpecialItemCategory } from "./army/special-item/special-item-category/s
 import { SpecialItem } from "./army/special-item/special-item.entity";
 import { ArmyList } from "./army-list/army-list.entity";
 import { ArmyListUnit } from "./army-list/army-list-unit/army-list-unit.entity";
+import { ArmyListModule } from "./army-list/army-list.module";
 
 dotenv.config()
 
@@ -53,12 +54,13 @@ const DB_DIALECT = "postgres"
         SpecialItemCategory,
         SpecialItem,
         ArmyList,
-        ArmyListUnit
+        ArmyListUnit,
       ],
       synchronize: false
     }),
     AccountModule,
-    ArmyModule
+    ArmyModule,
+    ArmyListModule
   ],
 })
 export class AppModule {}
