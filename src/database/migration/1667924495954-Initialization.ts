@@ -346,14 +346,8 @@ const ARMY_LIST_UNITS_TABLE: Table = new Table({
             isNullable: false,
         }, {
             name: "unit",
-            type: "varchar", // TODO: foreign key
+            type: "varchar",
         }, {
-            name: "options",
-            type: "varchar", // TODO: create new table for association
-        }, {
-            name: "upgrades",
-            type: "varchar", // TODO: create new table for association
-        },  {
             name: "number",
             type: "int",
             default: 1,
@@ -362,9 +356,84 @@ const ARMY_LIST_UNITS_TABLE: Table = new Table({
             name: "formation",
             type: "varchar",
             isNullable: false,
-        },
+        }, {
+            name: "army_list",
+            type: "varchar",
+            isNullable: true
+        }
     ]
 });
+
+const ARMY_LIST_UNITS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
+    new TableForeignKey({
+        columnNames: ["unit"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "units"
+    }), new TableForeignKey(({
+        columnNames: ["army_list"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "army_lists"
+    }))
+];
+
+const ARMY_LIST_UNITS_OPTIONS_TABLE: Table = new Table({
+    name: "army_list_units_options",
+    columns: [
+        {
+            name: "unit",
+            type: "varchar",
+            isNullable: false,
+            isUnique: false
+        }, {
+            name: "option",
+            type: "varchar",
+            isNullable: false,
+            isUnique: false,
+        }
+    ]
+});
+
+const ARMY_LIST_UNITS_OPTIONS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
+    new TableForeignKey({
+        columnNames: ["unit"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "army_list_units"
+    }), new TableForeignKey({
+        columnNames: ["option"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "options"
+    })
+];
+
+
+const ARMY_LIST_UNITS_UPGRADES_TABLE: Table = new Table({
+    name: "army_list_units_upgrades",
+    columns: [
+        {
+            name: "unit",
+            type: "varchar",
+            isNullable: false,
+            isUnique: false
+        }, {
+            name: "upgrade",
+            type: "varchar",
+            isNullable: false,
+            isUnique: false,
+        }
+    ]
+});
+
+const ARMY_LIST_UNITS_UPGRADES_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
+    new TableForeignKey({
+        columnNames: ["unit"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "army_list_units"
+    }), new TableForeignKey({
+        columnNames: ["upgrade"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "upgrades"
+    })
+];
 
 const ARMY_LISTS_TABLE: Table = new Table({
     name: "army_lists",
@@ -378,28 +447,93 @@ const ARMY_LISTS_TABLE: Table = new Table({
         }, {
             name: "name",
             type: "varchar",
+            isNullable: false,
         }, {
             name: "army",
-            type: "varchar", // todo: add foreign key
+            type: "varchar",
+            isNullable: false,
         }, {
             name: "cost",
             type: "varchar",
-        }, {
-            name: "units",
-            type: "varchar", // TODO: create association table
-        }, {
-            name: "upgrades",
-            type: "varchar", // TODO: create association table
-            isArray: true,
-        }, {
-            name: "rules",
-            type: "varchar", // TODO: create association table
+            isNullable: false,
         }, {
             name: "is_shared",
-            type: "boolean", // TODO: create association table
-        },
+            type: "boolean",
+            isNullable: false,
+        }, {
+            name: "owner",
+            type: "varchar",
+            isNullable: false
+        }
     ]
 });
+
+const ARMY_LIST_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
+    new TableForeignKey({
+        columnNames: ["army"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "armies"
+    }),
+];
+
+const ARMY_LIST_UPGRADES_TABLE: Table = new Table({
+    name: "amy_list_upgrades",
+    columns: [
+        {
+            name: "army_list",
+            type: "varchar",
+            isNullable: false,
+            isUnique: false,
+        }, {
+            name: "upgrade",
+            type: "varchar",
+            isNullable: false,
+            isUnique: false
+        }
+    ]
+});
+
+const ARMY_LIST_UPGRADES_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
+    new TableForeignKey({
+        columnNames: ["army_list"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "army_lists"
+    }), new TableForeignKey({
+        columnNames: ["upgrade"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "upgrades"
+    }),
+];
+
+const ARMY_LIST_OPTIONS_TABLE: Table = new Table({
+    name: "amy_list_options",
+    columns: [
+        {
+            name: "army_list",
+            type: "varchar",
+            isNullable: false,
+            isUnique: false,
+        }, {
+            name: "option",
+            type: "varchar",
+            isNullable: false,
+            isUnique: false
+        }
+    ]
+});
+
+const ARMY_LIST_OPTIONS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
+    new TableForeignKey({
+        columnNames: ["army_list"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "army_lists"
+    }), new TableForeignKey({
+        columnNames: ["option"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "options"
+    }),
+];
+
 
 export class Initialization1667924495954 implements MigrationInterface {
 
@@ -419,13 +553,27 @@ export class Initialization1667924495954 implements MigrationInterface {
         await queryRunner.createTable(UPGRADES_TABLE, true);
         await queryRunner.createTable(ARMIES_TABLE, true);
         // army lists
-        await queryRunner.createTable(ARMY_LIST_UNITS_TABLE, true);
         await queryRunner.createTable(ARMY_LISTS_TABLE, true);
+        await queryRunner.createTable(ARMY_LIST_UNITS_TABLE, true);
+        await queryRunner.createForeignKeys(ARMY_LIST_UNITS_TABLE, ARMY_LIST_UNITS_TABLE_FOREIGN_KEYS);
+        await queryRunner.createTable(ARMY_LIST_UNITS_OPTIONS_TABLE, true);
+        await queryRunner.createForeignKeys(ARMY_LIST_UNITS_OPTIONS_TABLE, ARMY_LIST_UNITS_OPTIONS_TABLE_FOREIGN_KEYS);
+        await queryRunner.createTable(ARMY_LIST_UNITS_UPGRADES_TABLE, true);
+        await queryRunner.createForeignKeys(ARMY_LIST_UNITS_UPGRADES_TABLE, ARMY_LIST_UNITS_UPGRADES_TABLE_FOREIGN_KEYS);
+        await queryRunner.createForeignKeys(ARMY_LISTS_TABLE, ARMY_LIST_TABLE_FOREIGN_KEYS);
+        await queryRunner.createTable(ARMY_LIST_OPTIONS_TABLE, true);
+        await queryRunner.createTable(ARMY_LIST_UPGRADES_TABLE, true);
+        await queryRunner.createForeignKeys(ARMY_LIST_OPTIONS_TABLE, ARMY_LIST_OPTIONS_TABLE_FOREIGN_KEYS);
+        await queryRunner.createForeignKeys(ARMY_LIST_UPGRADES_TABLE, ARMY_LIST_UPGRADES_TABLE_FOREIGN_KEYS);
+
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // users
-        await queryRunner.dropTable(PROFILES_TABLES, true);
+        // army lists
+        await queryRunner.dropTable(ARMY_LIST_UNITS_TABLE, true);
+        await queryRunner.dropTable(ARMY_LIST_OPTIONS_TABLE, true);
+        await queryRunner.dropTable(ARMY_LIST_UNITS_UPGRADES_TABLE, true);
+        await queryRunner.dropTable(ARMY_LISTS_TABLE, true);
         // armies
         await queryRunner.dropTable(MODIFIERS_TABLE, true);
         await queryRunner.dropTable(OPTIONS_TABLE, true);
@@ -437,8 +585,7 @@ export class Initialization1667924495954 implements MigrationInterface {
         await queryRunner.dropTable(UPGRADE_CATEGORIES_TABLE, true);
         await queryRunner.dropTable(UPGRADES_TABLE, true);
         await queryRunner.dropTable(ARMIES_TABLE, true);
-        // army lists
-        await queryRunner.dropTable(ARMY_LIST_UNITS_TABLE, true);
-        await queryRunner.dropTable(ARMY_LISTS_TABLE, true);
+        // users
+        await queryRunner.dropTable(PROFILES_TABLES, true);
     }
 }

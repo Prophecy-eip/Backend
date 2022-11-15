@@ -5,11 +5,11 @@ export class ArmyListDTO {
     constructor(list: ArmyList) {
         // this.id = list.id;
         this.name = list.name;
-        this.army = list.army.id;
+        // this.army = list.army.id;
         this.cost = list.cost;
-        for (const unit of list.units) {
-            this.units.push(new ArmyListUnitDTO(unit));
-        }
+        // for (const unit of list.units) {
+        //     this.units.push(new ArmyListUnitDTO(unit));
+        // }
         for (const upgrade of list.upgrades) {
             this.upgrades.push(upgrade.id)
         }

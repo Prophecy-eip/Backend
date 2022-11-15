@@ -1,0 +1,26 @@
+import { Injectable } from "@nestjs/common";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { randomUUID } from "crypto";
+
+import { ArmyListUnit } from "./army-list-unit.entity";
+import { Unit } from "../../army/unit/unit.entity";
+import { Upgrade } from "../../army/upgrade/upgrade.entity";
+import { Option } from "../../army/option/option.entity"
+
+@Injectable()
+export class ArmyListUnitService {
+    constructor(
+        @InjectRepository(ArmyListUnit)
+        private readonly repository: Repository<ArmyListUnit>
+    ) {}
+
+    async create(unit: string, number: number, formation: string, armyList: string): Promise<ArmyListUnit> {
+        const id: string = randomUUID()
+        return this.repository.create({ id, unit, number, formation, armyList });
+    }
+
+    save(unit: ArmyListUnit): Promise<ArmyListUnit> {
+        return this.repository.save(unit);
+    }
+}

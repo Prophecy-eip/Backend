@@ -1,10 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Army } from "../army/army.entity";
 import { JoinColumn } from "typeorm";
 import { Profile } from "../account/profile/profile.entity";
 import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
 import { Upgrade } from "../army/upgrade/upgrade.entity";
 import { Rule } from "../army/rule/rule.entity";
+
 
 @Entity("army_lists")
 export class ArmyList {
@@ -19,16 +20,18 @@ export class ArmyList {
     // @JoinColumn({ name: "profiles", referencedColumnName: "id" })
     // public owner: Profile;
 
+
     @Column({ type: "varchar" })
     @JoinColumn({ name: "armies", referencedColumnName: "id"})
-    public army: Army;
+    public army: string;
 
     @Column()
     public cost: string;
 
-    @Column({ type: "varchar" })
-    @JoinColumn({ name: "army_list_units", referencedColumnName: "id"})
-    public units: ArmyListUnit[];
+    // @Column({ type: "varchar" })
+    // @ManyToOne(type => ArmyListUnit, (unit) => unit.list)
+    // @JoinColumn({ name: "army_list_units", referencedColumnName: "id"})
+    // public units: ArmyListUnit[];
 
     @Column({ type: "varchar" })
     @JoinColumn({ name: "upgrades", referencedColumnName: "id" })
@@ -38,6 +41,6 @@ export class ArmyList {
     @JoinColumn({ name: "rules", referencedColumnName: "id" })
     public rules: Rule[];
 
-    @Column()
+    @Column({ name: "is_shared" })
     public isShared: boolean;
 }

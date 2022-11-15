@@ -9,6 +9,7 @@ import {UpgradeDTO} from "../army/upgrade/upgrade.dto";
 import {Rule} from "../army/rule/rule.entity";
 import {Army} from "../army/army.entity";
 import {randomUUID} from "crypto";
+import {Upgrade} from "../army/upgrade/upgrade.entity";
 
 @Injectable()
 export class ArmyListService {
@@ -21,12 +22,15 @@ export class ArmyListService {
                  name: string,
                  army: Army,
                  cost: string,
-                 units: ArmyListUnitDTO[],
-                 upgrades: UpgradeDTO[],
+                 upgrades: Upgrade[],
                  rules: Rule[],
-                 isShared?: boolean): Promise<ArmyList> {
-        const shared: boolean = (isShared === undefined) ? false : isShared;
+                 isShared: boolean): Promise<ArmyList> {
         const id: string = randomUUID();
-        return this.repository.create();
+        const armyId = army.id;
+        return this.repository.create({ id, name, army: army.id, cost, upgrades, rules, isShared });
+    }
+
+    save(list: ArmyList): Promise<ArmyList> {
+        return this.repository.save(list);
     }
 }

@@ -5,8 +5,9 @@ import { UpgradeDTO } from "../../army/upgrade/upgrade.dto";
 
 export class ArmyListUnitDTO {
     constructor(unit: ArmyListUnit) {
-        this.id = unit.id;
-        this.unit = new UnitDTO(unit.unit);
+        // this.id = unit.id;
+        // this.unit = new UnitDTO(unit.unit.id);
+        this.unitId = unit.unit;
         for (const option of unit.options) {
             this.options.push(new OptionDTO(option));
         }
@@ -17,8 +18,8 @@ export class ArmyListUnitDTO {
         this.formation = unit.formation;
     }
 
-    public id: string;
-    public unit: UnitDTO;
+    // public id: string;
+    public unitId: string;
     public options: OptionDTO[] = [];
     public upgrades: UpgradeDTO[] = [];
     public number: number;

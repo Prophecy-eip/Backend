@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "t
 import { Unit } from "../../army/unit/unit.entity";
 import { Option } from "../../army/option/option.entity";
 import { Upgrade } from "../../army/upgrade/upgrade.entity";
+import {ArmyList} from "../army-list.entity";
 
 @Entity("army_list_units")
 export class ArmyListUnit {
@@ -10,19 +11,22 @@ export class ArmyListUnit {
 
     @Column({ type: "varchar" })
     @JoinColumn({ name: "units", referencedColumnName: "id" })
-    public unit: Unit;
+    public unit: string
 
-    @Column({ type: "varchar" })
-    @JoinColumn({ name: "options", referencedColumnName: "id" })
-    public options: Option[]
-
-    @Column({ type: "varchar" })
-    @JoinColumn({ name: "upgrades", referencedColumnName: "id" })
-    public upgrades: Upgrade[]
+    // @Column({ type: "varchar" })
+    // @JoinColumn({ name: "options", referencedColumnName: "id" })
+    // public options: Option[]
+    //
+    // @Column({ type: "varchar" })
+    // @JoinColumn({ name: "upgrades", referencedColumnName: "id" })
+    // public upgrades: Upgrade[]
 
     @Column({ type: "int" })
     public number: number;
 
     @Column({ type: "varchar" })
     public formation: string;
+
+    @Column({ name: "army_list", type: "varchar" })
+    public armyList: string;
 }
