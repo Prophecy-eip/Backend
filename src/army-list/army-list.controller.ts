@@ -1,11 +1,20 @@
-import {Controller, HttpCode, HttpStatus, Body, Post, Request, UseGuards, BadRequestException} from "@nestjs/common";
+import {
+    Controller,
+    HttpCode,
+    HttpStatus,
+    Body,
+    Post,
+    Request,
+    UseGuards,
+    BadRequestException,
+    NotFoundException
+} from "@nestjs/common";
+import { QueryFailedError } from "typeorm";
 
-import { ArmyListService } from "./army-list.service";
 import { JwtAuthGuard } from "../account/auth/guards/jwt-auth.guard";
 import { ArmyListUnitDTO } from "./army-list-unit/army-list-unit.dto";
 import { ParamHelper } from "../helper/param.helper";
 import { ArmyService } from "../army/army.service";
-import { Army } from "../army/army.entity";
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
 import { ArmyListRule } from "./army-list-rule/army-list-rule.entity";
@@ -19,6 +28,7 @@ import { ArmyListUnitUpgradeService } from "./army-list-unit/army-list-unit-upgr
 import { ArmyListUnitOptionService } from "./army-list-unit/army-list-unit-option/army-list-unit-option.service";
 import { ArmyListUnitOption } from "./army-list-unit/army-list-unit-option/army-list-unit-option.entity";
 import { ArmyListUnitUpgrade } from "./army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.entity";
+import { ArmyListService } from "./army-list.service";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -50,34 +60,57 @@ export class ArmyListController {
             !ParamHelper.isValid(units) || !ParamHelper.isValid(upgradesIds) || !ParamHelper.isValid(rulesIds)) {
             throw new BadRequestException();
         }
-        const army: Army = await this.armyService.findOneById(armyId);
-        if (army === null) {
-            throw new BadRequestException("Invalid army id");
+        const list: ArmyList = await this.armyListService.create(name, armyId, cost, isShared, req.user.username);
+        try {
+            await this.armyListService.save(list);
+        } catch (error) {
+            if (error instanceof QueryFailedError) {
+                throw new NotFoundException(`The army ${armyId} was not found`);
+            }
         }
-        const list: ArmyList = await this.armyListService.create(req.user.username, name, army, cost, isShared, req.user.username)
-
-        await this.armyListService.save(list);
         for (const unit of units) {
-            console.log(unit)
             const u: ArmyListUnit = await this.armyListUnitService.create(unit.unitId, unit.number, unit.formation, list.id);
             await this.armyListUnitService.save(u);
             for (const option of unit.options) {
                 const o: ArmyListUnitOption = await this.armyListUnitOptionService.create(u.id, option);
-                await this.armyListUnitOptionService.save(o);
+                try {
+                    await this.armyListUnitOptionService.save(o);
+                } catch (error) {
+                    if (error instanceof QueryFailedError) {
+                        throw new NotFoundException();
+                    }
+                }
             }
             for (const upgrade of unit.upgrades) {
-                console.log(upgrade)
                 const up: ArmyListUnitUpgrade = await this.armyListUnitUpgradeService.create(u.id, upgrade);
-                await this.armyListUnitUpgradeService.save(up);
+                try {
+                    await this.armyListUnitUpgradeService.save(up);
+                } catch (error) {
+                    if (error instanceof QueryFailedError) {
+                        throw new NotFoundException();
+                    }
+                }
             }
-        }
-        for (const rule of rulesIds) {
-            const r: ArmyListRule = await this.armyListRuleService.create(list.id, rule);
-            await this.armyListRuleService.save(r);
-        }
-        for (const upgrade of upgradesIds) {
-            const u: ArmyListUpgrade = await this.armyListUpgradeService.create(list.id, upgrade);
-            await this.armyListUpgradeService.save(u);
+            for (const rule of rulesIds) {
+                const r: ArmyListRule = await this.armyListRuleService.create(list.id, rule);
+                try {
+                    await this.armyListRuleService.save(r);
+                } catch (error) {
+                    if (error instanceof QueryFailedError) {
+                        throw new NotFoundException();
+                    }
+                }
+            }
+            for (const upgrade of upgradesIds) {
+                const u: ArmyListUpgrade = await this.armyListUpgradeService.create(list.id, upgrade);
+                try {
+                    await this.armyListUpgradeService.save(u);
+                } catch (error) {
+                    if (error instanceof QueryFailedError) {
+                        throw new NotFoundException();
+                    }
+                }
+            }
         }
     }
 }

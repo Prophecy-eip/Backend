@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ArmyListUpgrade } from "./army-list-upgrade.entity";
 import { Repository } from "typeorm";
 import { randomUUID } from "crypto";
+
+import { ArmyListUpgrade } from "./army-list-upgrade.entity";
 
 @Injectable()
 export class ArmyListUpgradeService {

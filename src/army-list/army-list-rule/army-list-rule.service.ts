@@ -1,10 +1,9 @@
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { randomUUID } from "crypto";
 
 import { ArmyListRule } from "./army-list-rule.entity";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import { randomUUID } from "crypto";
-import loader from "ts-loader";
 
 @Injectable()
 export class ArmyListRuleService {

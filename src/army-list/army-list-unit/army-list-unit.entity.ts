@@ -1,8 +1,4 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Unit } from "../../army/unit/unit.entity";
-import { Option } from "../../army/option/option.entity";
-import { Upgrade } from "../../army/upgrade/upgrade.entity";
-import {ArmyList} from "../army-list.entity";
+import { Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("army_list_units")
 export class ArmyListUnit {
@@ -12,14 +8,6 @@ export class ArmyListUnit {
     @Column({ type: "varchar" })
     @JoinColumn({ name: "units", referencedColumnName: "id" })
     public unit: string
-
-    // @Column({ type: "varchar" })
-    // @JoinColumn({ name: "options", referencedColumnName: "id" })
-    // public options: Option[]
-    //
-    // @Column({ type: "varchar" })
-    // @JoinColumn({ name: "upgrades", referencedColumnName: "id" })
-    // public upgrades: Upgrade[]
 
     @Column({ type: "int" })
     public number: number;

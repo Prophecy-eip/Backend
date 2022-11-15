@@ -4,9 +4,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { randomUUID } from "crypto";
 
 import { ArmyListUnit } from "./army-list-unit.entity";
-import { Unit } from "../../army/unit/unit.entity";
-import { Upgrade } from "../../army/upgrade/upgrade.entity";
-import { Option } from "../../army/option/option.entity"
 
 @Injectable()
 export class ArmyListUnitService {
