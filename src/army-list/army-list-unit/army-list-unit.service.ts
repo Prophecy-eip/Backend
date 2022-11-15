@@ -20,4 +20,8 @@ export class ArmyListUnitService {
     save(unit: ArmyListUnit): Promise<ArmyListUnit> {
         return this.repository.save(unit);
     }
+
+    findByArmyList(list: string): Promise<ArmyListUnit[]> {
+        return this.repository.findBy({ armyList: list });
+    }
 }

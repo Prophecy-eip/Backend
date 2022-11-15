@@ -5,6 +5,8 @@ export class ArmyListUnitDTO {
         this.unitId = unit.unit;
         this.number = unit.number;
         this.formation = unit.formation;
+        this.options = unit.options;
+        this.upgrades = unit.upgrades;
     }
 
     public unitId: string;

@@ -8,7 +8,7 @@ import {
     Request,
     UseGuards,
     BadRequestException,
-    NotFoundException
+    NotFoundException, Param
 } from "@nestjs/common";
 import { QueryFailedError } from "typeorm";
 
@@ -31,6 +31,7 @@ import { ArmyListUnitOption } from "./army-list-unit/army-list-unit-option/army-
 import { ArmyListUnitUpgrade } from "./army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.entity";
 import { ArmyListService } from "./army-list.service";
 import { ArmyListCredentialsDTO } from "./army-list-upgrade/army-list-credentials.dto";
+import { ArmyListDTO } from "./army-list.dto";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -127,5 +128,19 @@ export class ArmyListController {
             credentials.push(new ArmyListCredentialsDTO(list));
         }
         return credentials;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(":id")
+    @HttpCode(HttpStatus.OK)
+    async get(@Request() req, @Param("id") id: string) {
+        let list: ArmyList = await this.armyListService.findByOwnerAndId(req.user.username, id);
+
+        if (list === null) {
+            throw new NotFoundException();
+        }
+        await list.load();
+        let units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(list.id);
+        return new ArmyListDTO(list, units);
     }
 }

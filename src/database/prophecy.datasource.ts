@@ -13,6 +13,10 @@ import { Modifier } from "../army/modifier/modifier.entity";
 import { Unit } from "../army/unit/unit.entity";
 import { ArmyList } from "../army-list/army-list.entity";
 import { ArmyListUnit } from "../army-list/army-list-unit/army-list-unit.entity";
+import { ArmyListUnitOption } from "../army-list/army-list-unit/army-list-unit-option/army-list-unit-option.entity";
+import { ArmyListUnitUpgrade } from "../army-list/army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.entity";
+import { ArmyListUpgrade } from "../army-list/army-list-upgrade/army-list-upgrade.entity";
+import { ArmyListRule } from "../army-list/army-list-rule/army-list-rule.entity";
 
 dotenv.config()
 
@@ -45,6 +49,10 @@ export class ProphecyDatasource extends DataSource {
                 Modifier,
                 ArmyList,
                 ArmyListUnit,
+                ArmyListUnitOption,
+                ArmyListUnitUpgrade,
+                ArmyListUpgrade,
+                ArmyListRule,
             ],
         });
     }
