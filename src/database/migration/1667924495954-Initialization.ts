@@ -382,6 +382,10 @@ const ARMY_LIST_UNITS_OPTIONS_TABLE: Table = new Table({
     name: "army_list_units_options",
     columns: [
         {
+           name: "id",
+           type: "varchar",
+           isPrimary: true,
+        }, {
             name: "unit",
             type: "varchar",
             isNullable: false,
@@ -414,6 +418,10 @@ const ARMY_LIST_UNITS_UPGRADES_TABLE: Table = new Table({
     name: "army_list_units_upgrades",
     columns: [
         {
+            name: "id",
+            type: "varchar",
+            isPrimary: true
+        }, {
             name: "unit",
             type: "varchar",
             isNullable: false,

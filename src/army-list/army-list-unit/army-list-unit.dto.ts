@@ -20,8 +20,8 @@ export class ArmyListUnitDTO {
 
     // public id: string;
     public unitId: string;
-    public options: OptionDTO[] = [];
-    public upgrades: UpgradeDTO[] = [];
+    public options: string[] = [];
+    public upgrades: string[] = [];
     public number: number;
     public formation: string;
 }

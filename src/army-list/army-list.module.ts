@@ -9,6 +9,8 @@ import { Upgrade } from "../army/upgrade/upgrade.entity";
 import { Unit } from "../army/unit/unit.entity";
 import { ArmyListRule } from "./army-list-rule/army-list-rule.entity";
 import { ArmyListUpgrade } from "./army-list-upgrade/army-list-upgrade.entity";
+import { ArmyListUnitOption } from "./army-list-unit/army-list-unit-option/army-list-unit-option.entity";
+import { ArmyListUnitUpgrade } from "./army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.entity";
 
 import { ArmyListService } from "./army-list.service";
 import { ArmyService } from "../army/army.service";
@@ -18,6 +20,8 @@ import { ArmyListUnitService } from "./army-list-unit/army-list-unit.service";
 import { UnitService } from "../army/unit/unit.service";
 import { ArmyListRuleService } from "./army-list-rule/army-list-rule.service";
 import { ArmyListUpgradeService } from "./army-list-upgrade/army-list-upgrade.service";
+import { ArmyListUnitOptionService } from "./army-list-unit/army-list-unit-option/army-list-unit-option.service";
+import { ArmyListUnitUpgradeService } from "./army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.service";
 
 import { ArmyListController } from "./army-list.controller";
 
@@ -32,6 +36,8 @@ import { ArmyListController } from "./army-list.controller";
             Unit,
             ArmyListRule,
             ArmyListUpgrade,
+            ArmyListUnitOption,
+            ArmyListUnitUpgrade,
         ])
     ],
     providers: [
@@ -43,6 +49,8 @@ import { ArmyListController } from "./army-list.controller";
         UnitService,
         ArmyListRuleService,
         ArmyListUpgradeService,
+        ArmyListUnitUpgradeService,
+        ArmyListUnitOptionService,
     ],
     exports: [],
     controllers: [ArmyListController]

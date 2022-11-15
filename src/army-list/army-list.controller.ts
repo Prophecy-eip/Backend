@@ -7,17 +7,18 @@ import { ParamHelper } from "../helper/param.helper";
 import { ArmyService } from "../army/army.service";
 import { Army } from "../army/army.entity";
 import { ArmyList } from "./army-list.entity";
-import { Upgrade } from "../army/upgrade/upgrade.entity";
-import { Rule } from "../army/rule/rule.entity";
-import { RuleService } from "../army/rule/rule.service";
-import { UpgradeService } from "../army/upgrade/upgrade.service";
 import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
-import { UnitService } from "../army/unit/unit.service";
-import { ArmyListUnitService } from "./army-list-unit/army-list-unit.service";
-import { ArmyListRuleService } from "./army-list-rule/army-list-rule.service";
 import { ArmyListRule } from "./army-list-rule/army-list-rule.entity";
-import { ArmyListUpgradeService } from "./army-list-upgrade/army-list-upgrade.service";
 import { ArmyListUpgrade } from "./army-list-upgrade/army-list-upgrade.entity";
+
+import { RuleService } from "../army/rule/rule.service";
+import { UpgradeService } from "../army/upgrade/upgrade.service";import { UnitService } from "../army/unit/unit.service";
+import { ArmyListUnitService } from "./army-list-unit/army-list-unit.service";
+import { ArmyListRuleService } from "./army-list-rule/army-list-rule.service";import { ArmyListUpgradeService } from "./army-list-upgrade/army-list-upgrade.service";
+import { ArmyListUnitUpgradeService } from "./army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.service";
+import { ArmyListUnitOptionService } from "./army-list-unit/army-list-unit-option/army-list-unit-option.service";
+import { ArmyListUnitOption } from "./army-list-unit/army-list-unit-option/army-list-unit-option.entity";
+import { ArmyListUnitUpgrade } from "./army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.entity";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -30,6 +31,8 @@ export class ArmyListController {
         private readonly armyListUnitService: ArmyListUnitService,
         private readonly armyListRuleService: ArmyListRuleService,
         private readonly armyListUpgradeService: ArmyListUpgradeService,
+        private readonly armyListUnitUpgradeService: ArmyListUnitUpgradeService,
+        private readonly armyListUnitOptionService: ArmyListUnitOptionService,
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -55,8 +58,18 @@ export class ArmyListController {
 
         await this.armyListService.save(list);
         for (const unit of units) {
+            console.log(unit)
             const u: ArmyListUnit = await this.armyListUnitService.create(unit.unitId, unit.number, unit.formation, list.id);
             await this.armyListUnitService.save(u);
+            for (const option of unit.options) {
+                const o: ArmyListUnitOption = await this.armyListUnitOptionService.create(u.id, option);
+                await this.armyListUnitOptionService.save(o);
+            }
+            for (const upgrade of unit.upgrades) {
+                console.log(upgrade)
+                const up: ArmyListUnitUpgrade = await this.armyListUnitUpgradeService.create(u.id, upgrade);
+                await this.armyListUnitUpgradeService.save(up);
+            }
         }
         for (const rule of rulesIds) {
             const r: ArmyListRule = await this.armyListRuleService.create(list.id, rule);
