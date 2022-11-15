@@ -24,6 +24,7 @@ import { ArmyListUnitUpgrade } from "./army-list/army-list-unit/army-list-unit-u
 import { ArmyModule } from "./army/army.module"
 import { AccountModule } from "./account/account.module";
 import { ArmyListModule } from "./army-list/army-list.module";
+import { HeartbeatModule } from "./heartbeat/heartbeat.module";
 
 dotenv.config()
 
@@ -35,40 +36,41 @@ const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DIALECT = "postgres"
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: DB_DIALECT,
-      host: DB_HOST,
-      port: DB_PORT,
-      username: DB_USERNAME,
-      password: DB_PASSWORD,
-      database: DB,
-      entities: [
-        Profile,
-        Army,
-        UnitCategory,
-        Unit,
-        Rule,
-        UnitProfile,
-        UpgradeCategory,
-        Option,
-        Modifier,
-        Upgrade,
-        UpgradeCategory,
-        SpecialItemCategory,
-        SpecialItem,
-        ArmyList,
-        ArmyListUnit,
-        ArmyListRule,
-        ArmyListUpgrade,
-        ArmyListUnitOption,
-        ArmyListUnitUpgrade,
-      ],
-      synchronize: false
-    }),
-    AccountModule,
-    ArmyModule,
-    ArmyListModule
-  ],
+    imports: [
+        TypeOrmModule.forRoot({
+            type: DB_DIALECT,
+            host: DB_HOST,
+            port: DB_PORT,
+            username: DB_USERNAME,
+            password: DB_PASSWORD,
+            database: DB,
+            entities: [
+                Profile,
+                Army,
+                UnitCategory,
+                Unit,
+                Rule,
+                UnitProfile,
+                UpgradeCategory,
+                Option,
+                Modifier,
+                Upgrade,
+                UpgradeCategory,
+                SpecialItemCategory,
+                SpecialItem,
+                ArmyList,
+                ArmyListUnit,
+                ArmyListRule,
+                ArmyListUpgrade,
+                ArmyListUnitOption,
+                ArmyListUnitUpgrade,
+            ],
+            synchronize: false
+        }),
+        AccountModule,
+        ArmyModule,
+        ArmyListModule,
+        HeartbeatModule
+    ],
 })
 export class AppModule {}
