@@ -24,4 +24,8 @@ export class ArmyListService {
     save(list: ArmyList): Promise<ArmyList> {
         return this.repository.save(list);
     }
+
+    async findByOwner(username: string): Promise<ArmyList[]> {
+        return this.repository.findBy({ owner: username });
+    }
 }

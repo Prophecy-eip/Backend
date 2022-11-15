@@ -4,6 +4,7 @@ import {
     HttpStatus,
     Body,
     Post,
+    Get,
     Request,
     UseGuards,
     BadRequestException,
@@ -29,6 +30,7 @@ import { ArmyListUnitOptionService } from "./army-list-unit/army-list-unit-optio
 import { ArmyListUnitOption } from "./army-list-unit/army-list-unit-option/army-list-unit-option.entity";
 import { ArmyListUnitUpgrade } from "./army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.entity";
 import { ArmyListService } from "./army-list.service";
+import { ArmyListCredentialsDTO } from "./army-list-upgrade/army-list-credentials.dto";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -112,5 +114,18 @@ export class ArmyListController {
                 }
             }
         }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get("lookup")
+    @HttpCode(HttpStatus.OK)
+    async lookup(@Request() req) {
+        const lists: ArmyList[] = await this.armyListService.findByOwner(req.user.username);
+        let credentials: ArmyListCredentialsDTO[] = [];
+
+        for (const list of lists) {
+            credentials.push(new ArmyListCredentialsDTO(list));
+        }
+        return credentials;
     }
 }
