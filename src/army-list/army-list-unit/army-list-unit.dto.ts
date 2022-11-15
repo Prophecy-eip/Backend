@@ -8,12 +8,12 @@ export class ArmyListUnitDTO {
         // this.id = unit.id;
         // this.unit = new UnitDTO(unit.unit.id);
         this.unitId = unit.unit;
-        for (const option of unit.options) {
-            this.options.push(new OptionDTO(option));
-        }
-        for (const upgrade of unit.upgrades) {
-            this.upgrades.push(new UpgradeDTO(upgrade));
-        }
+        // for (const option of unit.options) {
+        //     this.options.push(new OptionDTO(option));
+        // }
+        // for (const upgrade of unit.upgrades) {
+        //     this.upgrades.push(new UpgradeDTO(upgrade));
+        // }
         this.number = unit.number;
         this.formation = unit.formation;
     }

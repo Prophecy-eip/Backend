@@ -15,10 +15,9 @@ export class ArmyList {
     @Column()
     public name: string;
 
-    // @Column({ type: "varchar" })
-    // @OneToMany(() => Profile, (profile) => profile.armyLists)
-    // @JoinColumn({ name: "profiles", referencedColumnName: "id" })
-    // public owner: Profile;
+    @Column({ type: "varchar" })
+    @JoinColumn({ name: "profiles", referencedColumnName: "id" })
+    public owner: string;
 
 
     @Column({ type: "varchar" })
@@ -32,14 +31,14 @@ export class ArmyList {
     // @ManyToOne(type => ArmyListUnit, (unit) => unit.list)
     // @JoinColumn({ name: "army_list_units", referencedColumnName: "id"})
     // public units: ArmyListUnit[];
+    //
+    // @Column({ type: "varchar" })
+    // @JoinColumn({ name: "upgrades", referencedColumnName: "id" })
+    // public upgrades: Upgrade[];
 
-    @Column({ type: "varchar" })
-    @JoinColumn({ name: "upgrades", referencedColumnName: "id" })
-    public upgrades: Upgrade[];
-
-    @Column({ type: "varchar" })
-    @JoinColumn({ name: "rules", referencedColumnName: "id" })
-    public rules: Rule[];
+    // @Column({ type: "varchar" })
+    // @JoinColumn({ name: "rules", referencedColumnName: "id" })
+    // public rules: Rule[];
 
     @Column({ name: "is_shared" })
     public isShared: boolean;

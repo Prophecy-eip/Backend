@@ -10,12 +10,12 @@ export class ArmyListDTO {
         // for (const unit of list.units) {
         //     this.units.push(new ArmyListUnitDTO(unit));
         // }
-        for (const upgrade of list.upgrades) {
-            this.upgrades.push(upgrade.id)
-        }
-        for (const rule of list.rules) {
-            this.rules.push(rule.id);
-        }
+        // for (const upgrade of list.upgrades) {
+        //     this.upgrades.push(upgrade.id)
+        // }
+        // for (const rule of list.rules) {
+        //     this.rules.push(rule.id);
+        // }
         this.isShared = list.isShared;
     }
 

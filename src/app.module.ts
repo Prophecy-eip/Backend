@@ -8,7 +8,7 @@ import { AccountModule } from "./account/account.module";
 import { Army } from "./army/army.entity"
 import { ArmyModule } from "./army/army.module"
 import { Unit } from "./army/unit/unit.entity";
-import { UnitCategory} from "./army/unit/unit-category/unit-category.entity";
+import { UnitCategory } from "./army/unit/unit-category/unit-category.entity";
 import { Rule } from "./army/rule/rule.entity";
 import { UnitProfile } from "./army/unit/unit-profile/unit-profile.entity";
 import { UpgradeCategory } from "./army/upgrade/upgrade-category/upgrade-category.entity";
@@ -20,6 +20,8 @@ import { SpecialItem } from "./army/special-item/special-item.entity";
 import { ArmyList } from "./army-list/army-list.entity";
 import { ArmyListUnit } from "./army-list/army-list-unit/army-list-unit.entity";
 import { ArmyListModule } from "./army-list/army-list.module";
+import { ArmyListRule } from "./army-list/army-list-rule/army-list-rule.entity";
+import { ArmyListUpgrade } from "./army-list/army-list-upgrade/army-list-upgrade.entity";
 
 dotenv.config()
 
@@ -55,6 +57,8 @@ const DB_DIALECT = "postgres"
         SpecialItem,
         ArmyList,
         ArmyListUnit,
+        ArmyListRule,
+        ArmyListUpgrade,
       ],
       synchronize: false
     }),

@@ -1,22 +1,23 @@
 import {Controller, HttpCode, HttpStatus, Body, Post, Request, UseGuards, BadRequestException} from "@nestjs/common";
 
 import { ArmyListService } from "./army-list.service";
-import { ArmyListDTO } from "./army-list.dto";
 import { JwtAuthGuard } from "../account/auth/guards/jwt-auth.guard";
-import {ArmyListUnitDTO} from "./army-list-unit/army-list-unit.dto";
-import {ParamHelper} from "../helper/param.helper";
-import {ArmyService} from "../army/army.service";
-import {Army} from "../army/army.entity";
-import {ArmyList} from "./army-list.entity";
-import {Upgrade} from "../army/upgrade/upgrade.entity";
-import {Rule} from "../army/rule/rule.entity";
-import {RuleService} from "../army/rule/rule.service";
-import {UpgradeService} from "../army/upgrade/upgrade.service";
-import {ArmyListUnit} from "./army-list-unit/army-list-unit.entity";
-import {Unit} from "../army/unit/unit.entity";
-import {UnitService} from "../army/unit/unit.service";
-import {randomUUID} from "crypto";
-import {ArmyListUnitService} from "./army-list-unit/army-list-unit.service";
+import { ArmyListUnitDTO } from "./army-list-unit/army-list-unit.dto";
+import { ParamHelper } from "../helper/param.helper";
+import { ArmyService } from "../army/army.service";
+import { Army } from "../army/army.entity";
+import { ArmyList } from "./army-list.entity";
+import { Upgrade } from "../army/upgrade/upgrade.entity";
+import { Rule } from "../army/rule/rule.entity";
+import { RuleService } from "../army/rule/rule.service";
+import { UpgradeService } from "../army/upgrade/upgrade.service";
+import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
+import { UnitService } from "../army/unit/unit.service";
+import { ArmyListUnitService } from "./army-list-unit/army-list-unit.service";
+import { ArmyListRuleService } from "./army-list-rule/army-list-rule.service";
+import { ArmyListRule } from "./army-list-rule/army-list-rule.entity";
+import { ArmyListUpgradeService } from "./army-list-upgrade/army-list-upgrade.service";
+import { ArmyListUpgrade } from "./army-list-upgrade/army-list-upgrade.entity";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -27,6 +28,8 @@ export class ArmyListController {
         private readonly upgradeService: UpgradeService,
         private readonly unitService: UnitService,
         private readonly armyListUnitService: ArmyListUnitService,
+        private readonly armyListRuleService: ArmyListRuleService,
+        private readonly armyListUpgradeService: ArmyListUpgradeService,
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -48,18 +51,20 @@ export class ArmyListController {
         if (army === null) {
             throw new BadRequestException("Invalid army id");
         }
-        const rules: Rule[] = await this.ruleService.findByIds(rulesIds);
-        let upgrades: Upgrade[] = await this.upgradeService.findByIds(upgradesIds);
-        const listUnits: ArmyListUnit[] = [];
-        for (const unit of units) {
-            // const u: Unit = await this.unitService.findOneById(unit.unitId);
-            listUnits.push(await this.armyListUnitService.create(unit.unitId, [], [], unit.number, unit.formation))
-        }
-        const list: ArmyList = await this.armyListService.create(req.user.username, name, army, cost, upgrades, rules, isShared)
-        console.log(list);
-        for (const unit of listUnits) {
-            await this.armyListUnitService.save(unit);
-        }
+        const list: ArmyList = await this.armyListService.create(req.user.username, name, army, cost, isShared, req.user.username)
+
         await this.armyListService.save(list);
+        for (const unit of units) {
+            const u: ArmyListUnit = await this.armyListUnitService.create(unit.unitId, unit.number, unit.formation, list.id);
+            await this.armyListUnitService.save(u);
+        }
+        for (const rule of rulesIds) {
+            const r: ArmyListRule = await this.armyListRuleService.create(list.id, rule);
+            await this.armyListRuleService.save(r);
+        }
+        for (const upgrade of upgradesIds) {
+            const u: ArmyListUpgrade = await this.armyListUpgradeService.create(list.id, upgrade);
+            await this.armyListUpgradeService.save(u);
+        }
     }
 }

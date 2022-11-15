@@ -22,12 +22,11 @@ export class ArmyListService {
                  name: string,
                  army: Army,
                  cost: string,
-                 upgrades: Upgrade[],
-                 rules: Rule[],
-                 isShared: boolean): Promise<ArmyList> {
+                 isShared: boolean,
+                 owner: string): Promise<ArmyList> {
         const id: string = randomUUID();
         const armyId = army.id;
-        return this.repository.create({ id, name, army: army.id, cost, upgrades, rules, isShared });
+        return this.repository.create({ id, name, army: army.id, cost, isShared, owner });
     }
 
     save(list: ArmyList): Promise<ArmyList> {
