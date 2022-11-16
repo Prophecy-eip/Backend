@@ -1,7 +1,4 @@
-import { Test } from "@nestjs/testing";
-
 import { ParserHelper } from "../../src/helper/parser.helper";
-import loader from "ts-loader";
 
 describe("ParserHelper", () => {
     it("stringToMap: Parse valid string", () => {

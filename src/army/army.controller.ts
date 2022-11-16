@@ -3,7 +3,7 @@ import { Controller, HttpCode, HttpStatus, Get, Param, NotFoundException } from 
 import { ArmyService } from "./army.service";
 import { ArmyDTO } from "./army.dto";
 import { Army } from "./army.entity";
-import { ArmyCredentials } from "./ArmyCredentials";
+import { ArmyCredentialsDTO } from "./army-creadetials.dto";
 
 @Controller("armies")
 export class ArmyController {
@@ -15,10 +15,10 @@ export class ArmyController {
     @HttpCode(HttpStatus.OK)
     async lookup() {
         const armies: Army[] =  await this.armyService.getAll();
-        let arr: ArmyCredentials[] = [];
+        let arr: ArmyCredentialsDTO[] = [];
 
         for (const army of armies) {
-            arr.push(new ArmyCredentials(army.id, army.name));
+            arr.push(new ArmyCredentialsDTO(army.id, army.name));
         }
         return arr;
     }

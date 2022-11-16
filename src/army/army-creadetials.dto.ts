@@ -1,4 +1,4 @@
-export class ArmyCredentials {
+export class ArmyCredentialsDTO {
     constructor(id: string, name: string) {
         this.id = id;
         this.name = name;
