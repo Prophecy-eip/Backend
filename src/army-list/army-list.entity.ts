@@ -1,4 +1,4 @@
-import { AfterLoad, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { JoinColumn } from "typeorm";
 
 import { ProphecyDatasource } from "../database/prophecy.datasource";

@@ -1,4 +1,5 @@
 import { AfterLoad, Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
+
 import { ProphecyDatasource } from "../../database/prophecy.datasource";
 import { ArmyListUnitOption } from "./army-list-unit-option/army-list-unit-option.entity";
 import { ArmyListUnitUpgrade } from "./army-list-unit-upgrade/army-list-unit-upgrade.entity";
