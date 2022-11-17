@@ -32,4 +32,8 @@ export class ArmyListService {
     async findByOwnerAndId(username: string, id: string): Promise<ArmyList> {
         return this.repository.findOneBy([{ id: id }, { owner: username }]);
     }
+
+    async delete(id: string): Promise<void> {
+        await this.repository.delete(id);
+    }
 }

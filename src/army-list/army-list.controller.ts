@@ -8,7 +8,7 @@ import {
     Request,
     UseGuards,
     BadRequestException,
-    NotFoundException, Param
+    NotFoundException, Param, Delete
 } from "@nestjs/common";
 import { QueryFailedError } from "typeorm";
 
@@ -142,5 +142,17 @@ export class ArmyListController {
         await list.load();
         let units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(list.id);
         return new ArmyListDTO(list, units);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete("/delete/:id")
+    @HttpCode(HttpStatus.OK)
+    async delete(@Request() req, @Param("id") id: string) {
+        let list: ArmyList = await this.armyListService.findByOwnerAndId(req.user.username, id);
+
+        if (list === null) {
+            throw new NotFoundException();
+        }
+        await this.armyListService.delete(list.id);
     }
 }

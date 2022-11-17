@@ -401,7 +401,7 @@ paths:
   # ARMIES LISTS
 
   # create
-  /armies-lists/create-list:
+  /armies-lists/create:
     post:
       summary: Creates a new army list
       description: ""
@@ -426,9 +426,11 @@ paths:
                 $ref: '#/components/schemas/uuid'
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
+        404:
+          $ref: '#/components/schemas/notFoundResponse'
 
   # read
-  /armies-lists/get-lists:
+  /armies-lists/lookup:
     get:
       summary: Retrieves the user's armies list
       description: ""
@@ -448,13 +450,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/uuidArray'
+                $ref: '#/components/schemas/armyListCreadentials'
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
 
-  /armies-lists/get-list/{listId}:
+  /armies-lists/{listId}:
     get:
       summary: Retrieves an army list data
       description: ""
@@ -506,7 +508,7 @@ paths:
 
   # delete
 
-  /armies-lists/delete-list/{listId}:
+  /armies-lists/delete/{listId}:
     delete:
       summary: Deletes an army list
       description: ""
@@ -3004,15 +3006,15 @@ components:
       description: An army list data
       type: object
       properties:
-        listName:
+        name:
           allOf:
             - description: The list's name
             - $ref: '#/components/schemas/name'
-        points:
-          description: The list's points number
-          type: number
-          example: 500
-        armyId:
+        cost:
+          description: The list's cost
+          type: string
+          example: "500 pts"
+        army:
           allOf:
             - description: The army's id
             - $ref: '#/components/schemas/uuid'
@@ -3026,32 +3028,31 @@ components:
                 allOf:
                   - description: The unit's id
                   - $ref: '#/components/schemas/uuid'
-              modifiersIds:
-                allOf:
-                  - description: The unit's modifier's id
-                  - $ref: '#/components/schemas/uuidArray'
-              modelsNumber:
+              number:
                 description: The number of models
                 type: number
                 example: 5
-        modifiers:
-          allOf:
-            - description: The list's modifiers (spells, items, ...)
-            - $ref: '#/components/schemas/uuidArray'
+              options:
+                $ref: "#/components/schemas/uuidArray"
+              upgrades:
+                $ref: "#/components/schemas/uuidArray"
+              formation:
+                type: string
+                example: "5x1"
+        upgrades:
+          $ref: '#/components/schemas/uuidArray'
         rules:
           allOf:
             - description: The list's rules
             - $ref: '#/components/schemas/uuidArray'
-        tags:
-          allOf:
-            - description: The list's tags
-            - $ref: '#/components/schemas/uuidArray'
+        isShared:
+          type: boolean
       required:
-        - listName
-        - points
+        - name
+        - cost
         - armyId
         - units
-        - modifiers
+        - upgrades
         - rules
 
     tagObject:
@@ -3223,6 +3224,23 @@ components:
           description: The statistic's value in percent
           type: number
           example: 42
+
+    armyListCreadentials:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          $ref: '#/components/schemas/name'
+        army:
+          $ref: '#/components/schemas/uuid'
+        cost:
+          type: string
+          example: "500 pts"
+        isShared:
+          type: boolean
+          example: true
+
 
     # RESPONSES
 
