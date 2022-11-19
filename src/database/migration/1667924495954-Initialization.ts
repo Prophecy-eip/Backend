@@ -27,6 +27,7 @@ const PROFILES_TABLES: Table = new Table({
             name: "profile_picture_path",
             type: "varchar",
             isNullable: true,
+            default: null
         }, {
             name: "account_type",
             type: "varchar",

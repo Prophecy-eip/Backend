@@ -22,16 +22,11 @@ export class Profile {
     @Column({ name: "is_verified", default: false})
     public isVerified: boolean;
 
-    @Column({ name: "profile_picture_path", default: "" })
+    @Column({ name: "profile_picture_path", default: null })
     public profilePicturePath: string;
 
     @Column({ name: "account_type", default: "player" })
     public accountType: string = "player";
-
-    // @Column({ name: "army_lists", nullable: true, type: "varchar" })
-    // @ManyToOne(() => ArmyList, (list) => list.owner)
-    // @JoinColumn({ name: "army_lists", referencedColumnName: "id" })
-    // public armyLists: ArmyList[];
 
     @BeforeInsert()
     private async hashPassword() {

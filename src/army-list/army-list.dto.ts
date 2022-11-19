@@ -7,6 +7,7 @@ export class ArmyListDTO {
         this.name = list.name;
         this.cost = list.cost;
         this.isShared = list.isShared;
+        this.army = list.army
         for (const unit of units) {
             this.units.push(new ArmyListUnitDTO(unit));
         }

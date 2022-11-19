@@ -9,7 +9,7 @@ import {
     Request,
     UseGuards,
     BadRequestException,
-    NotFoundException, Param, Delete
+    NotFoundException, Param, Delete, UnauthorizedException
 } from "@nestjs/common";
 import { QueryFailedError } from "typeorm";
 
@@ -92,10 +92,13 @@ export class ArmyListController {
     @Get(":id")
     @HttpCode(HttpStatus.OK)
     async get(@Request() req, @Param("id") id: string) {
-        let list: ArmyList = await this.armyListService.findByOwnerAndId(req.user.username, id);
+        let list: ArmyList = await this.armyListService.findById(id);
 
         if (list === null) {
             throw new NotFoundException();
+        }
+        if (list.owner !== req.user.username && !list.isShared) {
+            throw new UnauthorizedException();
         }
         await list.load();
         let units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(list.id);
@@ -106,10 +109,13 @@ export class ArmyListController {
     @Delete("/delete/:id")
     @HttpCode(HttpStatus.OK)
     async delete(@Request() req, @Param("id") id: string) {
-        let list: ArmyList = await this.armyListService.findByOwnerAndId(req.user.username, id);
+        let list: ArmyList = await this.armyListService.findById(id);
 
         if (list === null) {
             throw new NotFoundException();
+        }
+        if (list.owner !== req.user.username) {
+            throw new UnauthorizedException();
         }
         await this.armyListService.delete(list.id);
     }

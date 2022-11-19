@@ -29,6 +29,10 @@ export class ArmyListService {
         return this.repository.findBy({ owner: username });
     }
 
+    async findById(id: string): Promise<ArmyList> {
+        return this.repository.findOneBy({ id: id });
+    }
+
     async findByOwnerAndId(username: string, id: string): Promise<ArmyList> {
         return this.repository.findOneBy([{ id: id }, { owner: username }]);
     }
