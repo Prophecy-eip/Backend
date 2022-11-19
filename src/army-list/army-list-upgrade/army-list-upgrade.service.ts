@@ -20,4 +20,8 @@ export class ArmyListUpgradeService {
     async save(upgrade: ArmyListUpgrade): Promise<ArmyListUpgrade> {
         return this.repository.save(upgrade);
     }
+
+    async delete(id: string): Promise<void> {
+        await this.repository.delete(id);
+    }
 }

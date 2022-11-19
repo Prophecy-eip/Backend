@@ -5,6 +5,7 @@ import {
     Body,
     Post,
     Get,
+    Put,
     Request,
     UseGuards,
     BadRequestException,
@@ -52,13 +53,13 @@ export class ArmyListController {
     @Post("create")
     @HttpCode(HttpStatus.CREATED)
     async create(@Request() req,
-                 @Body("name") name: string,
-                 @Body("army") armyId: string,
-                 @Body("cost") cost: string,
-                 @Body("units") units: ArmyListUnitDTO[],
-                 @Body("upgrades") upgradesIds: string[],
-                 @Body("rules") rulesIds: string[],
-                 @Body("isShared") isShared?: boolean) {
+        @Body("name") name: string,
+        @Body("army") armyId: string,
+        @Body("cost") cost: string,
+        @Body("units") units: ArmyListUnitDTO[],
+        @Body("upgrades") upgradesIds: string[],
+        @Body("rules") rulesIds: string[],
+        @Body("isShared") isShared?: boolean) {
         if (!ParamHelper.isValid(name) || !ParamHelper.isValid(armyId) || !ParamHelper.isValid(cost) ||
             !ParamHelper.isValid(units) || !ParamHelper.isValid(upgradesIds) || !ParamHelper.isValid(rulesIds)) {
             throw new BadRequestException();
@@ -68,9 +69,86 @@ export class ArmyListController {
             await this.armyListService.save(list);
         } catch (error) {
             if (error instanceof QueryFailedError) {
-                throw new NotFoundException(`The army ${armyId} was not found`);
+                throw new NotFoundException(`The army ${list.army} was not found`);
             }
         }
+        await this.saveListComponents(list, units, rulesIds, rulesIds);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get("lookup")
+    @HttpCode(HttpStatus.OK)
+    async lookup(@Request() req) {
+        const lists: ArmyList[] = await this.armyListService.findByOwner(req.user.username);
+        let credentials: ArmyListCredentialsDTO[] = [];
+
+        for (const list of lists) {
+            credentials.push(new ArmyListCredentialsDTO(list));
+        }
+        return credentials;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get(":id")
+    @HttpCode(HttpStatus.OK)
+    async get(@Request() req, @Param("id") id: string) {
+        let list: ArmyList = await this.armyListService.findByOwnerAndId(req.user.username, id);
+
+        if (list === null) {
+            throw new NotFoundException();
+        }
+        await list.load();
+        let units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(list.id);
+        return new ArmyListDTO(list, units);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete("/delete/:id")
+    @HttpCode(HttpStatus.OK)
+    async delete(@Request() req, @Param("id") id: string) {
+        let list: ArmyList = await this.armyListService.findByOwnerAndId(req.user.username, id);
+
+        if (list === null) {
+            throw new NotFoundException();
+        }
+        await this.armyListService.delete(list.id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Put("/update/:id")
+    @HttpCode(HttpStatus.OK)
+    async update(@Request() req, @Param("id") id: string,
+        @Body("name") name: string,
+        @Body("army") armyId: string,
+        @Body("cost") cost: string,
+        @Body("units") units: ArmyListUnitDTO[],
+        @Body("upgrades") upgradesIds: string[],
+        @Body("rules") rulesIds: string[],
+        @Body("isShared") isShared?: boolean) {
+            let list: ArmyList = await this.armyListService.findByOwnerAndId(req.user.username, id);
+
+            if (list === null) {
+                throw new NotFoundException();
+            }
+            await list.load();
+            let oldUpgrades: string[] = list.upgrades;
+            let oldRules: string[] = list.rules;
+            await this.armyListUnitService.deleteByList(list.id)
+            for (const upgrade in oldUpgrades) {
+                await this.armyListUpgradeService.delete(upgrade);
+            }
+            for (const rule in oldRules) {
+                await this.armyListRuleService.delete(rule);
+            }
+            try {
+                await this.armyListService.update(list.id, name, armyId, cost, isShared);
+            } catch (error) {
+                throw new BadRequestException();
+            }
+            await this.saveListComponents(list, units, rulesIds, upgradesIds);
+    }
+
+    private async saveListComponents(list: ArmyList, units: ArmyListUnitDTO[], rulesIds: string[], upgradesIds: string[]) {
         for (const unit of units) {
             const u: ArmyListUnit = await this.armyListUnitService.create(unit.unitId, unit.number, unit.formation, list.id);
             await this.armyListUnitService.save(u);
@@ -115,44 +193,5 @@ export class ArmyListController {
                 }
             }
         }
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get("lookup")
-    @HttpCode(HttpStatus.OK)
-    async lookup(@Request() req) {
-        const lists: ArmyList[] = await this.armyListService.findByOwner(req.user.username);
-        let credentials: ArmyListCredentialsDTO[] = [];
-
-        for (const list of lists) {
-            credentials.push(new ArmyListCredentialsDTO(list));
-        }
-        return credentials;
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get(":id")
-    @HttpCode(HttpStatus.OK)
-    async get(@Request() req, @Param("id") id: string) {
-        let list: ArmyList = await this.armyListService.findByOwnerAndId(req.user.username, id);
-
-        if (list === null) {
-            throw new NotFoundException();
-        }
-        await list.load();
-        let units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(list.id);
-        return new ArmyListDTO(list, units);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Delete("/delete/:id")
-    @HttpCode(HttpStatus.OK)
-    async delete(@Request() req, @Param("id") id: string) {
-        let list: ArmyList = await this.armyListService.findByOwnerAndId(req.user.username, id);
-
-        if (list === null) {
-            throw new NotFoundException();
-        }
-        await this.armyListService.delete(list.id);
     }
 }

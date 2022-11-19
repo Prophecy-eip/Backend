@@ -24,4 +24,8 @@ export class ArmyListUnitService {
     findByArmyList(list: string): Promise<ArmyListUnit[]> {
         return this.repository.findBy({ armyList: list });
     }
+
+    async deleteByList(list: string): Promise<void> {
+        await this.repository.delete({ armyList: list })
+    }
 }

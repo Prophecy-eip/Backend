@@ -36,4 +36,8 @@ export class ArmyListService {
     async delete(id: string): Promise<void> {
         await this.repository.delete(id);
     }
+
+    async update(id: string, name: string, army: string, cost: string, isShared: boolean) {
+        await this.repository.update({ id: id }, { name: name, army: army, cost: cost, isShared: isShared });
+    }
 }

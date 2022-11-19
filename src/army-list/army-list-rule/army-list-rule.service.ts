@@ -20,4 +20,8 @@ export class ArmyListRuleService {
     async save(rule: ArmyListRule): Promise<ArmyListRule> {
         return this.repository.save(rule);
     }
+
+    async delete(id: string): Promise<void> {
+        await this.repository.delete(id);
+    }
 }
