@@ -61,7 +61,7 @@ export class ProfileService {
     }
 
     async updateEmail(username: string, newEmail: string) {
-        await this.repository.update({ username: username },  { email: newEmail });
+        await this.repository.update({ username: username },  { email: newEmail, isEmailVerified: false });
     }
 
     async updatePassword(username: string, newPassword: string) {

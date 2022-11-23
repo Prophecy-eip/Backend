@@ -20,18 +20,12 @@ tags:
     description: Everything about the settings
   - name: users
     description: Everything about the users
-  - name: units
-    description: Everything about the units
   - name: teams
     description: Everything about the teams
   - name: locations
     description: Everything about the locations
   - name: armies-lists
     description: Everything about the armies lists
-  - name: modifiers
-    description: Everything about the modifiers
-  - name: rules
-    description: Everything about the armies rules
   - name: profile
     description: Everything about the profiles
   - name: posts
@@ -118,7 +112,7 @@ paths:
           description: Internal Server Error
 
   /account/email/send-verification-link:
-    post:
+    get:
       summary: Sends an email confirmation link
       description: ""
       tags:
@@ -127,12 +121,6 @@ paths:
         - bearerAuth: []
       parameters:
         - $ref: '#/components/parametersSchemes/authorization'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/parametersSchemes/emailAddress'
       responses:
         200:
           description: OK
@@ -143,27 +131,6 @@ paths:
         500:
           description: Internal Server Error
 
-  /account/email/verify/{id}/{hash}:
-    get:
-      summary: Sends an email confirmation link
-      description: ""
-      tags:
-        - account
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/id'
-        - $ref: '#/components/parametersSchemes/hash'
-      responses:
-        200:
-          description: OK
-        400:
-          description: Bad Request
-        404:
-          description: Not found
-        500:
-          description: Internal Server Error
 
   # EVENTS
 
@@ -481,7 +448,7 @@ paths:
 
 
   # update
-  /armies-lists/update-list/{listId}:
+  /armies-lists/update/{listId}:
     put:
       summary: Updates an army list
       description: ""

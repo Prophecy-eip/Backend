@@ -12,11 +12,11 @@ import {
 } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
-import { ProfileService } from "./profile/profile.service";
 import { LocalAuthGuard } from "./auth/guards/local-auth.guard";
-import { AuthService } from "./auth/auth.service";
 import { JwtAuthGuard } from "./auth/guards/jwt-auth.guard";
 import { Profile } from "./profile/profile.entity";
+import { ProfileService } from "./profile/profile.service";
+import { AuthService } from "./auth/auth.service";
 import { EmailConfirmationService } from "../email/email-confirmation.service";
 
 dotenv.config();
@@ -74,7 +74,6 @@ export class AccountController {
         if (profile.isEmailVerified) {
             throw new BadRequestException("The email address is already verified");
         }
-        const link: string = "";
         await this.emailConfirmationService.sendVerificationLink(profile.email)
     }
 
@@ -121,6 +120,7 @@ export class AccountController {
             throw new BadRequestException()
         }
         await this.profileService.updateEmail(username, email);
+        await this.emailConfirmationService.sendVerificationLink(email);
     }
 
     @UseGuards(JwtAuthGuard)

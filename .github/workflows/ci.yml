@@ -9,7 +9,20 @@ jobs:
 
       - name: Setup & Install
         run: | 
-          printf "SERVER_PORT=${{ secrets.SERVER_PORT }}\nPOSTGRES_DB=${{ secrets.POSTGRES_DB }}\nPOSTGRES_USER=${{ secrets.POSTGRES_USER }}\nPOSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}\nDATABASE_IP=${{ secrets.DATABASES_IP }}\nDATABASE_PORT=${{ secrets.DATABASES_PORT }}\nPGADMIN_PORT=${{ secrets.PGADMIN_PORT }}\nPGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}\nPGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}\nPGADMIN_LISTEN_ADDRESS=${{ secrets.PGADMIN_LISTEN_ADDRESS }}\nPGADMIN_LISTEN_PORT=${{ secrets.PGADMIN_LISTEN_PORT }}\nJWT_SECRET=${{ secrets.JWT_SECRET }}\nTESTS_PORT=${{ secrets.TESTS_PORT }}\nMIGRATION_PORT=${{ secrets.MIGRATION_PORT }}\n" > .env
+          printf "SERVER_PORT=${{ secrets.SERVER_PORT }}\n
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}\n
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}\n
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}\n
+          DATABASE_IP=${{ secrets.DATABASES_IP }}\n
+          DATABASE_PORT=${{ secrets.DATABASES_PORT }}\n
+          JWT_SECRET=${{ secrets.JWT_SECRET }}\n
+          TESTS_PORT=${{ secrets.TESTS_PORT }}\n
+          MIGRATION_PORT=${{ secrets.MIGRATION_PORT }}\n
+          SES_REGION=${{ secrets.AWS_SES_REGION }}\n
+          SES_ACCESS_KEY=${{ secrets.AWS_SES_ACCESS_KEY }}\n
+          SES_SECRET_ACCESS_KEY=${{ secrets.AWS_SES_SECRET_ACCESS_KEY }}\n
+          SES_FROM_ADDRESS=${{ secrets.AWS_SES_FROM_ADDRESS }}\n
+          API_URL=${{ secrets.API_URL }}" > .env
           printf "[postgresql]\nhost=${{ secrets.DATABASES_IP  }}\ndatabase=${{ secrets.POSTGRES_DB }}\nuser=${{ secrets.POSTGRES_USER }}\npassword=${{ secrets.POSTGRES_PASSWORD }}\n" > ./scripts/armies_database/database.ini
 
       - name: Build & Run Docker

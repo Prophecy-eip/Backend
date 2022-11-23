@@ -14,6 +14,11 @@ In order to launch the database and the server, you need to provide the followin
 - `JWT_SECRET`: The secret key for the server's jwt
 - `TESTS_PORT`: To run the unit tests
 - `MIGRATION_PORT`: The port used for database migrations
+- `SES_REGION`: The region configured for the AWS SES
+- `SES_ACCESS_KEY`: The access key for the AWS SES
+- `SES_SECRET_ACCESS_KEY`: The secret access key for the AWS SES
+- `SES_FROM_ADDRESS`: The email address that will be used to send emails 
+- `API_URL`: An url pointing to the server host
 
 ### Launching the database
 
