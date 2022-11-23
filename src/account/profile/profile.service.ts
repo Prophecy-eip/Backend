@@ -48,6 +48,10 @@ export class ProfileService {
         return await this.repository.findOneBy([{ username: username }]);
     }
 
+    async findOneByEmail(email: string): Promise<Profile> {
+        return await this.repository.findOneBy({ email: email });
+    }
+
     async delete(username: string): Promise<void> {
         await this.repository.delete(username);
     }
@@ -63,6 +67,10 @@ export class ProfileService {
     async updatePassword(username: string, newPassword: string) {
         const pwd: string = await hash(newPassword, 10);
 
-        await this.repository.update({username: username}, {password: pwd});
+        await this.repository.update({username: username }, { password: pwd });
+    }
+
+    async markEmailAsConfirmed(email): Promise<void> {
+        await this.repository.update({ email: email }, { isEmailVerified: true });
     }
 }

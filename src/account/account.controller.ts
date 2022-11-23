@@ -8,7 +8,7 @@ import {
     UseGuards,
     Request,
     Delete,
-    BadRequestException, ConflictException, UnauthorizedException, Put, InternalServerErrorException, Get
+    BadRequestException, ConflictException, UnauthorizedException, Put, InternalServerErrorException, Get, Query
 } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
@@ -76,7 +76,15 @@ export class AccountController {
         }
         const link: string = "";
         await this.emailConfirmationService.sendVerificationLink(profile.email)
-  }
+    }
+
+    @Get("verify-email")
+    @HttpCode(HttpStatus.OK)
+    async verifyEmail(@Request() req, @Query("token") token: string) {
+        const email: string = await this.emailConfirmationService.decodeConfirmationToken(token);
+
+        await this.emailConfirmationService.confirmEmail(email);
+    }
 
     @UseGuards(JwtAuthGuard)
     @Delete("settings/delete-account")

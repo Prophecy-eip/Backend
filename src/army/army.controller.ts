@@ -3,7 +3,7 @@ import { Controller, HttpCode, HttpStatus, Get, Param, NotFoundException } from 
 import { ArmyService } from "./army.service";
 import { ArmyDTO } from "./army.dto";
 import { Army } from "./army.entity";
-import { ArmyCredentialsDTO } from "./army-creadetials.dto";
+import { ArmyCredentialsDTO } from "./army-credentials.dto";
 
 @Controller("armies")
 export class ArmyController {

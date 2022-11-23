@@ -1,14 +1,16 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { jwtConstants } from "../account/auth/constants";
 import * as dotenv from "dotenv";
 
 import { EmailService } from "./email.service";
+import { ProfileService } from "../account/profile/profile.service";
+import { Profile } from "../account/profile/profile.entity";
 
 dotenv.config();
 
 const API_URL: string = process.env.API_URL;
-const EMAIL_VERIFICATION_ROUTE: string = `${API_URL}/account/email_verification`
+const EMAIL_VERIFICATION_ROUTE: string = `${API_URL}/account/verify-email`
 const FROM_ADDRESS: string = process.env.SES_FROM_ADDRESS;
 
 @Injectable()
@@ -16,6 +18,7 @@ export class EmailConfirmationService {
     constructor(
         private readonly jwtService: JwtService,
         private readonly emailService: EmailService,
+        private readonly profileService: ProfileService,
     ) {}
 
     public sendVerificationLink(email: string) {
@@ -25,8 +28,34 @@ export class EmailConfirmationService {
             expiresIn: "3d"
         });
         const url = `${EMAIL_VERIFICATION_ROUTE}?token=${token}`;
-        const text: string = `Welcome to Prophecy!\n\nTo confirm the email address, click here: ${url}`
+        const text: string = `<p>Welcome to Prophecy!</p><p>To confirm your email address, click <a href="${url}">here</a>.</p>`;
 
         return this.emailService.sendEmail([email], FROM_ADDRESS, "Email confirmation", text);
+    }
+
+    public async decodeConfirmationToken(token: string): Promise<string> {
+        try {
+            const payload = await this.jwtService.verify(token, {
+                secret: jwtConstants.secret
+            });
+            if (typeof payload === "object" && "email" in payload) {
+                return payload.email;
+            }
+        } catch (error) {
+            console.error(error);
+            if (error?.name === "TokenExpiredError") {
+                throw new BadRequestException("Email confirmation token expired");
+            }
+            throw new BadRequestException("Bad confirmation token");
+        }
+    }
+
+    public async confirmEmail(email: string): Promise<void> {
+        const profile: Profile = await this.profileService.findOneByEmail(email);
+
+        if (profile.isEmailVerified) {
+            throw new BadRequestException("Email already confirmed");
+        }
+        await this.profileService.markEmailAsConfirmed(email);
     }
 }

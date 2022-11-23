@@ -8,20 +8,10 @@ const SES_REGION: string = process.env.SES_REGION;
 const SES_ACCESS_KEY: string = process.env.SES_ACCESS_KEY;
 const SES_SECRET_ACCESS_KEY: string = process.env.SES_SECRET_ACCESS_KEY;
 
-// const SES_CONFIG = {
-//     accessKeyId: SES_ACCESS_KEY,
-//     secretAccessKey: SES_SECRET_ACCESS_KEY,
-//     region: SES_REGION
-// };
-// const AWS_SES = new AWS.SES(SES_CONFIG);
-
-// console.log(SES_CONFIG);
-
 @Injectable()
 export class EmailService {
 
     constructor() {
-        // console.log("coucou")
         this.awsSes = new AWS.SES({
             accessKeyId: SES_ACCESS_KEY,
             secretAccessKey: SES_SECRET_ACCESS_KEY,
@@ -30,7 +20,6 @@ export class EmailService {
     }
 
     async sendEmail(toAddresses: string[], fromAddress: string, subject: string, emailBody: string) {
-        console.log(`sending an email to ${toAddresses}`);
         const params = {
             Destination: {
                 ToAddresses: toAddresses
@@ -50,7 +39,6 @@ export class EmailService {
             Source: fromAddress
         };
 
-        // return AWS_SES.sendEmail(params).promise();
         return this.awsSes.sendEmail(params).promise();
     }
 
