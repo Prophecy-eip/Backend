@@ -8,24 +8,26 @@ import {
     UseGuards,
     Request,
     Delete,
-    BadRequestException, ConflictException, UnauthorizedException, Put
+    BadRequestException, ConflictException, UnauthorizedException, Put, InternalServerErrorException, Get
 } from "@nestjs/common";
+import * as dotenv from "dotenv";
 
 import { ProfileService } from "./profile/profile.service";
 import { LocalAuthGuard } from "./auth/guards/local-auth.guard";
 import { AuthService } from "./auth/auth.service";
 import { JwtAuthGuard } from "./auth/guards/jwt-auth.guard";
+import { Profile } from "./profile/profile.entity";
+import { EmailConfirmationService } from "../email/email-confirmation.service";
+
+dotenv.config();
 
 @Controller("account")
 export class AccountController {
     constructor(
         private readonly profileService: ProfileService,
         private readonly authService: AuthService,
+        private readonly emailConfirmationService: EmailConfirmationService,
     ) {}
-
-    private isFieldValid(str: string): boolean {
-        return (str !== undefined && str !== null && str !== "");
-    }
 
     @Post("sign-up")
     @HttpCode(HttpStatus.CREATED)
@@ -35,12 +37,19 @@ export class AccountController {
         }
         if (await this.profileService.credentialsAlreadyInUse(username, email)) {
             throw new ConflictException();
-        } try {
-            const profile = await this.profileService.create({ username, email, password });
+        }
+        try {
+            const profile = await this.profileService.create({username, email, password});
 
             await this.profileService.save(profile);
         } catch (err) {
             throw new BadRequestException();
+        }
+        try {
+            await this.emailConfirmationService.sendVerificationLink(email);
+        } catch(error) {
+            console.error(error);
+            throw new InternalServerErrorException("Unable to send email address validation");
         }
     }
 
@@ -55,6 +64,19 @@ export class AccountController {
     @Post("sign-out")
     @HttpCode(HttpStatus.OK)
     async logout(@Request() req) {}
+
+    @UseGuards(JwtAuthGuard)
+    @Get("send-email-verification-link")
+    @HttpCode(HttpStatus.OK)
+    async sendEmailVerificationLink(@Request() req) {
+        const profile: Profile = await this.profileService.findOneByUsername(req.user.username);
+
+        if (profile.isEmailVerified) {
+            throw new BadRequestException("The email address is already verified");
+        }
+        const link: string = "";
+        await this.emailConfirmationService.sendVerificationLink(profile.email)
+  }
 
     @UseGuards(JwtAuthGuard)
     @Delete("settings/delete-account")
@@ -106,5 +128,9 @@ export class AccountController {
         return {
             username: newUsername,
         };
+    }
+
+    private isFieldValid(str: string): boolean {
+        return (str !== undefined && str !== null && str !== "");
     }
 }

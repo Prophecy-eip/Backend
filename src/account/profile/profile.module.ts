@@ -6,10 +6,12 @@ import { Profile } from "./profile.entity";
 import { ProfileService } from "./profile.service";
 import { AccountController } from "../account.controller";
 import { AuthService } from "../auth/auth.service";
+import { EmailService } from "../../email/email.service";
+import { EmailConfirmationService } from "../../email/email-confirmation.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Profile])],
-    providers: [ProfileService, AuthService, JwtService],
+    providers: [ProfileService, AuthService, JwtService, EmailService, EmailConfirmationService],
     controllers: [AccountController],
 })
 export class ProfileModule {}

@@ -9,6 +9,9 @@ import { Profile } from "./profile/profile.entity";
 import { ProfileService } from "./profile/profile.service";
 import { jwtConstants } from "./auth/constants";
 import { ArmyList } from "../army-list/army-list.entity";
+import { EmailConfirmationService } from "../email/email-confirmation.service";
+import { EmailService } from "../email/email.service";
+import { EmailModule } from "../email/email.module";
 
 @Module({
     imports: [
@@ -18,9 +21,10 @@ import { ArmyList } from "../army-list/army-list.entity";
         JwtModule.register({
             secret: jwtConstants.secret,
             signOptions: { expiresIn: "7d" }
-        })
+        }),
+        EmailModule
     ],
-    providers: [ProfileService, AuthService],
+    providers: [ProfileService, AuthService, EmailService, EmailConfirmationService],
     exports: [ProfileModule]
 })
 export class AccountModule {}

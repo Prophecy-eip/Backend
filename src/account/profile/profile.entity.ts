@@ -19,8 +19,8 @@ export class Profile {
     @Column()
     public password: string;
 
-    @Column({ name: "is_verified", default: false})
-    public isVerified: boolean;
+    @Column({ name: "is_email_verified", default: false})
+    public isEmailVerified: boolean;
 
     @Column({ name: "profile_picture_path", default: null })
     public profilePicturePath: string;

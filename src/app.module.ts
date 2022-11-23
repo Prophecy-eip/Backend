@@ -25,6 +25,7 @@ import { ArmyModule } from "./army/army.module"
 import { AccountModule } from "./account/account.module";
 import { ArmyListModule } from "./army-list/army-list.module";
 import { HeartbeatModule } from "./heartbeat/heartbeat.module";
+import { EmailModule } from "./email/email.module";
 
 dotenv.config()
 
@@ -70,7 +71,8 @@ const DB_DIALECT = "postgres"
         AccountModule,
         ArmyModule,
         ArmyListModule,
-        HeartbeatModule
+        HeartbeatModule,
+        // EmailModule,
     ],
 })
 export class AppModule {}

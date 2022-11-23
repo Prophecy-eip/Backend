@@ -19,7 +19,7 @@ const PROFILES_TABLES: Table = new Table({
             type: "varchar",
             isNullable: false,
         }, {
-            name: "is_verified",
+            name: "is_email_verified",
             type: "boolean",
             default: false,
             isNullable: false,
