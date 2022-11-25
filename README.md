@@ -19,6 +19,7 @@ In order to launch the database and the server, you need to provide the followin
 - `SES_SECRET_ACCESS_KEY`: The secret access key for the AWS SES
 - `SES_FROM_ADDRESS`: The email address that will be used to send emails 
 - `API_URL`: An url pointing to the server host
+- `WEBSITE_URL`: An url pointing to the website
 
 ### Launching the database
 

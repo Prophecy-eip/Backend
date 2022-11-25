@@ -1,17 +1,20 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { jwtConstants } from "../account/auth/constants";
 import * as dotenv from "dotenv";
 
 import { EmailService } from "./email.service";
 import { ProfileService } from "../account/profile/profile.service";
 import { Profile } from "../account/profile/profile.entity";
+import { jwtConstants } from "../account/auth/constants";
 
 dotenv.config();
 
 const API_URL: string = process.env.API_URL;
 const EMAIL_VERIFICATION_ROUTE: string = `${API_URL}/account/verify-email`
 const FROM_ADDRESS: string = process.env.SES_FROM_ADDRESS;
+const WEBSITE_URL: string = process.env.WEBSITE_URL;
+
+const EMAIL_CONFIRMATION_ROUTE: string = `${WEBSITE_URL}/account/email-confirm`;
 
 @Injectable()
 export class EmailConfirmationService {
@@ -27,7 +30,7 @@ export class EmailConfirmationService {
             secret: jwtConstants.secret,
             expiresIn: "3d"
         });
-        const url = `${EMAIL_VERIFICATION_ROUTE}?token=${token}`;
+        const url: string = `${EMAIL_VERIFICATION_ROUTE}?token=${token}`;
         const text: string = `<p>Welcome to Prophecy!</p><p>To confirm your email address, click <a href="${url}">here</a>.</p>`;
 
         return this.emailService.sendEmail([email], FROM_ADDRESS, "Email confirmation", text);

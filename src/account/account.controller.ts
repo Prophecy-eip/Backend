@@ -18,6 +18,7 @@ import { Profile } from "./profile/profile.entity";
 import { ProfileService } from "./profile/profile.service";
 import { AuthService } from "./auth/auth.service";
 import { EmailConfirmationService } from "../email/email-confirmation.service";
+import { ForgottenPasswordService } from "../email/forgotten-password.service";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ export class AccountController {
         private readonly profileService: ProfileService,
         private readonly authService: AuthService,
         private readonly emailConfirmationService: EmailConfirmationService,
+        private readonly forgottenPasswordService: ForgottenPasswordService,
     ) {}
 
     @Post("sign-up")
@@ -83,6 +85,26 @@ export class AccountController {
         const email: string = await this.emailConfirmationService.decodeConfirmationToken(token);
 
         await this.emailConfirmationService.confirmEmail(email);
+    }
+
+    @Get("send-password-reset-link")
+    @HttpCode(HttpStatus.OK)
+    async sendPasswordResetLink(@Body("email") email: string) {
+        if (!this.isFieldValid(email) || await this.profileService.findOneByEmail(email) === null) {
+            throw new BadRequestException("Invalid email address");
+        }
+        await this.forgottenPasswordService.sendPasswordResetLink(email);
+    }
+
+    @Put("reset-password")
+    @HttpCode(HttpStatus.OK)
+    async resetPassword(@Query("token") token: string, @Body("password") password: string) {
+        const username: string = await this.forgottenPasswordService.decodeResetToken(token);
+
+        if (!this.isFieldValid(password)) {
+            throw new BadRequestException("Invalid password field");
+        }
+        await this.forgottenPasswordService.resetPassword(username, password);
     }
 
     @UseGuards(JwtAuthGuard)
