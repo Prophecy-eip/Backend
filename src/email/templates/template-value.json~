@@ -1,0 +1,8 @@
+{
+  "Source": "noreply@prophecy-eip.com",
+  "Template": "email-confirmation",
+  "Destination": {
+    "ToAddresses": ["victoire.rabeau@epitech.eu"]
+  },
+  "TemplateData": "{}"
+}

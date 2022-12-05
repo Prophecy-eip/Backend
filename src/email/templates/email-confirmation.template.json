@@ -1,0 +1,8 @@
+{
+  "Template": {
+    "TemplateName": "email-confirmation",
+    "SubjectPart": "Confirm your email address",
+    "HtmlPart": "Hello",
+    "TextPart": "Hi"
+  }
+}

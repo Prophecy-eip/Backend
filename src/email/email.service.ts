@@ -1,6 +1,7 @@
 import * as AWS from "aws-sdk";
 import * as dotenv from "dotenv";
 import { Injectable } from "@nestjs/common";
+import { SendTemplatedEmailCommand } from "@aws-sdk/client-ses";
 
 dotenv.config();
 
@@ -40,6 +41,29 @@ export class EmailService {
         };
 
         return this.awsSes.sendEmail(params).promise();
+    }
+
+    async sendTemplatedEmail(source: string, template: string, toAddresses: string[], templateData: string) {
+        const params = {
+            Source: source,
+            Template: template,
+            Destination: {
+                ToAddresses: toAddresses,
+            },
+            TemplateData: templateData,
+            ConfigurationSetName: "prophecy-email",
+        };
+        console.log(`sending email to ${toAddresses}`);
+        console.log(source, template, templateData);
+        return this.awsSes.sendTemplatedEmail(params);
+
+            // const command =  new SendTemplatedEmailCommand({
+            //     Destination: { ToAddresses: toAddresses },
+            //     TemplateData: templateData,
+            //     Source: source,
+            //     Template: template
+            // });
+            // return this.awsSes.sendTemplatedEmail(command);
     }
 
     private awsSes: AWS.SES;
