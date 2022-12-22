@@ -5,8 +5,8 @@ export class SpecialRule {
     @PrimaryColumn()
     public id: number;
 
-    @Column({ name: "army_id" })
-    public armyId: number;
+    // @Column({ name: "army_id" })
+    // public armyId: number;
 
     @Column({ name: "version_id" })
     public versionId: number;

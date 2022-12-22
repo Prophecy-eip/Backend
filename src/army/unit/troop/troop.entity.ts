@@ -27,12 +27,12 @@ export class Troop {
     @PrimaryColumn()
     public id: number;
 
-    @Column({ name: "unit_id" })
-    public unit_id: number;
+    // @Column({ name: "unit_id" })
+    // public unit_id: number;
 
     @Column()
     public name: string;
 
-    @Column({ type: "varchar"})
+    @Column({ type: "varchar" })
     public characteristics: Characteristics[];
 }

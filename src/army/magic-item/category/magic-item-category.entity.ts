@@ -17,8 +17,8 @@ export class MagicItemCategory {
     @Column()
     public max: number;
 
-    @Column({ name: "army_id" })
-    public armyId: number;
+    // @Column({ name: "army_id" })
+    // public armyId: number;
     // @Column({ name: "item_id" })
     // public itemId: number;
 }

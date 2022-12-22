@@ -8,8 +8,8 @@ export class MagicStandard {
     @Column({ name: "version_id" })
     public versionId: number;
 
-    @Column({ name: "army_id" })
-    public armyId: number;
+    // @Column({ name: "army_id" })
+    // public armyId: number;
 
     @Column()
     public name: string;

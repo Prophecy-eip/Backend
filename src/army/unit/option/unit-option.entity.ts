@@ -41,4 +41,63 @@ export class UnitOption {
     @Column({ name: "mount_and_characteristics_points" })
     public mountAdnCharacteristicsPoints: boolean;
 
+    @Column({ name: "organisation_mode" })
+    public organisationMode: string;
+
+    @Column({ name: "is_multiple" })
+    public isMultiple: boolean;
+
+    @Column({ name: "is_required" })
+    public isRequired: boolean;
+
+    @Column({ name: "domain_magic_id" })
+    public domainMagicId: number;
+
+    @Column({ name: "magic_item_source"})
+    public magicItemSource: string;
+
+    @Column({ name: "organisation_id" })
+    public organisationId: number;
+
+    @Column()
+    public name: string;
+
+    @Column({ name: "value_points" })
+    public valuePoints: number;
+
+    @Column({ name: "use_points"})
+    public usePoints: number;
+
+    @Column()
+    public max: number;
+
+    @Column({ name: "has_choices" })
+    public hasChoices: boolean;
+
+    @Column()
+    public weight: number;
+
+    @Column({ name: "change_profile"})
+    public changeProfile: boolean;
+
+    @Column()
+    public base: string;
+
+    @Column()
+    public height: string;
+
+    @Column({ name: "enchantment_limit" })
+    public enchantmentLimit: number;
+
+    @Column({ name: "unit_option_limits" })
+    public unitOptionLimits: string;
+
+    @Column()
+    public availabilities: string;
+
+    @Column({ name: "magic_item_categories" })
+    public magicItemCategories: number[];
+
+    @Column()
+    public equipments: number[];
 }

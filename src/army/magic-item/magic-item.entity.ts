@@ -14,8 +14,8 @@ export class MagicItem {
     @Column({ name: "magic_item_category_id" })
     public magicItemCategoryId: number;
 
-    @Column({ name: "army_id" })
-    armyId: number;
+    // @Column({ name: "army_id" })
+    // armyId: number;
 
     @Column({ name: "is_multiple" })
     public isMultiple: boolean;

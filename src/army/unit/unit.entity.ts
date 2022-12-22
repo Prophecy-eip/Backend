@@ -24,8 +24,8 @@ export class Unit {
     @Column()
     public name: string;
 
-    @Column({ name: "army_id" })
-    public armyId: number;
+    // @Column({ name: "army_id" })
+    // public armyId: number;
 
     @Column({ name: "unit_category_id" })
     public unitCategoryId: number;
@@ -68,4 +68,16 @@ export class Unit {
 
     @Column({ type: "varchar" })
     public characteristics: Characteristic;
+
+    @Column({ name: "troop_ids", type: "int", array: true })
+    public troopIds: number[];
+
+    @Column({ name: "special_rule_unit_troop_ids", type: "int", array: true })
+    public specialRuleUnitTroopIds: number[];
+
+    @Column({ name: "equipment_unit_troop_ids", type: "int", array: true })
+    public equipmentUnitTroopIds: number[];
+
+    @Column({ name: "unit_option_ids", type: "int", array: true })
+    public unitOptionIds: number[];
 }

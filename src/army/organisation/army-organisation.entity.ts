@@ -20,6 +20,9 @@ export class ArmyOrganisation {
     @Column({ name: "is_default" })
     public isDefault: boolean;
 
-    @Column({ name: "army_id" })
-    public armyId: number;
+    // @Column({ name: "army_id" })
+    // public armyId: number;
+
+    @Column({ name: "organisation_group_ids", type: "int", array: true})
+    public organisationGroupIds: number[];
 }

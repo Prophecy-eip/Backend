@@ -11,6 +11,6 @@ export class EquipmentCategory {
     @Column()
     public name: string;
 
-    @Column({ name: "army_id" })
-    public armyId: number;
+    // @Column({ name: "army_id" })
+    // public armyId: number;
 }

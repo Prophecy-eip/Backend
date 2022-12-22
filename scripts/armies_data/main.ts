@@ -8,6 +8,9 @@ import { MagicItem } from "../../src/army/magic-item/magic-item.entity";
 import { MagicStandard } from "../../src/army/magic-standard/magic-standard.entity";
 import { Equipment } from "../../src/army/equipment/equipment.entity";
 import { EquipmentCategory } from "../../src/army/equipment/category/equipment-category.entity";
+import { SpecialRule } from "../../src/army/special-rule/special-rule.entity";
+import { SelectQueryBuilder } from "typeorm";
+import { Unit } from "../../src/army/unit/unit.entity";
 
 class ArmyCredentials {
     id: number;
@@ -26,6 +29,10 @@ class BuilderOrganisation {
     name: string;
     position: number;
     medium_logo: string;
+
+    public async save(queryBuilder: any) {
+
+    }
 }
 
 class BuilderArmyOrganisationGroupLimit {
@@ -63,6 +70,19 @@ class BuilderArmyOrganisationGroup {
     army_organisation_group_limits: BuilderArmyOrganisationGroupLimit[];
     army_organisation_unit_limits: ArmyOrganisationUnitLimit[];
     change_item_limits: any[]
+
+    public async save(queryBuilder: any) {
+        // try {
+        //     await queryBuilder.insert().into(ArmyOrganisationGroup).values({
+        //         id: this.id,
+        //         armyOrganisationId: this.army_organisation_id,
+        //         name: this.name,
+        //         organisationGroupLimits: (this.army_organisation_group_limits === undefined ? null : stringify(this.army_organisation_group_limits)),
+        //         organisationUnitLimits: (this.army_organisation_unit_limits === undefined ? null : stringify(this.army_organisation_unit_limits)),
+        //         changeItemLimits: (this.change_item_limits === undefined ? null : stringify(this.change_item_limits))
+        //     }).execute();
+        // } catch(error) { /* todo: duplicate */ }
+    }
 }
 
 class BuilderArmyOrganisation {
@@ -71,6 +91,23 @@ class BuilderArmyOrganisation {
     description: string;
     is_default: boolean;
     army_organisation_groups: BuilderArmyOrganisationGroup[];
+
+    public async save(queryBuilder: any) {
+        // let groups: number[] = [];
+        // for (const group of this.army_organisation_groups) {
+        //     groups.push(group.id)
+        //     await group.save(queryBuilder)
+        // }
+        // try {
+        //     await queryBuilder.insert().into(ArmyOrganisation).values({
+        //         id: this.id,
+        //         name: this.name,
+        //         description: this.description,
+        //         isDefault: this.is_default,
+        //         organisationGroupIds: groups,
+        //     }).execute();
+        // } catch(error) {}
+    }
 }
 
 class BuilderMagicItemCategory {
@@ -79,12 +116,37 @@ class BuilderMagicItemCategory {
     name: string;
     is_multiple: boolean;
     max: number;
+
+    public async save(queryBuilder: any) {
+        try {
+            await queryBuilder.insert().into(MagicItemCategory).values({
+                id: this.id,
+                versionId: this.version_id,
+                name: this.name,
+                isMultiple: this.is_multiple,
+                max: this.max,
+            }).execute();
+        } catch(error) {
+            // todo: duplicate
+        }
+    }
 }
 
 class BuilderEquipmentCategory {
     id: number;
     version_id: number;
     name: string;
+
+    public async save(queryBuilder: any) {
+        try {
+            await queryBuilder.insert().into(EquipmentCategory).values({
+                id: this.id,
+                versionId: this.version_id,
+                name: this.name,
+                // armyId: army.id,
+            }).execute();
+        } catch(error) {}
+    }
 }
 
 class MagicItemAvailability {
@@ -113,6 +175,27 @@ class BuilderMagicItem {
     required_organisation_ids: number[];
     equipment_categories: BuilderEquipmentCategory[];
     availabilities: MagicItemAvailability[];
+
+    public async save(queryBuilder: any) {
+        try {
+            await queryBuilder.insert().into(MagicItem).values({
+                id: this.id,
+                name: this.name,
+                description: this.description,
+                magicItemCategoryId: this.magic_item_category_id,
+                // armyId: army.id,
+                isMultiple: this.is_multiple,
+                max: this.max,
+                isDominant: this.is_dominant,
+                versionId: this.version_id,
+                valuePoints: this.value_points,
+                footOnly: this.only_foot,
+                disableMagicPathLimit: this.disable_magic_path_limit,
+                wizardOnly: this.only_wizard,
+                requiredOrganisationIds: this.required_organisation_ids
+            }).execute();
+        } catch(error) {}
+    }
 }
 
 class BuilderMagicStandard {
@@ -126,6 +209,23 @@ class BuilderMagicStandard {
     value_points: number;
     max: number;
     availabilities: any[] // todo: check type
+
+    public async save(queryBuilder: any) {
+        try {
+            await queryBuilder.insert().into(MagicStandard).values({
+                id: this.id,
+                versionId: this.version_id,
+                // armyId: army.id,
+                name: this.name,
+                description: this.description,
+                isMultiple: this.is_multiple,
+                infos: this.infos,
+                valuePoints: this.value_points,
+                max: this.max,
+                availabilities: this.availabilities
+            }).execute();
+        } catch(error) {}
+    }
 }
 
 class BuilderEquipment {
@@ -137,6 +237,26 @@ class BuilderEquipment {
     type_lvl: string;
     can_be_enchanted: boolean;
     equipment_categories: BuilderEquipmentCategory[];
+
+    public async save(queryBuilder: any) {
+        let categories: number[] = [];
+        for (const cat of this.equipment_categories) {
+            categories.push(cat.id);
+            await cat.save(queryBuilder);
+        }
+        try {
+            await queryBuilder.insert().into(Equipment).values({
+                id: this.id,
+                // armyId: army.id,
+                versionId: this.version_id,
+                name: this.name,
+                description: this.description,
+                typeLvl: this.type_lvl,
+                canBeEnchanted: this.can_be_enchanted,
+                equipmentCategories: categories,
+            }).execute();
+        } catch (error) {}
+    }
 }
 
 class BuilderSpecialRule {
@@ -146,6 +266,19 @@ class BuilderSpecialRule {
     name: string;
     description: string;
     type_lvl: string;
+
+    public async save(queryBuilder: any) {
+        try {
+            await queryBuilder.insert().into(SpecialRule).values({
+                id: this.id,
+                // armyId: army.id,
+                versionId: this.version_id,
+                name: this.name,
+                description: this.description,
+                typeLvl: this.type_lvl,
+            }).execute();
+        } catch(error) {}
+    }
 }
 
 class UnitCarac {
@@ -304,10 +437,35 @@ class BuilderUnit {
     equipment_unit_troops: EquipmentUnitTroop[];
     unit_options: UnitOption[];
     organisation_changes: any[]; // todo: check type
+}
+
+class BuilderEquipmentLimit {
+    id: number;
+    limit: string;
+    min: number;
+    max: number;
+    key: string;
+    equipment_id: number;
+    isItemByArmy: boolean;
 
 }
 
+class BuilderSpecialRuleLimit {
+    id: number;
+    limit: string;
+    min: number;
+    max: number;
+    key: string;
+    special_rule_id: number;
+    isItemByArmy: boolean;
+}
+
 class BuilderArmy {
+    constructor(json: BuilderArmy) {
+        for (const key of Object.keys(json)) {
+            this[key] = json[key];
+        }
+    }
     id: number;
     name: string;
     version_id: number;
@@ -330,9 +488,9 @@ class BuilderArmy {
     magic_items: BuilderMagicItem[];
     magic_standards: BuilderMagicStandard[];
     equipments: BuilderEquipment[];
-    equipment_limits: any[] // todo: check type
+    equipment_limits: BuilderEquipmentLimit[]
     special_rules: BuilderSpecialRule[];
-    special_rule_limits: any[] // todo: check type
+    special_rule_limits: BuilderSpecialRuleLimit[];
     units: BuilderUnit[];
 }
 
@@ -352,7 +510,51 @@ async function getArmyData(id): Promise<BuilderArmy> {
     });
 }
 
-async function save() {
+async function saveUnit(queryBuilder: any, unit: BuilderUnit) {
+    let troops: number[] = [];
+    let specialRules: number[] = [];
+    let equipments: number[] = [];
+    let options: number[] = [];
+
+    for (const troop of unit.troops) {
+        troops.push(troop.id);
+
+    }
+    for (const rule of unit.special_rule_unit_troops) {
+        specialRules.push(rule.id);
+    }
+    for (const equipment of unit.equipment_unit_troops) {
+        equipments.push(equipment.id);
+    }
+    for (const option of unit.unit_options) {
+        options.push(option.id);
+    }
+    try {
+        await queryBuilder.insert().into(Unit).values({
+            id: unit.id,
+            name: unit.name,
+            unitCategoryId: unit.unit_category_id,
+            principalOrganisationId: unit.principal_organisation_id,
+            minSize: unit.min_size,
+            maxSize: unit.max_size,
+            canBeGeneralAndBsb: unit.can_be_general_and_bsb,
+            position: unit.position,
+            magic: unit.magic,
+            notes: unit.notes,
+            isMount: unit.is_mount,
+            unitTypeId: unit.unit_type_id,
+            armyOrganisationId: unit.army_organisation_id,
+            valuePoints: unit.value_points,
+            characteristics: stringify(unit.carac),
+            troopIds: troops,
+            specialRuleUnitTroopIds: specialRules,
+            equipmentUnitTroopIds: equipments,
+            unitOptionIds: options,
+        }).execute();
+    } catch(error) {}
+}
+
+async function saveArmy() {
     let dataSource = new ProphecyDatasource();
 
     await dataSource.initialize();
@@ -363,57 +565,70 @@ async function save() {
         if (c.source !== "Official")
             continue;
         console.log(`Saving ${c.name}...`)
-        const army: BuilderArmy = await getArmyData(c.id);
-        // console.log(army.magic_item_categories);
+        let army: BuilderArmy = await getArmyData(c.id);
+        // console.log(army);
+        // await    army.save(queryBuilder);
         try {
-            await queryBuilder.insert().into(Army).values({
-                id: army.id,
-                name: army.name,
-                versionId: army.version_id,
-                categoryId: army.category_id,
-                source: army.source
-            }).execute();
+            let organisations: number[] = [];
+            let magicItemCateogries: number[] = [];
+            let magicItems: number[] = [];
+            let magicStandards: number[] = [];
+            let equipments: number[] = [];
+            let rules: number[] = [];
+            let units: number[] = [];
+
+            // console.log(this.army_organisations);
             for (const organisation of army.army_organisations) {
-                await queryBuilder.insert().into(ArmyOrganisation).values({
-                    id: organisation.id,
-                    name: organisation.name,
-                    description: organisation.description,
-                    isDefault: organisation.is_default,
-                    armyId: army.id
-                }).execute();
+                organisations.push(organisation.id);
+                // await organisation.save(queryBuilder);
+                let groups: number[] = [];
                 for (const group of organisation.army_organisation_groups) {
-                    await queryBuilder.insert().into(ArmyOrganisationGroup).values({
-                        id: group.id,
-                        armyOrganisationId: group.army_organisation_id,
-                        name: group.name,
-                        organisationGroupLimits: (group.army_organisation_group_limits === undefined ? null : stringify(group.army_organisation_group_limits)),
-                        organisationUnitLimits: (group.army_organisation_unit_limits === undefined ? null : stringify(group.army_organisation_unit_limits)),
-                        changeItemLimits: (group.change_item_limits === undefined ? null : stringify(group.change_item_limits))
-                    }).execute();
+                    groups.push(group.id)
+                    // await group.save(queryBuilder)
+                    try {
+                        await queryBuilder.insert().into(ArmyOrganisationGroup).values({
+                            id: group.id,
+                            armyOrganisationId: group.army_organisation_id,
+                            name: group.name,
+                            organisationGroupLimits: (group.army_organisation_group_limits === undefined ? null : stringify(group.army_organisation_group_limits)),
+                            organisationUnitLimits: (group.army_organisation_unit_limits === undefined ? null : stringify(group.army_organisation_unit_limits)),
+                            changeItemLimits: (group.change_item_limits === undefined ? null : stringify(group.change_item_limits))
+                        }).execute();
+                    } catch(error) { /* todo: duplicate */ }
                 }
+                try {
+                    await queryBuilder.insert().into(ArmyOrganisation).values({
+                        id: organisation.id,
+                        name: organisation.name,
+                        description: organisation.description,
+                        isDefault: organisation.is_default,
+                        organisationGroupIds: groups,
+                    }).execute();
+                } catch(error) {}
             }
-            for (const category of army.magic_item_categories) {
+            for (const cat of army.magic_item_categories) {
+                magicItemCateogries.push(cat.id);
+                // await cat.save(queryBuilder);
                 try {
                     await queryBuilder.insert().into(MagicItemCategory).values({
-                        id: category.id,
-                        versionId: category.version_id,
-                        name: category.name,
-                        isMultiple: category.is_multiple,
-                        max: category.max,
-                        armyId: army.id
+                        id: cat.id,
+                        versionId: cat.version_id,
+                        name: cat.name,
+                        isMultiple: cat.is_multiple,
+                        max: cat.max,
                     }).execute();
-                } catch(error) {
-                    // todo: duplicate
-                }
+                } catch(error) {}
             }
             for (const item of army.magic_items) {
+                magicItems.push(item.id);
+                // await item.save(queryBuilder);
                 try {
                     await queryBuilder.insert().into(MagicItem).values({
                         id: item.id,
                         name: item.name,
                         description: item.description,
                         magicItemCategoryId: item.magic_item_category_id,
-                        armyId: army.id,
+                        // armyId: army.id,
                         isMultiple: item.is_multiple,
                         max: item.max,
                         isDominant: item.is_dominant,
@@ -424,16 +639,15 @@ async function save() {
                         wizardOnly: item.only_wizard,
                         requiredOrganisationIds: item.required_organisation_ids
                     }).execute();
-                } catch(error) {
-                    // todo: duplicate
-                }
+                } catch(error) {}
             }
             for (const standard of army.magic_standards) {
+                magicStandards.push(standard.id);
                 try {
                     await queryBuilder.insert().into(MagicStandard).values({
                         id: standard.id,
                         versionId: standard.version_id,
-                        armyId: army.id,
+                        // armyId: army.id,
                         name: standard.name,
                         description: standard.description,
                         isMultiple: standard.is_multiple,
@@ -442,42 +656,77 @@ async function save() {
                         max: standard.max,
                         availabilities: standard.availabilities
                     }).execute();
-                } catch(error) {
-                    // todo: duplicate
-                }
+                } catch(error) {}
             }
             for (const equipment of army.equipments) {
-                let categories: number[] = [];
+                equipments.push(equipment.id);
+                // await equipment.save(queryBuilder);
+                let equipmentCategories: number[] = [];
                 for (const cat of equipment.equipment_categories) {
+                    equipmentCategories.push(cat.id);
+                    // await cat.save(queryBuilder);
                     try {
                         await queryBuilder.insert().into(EquipmentCategory).values({
                             id: cat.id,
                             versionId: cat.version_id,
                             name: cat.name,
-                            armyId: army.id,
+                            // armyId: army.id,
                         }).execute();
                     } catch(error) {}
-                    categories.push(cat.id);
                 }
                 try {
                     await queryBuilder.insert().into(Equipment).values({
                         id: equipment.id,
-                        armyId: army.id,
+                        // armyId: army.id,
                         versionId: equipment.version_id,
                         name: equipment.name,
                         description: equipment.description,
                         typeLvl: equipment.type_lvl,
                         canBeEnchanted: equipment.can_be_enchanted,
-                        equipmentCategories: categories,
+                        equipmentCategories: equipmentCategories,
                     }).execute();
-                } catch (error) {
-                    // todo: duplicate (mainly)
-                }
+                } catch (error) {}
             }
+            for (const rule of army.special_rules) {
+                rules.push(rule.id);
+                // await rule.save(queryBuilder);
+                try {
+                    await queryBuilder.insert().into(SpecialRule).values({
+                        id: rule.id,
+                        // armyId: army.id,
+                        versionId: rule.version_id,
+                        name: rule.name,
+                        description: rule.description,
+                        typeLvl: rule.type_lvl,
+                    }).execute();
+                } catch(error) {}
+            }
+            for (const unit of army.units) {
+                units.push(unit.id);
+                // await unit.save(queryBuilder);
+                await saveUnit(queryBuilder, unit);
+            }
+            try {
+                await queryBuilder.insert().into(Army).values({
+                    id: army.id,
+                    name: army.name,
+                    versionId: army.version_id,
+                    categoryId: army.category_id,
+                    source: army.source,
+                    equipmentLimits: stringify(army.equipment_limits),
+                    specialRuleLimits: stringify(army.special_rule_limits),
+                    organisationIds: organisations,
+                    magicItemCategoryIds: magicItemCateogries,
+                    magicItemIds: magicItemCateogries,
+                    magicStandardIds: magicStandards,
+                    equipmentIds: equipments,
+                    ruleIds: rules,
+                    unitIds: units,
+                }).execute();
+            } catch(error) {}
         } catch(error) {
             console.error(error);
         }
-
         console.log("Done!\n")
     }
 
@@ -485,7 +734,7 @@ async function save() {
 }
 
 function main() {
-    save().then(() => { console.log("Done !")});
+    saveArmy().then(() => { console.log("Armies were saved successfully !")});
 }
 
 main()

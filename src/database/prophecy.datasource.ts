@@ -16,6 +16,8 @@ import { MagicItem } from "../army/magic-item/magic-item.entity";
 import { MagicStandard } from "../army/magic-standard/magic-standard.entity";
 import { Equipment } from "../army/equipment/equipment.entity";
 import { EquipmentCategory } from "../army/equipment/category/equipment-category.entity";
+import { SpecialRule } from "../army/special-rule/special-rule.entity";
+import { Troop } from "../army/unit/troop/troop.entity";
 
 dotenv.config()
 
@@ -25,8 +27,6 @@ const DB_PORT: number = +process.env.DATABASE_PORT;
 const DB_USERNAME = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DIALECT = "postgres";
-
-console.log(DB_PASSWORD)
 
 export class ProphecyDatasource extends DataSource {
     constructor() {
@@ -47,6 +47,8 @@ export class ProphecyDatasource extends DataSource {
                 Equipment,
                 EquipmentCategory,
                 Unit,
+                Troop,
+                SpecialRule,
                 ArmyList,
                 ArmyListUnit,
                 ArmyListUnitOption,
