@@ -564,59 +564,60 @@ const ARMY_LIST_RULES_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
 ];
 
 
-export class Initialization1667924495954 implements MigrationInterface {
+export class UsersInitialization1667924495954 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         // users
         await queryRunner.createTable(PROFILES_TABLES, true);
         // armies
-        await queryRunner.createTable(MODIFIERS_TABLE, true);
-        await queryRunner.createTable(OPTIONS_TABLE, true);
-        await queryRunner.createTable(RULES_TABLE, true);
-        await queryRunner.createTable(SPECIAL_ITEM_CATEGORIES_TABLE, true);
-        await queryRunner.createTable(SPECIAL_ITEMS_TABLE, true);
-        await queryRunner.createTable(UNIT_CATEGORIES_TABLE, true);
-        await queryRunner.createTable(UNIT_PROFILES_TABLE, true);
-        await queryRunner.createTable(UNITS_TABLE, true);
-        await queryRunner.createTable(UPGRADE_CATEGORIES_TABLE, true);
-        await queryRunner.createTable(UPGRADES_TABLE, true);
-        await queryRunner.createTable(ARMIES_TABLE, true);
+        // await queryRunner.createTable(MODIFIERS_TABLE, true);
+        // await queryRunner.createTable(OPTIONS_TABLE, true);
+        // await queryRunner.createTable(RULES_TABLE, true);
+        // await queryRunner.createTable(SPECIAL_ITEM_CATEGORIES_TABLE, true);
+        // await queryRunner.createTable(SPECIAL_ITEMS_TABLE, true);
+        // await queryRunner.createTable(UNIT_CATEGORIES_TABLE, true);
+        // await queryRunner.createTable(UNIT_PROFILES_TABLE, true);
+        // await queryRunner.createTable(UNITS_TABLE, true);
+        // await queryRunner.createTable(UPGRADE_CATEGORIES_TABLE, true);
+        // await queryRunner.createTable(UPGRADES_TABLE, true);
+        // await queryRunner.createTable(ARMIES_TABLE, true);
+
         // army lists
-        await queryRunner.createTable(ARMY_LISTS_TABLE, true);
-        await queryRunner.createTable(ARMY_LIST_UNITS_TABLE, true);
-        await queryRunner.createForeignKeys(ARMY_LIST_UNITS_TABLE, ARMY_LIST_UNITS_TABLE_FOREIGN_KEYS);
-        await queryRunner.createTable(ARMY_LIST_UNITS_OPTIONS_TABLE, true);
-        await queryRunner.createForeignKeys(ARMY_LIST_UNITS_OPTIONS_TABLE, ARMY_LIST_UNITS_OPTIONS_TABLE_FOREIGN_KEYS);
-        await queryRunner.createTable(ARMY_LIST_UNITS_UPGRADES_TABLE, true);
-        await queryRunner.createForeignKeys(ARMY_LIST_UNITS_UPGRADES_TABLE, ARMY_LIST_UNITS_UPGRADES_TABLE_FOREIGN_KEYS);
-        await queryRunner.createForeignKeys(ARMY_LISTS_TABLE, ARMY_LIST_TABLE_FOREIGN_KEYS);
-        await queryRunner.createTable(ARMY_LIST_RULES_TABLE, true);
-        await queryRunner.createTable(ARMY_LIST_UPGRADES_TABLE, true);
-        await queryRunner.createForeignKeys(ARMY_LIST_RULES_TABLE, ARMY_LIST_RULES_TABLE_FOREIGN_KEYS);
-        await queryRunner.createForeignKeys(ARMY_LIST_UPGRADES_TABLE, ARMY_LIST_UPGRADES_TABLE_FOREIGN_KEYS);
+        // await queryRunner.createTable(ARMY_LISTS_TABLE, true);
+        // await queryRunner.createTable(ARMY_LIST_UNITS_TABLE, true);
+        // await queryRunner.createForeignKeys(ARMY_LIST_UNITS_TABLE, ARMY_LIST_UNITS_TABLE_FOREIGN_KEYS);
+        // await queryRunner.createTable(ARMY_LIST_UNITS_OPTIONS_TABLE, true);
+        // await queryRunner.createForeignKeys(ARMY_LIST_UNITS_OPTIONS_TABLE, ARMY_LIST_UNITS_OPTIONS_TABLE_FOREIGN_KEYS);
+        // await queryRunner.createTable(ARMY_LIST_UNITS_UPGRADES_TABLE, true);
+        // await queryRunner.createForeignKeys(ARMY_LIST_UNITS_UPGRADES_TABLE, ARMY_LIST_UNITS_UPGRADES_TABLE_FOREIGN_KEYS);
+        // await queryRunner.createForeignKeys(ARMY_LISTS_TABLE, ARMY_LIST_TABLE_FOREIGN_KEYS);
+        // await queryRunner.createTable(ARMY_LIST_RULES_TABLE, true);
+        // await queryRunner.createTable(ARMY_LIST_UPGRADES_TABLE, true);
+        // await queryRunner.createForeignKeys(ARMY_LIST_RULES_TABLE, ARMY_LIST_RULES_TABLE_FOREIGN_KEYS);
+        // await queryRunner.createForeignKeys(ARMY_LIST_UPGRADES_TABLE, ARMY_LIST_UPGRADES_TABLE_FOREIGN_KEYS);
 
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         // army lists
-        await queryRunner.dropTable(ARMY_LIST_UPGRADES_TABLE, true);
-        await queryRunner.dropTable(ARMY_LIST_RULES_TABLE, true);
-        await queryRunner.dropTable(ARMY_LIST_UNITS_OPTIONS_TABLE, true);
-        await queryRunner.dropTable(ARMY_LIST_UNITS_UPGRADES_TABLE, true);
-        await queryRunner.dropTable(ARMY_LIST_UNITS_TABLE, true, true, );
-        await queryRunner.dropTable(ARMY_LISTS_TABLE, true, false);
+        // await queryRunner.dropTable(ARMY_LIST_UPGRADES_TABLE, true);
+        // await queryRunner.dropTable(ARMY_LIST_RULES_TABLE, true);
+        // await queryRunner.dropTable(ARMY_LIST_UNITS_OPTIONS_TABLE, true);
+        // await queryRunner.dropTable(ARMY_LIST_UNITS_UPGRADES_TABLE, true);
+        // await queryRunner.dropTable(ARMY_LIST_UNITS_TABLE, true, true, );
+        // await queryRunner.dropTable(ARMY_LISTS_TABLE, true, false);
 
         // armies
-        await queryRunner.dropTable(MODIFIERS_TABLE, true);
-        await queryRunner.dropTable(OPTIONS_TABLE, true);
-        await queryRunner.dropTable(SPECIAL_ITEM_CATEGORIES_TABLE, true);
-        await queryRunner.dropTable(SPECIAL_ITEMS_TABLE, true);
-        await queryRunner.dropTable(UNIT_CATEGORIES_TABLE, true);
-        await queryRunner.dropTable(UNIT_PROFILES_TABLE, true);
-        await queryRunner.dropTable(UNITS_TABLE, true);
-        await queryRunner.dropTable(UPGRADE_CATEGORIES_TABLE, true);
-        await queryRunner.dropTable(UPGRADES_TABLE, true);
-        await queryRunner.dropTable(ARMIES_TABLE, true);
+        // await queryRunner.dropTable(MODIFIERS_TABLE, true);
+        // await queryRunner.dropTable(OPTIONS_TABLE, true);
+        // await queryRunner.dropTable(SPECIAL_ITEM_CATEGORIES_TABLE, true);
+        // await queryRunner.dropTable(SPECIAL_ITEMS_TABLE, true);
+        // await queryRunner.dropTable(UNIT_CATEGORIES_TABLE, true);
+        // await queryRunner.dropTable(UNIT_PROFILES_TABLE, true);
+        // await queryRunner.dropTable(UNITS_TABLE, true);
+        // await queryRunner.dropTable(UPGRADE_CATEGORIES_TABLE, true);
+        // await queryRunner.dropTable(UPGRADES_TABLE, true);
+        // await queryRunner.dropTable(ARMIES_TABLE, true);
         // users
         await queryRunner.dropTable(PROFILES_TABLES, true);
     }

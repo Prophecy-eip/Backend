@@ -1,15 +1,6 @@
 import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
 
-import { Rule } from "../army/rule/rule.entity";
-import { UnitCategory } from "../army/unit/unit-category/unit-category.entity";
-import { Upgrade } from "../army/upgrade/upgrade.entity";
-import { UpgradeCategory } from "../army/upgrade/upgrade-category/upgrade-category.entity";
-import { SpecialItemCategory } from "../army/special-item/special-item-category/special-item-category.entity";
-import { SpecialItem } from "../army/special-item/special-item.entity";
-import { Option } from "../army/option/option.entity";
-import { UnitProfile } from "../army/unit/unit-profile/unit-profile.entity";
-import { Modifier } from "../army/modifier/modifier.entity";
 import { Unit } from "../army/unit/unit.entity";
 import { ArmyList } from "../army-list/army-list.entity";
 import { ArmyListUnit } from "../army-list/army-list-unit/army-list-unit.entity";
@@ -17,6 +8,14 @@ import { ArmyListUnitOption } from "../army-list/army-list-unit/army-list-unit-o
 import { ArmyListUnitUpgrade } from "../army-list/army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.entity";
 import { ArmyListUpgrade } from "../army-list/army-list-upgrade/army-list-upgrade.entity";
 import { ArmyListRule } from "../army-list/army-list-rule/army-list-rule.entity";
+import { Army } from "../army/army.entity";
+import { ArmyOrganisation } from "../army/organisation/army-organisation.entity";
+import { ArmyOrganisationGroup } from "../army/organisation/group/army-organisation-group.entity";
+import { MagicItemCategory } from "../army/magic-item/category/magic-item-category.entity";
+import { MagicItem } from "../army/magic-item/magic-item.entity";
+import { MagicStandard } from "../army/magic-standard/magic-standard.entity";
+import { Equipment } from "../army/equipment/equipment.entity";
+import { EquipmentCategory } from "../army/equipment/category/equipment-category.entity";
 
 dotenv.config()
 
@@ -26,6 +25,8 @@ const DB_PORT: number = +process.env.DATABASE_PORT;
 const DB_USERNAME = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DIALECT = "postgres";
+
+console.log(DB_PASSWORD)
 
 export class ProphecyDatasource extends DataSource {
     constructor() {
@@ -37,16 +38,15 @@ export class ProphecyDatasource extends DataSource {
             password: DB_PASSWORD,
             database: DB,
             entities: [
-                UnitCategory,
+                Army,
+                ArmyOrganisation,
+                ArmyOrganisationGroup,
+                MagicItemCategory,
+                MagicItem,
+                MagicStandard,
+                Equipment,
+                EquipmentCategory,
                 Unit,
-                Rule,
-                Upgrade,
-                UpgradeCategory,
-                SpecialItemCategory,
-                SpecialItem,
-                Option,
-                UnitProfile,
-                Modifier,
                 ArmyList,
                 ArmyListUnit,
                 ArmyListUnitOption,

@@ -1,3 +1,14 @@
+import { ProphecyDatasource } from "../../src/database/prophecy.datasource";
+import { Army } from "../../src/army/army.entity";
+import { ArmyOrganisation } from "../../src/army/organisation/army-organisation.entity";
+import { ArmyOrganisationGroup } from "../../src/army/organisation/group/army-organisation-group.entity";
+import { stringify } from "ts-jest";
+import { MagicItemCategory } from "../../src/army/magic-item/category/magic-item-category.entity";
+import { MagicItem } from "../../src/army/magic-item/magic-item.entity";
+import { MagicStandard } from "../../src/army/magic-standard/magic-standard.entity";
+import { Equipment } from "../../src/army/equipment/equipment.entity";
+import { EquipmentCategory } from "../../src/army/equipment/category/equipment-category.entity";
+
 class ArmyCredentials {
     id: number;
     name: string;
@@ -10,14 +21,14 @@ class ArmyCredentials {
     large_logo: string;
 }
 
-class Organisation {
+class BuilderOrganisation {
     id: number;
     name: string;
     position: number;
     medium_logo: string;
 }
 
-class ArmyOrganisationGroupLimit {
+class BuilderArmyOrganisationGroupLimit {
     id: number;
     army_organisation_group_id: number;
     points_min: number;
@@ -26,7 +37,6 @@ class ArmyOrganisationGroupLimit {
     value: number;
     repeat_interval: number;
     repeat_value: number;
-
 }
 
 class ArmyOrganisationUnitLimit {
@@ -37,27 +47,33 @@ class ArmyOrganisationUnitLimit {
     unit_ids: number[];
     availabilities: number[]
 }
-class ArmyOrganisationGroup {
+class BuilderArmyOrganisationGroup {
     id: number;
+    /**
+     * Id of the ArmyOrganisation parent object
+     */
     army_organisation_id: number;
-    organisation_id: number;
+    /**
+     * Id of the organisation category
+     */
+    organisation_id: number; // unused
     name: string;
-    position: number;
-    medium_logo: string;
-    army_organisation_group_limits: ArmyOrganisationGroupLimit[];
+    position: number; // unused
+    medium_logo: string; // unused
+    army_organisation_group_limits: BuilderArmyOrganisationGroupLimit[];
     army_organisation_unit_limits: ArmyOrganisationUnitLimit[];
     change_item_limits: any[]
 }
 
-class ArmyOrganisation {
-    is: number;
+class BuilderArmyOrganisation {
+    id: number;
     name: string;
     description: string;
     is_default: boolean;
-    army_organisation_groups: ArmyOrganisationGroup[];
+    army_organisation_groups: BuilderArmyOrganisationGroup[];
 }
 
-class MagicItemCategory {
+class BuilderMagicItemCategory {
     id: number;
     version_id: number;
     name: string;
@@ -65,7 +81,7 @@ class MagicItemCategory {
     max: number;
 }
 
-class EquipmentCategory {
+class BuilderEquipmentCategory {
     id: number;
     version_id: number;
     name: string;
@@ -78,9 +94,9 @@ class MagicItemAvailability {
     unit_option_id: number;
     size: string;
     special_rule_id: number;
-    action: string;
+    action: string; // todo: check possible values
 }
-class MagicItem {
+class BuilderMagicItem {
     id: number;
     name: string;
     description: string;
@@ -95,11 +111,11 @@ class MagicItem {
     disable_magic_path_limit: false;
     only_wizard: string[]
     required_organisation_ids: number[];
-    equipment_categories: EquipmentCategory[];
+    equipment_categories: BuilderEquipmentCategory[];
     availabilities: MagicItemAvailability[];
 }
 
-class MagicStandard {
+class BuilderMagicStandard {
     id: number;
     version_id: number;
     army_id: number;
@@ -112,7 +128,7 @@ class MagicStandard {
     availabilities: any[] // todo: check type
 }
 
-class Equipment {
+class BuilderEquipment {
     id: number;
     army_id: string;
     version_id: number;
@@ -120,10 +136,10 @@ class Equipment {
     description: string;
     type_lvl: string;
     can_be_enchanted: boolean;
-    equipment_categories: EquipmentCategory[];
+    equipment_categories: BuilderEquipmentCategory[];
 }
 
-class SpecialRule {
+class BuilderSpecialRule {
     id: number;
     army_id: number;
     version_id: number;
@@ -232,7 +248,7 @@ class UnitOption {
     is_per_model: boolean;
     is_only_foot: boolean;
     mount_id: number;
-    mount_and_carac_points: boolean;
+    mount_and_carac_points: boolean; ////////////////////////
     organisation_mode: string;
     is_multiple: boolean;
     is_required: boolean;
@@ -252,17 +268,17 @@ class UnitOption {
     unit_option_limits: UnitOptionLimits[];
     availabilities: any[]; // todo: check type
     modifiers: any[]; // todo: check type
-    magic_item_categories: MagicItemCategory[]; // todo: check type
+    magic_item_categories: BuilderMagicItemCategory[];
     unit_option_change_special_rules: any[]; // todo: check type
     unit_option_change_equipments: any[]; // todo: check type
     unit_option_change_profils: any[]; // todo: check type
-    equipments: Equipment[];
+    equipments: BuilderEquipment[];
 }
 
-class Unit {
+class BuilderUnit {
     id: number;
     name: string;
-    is_desabled: boolean;
+    is_desabled: boolean; // unused
     army_id: number;
     unit_category_id: number;
     principal_organisation_id: number;
@@ -291,31 +307,33 @@ class Unit {
 
 }
 
-class Army {
+class BuilderArmy {
     id: number;
     name: string;
-    version_id: string;
-    source: string;
-    is_disabled: boolean;
-    initials: string;
-    updated_at: number;
-    medium_logo: string;
-    large_logo: string;
+    version_id: number;
     /**
-     * Army id common to all versions
+     * Official or not
      */
-    category_id: string;
-    organisations: Organisation[];
-    army_organisations: ArmyOrganisation[];
-    magic_item_categories: MagicItemCategory[];
-    magic_items: MagicItem[];
-    magic_standards: MagicStandard;
-    equipments: Equipment[];
+    source: string; // unused
+    is_disabled: boolean; // unused
+    initials: string; // unused
+    updated_at: number; // unused
+    medium_logo: string; // unused
+    large_logo: string; // unused
+    /**
+     * BuilderArmy id common to all versions
+     */
+    category_id: number;
+    organisations: BuilderOrganisation[];
+    army_organisations: BuilderArmyOrganisation[];
+    magic_item_categories: BuilderMagicItemCategory[];
+    magic_items: BuilderMagicItem[];
+    magic_standards: BuilderMagicStandard[];
+    equipments: BuilderEquipment[];
     equipment_limits: any[] // todo: check type
-    special_rules: SpecialRule[];
+    special_rules: BuilderSpecialRule[];
     special_rule_limits: any[] // todo: check type
-    units: Unit[];
-
+    units: BuilderUnit[];
 }
 
 async function getArmiesCredentials(): Promise<ArmyCredentials[]> {
@@ -326,23 +344,148 @@ async function getArmiesCredentials(): Promise<ArmyCredentials[]> {
     });
 }
 
-async function getArmyData(id): Promise<Army> {
+async function getArmyData(id): Promise<BuilderArmy> {
     return await fetch(`https://9thbuilder.com/en/api/v1/ninth_age/armies/${id}.json`)
         .then(res => res.json())
         .then(res => {
-            return res as Army;
+            return res as BuilderArmy;
     });
 }
 
-function main() {
-    getArmiesCredentials().then(credentials => {
-        for (const c of credentials) {
-            console.log(`Retrieving: ${c.name}...`)
-            getArmyData(c.id).then(data => {
+async function save() {
+    let dataSource = new ProphecyDatasource();
 
-            });
+    await dataSource.initialize();
+    let queryBuilder = dataSource.createQueryBuilder();
+
+    const credentials: ArmyCredentials[] = await getArmiesCredentials();
+    for (const c of credentials) {
+        if (c.source !== "Official")
+            continue;
+        console.log(`Saving ${c.name}...`)
+        const army: BuilderArmy = await getArmyData(c.id);
+        // console.log(army.magic_item_categories);
+        try {
+            await queryBuilder.insert().into(Army).values({
+                id: army.id,
+                name: army.name,
+                versionId: army.version_id,
+                categoryId: army.category_id,
+                source: army.source
+            }).execute();
+            for (const organisation of army.army_organisations) {
+                await queryBuilder.insert().into(ArmyOrganisation).values({
+                    id: organisation.id,
+                    name: organisation.name,
+                    description: organisation.description,
+                    isDefault: organisation.is_default,
+                    armyId: army.id
+                }).execute();
+                for (const group of organisation.army_organisation_groups) {
+                    await queryBuilder.insert().into(ArmyOrganisationGroup).values({
+                        id: group.id,
+                        armyOrganisationId: group.army_organisation_id,
+                        name: group.name,
+                        organisationGroupLimits: (group.army_organisation_group_limits === undefined ? null : stringify(group.army_organisation_group_limits)),
+                        organisationUnitLimits: (group.army_organisation_unit_limits === undefined ? null : stringify(group.army_organisation_unit_limits)),
+                        changeItemLimits: (group.change_item_limits === undefined ? null : stringify(group.change_item_limits))
+                    }).execute();
+                }
+            }
+            for (const category of army.magic_item_categories) {
+                try {
+                    await queryBuilder.insert().into(MagicItemCategory).values({
+                        id: category.id,
+                        versionId: category.version_id,
+                        name: category.name,
+                        isMultiple: category.is_multiple,
+                        max: category.max,
+                        armyId: army.id
+                    }).execute();
+                } catch(error) {
+                    // todo: duplicate
+                }
+            }
+            for (const item of army.magic_items) {
+                try {
+                    await queryBuilder.insert().into(MagicItem).values({
+                        id: item.id,
+                        name: item.name,
+                        description: item.description,
+                        magicItemCategoryId: item.magic_item_category_id,
+                        armyId: army.id,
+                        isMultiple: item.is_multiple,
+                        max: item.max,
+                        isDominant: item.is_dominant,
+                        versionId: item.version_id,
+                        valuePoints: item.value_points,
+                        footOnly: item.only_foot,
+                        disableMagicPathLimit: item.disable_magic_path_limit,
+                        wizardOnly: item.only_wizard,
+                        requiredOrganisationIds: item.required_organisation_ids
+                    }).execute();
+                } catch(error) {
+                    // todo: duplicate
+                }
+            }
+            for (const standard of army.magic_standards) {
+                try {
+                    await queryBuilder.insert().into(MagicStandard).values({
+                        id: standard.id,
+                        versionId: standard.version_id,
+                        armyId: army.id,
+                        name: standard.name,
+                        description: standard.description,
+                        isMultiple: standard.is_multiple,
+                        infos: standard.infos,
+                        valuePoints: standard.value_points,
+                        max: standard.max,
+                        availabilities: standard.availabilities
+                    }).execute();
+                } catch(error) {
+                    // todo: duplicate
+                }
+            }
+            for (const equipment of army.equipments) {
+                let categories: number[] = [];
+                for (const cat of equipment.equipment_categories) {
+                    try {
+                        await queryBuilder.insert().into(EquipmentCategory).values({
+                            id: cat.id,
+                            versionId: cat.version_id,
+                            name: cat.name,
+                            armyId: army.id,
+                        }).execute();
+                    } catch(error) {}
+                    categories.push(cat.id);
+                }
+                try {
+                    await queryBuilder.insert().into(Equipment).values({
+                        id: equipment.id,
+                        armyId: army.id,
+                        versionId: equipment.version_id,
+                        name: equipment.name,
+                        description: equipment.description,
+                        typeLvl: equipment.type_lvl,
+                        canBeEnchanted: equipment.can_be_enchanted,
+                        equipmentCategories: categories,
+                    }).execute();
+                } catch (error) {
+                    // todo: duplicate (mainly)
+                }
+            }
+        } catch(error) {
+            console.error(error);
         }
-     })
+
+        console.log("Done!\n")
+    }
+
+    await dataSource.destroy();
+}
+
+function main() {
+    save().then(() => { console.log("Done !")});
 }
 
 main()

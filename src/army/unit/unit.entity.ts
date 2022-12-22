@@ -1,52 +1,71 @@
-import { AfterLoad, Column, Entity, PrimaryColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column } from "typeorm";
 
-import { ParserHelper } from "../../helper/parser.helper";
-import { Option } from "../option/option.entity";
-import { UnitProfile } from "./unit-profile/unit-profile.entity";
-import { ProphecyDatasource } from "../../database/prophecy.datasource";
+class Characteristic {
+    public type: string;
+    public base: string;
+    public height: string;
+    public unitTypeId: string;
+    public adv: string;
+    public mar: string;
+    public dis: string;
+    public evoked: string;
+    public hp: string;
+    public def: string;
+    public res: string;
+    public arm: string;
+    public aeg: string;
+}
 
 @Entity("units")
 export class Unit {
     @PrimaryColumn()
-    public id: string;
+    public id: number;
 
     @Column()
     public name: string;
 
-    @Column({ type: "varchar" })
-    public category: string;
+    @Column({ name: "army_id" })
+    public armyId: number;
+
+    @Column({ name: "unit_category_id" })
+    public unitCategoryId: number;
+
+    @Column({ name: "principal_organisation_id" })
+    public principalOrganisationId: number;
+
+    @Column({ name: "min_size" })
+    public minSize: number;
+
+    @Column({ name: "max_size" })
+    public maxSize: number;
+
+    @Column({ name: "can_be_general_and_bsb" })
+    public canBeGeneralAndBsb: boolean;
 
     @Column()
-    public cost: string;
+    public position: number;
 
-    @Column({ name: "options" })
-    private optionsIds: string;
+    @Column()
+    public magic: string; // todo: check type
 
-    @Column({type: "varchar", name: "profiles"})
-    private profilesIds: string;
+    @Column()
+    public notes: string; // todo: check type
 
-    public options: Option[] = []
-    public profiles: UnitProfile[] = []
+    @Column({ name: "is_mount" })
+    public isMount: boolean;
 
-    @AfterLoad()
-    private async loadEntities() {
-        const optionsIds: string[] = ParserHelper.stringToArray(this.optionsIds);
-        const profilesIds: string[] = ParserHelper.stringToArray(this.profilesIds);
-        let dataSource: ProphecyDatasource = new ProphecyDatasource();
+    @Column({ name: "unit_type_id"})
+    public unitTypeId: number;
 
-        await dataSource.initialize();
-        for (const id of optionsIds) {
-            const o: Option = await dataSource.getRepository(Option).findOneBy([{ id: id }]);
-            if (o === null)
-                continue;
-            this.options.push(o)
-        }
-        for (const id of profilesIds) {
-            const p: UnitProfile = await dataSource.getRepository(UnitProfile).findOneBy([{ id: id }]);
-            if (p === null)
-                continue;
-            this.profiles.push(p);
-        }
-        await dataSource.destroy();
-    }
+    @Column({ name: "army_organisation_id" })
+    public armyOrganisationId: number;
+
+    @Column({ name: "value_points" })
+    public valuePoints: number;
+
+    @Column({ name: "add_value_points"})
+    public addValuePoints: number;
+
+    @Column({ type: "varchar" })
+    public characteristics: Characteristic;
 }
