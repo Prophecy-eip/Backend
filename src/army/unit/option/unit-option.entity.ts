@@ -1,9 +1,13 @@
-import { Entity, Column, PrimaryColumn } from "typeorm";
+import { Entity, Column, PrimaryColumn, AfterLoad } from "typeorm";
+
+import { Equipment } from "../../equipment/equipment.entity";
+import { MagicItemCategory } from "../../magic-item/category/magic-item-category.entity";
+import { ProphecyDatasource } from "../../../database/prophecy.datasource";
 
 @Entity("unit_options")
 export class UnitOption {
     @PrimaryColumn()
-    public id: string;
+    public id: number;
 
     @Column({ name: "unit_id" })
     public unitId: number;
@@ -109,4 +113,19 @@ export class UnitOption {
 
     @Column({ name: "unit_option_change_profiles"})
     public unitOptionChangeProfiles: string;
+
+    public equipments: Equipment[] = [];
+    public magicItemCategories: MagicItemCategory[] = [];
+
+    @AfterLoad()
+    private async load() {
+        let datasource: ProphecyDatasource = new ProphecyDatasource();
+
+        await datasource.initialize();
+        for (const id of this.magicItemCategoryIds)
+            this.magicItemCategories.push(await datasource.getRepository(MagicItemCategory).findOneBy({ id: id }));
+        for (const id of this.equipmentIds)
+            this.equipments.push(await datasource.getRepository(Equipment).findOneBy({ id: id }));
+        await datasource.destroy();
+    }
 }

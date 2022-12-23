@@ -14,7 +14,9 @@ services:
       - prophecy
 
   server:
-    build: .
+    build:
+      dockerfile: ./server.Dockerfile
+      context: .
     container_name: nestjs-server
     command: ["yarn", "start"]
     ports:
@@ -24,8 +26,10 @@ services:
 
   run_migration:
     image: backend_server
-    build: .
-    command: ["yarn",  "run", "typeorm", "migration:run", "-d", "src/database/migration/ormconfig.ts"]
+    build:
+      dockerfile: ./server.Dockerfile
+      context: .
+    command: ["yarn",  "run", "typeorm", "migration:run", "-d", "./src/database/migration/ormconfig.ts"]
     ports:
       - "${MIGRATION_PORT}:${MIGRATION_PORT}"
     networks:
@@ -33,7 +37,9 @@ services:
 
   revert_migration:
     image: backend_server
-    build: .
+    build:
+      dockerfile: ./server.Dockerfile
+      context: .
     command: ["yarn",  "run", "typeorm", "migration:revert", "-d", "src/database/migration/ormconfig.ts"]
     ports:
       - "${MIGRATION_PORT}:${MIGRATION_PORT}"
@@ -52,10 +58,12 @@ services:
       networks:
         - prophecy
 
-#  script_setup_armies:
-#      build: ./scripts/armies_database/
-#      networks:
-#        - prophecy
+  script_setup_armies:
+      build:
+        dockerfile: armies_data.Dockerfile
+        context: .
+      networks:
+        - prophecy
 
 volumes:
   prophecy:

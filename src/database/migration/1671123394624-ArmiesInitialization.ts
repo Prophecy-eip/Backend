@@ -1,5 +1,4 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm"
-import { stringify } from "ts-jest";
 
 const ARMIES_TABLE: Table = new Table({
     name: "armies",
@@ -80,21 +79,8 @@ const EQUIPMENT_CATEGORIES_TABLE: Table = new Table({
             name: "name",
             type: "varchar",
         },
-        // {
-        //     name: "army_id",
-        //     type: "int",
-        // }
     ]
 });
-
-// const EQUIPMENT_CATEGORIES_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
-//     new TableForeignKey({
-//         columnNames: ["army_id"],
-//         referencedColumnNames: ["id"],
-//         referencedTableName: "armies",
-//         onDelete: "CASCADE"
-//     }),
-// ];
 
 const EQUIPMENTS_TABLE: Table = new Table({
     name: "equipments",
@@ -103,17 +89,13 @@ const EQUIPMENTS_TABLE: Table = new Table({
             name: "id",
             type: "int",
             isPrimary: true
-        },
-        // {
-        //     name: "army_id",
-        //     type: "int",
-        // },
-        {
+        }, {
             name: "version_id",
             type: "int",
         }, {
             name: "name",
             type: "varchar",
+            isNullable: true,
         }, {
             name: "description",
             type: "varchar",
@@ -131,15 +113,6 @@ const EQUIPMENTS_TABLE: Table = new Table({
         }
     ]
 });
-
-// const EQUIPMENTS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
-//     new TableForeignKey({
-//         columnNames: ["army_id"],
-//         referencedColumnNames: ["id"],
-//         referencedTableName: "armies",
-//         onDelete: "CASCADE"
-//     }),
-// ];
 
 const ARMY_ORGANISATION_TABLE: Table = new Table({
     name: "army_organisations",
@@ -166,15 +139,6 @@ const ARMY_ORGANISATION_TABLE: Table = new Table({
         }
     ]
 });
-
-// const ARMY_ORGANISATION_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
-//     new TableForeignKey({
-//         columnNames: ["army_id"],
-//         referencedColumnNames: ["id"],
-//         referencedTableName: "armies",
-//         onDelete: "CASCADE"
-//     }),
-// ];
 
 const ARMY_ORGANISATION_GROUP_TABLE: Table = new Table({
     name: "army_organisation_groups",
@@ -207,14 +171,14 @@ const ARMY_ORGANISATION_GROUP_TABLE: Table = new Table({
     ]
 });
 
-const ARMY_ORGANISATION_GROUP_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
-    new TableForeignKey({
-        columnNames: ["army_organisation_id"],
-        referencedColumnNames: ["id"],
-        referencedTableName: "army_organisations",
-        onDelete: "CASCADE"
-    }),
-];
+// const ARMY_ORGANISATION_GROUP_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
+//     new TableForeignKey({
+//         columnNames: ["army_organisation_id"],
+//         referencedColumnNames: ["id"],
+//         referencedTableName: "army_organisations",
+//         onDelete: "CASCADE"
+//     }),
+// ];
 
 const MAGIC_ITEM_CATEGORIES_TABLE: Table = new Table({
    name: "magic_item_categories",
@@ -259,10 +223,7 @@ const MAGIC_ITEMS_TABLE: Table = new Table({
         }, {
             name: "magic_item_category_id",
             type: "int",
-        },/* {
-            name: "army_id",
-            type: "int",
-        }, */{
+        }, {
             name: "is_multiple",
             type: "boolean",
         }, {
@@ -276,7 +237,7 @@ const MAGIC_ITEMS_TABLE: Table = new Table({
             type: "int",
         }, {
             name: "value_points",
-            type: "int",
+            type: "float",
         }, {
             name: "foot_only",
             type: "boolean",
@@ -301,12 +262,7 @@ const MAGIC_ITEMS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         referencedColumnNames: ["id"],
         referencedTableName: "magic_item_categories",
         onDelete: "CASCADE"
-    }), /* new TableForeignKey({
-        columnNames: ["army_id"],
-        referencedColumnNames: ["id"],
-        referencedTableName: "armies",
-        onDelete: "CASCADE"
-    }),*/
+    }),
 ];
 
 const MAGIC_STANDARDS_TABLE: Table = new Table({
@@ -319,10 +275,7 @@ const MAGIC_STANDARDS_TABLE: Table = new Table({
         }, {
             name: "version_id",
             type: "int"
-        },/* {
-            name: "army_id",
-            type: "int"
-        },*/ {
+        }, {
             name: "name",
             type: "varchar"
         }, {
@@ -338,7 +291,7 @@ const MAGIC_STANDARDS_TABLE: Table = new Table({
             isNullable: true,
         }, {
             name: "value_points",
-            type: "int"
+            type: "float"
         }, {
             name: "max",
             type: "int"
@@ -350,15 +303,6 @@ const MAGIC_STANDARDS_TABLE: Table = new Table({
     ]
 });
 
-// const MAGIC_STANDARDS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
-//    new TableForeignKey({
-//         columnNames: ["army_id"],
-//         referencedColumnNames: ["id"],
-//         referencedTableName: "armies",
-//         onDelete: "CASCADE"
-//     }),
-// ];
-
 const SPECIAL_RULES_TABLE: Table = new Table({
     name: "special_rules",
     columns: [
@@ -366,12 +310,7 @@ const SPECIAL_RULES_TABLE: Table = new Table({
             name: "id",
             type: "int",
             isPrimary: true
-        },
-        // {
-        //     name: "army_id",
-        //     type: "int"
-        // },
-        {
+        }, {
             name: "version_id",
             type: "int"
         }, {
@@ -388,15 +327,6 @@ const SPECIAL_RULES_TABLE: Table = new Table({
     ]
 });
 
-// const SPECIAL_RULES_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
-//     new TableForeignKey({
-//         columnNames: ["army_id"],
-//         referencedColumnNames: ["id"],
-//         referencedTableName: "armies",
-//         onDelete: "CASCADE"
-//     }),
-// ];
-
 const UNITS_TABLE: Table = new Table({
     name: "units",
     columns: [
@@ -407,12 +337,7 @@ const UNITS_TABLE: Table = new Table({
         }, {
             name: "name",
             type: "varchar"
-        },
-        // {
-        //     name: "army_id",
-        //     type: "int"
-        // },
-        {
+        }, {
             name: "unit_category_id",
             type: "int"
         }, {
@@ -450,7 +375,7 @@ const UNITS_TABLE: Table = new Table({
             isNullable: true,
         }, {
             name: "value_points",
-            type: "int"
+            type: "float"
         }, {
             name: "add_value_points",
             type: "int",
@@ -697,25 +622,19 @@ export class ArmiesInitialization1671123394624 implements MigrationInterface {
         await queryRunner.createTable(ARMIES_TABLE);
         // organisations
         await queryRunner.createTable(ARMY_ORGANISATION_TABLE);
-        // await queryRunner.createForeignKeys(ARMY_ORGANISATION_TABLE, ARMY_ORGANISATION_TABLE_FOREIGN_KEYS)
         await queryRunner.createTable(ARMY_ORGANISATION_GROUP_TABLE);
-        await queryRunner.createForeignKeys(ARMY_ORGANISATION_GROUP_TABLE, ARMY_ORGANISATION_GROUP_TABLE_FOREIGN_KEYS);
+        // await queryRunner.createForeignKeys(ARMY_ORGANISATION_GROUP_TABLE, ARMY_ORGANISATION_GROUP_TABLE_FOREIGN_KEYS);
         // magic items
         await queryRunner.createTable(MAGIC_ITEM_CATEGORIES_TABLE);
-        // await queryRunner.createForeignKeys(MAGIC_ITEM_CATEGORIES_TABLE, MAGIC_ITEM_CATEGORIES_TABLE_FOREIGN_KEYS)
         await queryRunner.createTable(MAGIC_ITEMS_TABLE);
-        await queryRunner.createForeignKeys(MAGIC_ITEMS_TABLE, MAGIC_ITEMS_TABLE_FOREIGN_KEYS);
+        // await queryRunner.createForeignKeys(MAGIC_ITEMS_TABLE, MAGIC_ITEMS_TABLE_FOREIGN_KEYS);
         // magic standards
         await queryRunner.createTable(MAGIC_STANDARDS_TABLE);
-        // await queryRunner.createForeignKeys(MAGIC_STANDARDS_TABLE, MAGIC_STANDARDS_TABLE_FOREIGN_KEYS);
         // equipments
         await queryRunner.createTable(EQUIPMENT_CATEGORIES_TABLE);
-        // await queryRunner.createForeignKeys(EQUIPMENT_CATEGORIES_TABLE, EQUIPMENT_CATEGORIES_TABLE_FOREIGN_KEYS);
         await queryRunner.createTable(EQUIPMENTS_TABLE);
-        // await queryRunner.createForeignKeys(EQUIPMENTS_TABLE, EQUIPMENTS_TABLE_FOREIGN_KEYS);
         // special rules
         await queryRunner.createTable(SPECIAL_RULES_TABLE);
-        // await queryRunner.createForeignKeys(SPECIAL_RULES_TABLE, SPECIAL_RULES_TABLE_FOREIGN_KEYS);
         // units
         await queryRunner.createTable(UNITS_TABLE);
         await queryRunner.createTable(TROOPS_TABLE);
@@ -747,5 +666,4 @@ export class ArmiesInitialization1671123394624 implements MigrationInterface {
         // armies
         await queryRunner.dropTable(ARMIES_TABLE);
     }
-
 }

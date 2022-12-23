@@ -1,0 +1,84 @@
+import { UnitOption } from "./unit-option.entity";
+import { Column, PrimaryColumn } from "typeorm";
+import { Equipment } from "../../equipment/equipment.entity";
+import { MagicItemCategory } from "../../magic-item/category/magic-item-category.entity";
+import { EquipmentDTO } from "../../equipment/equipment.dto";
+
+export class UnitOptionDTO {
+    constructor(option: UnitOption) {
+        this.id = option.id;
+        this.unitId = option.unitId;
+        this.parentId = option.parentId;
+        this.category = option.category;
+        this.magicItemFactor = option.magicItemFactor;
+        this.armyOrganisationActivatorId = option.armyOrganisationActivatorId;
+        this.armyOrganisationDesactivatorId = option.armyOrganisationDesactivatorId;
+        this.useAllActivators = option.useAllActivators;
+        this.armyOrganisationId = option.organisationId;
+        this.isPerModel = option.isPerModel;
+        this.isFootOnly = option.isFootOnly;
+        this.mountId = option.mountId;
+        this.mountAdnCharacteristicsPoints = option.mountAdnCharacteristicsPoints;
+        this.organisationMode = option.organisationMode;
+        this.isMultiple = option.isMultiple;
+        this.isRequired = option.isRequired;
+        this.domainMagicId = option.domainMagicId;
+        this.magicItemSource = option.magicItemSource;
+        this.organisationId = option.organisationId;
+        this.name = option.name;
+        this.valuePoints = option.valuePoints;
+        this.usePoints = option.usePoints;
+        this.max = option.max;
+        this.hasChoices = option.hasChoices;
+        this.weight = option.weight;
+        this.changeProfile = option.changeProfile;
+        this.base = option.base;
+        this.height = option.height;
+        this.enchantmentLimit = option.enchantmentLimit;
+        this.unitOptionLimits = option.unitOptionLimits;
+        this.availabilities = option.availabilities;
+        this.unitOptionChangeSpecialRules = option.unitOptionChangeSpecialRules;
+        this.unitOptionChangeEquipments = option.unitOptionChangeEquipments;
+        this.unitOptionChangeProfiles = option.unitOptionChangeProfiles;
+        this.magicItemCategories = option.magicItemCategories;
+        for (const e of option.equipments)
+            this.equipments.push(new EquipmentDTO(e));
+    }
+
+    public id: number;
+    public unitId: number;
+    public parentId: number;
+    public category: string;
+    public magicItemFactor: number;
+    public armyOrganisationActivatorId: number;
+    public armyOrganisationDesactivatorId: number;
+    public useAllActivators: boolean;
+    public armyOrganisationId: number;
+    public isPerModel: boolean;
+    public isFootOnly: boolean;
+    public mountId: number;
+    public mountAdnCharacteristicsPoints: boolean;
+    public organisationMode: string;
+    public isMultiple: boolean;
+    public isRequired: boolean;
+    public domainMagicId: number;
+    public magicItemSource: string;
+    public organisationId: number;
+    public name: string;
+    public valuePoints: number;
+    public usePoints: string;
+    public max: number;
+    public hasChoices: boolean;
+    public weight: number;
+    public changeProfile: boolean;
+    public base: string;
+    public height: string;
+    public enchantmentLimit: number;
+    public unitOptionLimits: string;
+    public availabilities: string;
+    public unitOptionChangeSpecialRules: string;
+    public unitOptionChangeEquipments: string;
+    public unitOptionChangeProfiles: string;
+    public equipments: EquipmentDTO[] = [];
+    public magicItemCategories: MagicItemCategory[] = [];
+}

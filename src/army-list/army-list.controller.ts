@@ -16,14 +16,14 @@ import { QueryFailedError } from "typeorm";
 import { JwtAuthGuard } from "../account/auth/guards/jwt-auth.guard";
 import { ArmyListUnitDTO } from "./army-list-unit/army-list-unit.dto";
 import { ParamHelper } from "../helper/param.helper";
-import { ArmyService } from "../army/army.service";
+// import { ArmyService } from "../army/army.service";
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
 import { ArmyListRule } from "./army-list-rule/army-list-rule.entity";
 import { ArmyListUpgrade } from "./army-list-upgrade/army-list-upgrade.entity";
 
-import { RuleService } from "../army/rule/rule.service";
-import { UpgradeService } from "../army/upgrade/upgrade.service";import { UnitService } from "../army/unit/unit.service";
+// import { RuleService } from "../army/rule/rule.service";
+// import { UpgradeService } from "../army/upgrade/upgrade.service";import { UnitService } from "../army/unit/unit.service";
 import { ArmyListUnitService } from "./army-list-unit/army-list-unit.service";
 import { ArmyListRuleService } from "./army-list-rule/army-list-rule.service";import { ArmyListUpgradeService } from "./army-list-upgrade/army-list-upgrade.service";
 import { ArmyListUnitUpgradeService } from "./army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.service";
@@ -38,10 +38,10 @@ import { ArmyListDTO } from "./army-list.dto";
 export class ArmyListController {
     constructor(
         private readonly armyListService: ArmyListService,
-        private readonly armyService: ArmyService,
-        private readonly ruleService: RuleService,
-        private readonly upgradeService: UpgradeService,
-        private readonly unitService: UnitService,
+        // private readonly armyService: ArmyService,
+        // private readonly ruleService: RuleService,
+        // private readonly upgradeService: UpgradeService,
+        // private readonly unitService: UnitService,
         private readonly armyListUnitService: ArmyListUnitService,
         private readonly armyListRuleService: ArmyListRuleService,
         private readonly armyListUpgradeService: ArmyListUpgradeService,

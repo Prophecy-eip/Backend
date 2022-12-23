@@ -1,4 +1,12 @@
 import { Entity, PrimaryColumn, Column } from "typeorm";
+import { ArmyOrganisation } from "./organisation/army-organisation.entity";
+import { ProphecyDatasource } from "../database/prophecy.datasource";
+import { MagicItemCategory } from "./magic-item/category/magic-item-category.entity";
+import { MagicItem } from "./magic-item/magic-item.entity";
+import { MagicStandard } from "./magic-standard/magic-standard.entity";
+import { Equipment } from "./equipment/equipment.entity";
+import { SpecialRule } from "./special-rule/special-rule.entity";
+import { Unit } from "./unit/unit.entity";
 
 @Entity("armies")
 export class Army {
@@ -43,4 +51,33 @@ export class Army {
 
     @Column({ name: "unit_ids", type: "int", array: true })
     public unitIds: number[];
+
+    public organisations: ArmyOrganisation[] = [];
+    public magicItemCategories: MagicItemCategory[] = [];
+    public magicItems: MagicItem[] = [];
+    public magicStandards: MagicStandard[] = [];
+    public equipments: Equipment[] = [];
+    public specialRules: SpecialRule[] = [];
+    public units: Unit[] = [];
+
+    public async load() {
+        let datasource: ProphecyDatasource = new ProphecyDatasource();
+
+        await datasource.initialize();
+        for (const id of this.organisationIds)
+            this.organisations.push(await datasource.getRepository(ArmyOrganisation).findOneBy({ id: id }));
+        for (const id of this.magicItemCategoryIds)
+            this.magicItemCategories.push(await datasource.getRepository(MagicItemCategory).findOneBy({ id: id }));
+        for (const id of this.magicItemIds)
+            this.magicItems.push(await datasource.getRepository(MagicItem).findOneBy({ id: id }));
+        for (const id of this.magicStandardIds)
+            this.magicStandards.push(await datasource.getRepository(MagicStandard).findOneBy({ id: id }));
+        for (const id of this.equipmentIds)
+            this.equipments.push(await datasource.getRepository(Equipment).findOneBy({ id: id }));
+        for (const id of this.ruleIds)
+            this.specialRules.push(await datasource.getRepository(SpecialRule).findOneBy({ id: id }));
+        for (const id of this.unitIds)
+            this.units.push(await datasource.getRepository(Unit).findOneBy({ id: id }));
+        await datasource.destroy();
+    }
 }
