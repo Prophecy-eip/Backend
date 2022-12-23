@@ -1,7 +1,6 @@
 import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
 
-import { Unit } from "../army/unit/unit.entity";
 import { ArmyList } from "../army-list/army-list.entity";
 import { ArmyListUnit } from "../army-list/army-list-unit/army-list-unit.entity";
 import { ArmyListUnitOption } from "../army-list/army-list-unit/army-list-unit-option/army-list-unit-option.entity";
@@ -18,6 +17,10 @@ import { Equipment } from "../army/equipment/equipment.entity";
 import { EquipmentCategory } from "../army/equipment/category/equipment-category.entity";
 import { SpecialRule } from "../army/special-rule/special-rule.entity";
 import { Troop } from "../army/unit/troop/troop.entity";
+import { SpecialRuleUnitTroop } from "../army/unit/troop/special-rule/special-rule-unit-troop.entity";
+import { EquipmentUnitTroop } from "../army/unit/troop/equipment/equipment-unit-troop.entity";
+import { UnitOption } from "../army/unit/option/unit-option.entity";
+import { Unit } from "../army/unit/unit.entity";
 
 dotenv.config()
 
@@ -47,7 +50,11 @@ export class ProphecyDatasource extends DataSource {
                 Equipment,
                 EquipmentCategory,
                 Unit,
+                UnitOption,
                 Troop,
+                SpecialRuleUnitTroop,
+                EquipmentUnitTroop,
+                UnitOption,
                 SpecialRule,
                 ArmyList,
                 ArmyListUnit,

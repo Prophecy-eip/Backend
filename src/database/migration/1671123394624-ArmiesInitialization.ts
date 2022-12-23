@@ -487,10 +487,205 @@ const TROOPS_TABLE: Table = new Table({
             isPrimary: true,
         }, {
             name: "name",
-            type: "varchar"
+            type: "varchar",
+            isNullable: true,
         }, {
             name: "characteristics",
             type: "varchar"
+        }
+    ]
+});
+
+const SPECIAL_RULE_UNIT_TROOP_TABLE: Table = new Table({
+    name: "special_rule_unit_troops",
+    columns: [
+        {
+            name: "id",
+            type: "int",
+            isPrimary: true,
+        }, {
+            name: "unit_id",
+            type: "int",
+        }, {
+            name: "troop_id",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "info",
+            type: "varchar",
+            isNullable: true,
+        }, {
+            name: "special_rule_id",
+            type: "int",
+        }, {
+            name: "type_lvl",
+            type: "varchar",
+        }, {
+            name: "name",
+            type: "varchar",
+        }
+    ]
+});
+
+const EQUIPMENT_UNIT_TROOPS_TABLE: Table = new Table({
+    name: "equipment_unit_troops",
+    columns: [
+        {
+            name: "id",
+            type: "int",
+            isPrimary: true,
+        }, {
+            name: "unit_id",
+            type: "int",
+        }, {
+            name: "troop_id",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "info",
+            type: "varchar",
+            isNullable: true,
+        }, {
+            name: "equipment_id",
+            type: "int",
+        }, {
+            name: "type_lvl",
+            type: "varchar",
+        }, {
+            name: "name",
+            type: "varchar",
+        }
+    ]
+});
+
+const UNIT_OPTIONS_TABLE: Table = new Table({
+    name: "unit_options",
+    columns: [
+        {
+            name: "id",
+            type: "int",
+            isPrimary: true,
+        }, {
+            name: "unit_id",
+            type: "int",
+        }, {
+            name: "parent_id",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "category",
+            type: "varchar",
+        }, {
+            name: "magic_item_factor",
+            type: "int",
+        }, {
+            name: "army_organisation_activator_id",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "army_organisation_desactivator_id",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "use_all_activators",
+            type: "boolean",
+        }, {
+            name: "army_organisation_id",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "is_per_model",
+            type: "boolean",
+        }, {
+            name: "is_foot_only",
+            type: "boolean",
+        }, {
+            name: "mount_id",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "mount_and_characteristics_points",
+            type: "boolean",
+        }, {
+            name: "organisation_mode",
+            type: "varchar",
+        }, {
+            name: "is_multiple",
+            type: "boolean",
+        }, {
+            name: "is_required",
+            type: "boolean",
+        }, {
+            name: "domain_magic_id",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "magic_item_source",
+            type: "varchar",
+        }, {
+            name: "organisation_id",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "name",
+            type: "varchar",
+            isNullable: true,
+        }, {
+            name: "value_points",
+            type: "float",
+            isNullable: true,
+        }, {
+            name: "use_points",
+            type: "varchar",
+        }, {
+            name: "max",
+            type: "int",
+            isNullable: true,
+        }, {
+            name: "has_choices",
+            type: "boolean",
+            isNullable: true,
+        }, {
+            name: "weight",
+            type: "int",
+        }, {
+            name: "change_profile",
+            type: "boolean",
+        }, {
+            name: "base",
+            type: "varchar",
+            isNullable: true,
+        }, {
+            name: "height",
+            type: "varchar",
+            isNullable: true,
+        }, {
+            name: "enchantment_limit",
+            type: "int",
+        }, {
+            name: "unit_option_limits",
+            type: "varchar",
+            isNullable: true,
+        }, {
+            name: "availabilities",
+            type: "varchar",
+        }, {
+            name: "magic_item_category_ids",
+            type: "int",
+            isArray: true,
+        }, {
+            name: "equipment_ids",
+            type: "int",
+            isArray: true,
+        }, {
+            name: "unit_option_change_special_rules",
+            type: "varchar",
+        }, {
+            name: "unit_option_change_equipments",
+            type: "varchar",
+        }, {
+            name: "unit_option_change_profiles",
+            type: "varchar",
         }
     ]
 });
@@ -524,11 +719,16 @@ export class ArmiesInitialization1671123394624 implements MigrationInterface {
         // units
         await queryRunner.createTable(UNITS_TABLE);
         await queryRunner.createTable(TROOPS_TABLE);
-
+        await queryRunner.createTable(SPECIAL_RULE_UNIT_TROOP_TABLE);
+        await queryRunner.createTable(EQUIPMENT_UNIT_TROOPS_TABLE);
+        await queryRunner.createTable(UNIT_OPTIONS_TABLE);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         // units
+        await queryRunner.dropTable(UNIT_OPTIONS_TABLE);
+        await queryRunner.dropTable(EQUIPMENT_UNIT_TROOPS_TABLE);
+        await queryRunner.dropTable(SPECIAL_RULE_UNIT_TROOP_TABLE);
         await queryRunner.dropTable(TROOPS_TABLE);
         await queryRunner.dropTable(UNITS_TABLE);
         // special rules

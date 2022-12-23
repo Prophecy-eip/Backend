@@ -52,10 +52,10 @@ services:
       networks:
         - prophecy
 
-  script_setup_armies:
-      build: ./scripts/armies_database/
-      networks:
-        - prophecy
+#  script_setup_armies:
+#      build: ./scripts/armies_database/
+#      networks:
+#        - prophecy
 
 volumes:
   prophecy:

@@ -36,7 +36,7 @@ export class UnitOption {
     public isFootOnly: boolean;
 
     @Column( { name: "mount_id" })
-    public mount_id: number;
+    public mountId: number;
 
     @Column({ name: "mount_and_characteristics_points" })
     public mountAdnCharacteristicsPoints: boolean;
@@ -66,7 +66,7 @@ export class UnitOption {
     public valuePoints: number;
 
     @Column({ name: "use_points"})
-    public usePoints: number;
+    public usePoints: string;
 
     @Column()
     public max: number;
@@ -95,9 +95,18 @@ export class UnitOption {
     @Column()
     public availabilities: string;
 
-    @Column({ name: "magic_item_categories" })
-    public magicItemCategories: number[];
+    @Column({ name: "magic_item_category_ids", type: "int", array: true })
+    public magicItemCategoryIds: number[];
 
-    @Column()
-    public equipments: number[];
+    @Column({ name: "equipment_ids", type: "int", array: true })
+    public equipmentIds: number[];
+
+    @Column({ name: "unit_option_change_special_rules" })
+    public unitOptionChangeSpecialRules: string;
+
+    @Column({ name: "unit_option_change_equipments" })
+    public unitOptionChangeEquipments: string;
+
+    @Column({ name: "unit_option_change_profiles"})
+    public unitOptionChangeProfiles: string;
 }
