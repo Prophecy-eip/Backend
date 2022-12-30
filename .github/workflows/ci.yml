@@ -23,13 +23,15 @@ jobs:
           SES_SECRET_ACCESS_KEY=${{ secrets.AWS_SES_SECRET_ACCESS_KEY }}\n
           SES_FROM_ADDRESS=${{ secrets.AWS_SES_FROM_ADDRESS }}\n
           API_URL=${{ secrets.API_URL }}" > .env
-          printf "[postgresql]\nhost=${{ secrets.DATABASES_IP  }}\ndatabase=${{ secrets.POSTGRES_DB }}\nuser=${{ secrets.POSTGRES_USER }}\npassword=${{ secrets.POSTGRES_PASSWORD }}\n" > ./scripts/armies_database/database.ini
+          printf "DATABASE_IP=${{ secrets.DATABASES_IP  }}\n
+          POSTGRES_DB=${{ secrets.POSTGRES_DB }}\n
+          POSTGRES_USER=${{ secrets.POSTGRES_USER }}\n
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}\n" > ./scripts/armies_data/.env
 
       - name: Build & Run Docker
         run: | 
           docker-compose -f docker-compose.yml up --build -d db server
           docker-compose up run_migration
-          docker-compose up --build script_setup_armies
 
       - name: Run Unit Tests
         run: docker-compose -f docker-compose.yml up tests
