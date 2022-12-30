@@ -20,7 +20,7 @@ export class ArmyDTO {
             this.organisations.push(new ArmyOrganisationDTO(o));
         this.magicItemCategories = army.magicItemCategories;
         this.magicItems = army.magicItems;
-        this.magicStandard = army.magicStandards;
+        this.magicStandards = army.magicStandards;
         for (const e of army.equipments)
             this.equipments.push(new EquipmentDTO(e));
         this.specialRules = army.specialRules;
@@ -38,7 +38,7 @@ export class ArmyDTO {
     public organisations: ArmyOrganisationDTO[] = [];
     public magicItemCategories: MagicItemCategory[] = [];
     public magicItems: MagicItem[] = [];
-    public magicStandard: MagicStandard[] = [];
+    public magicStandards: MagicStandard[] = [];
     public equipments: EquipmentDTO[] = [];
     public specialRules: SpecialRule[] = [];
     public units: UnitDTO[] = [];

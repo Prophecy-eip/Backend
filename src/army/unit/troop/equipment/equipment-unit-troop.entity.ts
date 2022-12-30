@@ -15,7 +15,7 @@ export class EquipmentUnitTroop {
     public info: string;
 
     @Column({ name: "equipment_id" })
-    public equipmentId: string;
+    public equipmentId: number;
 
     @Column({ name: "type_lvl" })
     public typeLvl: string;

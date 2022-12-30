@@ -4,7 +4,7 @@ class ArmyOrganisationGroupLimit {
     id: number;
     army_organisation_group_id: number;
     points_min: number;
-    points_max: number;
+        points_max: number;
     target: string;
     value: number;
     repeat_interval: number;

@@ -113,6 +113,8 @@ paths:
 
   /account/email/send-verification-link:
     get:
+
+
       summary: Sends an email confirmation link
       description: ""
       tags:
@@ -440,7 +442,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/armyListObject'
+                $ref: '#/components/schemas/ArmyListWithId'
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
@@ -2325,11 +2327,6 @@ components:
       format: date
       example: YYYY-MM-DD
 
-    time:
-      type: string
-      format: time
-      example: THH:MM:SSZ
-
     link:
       type: string
       format: link
@@ -2342,44 +2339,6 @@ components:
     tag:
       type: string
       example: tag
-
-    size:
-      type: object
-      properties:
-        x:
-          type: number
-          example: 25
-        y:
-          type: number
-          example: 25
-
-    limit:
-      type: object
-      properties:
-        type:
-          description: The limit's type
-          type: string
-          enum: ["Min", "Max", "No limit"]
-        value:
-          description: The limit's value in percent
-          type: number
-          example: 42
-      required:
-        - type
-        - value
-
-    interval:
-      type: object
-      properties:
-        min:
-          type: number
-          example: 0
-        max:
-          type: number
-          example: 4
-      required:
-        - min
-        - max
 
     address:
       type: object
@@ -2526,261 +2485,376 @@ components:
         - message
         - dateTime
 
-    unitGlobalStatistics:
-      description: The unit's global statistics
-      type: object
-      properties: # TODO: change numbers to string
-        adv:
-          description: 'Advance Rate: The distance the model can Advance Move in inches'
-          type: number
-          example: 5
-        mar:
-          description: 'March Rate: The distance the model can March Move in inches'
-          type: number
-          example: 10
-        dis:
-          description: 'Discipline: The model’s ability to stand and fight'
-          type: number
-          example: 9
-      required:
-        - adv
-        - mar
-        - dis
-
-    unitDefensiveStatistics:
-      description: The unit's defensive statistics
-      type: object
-      properties:
-        hp:
-          description: 'Health Points: When the model loses this many Health Points, it is removed as a casualty'
-          type: string
-          example: 3
-        def:
-          description: 'Defensive Skill: How well the model avoids being hit in melee'
-          type: string
-          example: 3D6
-        res:
-          description: 'Resilience: How easily the model withstands blows'
-          type: string
-          example: 5
-        arm:
-          description: 'Armour: The innate Armour of the model'
-          type: string
-          example: 0
-        argis:
-          description: Aegis is a Special Save. A model must reroll successful Aegis Saves against Divine Attacks
-          type: string
-          example: 3
-      required:
-        - hp
-        - def
-        - res
-        - arm
-
-    unitOffensiveStatistics:
-      description: The unit's offensive statistics
-      type: object
-      properties:
-        att:
-          description: 'Attack Value: The number of times the model part can strike in a Round of Combat'
-          type: string
-          example: 3
-        off:
-          description: 'Offensive Skill: How good the model part is at scoring hits in melee'
-          type: string
-          example:
-        str:
-          description: 'Strength: How easily the model part can wound enemy models'
-          type: string
-          example: 3
-        ap:
-          description: 'Armour Penetration: How well the model part can penetrate the Armour of enemy models'
-          type: string
-          example: 3
-        agi:
-          description: 'Agility: Model parts with a higher Agility strike first in melee'
-          type: string
-          example: 3
-      required:
-        - att
-        - off
-        - str
-        - ap
-        - agi
-
-    unitHeader:
-      description: The header of a unit entry usually contains all the general information on the unit
-      type: object
-      properties:
-        name:
-          description: This is the name of the unit that will be used e.g. when choosing the unit to perform an action like Charging, or when targeting the unit with a spell or a Shooting Attack
-          type: string
-          example:
-        armyCategories:
-          description: Every unit is part of an Army Category, like Characters, Core, or Special, which is important e.g. for building an army or for certain Model Rules
-          type: array
-          items:
-            type: string
-            example: Core
-        size:
-          allOf:
-            - description: The unit size tells you the minimum and the maximum size of the unit when building an army. The minimum unit size corresponds to the number of models that the unit must contain at least. And accordingly, the maximum unit size represents the number of models that the unit can consist of at the most
-            - $ref: '#/components/schemas/interval'
-        cost:
-          description: The unit cost tells you how many points you have to pay for adding the unit to your army in its minimum size, and how many points each additional model will cost. For some units in the game, an additional model will cost the same amount of points as a model that is part of the unit’s minimum size, while for others additional models may be more or less expensive than the initial models.
-          type: object
-          properties:
-            base:
-              description: The model's base cost in points
-              type: number
-              example: 120
-            extraModel:
-              description: The extra models' cost in points
-              type: number
-              example: 10
-          example:
-        scoring: # TODO: check
-          description: Some units have a certain Model Rule called Scoring, which is relevant for winning Secondary Objectives during the game
-          type: boolean
-          example: true
-        cap:
-          allOf:
-            - description: Certain units can only be selected a limited number of times in an army. In this case, you will find a “0–X Units/Army” cap in the unit entry
-            - $ref: '#/components/schemas/interval'
-        specifications:
-          description: Every model in the game has a specific Height, Type, and base size, which are relevant for a wide variety of game mechanics and Model Rules
-          type: object
-          properties:
-            height:
-              description: The unit's height
-              type: string
-              enum: ['Standard', 'Large', 'Gigantic', 'Chariot']
-            type:
-              description: The unit's type # TODO: check
-              type: string
-              example: Infantry
-            base:
-              allOf:
-                - description: The model's base size
-                - $ref: '#/components/schemas/size'
-      required:
-        - category
-        - name
-        - cost
-
-    unitCharacteristicProfiles:
-      description: The Characteristic Profiles of each unit entry contain the values of all of a unit’s Global, Defensive, and Offensive Characteristics
-      type: object
-      properties:
-        global: # TODO: make map (see multipart models)
-          $ref: '#/components/schemas/unitGlobalStatistics'
-        defensive: # TODO: make map (see multipart models)
-          $ref: '#/components/schemas/unitDefensiveStatistics'
-        offensive: # TODO: make map (see multipart models)
-          $ref: '#/components/schemas/unitOffensiveStatistics'
-      required:
-        - global
-        - defensive
-        - offensive
-
-    unitModelRules: # TODO
-      description: In this part of the unit entry, the unit’s Model Rules are displayed
-      type: object
-      properties:
-        global:
-          type: array
-          items:
-            type: string
-            example: Scoring
-        defensive:
-          type: array
-          items:
-            type: string
-            example: Light Armour
-        offensive:
-          type: array
-          items:
-            type: string
-            example: Halberd
-
     unitObject:
       description: A unit's data
       type: object
       properties:
-        profiles:
-          type: array
-          items:
-            $ref: '#/components/schemas/unitProfile'
-        options:
-          type: array
-          items:
-            $ref: '#/components/schemas/modifierObject'
         id:
-          $ref: '#/components/schemas/uuid'
+          type: number
         name:
-          $ref: '#/components/schemas/name'
-        category:
-          $ref: '#/components/schemas/uuid'
-        cost:
           type: string
-      required:
-        - header
-        - characteristicProfiles
-        - modelRules
-        - options
+        unitCategoryId:
+          type: number
+        principalOrganisationId:
+          type: number
+        minSize:
+          type: number
+        maxSize:
+          type: number
+        canBeGeneralAndBsb:
+          type: boolean
+        position:
+          type: number
+        magic:
+          type: string
+        notes:
+          type: string
+        isMount:
+          type: boolean
+        unitTypeId:
+          type: number
+        armyOrganisationId:
+          type: number
+        valuePoints:
+          type: number
+        addValuePoints:
+          type: number
+        characteristics:
+          $ref: "#/components/schemas/unitCharacteristics"
+        troops:
+          type: array
+          items:
+            $ref: "#/components/schemas/troop"
+        specialRuleUnitTroops:
+          type: array
+          items:
+            $ref: "#/components/schemas/specialRuleUnitTroop"
+        equipmentUnitTroops:
+          type: array
+          items:
+            $ref: "#/components/schemas/equipmentUnitTroop"
+        unitOptions:
+          type: array
+          items:
+            $ref: "#/components/schemas/unitOption"
 
-    unitProfile:
-      id:
-        $ref: '#/components/schemas/uuid'
-      name:
-        $ref: '#/components/schemas/name'
-      characteristics:
-        type: object
+    unitOption:
+      type: object
+      properties:
+        id:
+          type: number
+        unitId:
+          type: number
+        parentId:
+          type: number
+        category:
+          type: string
+        magicItemFactor:
+          type: number
+        armyOrganisationActivatorId:
+          type: number
+        armyOrganisationDesactivatorId:
+          type: number
+        useAllActivators:
+          type: boolean
+        armyOrganisationId:
+          type: number
+        isPerModel:
+          type: boolean
+        isFootOnly:
+          type: boolean
+        mountId:
+          type: number
+        mountAdnCharacteristicsPoints:
+          type: boolean
+        organisationMode:
+          type: string
+        isMultiple:
+          type: boolean
+        isRequired:
+          type: boolean
+        domainMagicId:
+          type: number
+        magicItemSource:
+          type: string
+        organisationId:
+          type: number
+        name:
+          type: string
+        valuePoints:
+          type: number
+        usePoints:
+          type: string
+        max:
+          type: number
+        hasChoices:
+          type: boolean
+        weight:
+          type: number
+        changeProfile:
+          type: boolean
+        base:
+          type: string
+        height:
+          type: string
+        enchantmentLimit:
+          type: number
+        unitOptionLimits:
+          type: string
+        availabilities:
+          type: string
+        unitOptionChangeSpecialRules:
+          type: string
+        unitOptionChangeEquipments:
+          type: string
+        unitOptionChangeProfiles:
+          type: string
+        equipments:
+          type: array
+          items:
+            $ref: "#/components/schemas/equipment"
+        magicItemCategories:
+          type: array
+          items:
+            $ref: "#/components/schemas/magicItemCategory"
+
+    equipmentUnitTroop:
+      type: object
+      properties:
+        id:
+          type: string
+        unitId:
+          type: number
+        troopId:
+          type: number
+        info:
+          type: string
+        equipmentId:
+          type: number
+        typeLvl:
+          type: string
+        name:
+          type: string
+
+    specialRuleUnitTroop:
+      type: object
+      properties:
+        unitId:
+          type: number
+        troopId:
+          type: number
+        infos:
+          type: string
+        specialRuleId:
+          type: number
+        typeLvl:
+          type: string
+        name:
+          type: string
+
+
+    unitCharacteristics:
+      type: object
+      properties:
+        type:
+          type: string
+        base:
+          type: string
+        height:
+          type: string
+        unitTypeId:
+          type: string
+        adv:
+          type: string
+        mar:
+          type: string
+        dis:
+          type: string
+        evoked:
+          type: string
+        hp:
+          type: string
+        def:
+          type: string
+        res:
+          type: string
+        arm:
+          type: string
+        aeg:
+          type: string
+
+    troop:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        characteristics:
+          $ref: '#/components/schemas/troopCharacteristics'
+
+    troopCharacteristics:
+      type: object
+      properties:
+        M:
+          type: string
+        WS:
+          type: string
+        BS:
+          type: string
+        S:
+          type: string
+        T:
+          type: string
+        W:
+          type: string
+        I:
+          type: string
+        A:
+          type: string
+        LD:
+          type: string
+        E:
+          type: string
+        type:
+          type: string
+        size:
+          type: number
+        att:
+          type: string
+        of:
+          type: string
+        str:
+          type: string
+        ap:
+          type: string
+        agi:
+          type: string
+        type_id:
+          type: string
+        type_name:
+          type: string
+
 
     armyOrganisation:
       description: The army's organisation
-      type: array
-      items:
-        $ref: '#/components/schemas/unitCategory'
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        isDefault:
+          type: boolean
+        organisationGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/armyOrganisationGroup'
+        # $ref: '#/components/schemas/unitCategory'
+
+    armyOrganisationGroup:
+      type: object
+      properties:
+        id:
+          type: number
+        armyOrganisationId:
+          type: number
+        name:
+          type: string
+        organisationGroupLimits:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: number
+              army_organisation_group_id:
+                type: number
+              points_min:
+                type: number
+              points_max:
+                type: number
+              target:
+                type: string
+              value:
+                type: number
+              repeat_interval:
+                type: number
+              repeat_value:
+                type: number
+        organisationUnitLimits:
+          type: array
+          items:
+            properties:
+              id:
+                type: number
+              unit_min:
+                type: number
+              unit_max:
+                type: number
+              model_max:
+                type: number
+              unit_ids:
+                type: array
+                items:
+                  type: number
+              availabilities:
+                type: array
+                items:
+                  type: number
+        changeLimits:
+          type: string
 
     armyObject:
       description: The army's data
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/uuid"
+          type: number
         name:
           allOf:
             - description: The army's name
             - $ref: '#/components/schemas/name'
-        unitCategories:
+        version:
+          type: number
+        categoryId:
+          type: number
+        source:
+          type: string
+        equipmentLimits:
+          type: string
+        specialRuleLimits:
+          type: string
+        organisations:
           type: array
           items:
-            $ref: "#/components/schemas/unitCategory"
+            $ref: '#/components/schemas/armyOrganisation'
+        magicItemCategories:
+          type: array
+          items:
+            $ref: '#/components/schemas/magicItemCategory'
+        magicItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/magicItem'
+        magicStandards:
+          type: array
+          items:
+            $ref: '#/components/schemas/magicStandard'
+        equipments:
+          type: array
+          items:
+            $ref: '#/components/schemas/equipment'
         units:
           type: array
           items:
-            $ref: '#/components/schemas/unitObject'
-        rules:
+            $ref: '#/components/schemas/unitObject' # TODO
+        specialRules:
           type: array
           items:
-            $ref: '#/components/schemas/ruleObject'
-        upgradeCategories:
-          type: array
-          items:
-            $ref: '#/components/schemas/unitCategory'
-        upgrades:
-          type: array
-          items:
-            $ref: '#/components/schemas/upgradeObject'
-        specialItemCategories:
-          type: array
-          items:
-            $ref: '#/components/schemas/specialItemCategory'
-        options:
-          type: array
-          items:
-            $ref: '#/components/schemas/optionObject'
+            $ref: '#/components/schemas/specialRuleObject'
       required:
         - name
         - id
@@ -2792,69 +2866,110 @@ components:
         - specialIemCategories
         - options
 
-    optionObject:
+    magicItemCategory:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/uuid'
-        name:
-          $ref: '#/components/schemas/name'
-        type:
-          type: string
-        cost:
-          type: string
-        rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/ruleObject'
-        modifiers:
-          type: array
-          items:
-            $ref: '#/components/schemas/modifierObject'
-
-    specialItemCategory:
-      type: object
-      properties:
-        id:
-          $ref: "#/components/schemas/uuid"
+          type: number
         name:
           $ref: "#/components/schemas/name"
-        isCollective:
+        isMultiple:
           type: boolean
-        limits:
-          type: string
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/upgradeObject"
+        versionId:
+          type: number
+        max:
+          type: number
 
-    upgradeObject:
+    equipment:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/uuid"
+          type: number
+        versionId:
+          type: number
         name:
-          $ref: "#/components/schemas/name"
-        isCollective:
+          type: string
+        description:
+          type: string
+        typeLvl:
+          type: string
+        canBeEnchanted:
           type: boolean
-        limits:
-          type: string
-        cost:
-          type: string
-        modifiers:
+        equipmentCategories:
           type: array
           items:
-            $ref: "#/components/schemas/modifierObject"
-        profiles:
-          type: array
-          items:
-            $ref: "#/components/schemas/unitProfile"
-        rules:
-          type: array
-          items:
-            $ref: "#/components/schemas/ruleObject"
+            $ref: "#/components/schemas/equipmentCategory"
 
-    ruleObject:
+    equipmentCategory:
+      type: object
+      properties:
+        id:
+          type: number
+        versionId:
+          type: number
+        name:
+          type: string
+
+    magicItem:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        magicItemCategoryId:
+          type: number
+        isMultiple:
+          type: boolean
+        max:
+          type: number
+        isDominant:
+          type: boolean
+        versionId:
+          type: number
+        valuePoints:
+          type: number
+        footOnly:
+          type: boolean
+        disableMagicPathLimit:
+          type: boolean
+        wizardOnly:
+          type: array
+          items:
+            type: string
+        requiredOrganisationIds:
+          type: array
+          items:
+            type: number
+
+    magicStandard:
+      type: object
+      properties:
+        id:
+          type: number
+        versionId:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        isMultiple:
+          type: boolean
+        infos:
+          type: string
+        valuePoint:
+          type: number
+        max:
+          type: number
+        availabilities:
+          type: array
+          items:
+            type: string
+
+
+    specialRuleObject:
       type: object
       properties:
         id:
@@ -2863,111 +2978,45 @@ components:
           $ref: "#/components/schemas/name"
         description:
           $ref: "#/components/schemas/description"
-
-    unitCategory:
-      type: object
-      properties:
-        id:
-          $ref: "#/components/schemas/uuid"
-        name:
-          $ref: '#/components/schemas/name'
-        limits:
+        typeLvl:
           type: string
-        targetId:
-          $ref: '#/components/schemas/armyCredentials'
+
+
 
     armyCredentials:
       type: object
       properties:
         id:
-          - $ref: '#/components/schemas/uuid'
+          type: number
         name:
           - $ref: '#/components/schemas/name'
 
-    effect:
-      description: Represents an effect
-      type: object
-      properties:
-        value:
-          description: The effect' value
-          type: number
-          example: -2
-        duration:
-          description: The effect's duration
-          type: string
-          example: Once
-        range:
-          description: The effect's range in inches
-          type: number
-          example: 15
-        modelRestrictions:
-          description: The effect's model restrictions
-          type: array
-          items:
-            type: string
-            example: on foot
-        conditions:
-          description: The effects conditions
-          type: array
-          items:
-            type: string
-            example: on fire weakness
-        additionnalEffects:
-          description: The additionnal effects
-          type: array
-          items:
-            type: string
-            example: reroll dices
-      required:
-        - value
-        - duration
-        - modelRestrictions
-
-    effectsOnUnit:
-      description: An effect on a unit
-      type: object
-      properties:
-        adv:
-          $ref: '#/components/schemas/effect'
-        mar:
-          $ref: '#/components/schemas/effect'
-        dis:
-          $ref: '#/components/schemas/effect'
-        hp:
-          $ref: '#/components/schemas/effect'
-        def:
-          $ref: '#/components/schemas/effect'
-        res:
-          $ref: '#/components/schemas/effect'
-        arm:
-          $ref: '#/components/schemas/effect'
-        att:
-          $ref: '#/components/schemas/effect'
-        off:
-          $ref: '#/components/schemas/effect'
-        str:
-          $ref: '#/components/schemas/effect'
-        ap:
-          $ref: '#/components/schemas/effect'
-        agi:
-          $ref: '#/components/schemas/effect'
-        aegis:
-          $ref: '#/components/schemas/effect'
-
-
-    modifierObject:
+    ArmyListWithId:
       type: object
       properties:
         id:
-          $ref: "#/components/schemas/uuid"
-        type:
           type: string
-        value:
-          type: string
-        field:
-          type: string
-        limits:
-          type: string
+        name:
+          allOf:
+            - description: The list's name
+            - $ref: '#/components/schemas/name'
+        valuePoints:
+          description: The list's cost
+          type: number
+          example: 500
+        armyId:
+          allOf:
+            - description: The army's id
+            - type: number
+        units:
+          description: The list's units
+          type: array
+          items:
+            $ref: "#/components/schemas/armyListUnit"
+        isShared:
+          type: boolean
+        isFavourite:
+          type: boolean
 
     armyListObject:
       description: An army list data
@@ -2977,50 +3026,121 @@ components:
           allOf:
             - description: The list's name
             - $ref: '#/components/schemas/name'
-        cost:
+        valuePoints:
           description: The list's cost
-          type: string
-          example: "500 pts"
-        army:
+          type: number
+          example: 500
+        armyId:
           allOf:
             - description: The army's id
-            - $ref: '#/components/schemas/uuid'
+            - type: number
         units:
           description: The list's units
           type: array
           items:
-            type: object
-            properties:
-              unitId:
-                allOf:
-                  - description: The unit's id
-                  - $ref: '#/components/schemas/uuid'
-              number:
-                description: The number of models
-                type: number
-                example: 5
-              options:
-                $ref: "#/components/schemas/uuidArray"
-              upgrades:
-                $ref: "#/components/schemas/uuidArray"
-              formation:
-                type: string
-                example: "5x1"
-        upgrades:
-          $ref: '#/components/schemas/uuidArray'
-        rules:
-          allOf:
-            - description: The list's rules
-            - $ref: '#/components/schemas/uuidArray'
+            $ref: "#/components/schemas/armyListUnit"
         isShared:
+          type: boolean
+        isFavourite:
           type: boolean
       required:
         - name
         - cost
         - armyId
         - units
-        - upgrades
-        - rules
+        - isShared
+        - isFavourite
+
+    armyListUnit:
+      type: object
+      properties:
+        unitId:
+          type: number
+        quantity:
+          type: number
+        formation:
+          type: string
+          example: "5x2"
+        troopIds:
+          type: array
+          items:
+            type: number
+        magicItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/armyListMagicItem"
+        magicStandards:
+          type: array
+          items:
+            $ref: "#/components/schemas/armyListMagicStandard"
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/armyListOption"
+        specialRuleTroops:
+          type: array
+          items:
+            $ref: "#/components/schemas/armyListSpecialRuleTroop"
+        equipmentTroops:
+          type: array
+          items:
+            $ref: "#/components/schemas/armyListEquipmentTroop"
+
+
+    armyListMagicItem:
+      type: object
+      properties:
+        unitId:
+          type: number
+        magicItemId:
+          type: number
+        equipmentId:
+          type: number
+        quantity:
+          type: number
+        valuePoints:
+          type: number
+
+    armyListMagicStandard:
+      type: object
+      properties:
+        magicStandardId:
+          type: number
+        unitOptionId:
+          type: number
+        quantity:
+          type: number
+        valuePoints:
+          type: number
+
+    armyListOption:
+      type: object
+      properties:
+        unitId:
+          type: number
+        optionId:
+          type: number
+        quantity:
+          type: number
+        valuePoints:
+          type: number
+
+    armyListSpecialRuleTroop:
+      type: object
+      properties:
+        troopId:
+          type: number
+        ruleId:
+          type: number
+
+    armyListEquipmentTroop:
+      type: object
+      properties:
+        troopId:
+          type: number
+        equipmentId:
+          type: number
+
 
     tagObject:
       description: A tag's data
@@ -3199,14 +3319,15 @@ components:
           $ref: '#/components/schemas/uuid'
         name:
           $ref: '#/components/schemas/name'
-        army:
-          $ref: '#/components/schemas/uuid'
-        cost:
-          type: string
-          example: "500 pts"
+        armyId:
+          type: number
+        valuePoints:
+          type: number
         isShared:
           type: boolean
           example: true
+        isFavourite:
+          type: boolean
 
 
     # RESPONSES
