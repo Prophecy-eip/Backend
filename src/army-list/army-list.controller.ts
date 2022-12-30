@@ -14,15 +14,22 @@ import {
 import { QueryFailedError } from "typeorm";
 
 import { JwtAuthGuard } from "../account/auth/guards/jwt-auth.guard";
-import { ArmyListUnitDTO } from "./army-list-unit/army-list-unit.dto";
 import { ParamHelper } from "../helper/param.helper";
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
+import {
+    ArmyListUnitTroopSpecialRule
+} from "./army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
+import { ArmyListUnitTroopEquipment } from "./army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
+import { ArmyListUnitMagicItem } from "./army-list-unit/magic-item/army-list-unit-magic-item.entity";
+import { ArmyListUnitMagicStandard } from "./army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
+import { ArmyListUnitOption } from "./army-list-unit/option/army-list-unit-option.entity";
+import { ArmyListUnitCredentialsDTO } from "./army-list-unit/army-list-unit-credentials.dto";
+import { ArmyListDTO } from "./army-list.dto";
+import { ArmyListCredentialsDTO } from "./army-list-credentials.dto";
 
 import { ArmyListUnitService } from "./army-list-unit/army-list-unit.service";
 import { ArmyListService } from "./army-list.service";
-import { ArmyListDTO } from "./army-list.dto";
-import { ArmyListCredentialsDTO } from "./army-list-credentials.dto";
 import { ArmyListUnitMagicItemService } from "./army-list-unit/magic-item/army-list-unit-magic-item.service";
 import {
     ArmyListUnitMagicStandardService
@@ -32,16 +39,8 @@ import {
     ArmyListUnitTroopEquipmentService
 } from "./army-list-unit/troop/equipment/army-list-unit-troop-equipment.service";
 import {
-    ArmyListUnitTroopSpecialRule
-} from "./army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
-import {
     ArmyListUnitTroopSpecialRuleService
 } from "./army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.service";
-import { ArmyListUnitTroopEquipment } from "./army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
-import { ArmyListUnitMagicItem } from "./army-list-unit/magic-item/army-list-unit-magic-item.entity";
-import { ArmyListUnitMagicStandard } from "./army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
-import { ArmyListUnitOption } from "./army-list-unit/option/army-list-unit-option.entity";
-import { ArmyListUnitCredentialsDTO } from "./army-list-unit/army-list-unit-credentials.dto";
 
 @Controller("armies-lists")
 export class ArmyListController {

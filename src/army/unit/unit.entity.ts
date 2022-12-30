@@ -57,7 +57,7 @@ export class Unit {
     @Column({ name: "is_mount" })
     public isMount: boolean;
 
-    @Column({ name: "unit_type_id"})
+    @Column({ name: "unit_type_id" })
     public unitTypeId: number;
 
     @Column({ name: "army_organisation_id" })
@@ -66,7 +66,7 @@ export class Unit {
     @Column({ name: "value_points" })
     public valuePoints: number;
 
-    @Column({ name: "add_value_points"})
+    @Column({ name: "add_value_points" })
     public addValuePoints: number;
 
     @Column({ type: "json" })

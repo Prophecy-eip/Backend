@@ -173,15 +173,6 @@ const ARMY_ORGANISATION_GROUP_TABLE: Table = new Table({
     ]
 });
 
-// const ARMY_ORGANISATION_GROUP_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
-//     new TableForeignKey({
-//         columnNames: ["army_organisation_id"],
-//         referencedColumnNames: ["id"],
-//         referencedTableName: "army_organisations",
-//         onDelete: "CASCADE"
-//     }),
-// ];
-
 const MAGIC_ITEM_CATEGORIES_TABLE: Table = new Table({
    name: "magic_item_categories",
    columns: [
@@ -625,11 +616,9 @@ export class ArmiesInitialization1671123394624 implements MigrationInterface {
         // organisations
         await queryRunner.createTable(ARMY_ORGANISATION_TABLE);
         await queryRunner.createTable(ARMY_ORGANISATION_GROUP_TABLE);
-        // await queryRunner.createForeignKeys(ARMY_ORGANISATION_GROUP_TABLE, ARMY_ORGANISATION_GROUP_TABLE_FOREIGN_KEYS);
         // magic items
         await queryRunner.createTable(MAGIC_ITEM_CATEGORIES_TABLE);
         await queryRunner.createTable(MAGIC_ITEMS_TABLE);
-        // await queryRunner.createForeignKeys(MAGIC_ITEMS_TABLE, MAGIC_ITEMS_TABLE_FOREIGN_KEYS);
         // magic standards
         await queryRunner.createTable(MAGIC_STANDARDS_TABLE);
         // equipments

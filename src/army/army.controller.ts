@@ -1,9 +1,10 @@
 import { BadRequestException, Controller, Get, HttpCode, HttpStatus, NotFoundException, Param } from "@nestjs/common";
-import { ArmyService } from "./army.service";
+
 import { Army } from "./army.entity";
 import { ArmyCredentialsDTO } from "./army-credentials.dto";
 import { ArmyDTO } from "./army.dto";
-import { stringify } from "ts-jest";
+
+import { ArmyService } from "./army.service";
 
 @Controller("armies")
 export class ArmyController {

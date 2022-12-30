@@ -16,11 +16,6 @@ import { UnitOption } from "./army/unit/option/unit-option.entity";
 import { Troop } from "./army/unit/troop/troop.entity";
 import { EquipmentUnitTroop } from "./army/unit/troop/equipment/equipment-unit-troop.entity";
 import { SpecialRuleUnitTroop } from "./army/unit/troop/special-rule/special-rule-unit-troop.entity";
-
-import { ArmyModule } from "./army/army.module"
-import { AccountModule } from "./account/account.module";
-import { ArmyListModule } from "./army-list/army-list.module";
-import { HeartbeatModule } from "./heartbeat/heartbeat.module";
 import { ArmyList } from "./army-list/army-list.entity";
 import { ArmyListUnit } from "./army-list/army-list-unit/army-list-unit.entity";
 import { ArmyListUnitMagicItem } from "./army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
@@ -34,6 +29,11 @@ import {
 import {
     ArmyListUnitTroopEquipment
 } from "./army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
+
+import { ArmyModule } from "./army/army.module"
+import { AccountModule } from "./account/account.module";
+import { ArmyListModule } from "./army-list/army-list.module";
+import { HeartbeatModule } from "./heartbeat/heartbeat.module";
 
 dotenv.config()
 

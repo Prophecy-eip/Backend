@@ -259,7 +259,7 @@ class BuilderUnitOption {
     is_per_model: boolean;
     is_only_foot: boolean;
     mount_id: number;
-    mount_and_carac_points: boolean; ////////////////////////
+    mount_and_carac_points: boolean;
     organisation_mode: string;
     is_multiple: boolean;
     is_required: boolean;

@@ -58,13 +58,6 @@ services:
       networks:
         - prophecy
 
-  script_setup_armies:
-      build:
-        dockerfile: armies_data.Dockerfile
-        context: .
-      networks:
-        - prophecy
-
 volumes:
   prophecy:
 

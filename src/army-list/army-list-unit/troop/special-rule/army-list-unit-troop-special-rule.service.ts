@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { randomUUID } from "crypto";
+
 import { ArmyListUnitTroopSpecialRule } from "./army-list-unit-troop-special-rule.entity";
 
 @Injectable()
