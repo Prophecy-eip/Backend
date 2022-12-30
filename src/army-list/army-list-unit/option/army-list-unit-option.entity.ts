@@ -11,7 +11,7 @@ export class ArmyListUnitOption {
     @Column({ type: "int", name: "unit_id" })
     public unitId: number;
 
-    @Column({ type: "int", name: "unit_option_id" })
+    @Column({ type: "int", name: "option_id" })
     public optionId: number;
 
     @Column()

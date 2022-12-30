@@ -12,20 +12,21 @@ export class ArmyListUnitService {
         private readonly repository: Repository<ArmyListUnit>
     ) {}
 
-    async create(unit: number, quantity: number, formation: string, armyList: string): Promise<ArmyListUnit> {
-        const id: string = randomUUID()
-        return this.repository.create({ id, unit, quantity, formation, armyList });
+    async create(unitId: number, quantity: number, formation: string, armyListId: string, troopIds: number[]): Promise<ArmyListUnit> {
+        const id: string = randomUUID();
+
+        return this.repository.create({ id, unitId, quantity, formation, armyListId, troopIds });
     }
 
     save(unit: ArmyListUnit): Promise<ArmyListUnit> {
         return this.repository.save(unit);
     }
 
-    findByArmyList(list: string): Promise<ArmyListUnit[]> {
-        return this.repository.findBy({ armyList: list });
+    findByArmyList(listId: string): Promise<ArmyListUnit[]> {
+        return this.repository.findBy({ armyListId: listId });
     }
 
-    async deleteByList(list: string): Promise<void> {
-        await this.repository.delete({ armyList: list })
+    async deleteByList(listId: string): Promise<void> {
+        await this.repository.delete({ armyListId: listId });
     }
 }

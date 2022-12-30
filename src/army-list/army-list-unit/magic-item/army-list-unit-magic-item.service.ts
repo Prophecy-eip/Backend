@@ -6,7 +6,7 @@ import { randomUUID } from "crypto";
 import { ArmyListUnitMagicItem } from "./army-list-unit-magic-item.entity";
 
 @Injectable()
-export class ArmyListUnitUpgradeService {
+export class ArmyListUnitMagicItemService {
     constructor(
         @InjectRepository(ArmyListUnitMagicItem)
         private repository: Repository<ArmyListUnitMagicItem>

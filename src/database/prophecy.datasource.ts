@@ -20,7 +20,6 @@ import { Unit } from "../army/unit/unit.entity";
 import { ArmyListUnitMagicItem } from "../army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
 import { ArmyListUnitMagicStandard } from "../army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
 import { ArmyListUnitOption } from "../army-list/army-list-unit/option/army-list-unit-option.entity";
-import { ArmyListRule } from "../army-list/army-list-rule/army-list-rule.entity";
 import { ArmyListUnitTroopEquipment } from "../army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 import { ArmyListUnitTroopSpecialRule } from "../army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
 
@@ -63,7 +62,7 @@ export class ProphecyDatasource extends DataSource {
                 ArmyListUnitMagicItem,
                 ArmyListUnitMagicStandard,
                 ArmyListUnitOption,
-                ArmyListRule,
+                // ArmyListRule,
                 ArmyListUnitTroopEquipment,
                 ArmyListUnitTroopSpecialRule,
             ],

@@ -1,9 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 import { JoinColumn } from "typeorm";
 
 @Entity("army_lists")
 export class ArmyList {
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryColumn()
     public id: string;
 
     @Column()
@@ -22,4 +22,7 @@ export class ArmyList {
 
     @Column({ name: "is_shared" })
     public isShared: boolean;
+
+    @Column({ name: "is_favourite" })
+    public isFavourite: boolean;
 }

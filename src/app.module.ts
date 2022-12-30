@@ -5,12 +5,6 @@ import * as dotenv from "dotenv";
 import { Profile } from "./account/profile/profile.entity";
 import { Army } from "./army/army.entity"
 import { Unit } from "./army/unit/unit.entity";
-import { ArmyList } from "./army-list/army-list.entity";
-import { ArmyListUnit } from "./army-list/army-list-unit/army-list-unit.entity";
-import { ArmyListRule } from "./army-list/army-list-rule/army-list-rule.entity";
-import { ArmyListUpgrade } from "./army-list/army-list-upgrade/army-list-upgrade.entity";
-import { ArmyListUnitOption } from "./army-list/army-list-unit/army-list-unit-option/army-list-unit-option.entity";
-import { ArmyListUnitUpgrade } from "./army-list/army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.entity";
 import { Equipment } from "./army/equipment/equipment.entity";
 import { EquipmentCategory } from "./army/equipment/category/equipment-category.entity";
 import { MagicItem } from "./army/magic-item/magic-item.entity";
@@ -27,6 +21,19 @@ import { ArmyModule } from "./army/army.module"
 import { AccountModule } from "./account/account.module";
 import { ArmyListModule } from "./army-list/army-list.module";
 import { HeartbeatModule } from "./heartbeat/heartbeat.module";
+import { ArmyList } from "./army-list/army-list.entity";
+import { ArmyListUnit } from "./army-list/army-list-unit/army-list-unit.entity";
+import { ArmyListUnitMagicItem } from "./army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
+import {
+    ArmyListUnitMagicStandard
+} from "./army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
+import { ArmyListUnitOption } from "./army-list/army-list-unit/option/army-list-unit-option.entity";
+import {
+    ArmyListUnitTroopSpecialRule
+} from "./army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
+import {
+    ArmyListUnitTroopEquipment
+} from "./army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 
 dotenv.config()
 
@@ -61,18 +68,19 @@ const DB_DIALECT = "postgres"
                 Troop,
                 EquipmentUnitTroop,
                 SpecialRuleUnitTroop,
-                // ArmyList,
-                // ArmyListUnit,
-                // ArmyListRule,
-                // ArmyListUpgrade,
-                // ArmyListUnitOption,
-                // ArmyListUnitUpgrade,
+                ArmyList,
+                ArmyListUnit,
+                ArmyListUnitMagicItem,
+                ArmyListUnitMagicStandard,
+                ArmyListUnitOption,
+                ArmyListUnitTroopSpecialRule,
+                ArmyListUnitTroopEquipment,
             ],
             synchronize: false
         }),
         AccountModule,
         ArmyModule,
-        // ArmyListModule,
+        ArmyListModule,
         HeartbeatModule,
     ],
 })

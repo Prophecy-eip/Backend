@@ -12,13 +12,11 @@ export class ArmyListService {
         private repository: Repository<ArmyList>
     ) {}
 
-    async create(name: string,
-                 army: string,
-                 cost: string,
-                 isShared: boolean,
-                 owner: string): Promise<ArmyList> {
+    async create(name: string, owner: string, armyId: number, valuePoints: number, isShared: boolean,
+        isFavourite: boolean): Promise<ArmyList> {
         const id: string = randomUUID();
-        return this.repository.create({ id, name, army, cost, isShared, owner });
+
+        return this.repository.create({ id, name, owner, armyId, valuePoints, isShared, isFavourite });
     }
 
     save(list: ArmyList): Promise<ArmyList> {
@@ -29,11 +27,11 @@ export class ArmyListService {
         return this.repository.findBy({ owner: username });
     }
 
-    async findById(id: string): Promise<ArmyList> {
+    async findOneById(id: string): Promise<ArmyList> {
         return this.repository.findOneBy({ id: id });
     }
 
-    async findByOwnerAndId(username: string, id: string): Promise<ArmyList> {
+    async findOneByOwnerAndId(username: string, id: string): Promise<ArmyList> {
         return this.repository.findOneBy([{ id: id }, { owner: username }]);
     }
 
@@ -41,7 +39,8 @@ export class ArmyListService {
         await this.repository.delete(id);
     }
 
-    async update(id: string, name: string, army: string, cost: string, isShared: boolean) {
-        await this.repository.update({ id: id }, { name: name, army: army, valuePoints: cost, isShared: isShared });
+    async update(id: string, name: string, armyId: number, valuePoints: number, isShared: boolean, isFavourite: boolean) {
+        await this.repository.update({ id: id }, { name: name, armyId: armyId,
+            valuePoints: valuePoints, isShared: isShared, isFavourite: isFavourite });
     }
 }

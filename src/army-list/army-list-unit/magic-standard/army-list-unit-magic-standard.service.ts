@@ -12,10 +12,11 @@ export class ArmyListUnitMagicStandardService {
         private repository: Repository<ArmyListUnitMagicStandard>
     ) {}
 
-    async create(unitId: number, armyListId: string, magicStandardId: number, unitOptionId: number, quantity: number, valuePoints: number): Promise<ArmyListUnitMagicStandard> {
+    async create(armyListUnitId: string, magicStandardId: number, unitOptionId: number, quantity: number,
+        valuePoints: number): Promise<ArmyListUnitMagicStandard> {
         const id: string = randomUUID();
 
-        return this.repository.create({ id, magicStandardId, unitOptionId, quantity, valuePoints });
+        return this.repository.create({ id, armyListUnitId, magicStandardId, unitOptionId, quantity, valuePoints });
     }
 
     async save(standard: ArmyListUnitMagicStandard): Promise<ArmyListUnitMagicStandard> {

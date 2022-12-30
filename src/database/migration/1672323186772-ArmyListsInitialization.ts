@@ -22,7 +22,10 @@ const ARMY_LISTS_TABLE: Table = new Table({
         }, {
             name: "is_shared",
             type: "boolean",
-        }
+        }, {
+            name: "is_favourite",
+            type: "boolean",
+        },
     ]
 });
 
@@ -100,9 +103,11 @@ const ARMY_LIST_UNIT_MAGIC_ITEMS_TABLE: Table = new Table({
         }, {
             name: "unit_option_id",
             type: "int",
+            isNullable: true,
         }, {
             name: "equipment_id",
             type: "int",
+            isNullable: true,
         }, {
             name: "quantity",
             type: "int",
@@ -158,6 +163,7 @@ const ARMY_LIST_UNIT_MAGIC_STANDARDS_TABLE: Table = new Table({
         }, {
             name: "unit_option_id",
             type: "int",
+            isNullable: true,
         }, {
             name: "quantity",
             type: "int",
@@ -254,6 +260,11 @@ const ARMY_LIST_UNIT_TROOP_EQUIPMENTS_TABLE: Table = new Table({
 
 const ARMY_LIST_UNIT_TROOP_EQUIPMENTS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
     new TableForeignKey({
+        columnNames: ["army_list_unit_id"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "army_list_units",
+        onDelete: "CASCADE",
+    }), new TableForeignKey({
         columnNames: ["troop_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "troops",
@@ -280,7 +291,7 @@ const ARMY_LIST_UNIT_TROOP_SPECIAL_RULES_TABLE: Table = new Table({
             name: "troop_id",
             type: "int",
         }, {
-            name: "rule_id",
+            name: "special_rule_id",
             type: "int",
         },
     ]
@@ -288,12 +299,17 @@ const ARMY_LIST_UNIT_TROOP_SPECIAL_RULES_TABLE: Table = new Table({
 
 const ARMY_LIST_UNIT_TROOP_SPECIAL_RULES_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
     new TableForeignKey({
+        columnNames: ["army_list_unit_id"],
+        referencedColumnNames: ["id"],
+        referencedTableName: "army_list_units",
+        onDelete: "CASCADE",
+    }), new TableForeignKey({
         columnNames: ["troop_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "troops",
         onDelete: "CASCADE",
     }), new TableForeignKey({
-        columnNames: ["rule_id"],
+        columnNames: ["special_rule_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "special_rules",
         onDelete: "CASCADE",
