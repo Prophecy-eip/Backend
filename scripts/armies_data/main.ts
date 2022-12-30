@@ -50,7 +50,7 @@ class BuilderArmyOrganisationGroupLimit {
     repeat_value: number;
 }
 
-class ArmyOrganisationUnitLimit {
+class BuilderArmyOrganisationUnitLimit {
     id: number;
     unit_min: number;
     unit_max: number;
@@ -72,7 +72,7 @@ class BuilderArmyOrganisationGroup {
     position: number; // unused
     medium_logo: string; // unused
     army_organisation_group_limits: BuilderArmyOrganisationGroupLimit[];
-    army_organisation_unit_limits: ArmyOrganisationUnitLimit[];
+    army_organisation_unit_limits: BuilderArmyOrganisationUnitLimit[];
     change_item_limits: any[]
 }
 
@@ -415,7 +415,7 @@ async function saveEquipmentAndCategories(queryBuilder: any, equipment: BuilderE
         } catch(error) { logError(error); }
     }
     try {
-        await queryBuilder.insert().into(Equipment).values({
+            await queryBuilder.insert().into(Equipment).values({
             id: equipment.id,
             versionId: equipment.version_id,
             name: equipment.name,
@@ -438,7 +438,7 @@ async function saveUnit(queryBuilder: any, unit: BuilderUnit) {
             await queryBuilder.insert().into(Troop).values({
                 id: troop.id,
                 name: troop.name,
-                characteristics: stringify(troop.carac),
+                characteristics: troop.carac,
             }).execute();
         } catch (error){ logError(error); }
     }
@@ -539,7 +539,7 @@ async function saveUnit(queryBuilder: any, unit: BuilderUnit) {
             unitTypeId: unit.unit_type_id,
             armyOrganisationId: unit.army_organisation_id,
             valuePoints: unit.value_points,
-            characteristics: stringify(unit.carac),
+            characteristics: unit.carac,
             troopIds: troops,
             specialRuleUnitTroopIds: specialRules,
             equipmentUnitTroopIds: equipments,
@@ -579,8 +579,8 @@ async function saveArmy() {
                             id: group.id,
                             armyOrganisationId: group.army_organisation_id,
                             name: group.name,
-                            organisationGroupLimits: (group.army_organisation_group_limits === undefined ? null : stringify(group.army_organisation_group_limits)),
-                            organisationUnitLimits: (group.army_organisation_unit_limits === undefined ? null : stringify(group.army_organisation_unit_limits)),
+                            organisationGroupLimits: group.army_organisation_group_limits,
+                            organisationUnitLimits: group.army_organisation_unit_limits,
                             changeItemLimits: (group.change_item_limits === undefined ? null : stringify(group.change_item_limits))
                         }).execute();
                     } catch(error) { logError(error); }

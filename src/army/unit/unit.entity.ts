@@ -69,7 +69,7 @@ export class Unit {
     @Column({ name: "add_value_points"})
     public addValuePoints: number;
 
-    @Column({ type: "varchar" })
+    @Column({ type: "json" })
     public characteristics: UnitCharacteristic;
 
     @Column({ name: "troop_ids", type: "int", array: true })

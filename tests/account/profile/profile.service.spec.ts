@@ -32,7 +32,7 @@ function initDefaultProfile(username: string, email: string, password: string): 
     profile.username = username;
     profile.email = email;
     profile.password = password;
-    profile.isVerified = false;
+    profile.isEmailVerified = false;
     profile.accountType = "player";
     profile.profilePicturePath = "";
     return profile;

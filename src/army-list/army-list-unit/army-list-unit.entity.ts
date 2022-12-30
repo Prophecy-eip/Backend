@@ -1,44 +1,54 @@
 import { AfterLoad, Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 
 import { ProphecyDatasource } from "../../database/prophecy.datasource";
-import { ArmyListUnitOption } from "./army-list-unit-option/army-list-unit-option.entity";
-import { ArmyListUnitUpgrade } from "./army-list-unit-upgrade/army-list-unit-upgrade.entity";
+import { ArmyListUnitMagicItem } from "./magic-item/army-list-unit-magic-item.entity";
+import { ArmyListUnitMagicStandard } from "./magic-standard/army-list-unit-magic-standard.entity";
+import { ArmyListUnitOption } from "./option/army-list-unit-option.entity";
+import { Troop } from "../../army/unit/troop/troop.entity";
+import { ArmyListUnitTroopSpecialRule } from "./troop/special-rule/army-list-unit-troop-special-rule.entity";
+import { ArmyListUnitTroopEquipment } from "./troop/equipment/army-list-unit-troop-equipment.entity";
 
 @Entity("army_list_units")
 export class ArmyListUnit {
     @PrimaryGeneratedColumn("uuid")
     public id: string;
 
-    @Column({ type: "varchar" })
+    @Column({ type: "int", name: "unit_id" })
     @JoinColumn({ name: "units", referencedColumnName: "id" })
-    public unit: string
+    public unitId: number;
 
     @Column({ type: "int" })
-    public number: number;
+    public quantity: number;
 
     @Column({ type: "varchar" })
     public formation: string;
 
-    @Column({ name: "army_list", type: "varchar" })
-    public armyList: string;
+    @Column({ name: "army_list_id", type: "varchar" })
+    public armyListId: string;
 
-    public options: string[] = [];
-    public upgrades: string[] = [];
+    @Column({ name: "troop_ids", type: "int", array: true })
+    public troopIds: number[];
+
+    public magicItems: ArmyListUnitMagicItem[] = [];
+    public magicStandards: ArmyListUnitMagicStandard[] = [];
+    public options: ArmyListUnitOption[] = [];
+    public troops: Troop[] = [];
+    public specialRuleTroops: ArmyListUnitTroopSpecialRule[] = [];
+    public equipmentTroops: ArmyListUnitTroopEquipment[] = [];
 
     @AfterLoad()
     private async load() {
         let dataSource: ProphecyDatasource = new ProphecyDatasource();
 
         await dataSource.initialize();
-        const opt: ArmyListUnitOption[] = await dataSource.getRepository(ArmyListUnitOption).findBy({ unit: this.id });
-        const upg: ArmyListUnitUpgrade[] = await dataSource.getRepository(ArmyListUnitUpgrade).findBy({ unit: this.id });
-
-        for (const o of opt) {
-            this.options.push(o.option);
+        for (const id of this.troopIds) {
+            this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }))
         }
-        for (const u of upg) {
-            this.upgrades.push(u.upgrade);
-        }
+        this.magicItems = await dataSource.getRepository(ArmyListUnitMagicItem).findBy({ armyListUnitId: this.id });
+        this.options = await dataSource.getRepository(ArmyListUnitOption).findBy({ armyListUnitId: this.id });
+        this.magicStandards = await dataSource.getRepository(ArmyListUnitMagicStandard).findBy({ armyListUnitId: this.id });
+        this.specialRuleTroops = await dataSource.getRepository(ArmyListUnitTroopSpecialRule).findBy({ armyListUnitId: this.id });
+        this.equipmentTroops = await dataSource.getRepository(ArmyListUnitTroopEquipment).findBy({ armyListUnitId: this.id });
         await dataSource.destroy();
     }
 }

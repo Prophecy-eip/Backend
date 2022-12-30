@@ -3,10 +3,6 @@ import { DataSource } from "typeorm";
 
 import { ArmyList } from "../army-list/army-list.entity";
 import { ArmyListUnit } from "../army-list/army-list-unit/army-list-unit.entity";
-import { ArmyListUnitOption } from "../army-list/army-list-unit/army-list-unit-option/army-list-unit-option.entity";
-import { ArmyListUnitUpgrade } from "../army-list/army-list-unit/army-list-unit-upgrade/army-list-unit-upgrade.entity";
-import { ArmyListUpgrade } from "../army-list/army-list-upgrade/army-list-upgrade.entity";
-import { ArmyListRule } from "../army-list/army-list-rule/army-list-rule.entity";
 import { Army } from "../army/army.entity";
 import { ArmyOrganisation } from "../army/organisation/army-organisation.entity";
 import { ArmyOrganisationGroup } from "../army/organisation/group/army-organisation-group.entity";
@@ -21,6 +17,12 @@ import { SpecialRuleUnitTroop } from "../army/unit/troop/special-rule/special-ru
 import { EquipmentUnitTroop } from "../army/unit/troop/equipment/equipment-unit-troop.entity";
 import { UnitOption } from "../army/unit/option/unit-option.entity";
 import { Unit } from "../army/unit/unit.entity";
+import { ArmyListUnitMagicItem } from "../army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
+import { ArmyListUnitMagicStandard } from "../army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
+import { ArmyListUnitOption } from "../army-list/army-list-unit/option/army-list-unit-option.entity";
+import { ArmyListRule } from "../army-list/army-list-rule/army-list-rule.entity";
+import { ArmyListUnitTroopEquipment } from "../army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
+import { ArmyListUnitTroopSpecialRule } from "../army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
 
 dotenv.config()
 
@@ -58,10 +60,12 @@ export class ProphecyDatasource extends DataSource {
                 SpecialRule,
                 ArmyList,
                 ArmyListUnit,
+                ArmyListUnitMagicItem,
+                ArmyListUnitMagicStandard,
                 ArmyListUnitOption,
-                ArmyListUnitUpgrade,
-                ArmyListUpgrade,
                 ArmyListRule,
+                ArmyListUnitTroopEquipment,
+                ArmyListUnitTroopSpecialRule,
             ],
         });
     }

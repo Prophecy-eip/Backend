@@ -30,6 +30,6 @@ export class Troop {
     @Column()
     public name: string;
 
-    @Column({ type: "varchar" })
+    @Column({ type: "json", array: true })
     public characteristics: Characteristics[];
 }

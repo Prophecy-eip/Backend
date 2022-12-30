@@ -12,9 +12,9 @@ export class ArmyListUnitService {
         private readonly repository: Repository<ArmyListUnit>
     ) {}
 
-    async create(unit: string, number: number, formation: string, armyList: string): Promise<ArmyListUnit> {
+    async create(unit: number, quantity: number, formation: string, armyList: string): Promise<ArmyListUnit> {
         const id: string = randomUUID()
-        return this.repository.create({ id, unit, number, formation, armyList });
+        return this.repository.create({ id, unit, quantity, formation, armyList });
     }
 
     save(unit: ArmyListUnit): Promise<ArmyListUnit> {

@@ -29,6 +29,9 @@ export class Equipment {
 
     @AfterLoad()
     private async load() {
+        if (this.equipmentCategoriesIds === null) {
+            return;
+        }
         let datasource: ProphecyDatasource = new ProphecyDatasource();
 
         await datasource.initialize();

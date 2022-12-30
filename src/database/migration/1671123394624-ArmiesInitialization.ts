@@ -110,6 +110,7 @@ const EQUIPMENTS_TABLE: Table = new Table({
             name: "equipment_categories",
             type: "int",
             isArray: true,
+            isNullable: true,
         }
     ]
 });
@@ -157,12 +158,13 @@ const ARMY_ORGANISATION_GROUP_TABLE: Table = new Table({
             isNullable: false
         }, {
             name: "organisation_group_limits",
-            type: "varchar",
+            type: "json",
             isNullable: true,
         }, {
             name: "organisation_unit_limits",
             type: "varchar",
             isNullable: true,
+            isArray: true,
         }, {
             name: "change_item_limits",
             type: "varchar",
@@ -382,7 +384,7 @@ const UNITS_TABLE: Table = new Table({
             isNullable: true,
         }, {
             name: "characteristics",
-            type: "varchar"
+            type: "json"
         }, {
             name: "troop_ids",
             type: "int",
@@ -416,7 +418,7 @@ const TROOPS_TABLE: Table = new Table({
             isNullable: true,
         }, {
             name: "characteristics",
-            type: "varchar"
+            type: "json",
         }
     ]
 });

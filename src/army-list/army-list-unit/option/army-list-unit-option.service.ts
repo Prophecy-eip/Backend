@@ -12,11 +12,11 @@ export class ArmyListUnitOptionService {
         private repository: Repository<ArmyListUnitOption>
     ) {}
 
-    async create(unit: string, option: string): Promise<ArmyListUnitOption> {
+    async create(armyListUnitId: string, unitId: number, optionId: number, quantity: number, valuePoints: number): Promise<ArmyListUnitOption> {
         const id: string = randomUUID();
-        return this.repository.create({ id, unit, option });
-    }
 
+        return this.repository.create({ id, armyListUnitId, unitId, optionId, quantity, valuePoints })
+    }
     async save(option: ArmyListUnitOption): Promise<ArmyListUnitOption> {
         return this.repository.save(option);
     }

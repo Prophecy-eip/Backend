@@ -8,8 +8,8 @@ let app: INestApplication;
 
 const ARMIES = "/armies";
 const LOOKUP_ROOT = ARMIES + "/lookup";
-
-const FAKE_ID: string = "fakeId";
+const FAKE_ID: number = 12345;
+const INVALID_ID: string = "12345678910111213";
 
 describe("Account Route", () => {
 
@@ -22,13 +22,18 @@ describe("Account Route", () => {
         await app.init();
     });
 
-    // it("lookup: Retrieve army credentials", async () => {
-    //     const response = await request(app.getHttpServer())
-    //         .get(LOOKUP_ROOT);
-    //
-    //     expect(response.status).toEqual(HttpStatus.OK);
-    //     expect(response.body).toBeDefined();
-    // });
+    it("lookup: Retrieve army credentials", async () => {
+        const response = await request(app.getHttpServer())
+            .get(LOOKUP_ROOT);
+
+        expect(response.status).toEqual(HttpStatus.OK);
+        expect(response.body).toBeDefined();
+        expect(response.body.length).toBeGreaterThan(0);
+        for (const it of response.body) {
+            expect(it.id).toBeDefined();
+            expect(it.name).toBeDefined();
+        }
+    });
 
     // it(":id: Retrieve existing army's data", async () => {
     //     const credentials = await request(app.getHttpServer())
@@ -56,5 +61,12 @@ describe("Account Route", () => {
             .get(`/armies/${FAKE_ID}`);
 
         expect(response.status).toEqual(HttpStatus.NOT_FOUND);
+    });
+
+    it(":id: Use invalid id type - then should return Bad Request (400)", async () => {
+        const response = await request(app.getHttpServer())
+            .get(`/armies/${INVALID_ID}`);
+
+        expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 });

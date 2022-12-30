@@ -23,6 +23,9 @@ export class ArmyDTO {
         this.magicStandard = army.magicStandards;
         for (const e of army.equipments)
             this.equipments.push(new EquipmentDTO(e));
+        this.specialRules = army.specialRules;
+        for (const u of army.units)
+            this.units.push(new UnitDTO(u));
     }
 
     public id: number;

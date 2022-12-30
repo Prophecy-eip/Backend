@@ -42,6 +42,6 @@ export class ArmyListService {
     }
 
     async update(id: string, name: string, army: string, cost: string, isShared: boolean) {
-        await this.repository.update({ id: id }, { name: name, army: army, cost: cost, isShared: isShared });
+        await this.repository.update({ id: id }, { name: name, army: army, valuePoints: cost, isShared: isShared });
     }
 }
