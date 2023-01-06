@@ -625,9 +625,9 @@ paths:
   # PROPHECIES
 
   # read
-  /prophecies/get-prophecy:
+  /prophecies/units/get-prophecy:
     post:
-      summary: Retrieves a prophecy for the user
+      summary: Retrieves a unit prophecy for the user
       description: ""
       tags:
         - prophecies
@@ -2225,17 +2225,12 @@ paths:
           $ref: '#/components/schemas/notFoundResponse'
 
 
-# Added by API Auto Mocking Plugin
-# host: virtserver.swaggerhub.com
-# basePath: /Victoire-Rabeau/Prophecy/1.0.0
-# schemes:
-# - https
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/Victoire-Rabeau/Prophecy/1.0.0
-  - description: The local server
-    url: localhost
+  - description: Prophecy's server
+    url: https://prophecy-eip.com
     variables:
       basePath:
         default: /api
@@ -3203,43 +3198,108 @@ components:
       description: A prophecy request data
       type: object
       properties:
-        playersArmy:
-          allOf:
-            - description: The player's army list
-            - $ref: '#/components/schemas/armyListObject'
-        opponentsArmy:
-          allOf:
-            - description: The opponent's army list
-            - $ref: '#/components/schemas/armyListObject'
-      required:
-        - playersArmy
-        - opponentsArmy
+        attackingRegiment:
+          $ref: "#/components/schemas/armyListUnit"
+        defendingRegiment:
+          $ref: "#/components/schemas/armyListUnit"
 
     prophecyObject:
       description: A prophecy data
       type: object
       properties:
-        playersArmy:
-          allOf:
-            - description: The player's army list
-            - $ref: '#/components/schemas/armyListObject'
-        opponentsArmy:
-          allOf:
-            - description: The opponent's army list
-            - $ref: '#/components/schemas/armyListObject'
-        playersScore:
-          description: The player's predicted score
-          type: number
-          example: 15
-        opponentsScore:
-          description: The opponent's predicted score
-          type: number
-          example: 5
+        attackingRegiment:
+          $ref: "#/components/schemas/armyListUnit"
+        defendingRegiment:
+          $ref: "#/components/schemas/armyListUnit"
+        bestCase:
+          $ref: "#/components/schemas/prophecyUnitCase"
+        meanCase:
+          $ref: "#/components/schemas/prophecyUnitCase"
+        worstCase:
+          $ref: "#/components/schemas/prophecyUnitCase"
+
       required:
         - playersArmy
         - opponentsArmy
         - playersScore
         - opponentsScore
+
+    prophecyUnitCase:
+      type: object
+      properties:
+        attackingRegiment:
+          $ref: "#/components/schemas/prophecyUnitRegiment"
+        defendingRegiment:
+          $ref: "#/components/schemas/prophecyUnitRegiment"
+        occurenceProbability:
+          type: number
+
+
+    prophecyUnitRegiment:
+      type: object
+      properties:
+        model:
+          $ref: "#/components/schemas/prophecyUnitModel"
+        nbRows:
+          type: number
+        nbCols:
+          type: number
+        regimentHealthPoints:
+          type: number
+        points:
+          type: number
+
+    prophecyUnitModel:
+      type: object
+      properties:
+        stats:
+          $ref: "#/components/schemas/prophecyUnitModel"
+        modifiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/prophecyUnitModifier"
+
+    prophecyUnitModifier:
+      type: object
+      properties:
+        stats:
+          $ref: "#/components/schemas/prophecyUnitModel"
+        bonus:
+          type: boolean
+        nbDice:
+          type: number
+        requirements:
+          example: []
+
+    prophecyUnitModelStats:
+      type: object
+      properties:
+        advance:
+          type: number
+        march:
+          type: number
+        discipline:
+          type: number
+        healthPoint:
+          type: number
+        defense:
+          type: number
+        resilience:
+          type: number
+        armour:
+          type: number
+        aegis:
+          type: number
+        attack:
+          type: number
+        offensive:
+          type: number
+        strength:
+          type: number
+        armourPenetration:
+          type: number
+        agility:
+          type: number
 
     pictureContent:
       description: A picture's content

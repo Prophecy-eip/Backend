@@ -22,7 +22,8 @@ jobs:
           SES_ACCESS_KEY=${{ secrets.AWS_SES_ACCESS_KEY }}\n
           SES_SECRET_ACCESS_KEY=${{ secrets.AWS_SES_SECRET_ACCESS_KEY }}\n
           SES_FROM_ADDRESS=${{ secrets.AWS_SES_FROM_ADDRESS }}\n
-          API_URL=${{ secrets.API_URL }}" > .env
+          API_URL=${{ secrets.API_URL }}\n
+          MATHS_KEY=${{ secrets.MATHS_KEY }}\n" > .env
           printf "DATABASE_IP=${{ secrets.DATABASES_IP  }}\n
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}\n
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}\n

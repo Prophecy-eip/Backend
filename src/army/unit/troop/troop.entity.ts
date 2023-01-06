@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column } from "typeorm";
 
-class Characteristics {
+export class TroopCharacteristics {
     public M: string;
     public WS: string;
     public BS: string;
@@ -30,6 +30,6 @@ export class Troop {
     @Column()
     public name: string;
 
-    @Column({ type: "json", array: true })
-    public characteristics: Characteristics[];
+    @Column({ type: "json" })
+    public characteristics: TroopCharacteristics;
 }
