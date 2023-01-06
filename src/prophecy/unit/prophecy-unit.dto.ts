@@ -1,0 +1,18 @@
+import { ProphecyUnit, ProphecyUnitCase } from "./prophecy-unit.entity";
+import { ArmyListUnitDTO } from "../../army-list/army-list-unit/army-list-unit.dto";
+
+export class ProphecyUnitDTO {
+    constructor(prophecy: ProphecyUnit) {
+        this.attackingRegiment = new ArmyListUnitDTO(prophecy.attackingRegimentUnit);
+        this.defendingRegiment = new ArmyListUnitDTO(prophecy.defendingRegimentUnit);
+        this.meanCase = prophecy.meanCase;
+        this.bestCase = prophecy.bestCase;
+        this.worstCase = prophecy.worstCase;
+    }
+
+    public attackingRegiment: ArmyListUnitDTO;
+    public defendingRegiment: ArmyListUnitDTO;
+    public bestCase: ProphecyUnitCase;
+    public meanCase: ProphecyUnitCase;
+    public worstCase: ProphecyUnitCase;
+}

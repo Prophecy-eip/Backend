@@ -29,11 +29,13 @@ import {
 import {
     ArmyListUnitTroopEquipment
 } from "./army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
+import { ProphecyUnit } from "./prophecy/unit/prophecy-unit.entity";
 
 import { ArmyModule } from "./army/army.module"
 import { AccountModule } from "./account/account.module";
 import { ArmyListModule } from "./army-list/army-list.module";
 import { HeartbeatModule } from "./heartbeat/heartbeat.module";
+import { ProphecyModule } from "./prophecy/prophecy.module";
 
 dotenv.config()
 
@@ -75,6 +77,7 @@ const DB_DIALECT = "postgres"
                 ArmyListUnitOption,
                 ArmyListUnitTroopSpecialRule,
                 ArmyListUnitTroopEquipment,
+                ProphecyUnit,
             ],
             synchronize: false
         }),
@@ -82,6 +85,7 @@ const DB_DIALECT = "postgres"
         ArmyModule,
         ArmyListModule,
         HeartbeatModule,
+        ProphecyModule
     ],
 })
 export class AppModule {}

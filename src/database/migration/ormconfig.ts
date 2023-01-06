@@ -22,6 +22,8 @@ import { Troop } from "../../army/unit/troop/troop.entity";
 import { UsersInitialization1667924495954 } from "./1667924495954-UsersInitialization";
 import { ArmiesInitialization1671123394624 } from "./1671123394624-ArmiesInitialization";
 import { ArmyListsInitialization1672323186772 } from "./1672323186772-ArmyListsInitialization";
+import { ProphecyUnitInitialization1672968324920 } from "./1672968324920-ProphecyUnitInitialization";
+import { ProphecyUnit } from "../../prophecy/unit/prophecy-unit.entity";
 
 dotenv.config()
 
@@ -56,10 +58,12 @@ export const connectionSource = new DataSource({
         ArmyListUnitMagicStandard,
         ArmyListUnitOption,
         Troop,
+        ProphecyUnit,
     ],
     migrations: [
         UsersInitialization1667924495954,
         ArmiesInitialization1671123394624,
         ArmyListsInitialization1672323186772,
+        ProphecyUnitInitialization1672968324920,
     ]
 });

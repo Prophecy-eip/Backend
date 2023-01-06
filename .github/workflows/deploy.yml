@@ -3,7 +3,8 @@ on:
   push:
     branches:
       - master
-jobs:
+
+cjobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
@@ -27,7 +28,8 @@ jobs:
           SES_ACCESS_KEY=${{ secrets.AWS_SES_ACCESS_KEY }}\n
           SES_SECRET_ACCESS_KEY=${{ secrets.AWS_SES_SECRET_ACCESS_KEY }}\n
           SES_FROM_ADDRESS=${{ secrets.AWS_SES_FROM_ADDRESS }}\n
-          API_URL=${{ secrets.API_URL }}" > .env
+          API_URL=${{ secrets.API_URL }}\n
+          MATHS_KEY=${{ secrets.MATHS_KEY }}\n" > .env
       - name: "Configure AWS credentials"
         uses: aws-actions/configure-aws-credentials@v1
         with:

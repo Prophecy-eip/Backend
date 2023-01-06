@@ -7,6 +7,7 @@ import { ArmyListUnitOption } from "./option/army-list-unit-option.entity";
 import { Troop } from "../../army/unit/troop/troop.entity";
 import { ArmyListUnitTroopSpecialRule } from "./troop/special-rule/army-list-unit-troop-special-rule.entity";
 import { ArmyListUnitTroopEquipment } from "./troop/equipment/army-list-unit-troop-equipment.entity";
+import { Unit } from "../../army/unit/unit.entity";
 
 @Entity("army_list_units")
 export class ArmyListUnit {
@@ -29,6 +30,7 @@ export class ArmyListUnit {
     @Column({ name: "troop_ids", type: "int", array: true })
     public troopIds: number[];
 
+    public unit: Unit;
     public magicItems: ArmyListUnitMagicItem[] = [];
     public magicStandards: ArmyListUnitMagicStandard[] = [];
     public options: ArmyListUnitOption[] = [];
@@ -37,10 +39,11 @@ export class ArmyListUnit {
     public equipmentTroops: ArmyListUnitTroopEquipment[] = [];
 
     @AfterLoad()
-    private async load() {
+    public async load() {
         let dataSource: ProphecyDatasource = new ProphecyDatasource();
 
         await dataSource.initialize();
+        this.unit = await dataSource.getRepository(Unit).findOneBy({ id: this.unitId });
         for (const id of this.troopIds) {
             this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }))
         }

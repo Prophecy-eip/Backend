@@ -62,6 +62,7 @@ const ARMY_LIST_UNITS_TABLE: Table = new Table({
         }, {
             name: "army_list_id",
             type: "varchar",
+            isNullable: true,
         }, {
             name: "troop_ids",
             type: "int",
