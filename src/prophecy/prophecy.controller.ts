@@ -1,4 +1,14 @@
-import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, UseGuards, Request } from "@nestjs/common";
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    HttpCode,
+    HttpStatus,
+    Post,
+    UseGuards,
+    Request,
+    Get
+} from "@nestjs/common";
 import * as dotenv from "dotenv";
 
 import { JwtAuthGuard } from "../account/auth/guards/jwt-auth.guard";
@@ -8,7 +18,7 @@ import { ArmyListUnitService } from "../army-list/army-list-unit/army-list-unit.
 import { ArmyListUnitCredentialsDTO } from "../army-list/army-list-unit/army-list-unit-credentials.dto";
 import { ProphecyUnit } from "./unit/prophecy-unit.entity";
 import { ProphecyUnitService } from "./unit/prophecy-unit.service";
-import { ProphecyUnitDTO } from "./unit/prophecy-unit.dto";
+import { ProphecyUnitDTO, ProphecyUnitWithIdDTO } from "./unit/prophecy-unit.dto";
 
 dotenv.config();
 
@@ -24,7 +34,7 @@ export class ProphecyController {
         ) {}
 
     @UseGuards(JwtAuthGuard)
-    @Post("units/get-prophecy")
+    @Post("units/request-prophecy")
     @HttpCode(HttpStatus.OK)
     async getUnitsProphecy(@Request() req,
         @Body("attackingRegiment") attackingRegiment: ArmyListUnitCredentialsDTO,
@@ -57,5 +67,18 @@ export class ProphecyController {
         await prophecy.load();
         await this.prophecyUnitService.save(prophecy);
         return new ProphecyUnitDTO(prophecy);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get("units/lookup")
+    @HttpCode(HttpStatus.OK)
+    async getUnitHistory(@Request() req) {
+        const prophecies: ProphecyUnit[] = await this.prophecyUnitService.findByOwner(req.user.username);
+        let propheciesDto: ProphecyUnitWithIdDTO[] = [];
+
+        for (const p of prophecies) {
+            propheciesDto.push(new ProphecyUnitWithIdDTO(p));
+        }
+        return propheciesDto;
     }
 }

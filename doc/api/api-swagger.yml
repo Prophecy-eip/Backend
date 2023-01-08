@@ -625,7 +625,7 @@ paths:
   # PROPHECIES
 
   # read
-  /prophecies/units/get-prophecy:
+  /prophecies/units/request-prophecy:
     post:
       summary: Retrieves a unit prophecy for the user
       description: ""
@@ -651,7 +651,7 @@ paths:
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
 
-  /prophecies/get-history:
+  /prophecies/lookup:
     get:
       summary: Retrieves the prophecies history
       description: ""
@@ -3558,3 +3558,4 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
+        

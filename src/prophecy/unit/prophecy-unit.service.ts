@@ -31,4 +31,8 @@ export class ProphecyUnitService {
     public async save(prophecy: ProphecyUnit): Promise<ProphecyUnit> {
         return this.repository.save(prophecy);
     }
+
+    public async findByOwner(owner: string): Promise<ProphecyUnit[]> {
+        return this.repository.findBy({ owner: owner });
+    }
 }
