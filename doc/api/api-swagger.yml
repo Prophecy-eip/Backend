@@ -642,8 +642,8 @@ paths:
             schema:
               $ref: '#/components/schemas/prophecyRequest'
       responses:
-        200:
-          description: OK
+        201:
+          description: Created
           content:
             application/json:
               schema:
@@ -651,7 +651,7 @@ paths:
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
 
-  /prophecies/lookup:
+  /prophecies/units/lookup:
     get:
       summary: Retrieves the prophecies history
       description: ""
@@ -674,6 +674,31 @@ paths:
           $ref: '#/components/schemas/unauthorizedResponse'
         404:
           $ref: '#/components/schemas/notFoundResponse'
+
+  /prophecies/units/delete/{prophecyId}:
+    delete:
+      summary: Deletes a prophecy
+      description: ""
+      tags:
+        - prophecies
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: "#/components/parametersSchemes/prophecyId"
+      responses:
+        200:
+          description: OK
+        400:
+          description: No id provided
+        401:
+          description: The user is not authenticated
+        403:
+          description: The user tries to access data that is not his
+        404:
+          description: The prophecy was not found
+
+
 
   # GAMES
 
@@ -3447,6 +3472,14 @@ components:
       schema:
         $ref: '#/components/schemas/uuid'
 
+    prophecyId:
+      in: path
+      name: prophecyId
+      description: The prophecy's id
+      required: true
+      schema:
+        $ref: '#/components/schemas/uuid'
+
     gameId:
       in: path
       name: gameId
@@ -3558,4 +3591,3 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
-        

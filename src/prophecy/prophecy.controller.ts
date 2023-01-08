@@ -7,7 +7,7 @@ import {
     Post,
     UseGuards,
     Request,
-    Get
+    Get, Delete, NotFoundException, Param, ForbiddenException
 } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
@@ -19,6 +19,7 @@ import { ArmyListUnitCredentialsDTO } from "../army-list/army-list-unit/army-lis
 import { ProphecyUnit } from "./unit/prophecy-unit.entity";
 import { ProphecyUnitService } from "./unit/prophecy-unit.service";
 import { ProphecyUnitDTO, ProphecyUnitWithIdDTO } from "./unit/prophecy-unit.dto";
+import { ParamHelper } from "../helper/param.helper";
 
 dotenv.config();
 
@@ -35,10 +36,10 @@ export class ProphecyController {
 
     @UseGuards(JwtAuthGuard)
     @Post("units/request-prophecy")
-    @HttpCode(HttpStatus.OK)
+    @HttpCode(HttpStatus.CREATED)
     async getUnitsProphecy(@Request() req,
         @Body("attackingRegiment") attackingRegiment: ArmyListUnitCredentialsDTO,
-        @Body("defendingRegiment") defendingRegiment: ArmyListUnitCredentialsDTO) {
+        @Body("defendingRegiment") defendingRegiment: ArmyListUnitCredentialsDTO): Promise<ProphecyUnitDTO> {
         const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(attackingRegiment.unitId, attackingRegiment.quantity, attackingRegiment.formation, null, attackingRegiment.troopIds);
         const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(defendingRegiment.unitId, defendingRegiment.quantity, defendingRegiment.formation, null, defendingRegiment.troopIds);
 
@@ -72,7 +73,7 @@ export class ProphecyController {
     @UseGuards(JwtAuthGuard)
     @Get("units/lookup")
     @HttpCode(HttpStatus.OK)
-    async getUnitHistory(@Request() req) {
+    async lookupUnitsProphecy(@Request() req): Promise<ProphecyUnitWithIdDTO[]> {
         const prophecies: ProphecyUnit[] = await this.prophecyUnitService.findByOwner(req.user.username);
         let propheciesDto: ProphecyUnitWithIdDTO[] = [];
 
@@ -80,5 +81,25 @@ export class ProphecyController {
             propheciesDto.push(new ProphecyUnitWithIdDTO(p));
         }
         return propheciesDto;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete("units/delete/:id")
+    @HttpCode(HttpStatus.OK)
+    async deleteUnitsProphecy(
+        @Request() req,
+        @Param("id") id: string) : Promise<void> {
+        if (!ParamHelper.isValid(id)) {
+            throw new BadRequestException("An id is required");
+        }
+        const prophecy: ProphecyUnit = await this.prophecyUnitService.findOneById(id);
+
+        if (prophecy === null) {
+            throw new NotFoundException(`Prophecy ${id} does not exist.`);
+        }
+        if (prophecy.owner !== req.user.username) {
+            throw new ForbiddenException();
+        }
+        await this.prophecyUnitService.delete(id);
     }
 }

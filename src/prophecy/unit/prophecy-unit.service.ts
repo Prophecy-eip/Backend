@@ -35,4 +35,12 @@ export class ProphecyUnitService {
     public async findByOwner(owner: string): Promise<ProphecyUnit[]> {
         return this.repository.findBy({ owner: owner });
     }
+
+    public async findOneById(id: string): Promise<ProphecyUnit> {
+        return this.repository.findOneBy({ id: id });
+    }
+
+    public async delete(id: string): Promise<void> {
+        await this.repository.delete(id);
+    }
 }
