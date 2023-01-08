@@ -16,3 +16,11 @@ export class ProphecyUnitDTO {
     public meanCase: ProphecyUnitCase;
     public worstCase: ProphecyUnitCase;
 }
+
+export class ProphecyUnitWithIdDTO extends ProphecyUnitDTO {
+    constructor(prophecy: ProphecyUnit) {
+        super(prophecy);
+        this.id = prophecy.id;
+    }
+    public id: string;
+}
