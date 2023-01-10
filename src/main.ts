@@ -9,7 +9,7 @@ const PORT = process.env.SERVER_PORT;
 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { logger: ["log", "error", "warn", "verbose", "debug"]});
   await app.listen(PORT);
 }
 bootstrap();

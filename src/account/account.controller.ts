@@ -33,7 +33,7 @@ export class AccountController {
 
     @Post("sign-up")
     @HttpCode(HttpStatus.CREATED)
-    async create(@Body("username") username: string, @Body("email") email: string, @Body("password") password: string) {
+    async create(@Body("username") username: string, @Body("email") email: string, @Body("password") password: string, @Body("sendEmail") sendEmail: boolean) {
         if (!this.isFieldValid(username) || !this.isFieldValid(email) || !this.isFieldValid(password)) {
             throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
         }
@@ -48,6 +48,9 @@ export class AccountController {
             throw new BadRequestException();
         }
         try {
+            if (sendEmail === false ) {
+                return;
+            }
             await this.emailConfirmationService.sendVerificationLink(email);
         } catch(error) {
             console.error(error);

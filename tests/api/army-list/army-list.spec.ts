@@ -6,13 +6,7 @@ import { AppModule } from '../../../src/app.module';
 import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
 import { ArmyListUnitDTO } from "../../../src/army-list/army-list-unit/army-list-unit.dto";
 import { ArmyListDTO } from "../../../src/army-list/army-list.dto";
-import exp = require("constants");
-
-const USERNAME = "username";
-const PASSWORD = "password";
-const EMAIL = "user@prophecy.com";
-const USERNAME1 = "username1";
-const EMAIL1 = "user1@prophecy.com";
+import { TestsHelper } from "../../tests.helper";
 
 const LIST_NAME: string = "my list";
 const ARMY_ID: string = "3557-241b-5999-a3b1";
@@ -35,14 +29,6 @@ const UPDATE_ROUTE: string = ARMIES_LIST_ROUTE + "/update";
 let app: INestApplication;
 let token: string;
 let token1: string;
-
-// class Unit {
-//     unitId: string;
-//     options: string[];
-//     upgrades: string[];
-//     number: number;
-//     formation: string;
-// }
 
 class List {
     constructor(name: string, armyId: number, valuePoints: number, units: ArmyListUnitCredentialsDTO[], isShared: boolean,
@@ -149,12 +135,13 @@ describe("Armies lists route", () => {
         app = module.createNestApplication();
         await app.init();
 
-        token = await createAccountAndGetToken(USERNAME, EMAIL, PASSWORD);
-        token1 = await createAccountAndGetToken(USERNAME1, EMAIL1, PASSWORD);
+        token = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), TestsHelper.USERNAME, TestsHelper.EMAIL,
+            TestsHelper.PASSWORD);
+        token1 = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), TestsHelper.USERNAME1, TestsHelper.EMAIL1,
+            TestsHelper.PASSWORD);
     });
 
     afterAll(async () => {
-        // const token: string = await getToken();
         const res = await  request(app.getHttpServer())
             .get(LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -164,42 +151,9 @@ describe("Armies lists route", () => {
                 .delete(`${DELETE_ROUTE}/${a.id}`)
                 .set("Authorization", `Bearer ${token}`);
         }
-        await request(app.getHttpServer())
-            .delete(DELETE_ACCOUNT_ROUTE)
-            .set("Authorization", `Bearer ${token}`);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token1);
     });
-
-    async function createAccountAndGetToken(username: string, email: string, password: string): Promise<string> {
-        const r1 = await request(app.getHttpServer())
-            .post("/account/sign-up")
-            .send({
-                username: username,
-                email: email,
-                password: password
-        });
-        const r2 = await request(app.getHttpServer())
-            .post("/account/sign-in")
-            .send({
-                      username: username,
-                      password: password
-        });
-        return r2.body.access_token;
-    }
-
-    async function createArmyList(): Promise<void> {
-        // const units: Unit[] = [ {
-        //     unitId: UNIT_ID,
-        //     upgrades: [],
-        //     options: [],
-        //     formation: FORMATION,
-        //     number: NUMBER
-        // }];
-        // const list: List = new List(LIST_NAME, ARMY_ID, COST, units, UPGRADES_ID, [], false);
-        // const res = await request(app.getHttpServer())
-        //     .post(CREATE_ROUTE)
-        //     .set("Authorization", `Bearer ${token}`).send(list);
-
-    }
 
     function compareUnitWithCredentials(lhs: ArmyListUnitCredentialsDTO, rhs: ArmyListUnitDTO) {
         expect(lhs.unitId).toEqual(rhs.unitId);
@@ -214,6 +168,7 @@ describe("Armies lists route", () => {
         expect(lhs.specialRuleTroops).toEqual(rhs.specialRuleTroops);
         expect(lhs.equipmentTroops).toEqual(rhs.equipmentTroops);
     }
+
     function compareLists(lhs: List, rhs: ArmyListDTO) {
         expect(lhs.name).toEqual(rhs.name);
         expect(lhs.armyId).toEqual(rhs.armyId);
@@ -397,7 +352,6 @@ describe("Armies lists route", () => {
 
 
     it("delete: not the owner - then should return forbidden (403)", async () => {
-        await createArmyList();
         const a = await request(app.getHttpServer())
             .get(LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -410,7 +364,6 @@ describe("Armies lists route", () => {
     });
 
     it("delete: use invalid army list id - then should return not found (404)", async () => {
-        await createArmyList();
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
             .delete(`${DELETE_ROUTE}/${id}`)
@@ -439,14 +392,9 @@ describe("Armies lists route", () => {
             .get(`${ARMIES_LIST_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`)
         compareLists(ARMY2, listRes.body);
-        // expect(listRes.body.name).toEqual(LIST2.name);
-        // expect(listRes.body.cost).toEqual(LIST2.valuePoints);
-        // expect(listRes.body.army).toEqual(LIST2.armyId);
-        // expect(listRes.body.isShared).toEqual(LIST2.isShared);
     });
 
     it("update: use invalid armyId - then should return 404 (not found)", async () => {
-        // await createArmyList();
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
             .put(`${UPDATE_ROUTE}/${id}`)
