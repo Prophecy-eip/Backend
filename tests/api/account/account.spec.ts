@@ -75,7 +75,7 @@ describe("Account Route", () => {
             .post(SIGNIN_ROUTE)
             .send({
                 username: id,
-                password: password
+                password: password,
             });
         return response.body.access_token;
     }
@@ -86,7 +86,8 @@ describe("Account Route", () => {
             .send({
                 username: username,
                 email: email,
-                password: password
+                password: password,
+                sendEmail: false
             });
     }
 
@@ -100,7 +101,8 @@ describe("Account Route", () => {
             .send({
                 username: USERNAME,
                 email: EMAIL,
-                password: PASSWORD
+                password: PASSWORD,
+                sendEmail: false
             });
 
         expect(response.status).toEqual(HttpStatus.CREATED);
@@ -118,7 +120,8 @@ describe("Account Route", () => {
             .send({
                 username: USERNAME,
                 email: EMAIL1,
-                password: PASSWORD
+                password: PASSWORD,
+                sendEmail: false,
             });
 
         expect(response.status).toEqual(HttpStatus.CONFLICT);
@@ -136,7 +139,8 @@ describe("Account Route", () => {
             .send({
                 username: USERNAME1,
                 email: EMAIL,
-                password: PASSWORD
+                password: PASSWORD,
+                sendEmail: false
             });
 
         expect(response.status).toEqual(HttpStatus.CONFLICT);

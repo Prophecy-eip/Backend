@@ -7,7 +7,7 @@ import {
     Post,
     UseGuards,
     Request,
-    Get, Delete, NotFoundException, Param, ForbiddenException
+    Get, Delete, NotFoundException, Param, ForbiddenException, InternalServerErrorException
 } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
@@ -40,34 +40,47 @@ export class ProphecyController {
     async getUnitsProphecy(@Request() req,
         @Body("attackingRegiment") attackingRegiment: ArmyListUnitCredentialsDTO,
         @Body("defendingRegiment") defendingRegiment: ArmyListUnitCredentialsDTO): Promise<ProphecyUnitDTO> {
-        const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(attackingRegiment.unitId, attackingRegiment.quantity, attackingRegiment.formation, null, attackingRegiment.troopIds);
-        const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(defendingRegiment.unitId, defendingRegiment.quantity, defendingRegiment.formation, null, defendingRegiment.troopIds);
-
-        await attackingRegimentUnit.load();
-        await defendingRegimentUnit.load();
-        await this.armyListUnitService.save(attackingRegimentUnit);
-        await this.armyListUnitService.save(defendingRegimentUnit);
-        if (attackingRegimentUnit.troopIds.length != 1 || defendingRegimentUnit.troopIds.length != 1) {
-            throw new BadRequestException("The troopIds must contain one (and only one) id");
-        }
-        let request: ProphecyUnitMathsRequestDTO = new ProphecyUnitMathsRequestDTO(MATHS_KEY, attackingRegimentUnit, defendingRegimentUnit);
-        const content: string = JSON.stringify(request);
-
-        const response: Response = await fetch(MATHS_UNITS_REQUEST_URL, {
-            method: "POST",
-            body: content,
-            headers: { "Content-Type": "application/json" }
-        });
-        if (response.status === HttpStatus.BAD_REQUEST) {
-            console.log(response);
+        if (!ParamHelper.isValid(attackingRegiment) || !ParamHelper.isValid(defendingRegiment)) {
             throw new BadRequestException();
         }
-        const mathsResponse: ProphecyUnitMathsResponseDTO = (await response.json()) as ProphecyUnitMathsResponseDTO;
-        const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username, attackingRegimentUnit.id,
-            defendingRegimentUnit.id, mathsResponse);
-        await prophecy.load();
-        await this.prophecyUnitService.save(prophecy);
-        return new ProphecyUnitDTO(prophecy);
+        try {
+            const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(attackingRegiment.unitId, attackingRegiment.quantity, attackingRegiment.formation, null, attackingRegiment.troopIds);
+            const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(defendingRegiment.unitId, defendingRegiment.quantity, defendingRegiment.formation, null, defendingRegiment.troopIds);
+
+            await attackingRegimentUnit.load();
+            await defendingRegimentUnit.load();
+            await this.armyListUnitService.save(attackingRegimentUnit);
+            await this.armyListUnitService.save(defendingRegimentUnit);
+            if (attackingRegimentUnit.troopIds.length != 1 || defendingRegimentUnit.troopIds.length != 1) {
+                throw new BadRequestException("The troopIds must contain one (and only one) id");
+            }
+            let request: ProphecyUnitMathsRequestDTO = new ProphecyUnitMathsRequestDTO(MATHS_KEY, attackingRegimentUnit, defendingRegimentUnit);
+            const content: string = JSON.stringify(request);
+
+            const response: Response = await fetch(MATHS_UNITS_REQUEST_URL, {
+                method: "POST",
+                body: content,
+                headers: {"Content-Type": "application/json"}
+            });
+            if (response.status === HttpStatus.BAD_REQUEST) {
+                console.log(response);
+                throw new BadRequestException();
+            }
+            const mathsResponse: ProphecyUnitMathsResponseDTO = (await response.json()) as ProphecyUnitMathsResponseDTO;
+            const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username, attackingRegimentUnit.id,
+                defendingRegimentUnit.id, mathsResponse);
+            await prophecy.load();
+            await this.prophecyUnitService.save(prophecy);
+            return new ProphecyUnitDTO(prophecy);
+        } catch (error) {
+            if (error instanceof BadRequestException) {
+                throw error;
+            }
+            if (error.message.includes("insert or update on table \"army_list_units\" violates foreign key constraint")) {
+                throw new NotFoundException();
+            }
+            throw new InternalServerErrorException();
+        }
     }
 
     @UseGuards(JwtAuthGuard)
