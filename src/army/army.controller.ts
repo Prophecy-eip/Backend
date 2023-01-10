@@ -29,8 +29,7 @@ export class ArmyController {
     async get(@Param("id") id: number) {
         try {
             let army: Army = await this.armyService.findOneById(id);
-
-            if (army === null) {
+            if (army == null) {
                 throw new NotFoundException();
             }
             await army.load();
@@ -38,6 +37,9 @@ export class ArmyController {
         } catch (error) {
             if (error.message.includes("out of range for type integer")) {
                 throw new BadRequestException("Invalid id type");
+            }
+            if (error instanceof NotFoundException) {
+                throw new NotFoundException();
             }
 
         }

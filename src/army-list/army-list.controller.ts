@@ -41,6 +41,8 @@ import {
 import {
     ArmyListUnitTroopSpecialRuleService
 } from "./army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.service";
+import { ArmyService } from "../army/army.service";
+import { Army } from "../army/army.entity";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -52,6 +54,7 @@ export class ArmyListController {
         private readonly armyListUnitOptionService: ArmyListUnitOptionService,
         private readonly armyListUnitTroopSpecialRuleService: ArmyListUnitTroopSpecialRuleService,
         private readonly armyListUnitTroopEquipmentService: ArmyListUnitTroopEquipmentService,
+        private readonly armyService: ArmyService,
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -65,8 +68,12 @@ export class ArmyListController {
         @Body("isShared") isShared: boolean,
         @Body("isFavourite") isFavourite: boolean) {
         if (!ParamHelper.isValid(name) || !ParamHelper.isValid(armyId) || !ParamHelper.isValid(valuePoints) ||
-            !ParamHelper.isValid(units)) {
+            !ParamHelper.isValid(units) || !ParamHelper.isValid(isFavourite)) {
             throw new BadRequestException();
+        }
+        const army: Army = await this.armyService.findOneById(armyId);
+        if (army === null) {
+            throw new NotFoundException(`The army ${armyId} does not exist.`)
         }
         const list: ArmyList = await this.armyListService.create(name, req.user.username, armyId, valuePoints, isShared,
             isFavourite)
@@ -78,6 +85,7 @@ export class ArmyListController {
             if (error instanceof QueryFailedError) {
                 throw new NotFoundException(`The army ${list.armyId} was not found`);
             }
+
         }
         await this.saveUnits(list.id, units);
     }
@@ -143,7 +151,7 @@ export class ArmyListController {
                 throw new NotFoundException();
             }
             if (list.owner !== req.user.username) {
-                new ForbiddenException();
+                throw new ForbiddenException();
             }
             await this.armyListService.update(id, name, armyId, valuePoints, isShared, isFavourite);
             await this.armyListUnitService.deleteByList(list.id)
