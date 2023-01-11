@@ -1,7 +1,9 @@
 services:
-  db:
-    build: ./database
-    container_name: database
+  database:
+    build:
+      context: .
+      dockerfile: .dev-containers/database.Dockerfile
+    container_name: prophecy-database
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
     volumes:
@@ -13,27 +15,43 @@ services:
     networks:
       - prophecy
 
-  server:
-    build: .
-    container_name: nestjs-server
+  server-dev:
+    build:
+      context: .
+      dockerfile: .dev-containers/backend-development.Dockerfile
+    container_name: prophecy-server-dev
     command: ["yarn", "start"]
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     networks:
       - prophecy
 
-  run_migration:
-    image: backend_server
-    build: .
+  server-prod:
+    build:
+      context: .
+      dockerfile: .dev-containers/backend-production.Dockerfile
+    container_name: prophecy-server-prod
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    networks:
+      - prophecy
+
+  migration-run:
+    image: backend_server-dev
+    build:
+      context: .
+      dockerfile: .dev-containers/backend-production.Dockerfile
     command: ["yarn",  "run", "typeorm", "migration:run", "-d", "./src/database/migration/ormconfig.ts"]
     ports:
       - "${MIGRATION_PORT}:${MIGRATION_PORT}"
     networks:
       - prophecy
 
-  revert_migration:
-    image: backend_server
-    build: .
+  migration-revert:
+    image: backend_server-dev
+    build:
+      context: .
+      dockerfile: .dev-containers/backend-production.Dockerfile
     command: ["yarn",  "run", "typeorm", "migration:revert", "-d", "src/database/migration/ormconfig.ts"]
     ports:
       - "${MIGRATION_PORT}:${MIGRATION_PORT}"
@@ -42,8 +60,8 @@ services:
 
   tests:
       depends_on:
-        - "db"
-        - "server"
+        - "database"
+        - "server-dev"
       image: backend_server
       container_name: backend_tests
       command: ["yarn", "test", "--coverage"]
