@@ -62,7 +62,6 @@ export class ProphecyDatasource extends DataSource {
                 ArmyListUnitMagicItem,
                 ArmyListUnitMagicStandard,
                 ArmyListUnitOption,
-                // ArmyListRule,
                 ArmyListUnitTroopEquipment,
                 ArmyListUnitTroopSpecialRule,
             ],
