@@ -4,7 +4,7 @@
 
 ### Environment setup
 
-In order to launch the database and the server, you need to provide the following environment variables in a `.env` file:
+In order to launch the database and the server, you need to provide the following environment variables in a `.env` file (see the [sample file](.env.sample)):
 - `SERVER_PORT`: The port the server will listen to
 - `POSTGRES_DB`: The name of the postgres  database
 - `POSTGRES_USER`: The name of the postgres user
@@ -20,37 +20,49 @@ In order to launch the database and the server, you need to provide the followin
 - `SES_FROM_ADDRESS`: The email address that will be used to send emails 
 - `API_URL`: An url pointing to the server host
 - `WEBSITE_URL`: An url pointing to the website
+- `MATHS_KEY`: The key for the mathematics library authentication
 
 ### Launching the database
 
 Once you provided the required environment variables, you can launch the database by running:
 ```bash
-docker-compose up --build db
+docker-compose up --build database
 ```
 
 ### Running database migrations
 To set up or update the database, you might need to run migrations
 ```bash
-docker-compose up --build run_migration
+docker-compose up --build migration-run
 ```
 
 You can revert the migration by running:
 ```bash
-docker-compose up revert_migration
+docker-compose up migration-revert
 ```
 
-### Launching the server
+### Launching the development server
 
-Once you provided the required environment variables and started the database, you can launch the server by running:
+Once you provided the required environment variables and started the database, you can launch the development server by running:
 ```bash
-docker-compose up --build server
+docker-compose up --build server-dev
+```
+
+### Launching the production server:
+
+Run the following command:
+
+```shell
+docker-compose up --build server-prod
 ```
 
 ### Filling the armies tables
 
 Once the database and the server are launched, it is possible to fill the database with armies data.
 
-Follow the [instructions](./scripts/armies_data/README.md).
+Follow the [instructions](./scripts/armies_data/README.md), and run the following command:
+```shell
+docker-compose up --build script_armies-data
+```
 
 ## Documentation
 

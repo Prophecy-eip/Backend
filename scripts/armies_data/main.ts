@@ -1,20 +1,579 @@
-import { ProphecyDatasource } from "../../src/database/prophecy.datasource";
-import { Army } from "../../src/army/army.entity";
-import { ArmyOrganisation } from "../../src/army/organisation/army-organisation.entity";
-import { ArmyOrganisationGroup } from "../../src/army/organisation/group/army-organisation-group.entity";
+import * as dotenv from "dotenv";
 import { stringify } from "ts-jest";
-import { MagicItemCategory } from "../../src/army/magic-item/category/magic-item-category.entity";
-import { MagicItem } from "../../src/army/magic-item/magic-item.entity";
-import { MagicStandard } from "../../src/army/magic-standard/magic-standard.entity";
-import { Equipment } from "../../src/army/equipment/equipment.entity";
-import { EquipmentCategory } from "../../src/army/equipment/category/equipment-category.entity";
-import { SpecialRule } from "../../src/army/special-rule/special-rule.entity";
-import { QueryFailedError, SelectQueryBuilder } from "typeorm";
-import { Unit } from "../../src/army/unit/unit.entity";
-import { Troop } from "../../src/army/unit/troop/troop.entity";
-import { SpecialRuleUnitTroop } from "../../src/army/unit/troop/special-rule/special-rule-unit-troop.entity";
-import { EquipmentUnitTroop } from "../../src/army/unit/troop/equipment/equipment-unit-troop.entity";
-import { UnitOption } from "../../src/army/unit/option/unit-option.entity";
+import { Column, Entity, PrimaryColumn, DataSource } from "typeorm";
+
+dotenv.config()
+
+const DB = process.env.POSTGRES_DB;
+const DB_HOST = process.env.DATABASE_IP;
+const DB_PORT: number = +process.env.DATABASE_PORT;
+const DB_USERNAME = process.env.POSTGRES_USER;
+const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
+const DB_DIALECT = "postgres";
+
+/**
+ * PROPHECY ENTITIES
+ */
+
+@Entity("unit_options")
+class ProphecyUnitOption {
+    @PrimaryColumn({ type: "int" })
+    public id: number;
+
+    @Column({ name: "unit_id" })
+    public unitId: number;
+
+    @Column({ name: "parent_id" })
+    public parentId: number;
+
+    @Column()
+    public category: string;
+
+    @Column({ name: "magic_item_factor" })
+    public magicItemFactor: number;
+
+    @Column({ name: "army_organisation_activator_id"})
+    public armyOrganisationActivatorId: number;
+
+    @Column({ name: "army_organisation_desactivator_id"})
+    public armyOrganisationDesactivatorId: number;
+
+    @Column({ name: "use_all_activators" })
+    public useAllActivators: boolean;
+
+    @Column({ name: "army_organisation_id" })
+    public armyOrganisationId: number;
+
+    @Column({ name: "is_per_model" })
+    public isPerModel: boolean;
+
+    @Column({ name: "is_foot_only" })
+    public isFootOnly: boolean;
+
+    @Column( { name: "mount_id" })
+    public mountId: number;
+
+    @Column({ name: "mount_and_characteristics_points" })
+    public mountAdnCharacteristicsPoints: boolean;
+
+    @Column({ name: "organisation_mode" })
+    public organisationMode: string;
+
+    @Column({ name: "is_multiple" })
+    public isMultiple: boolean;
+
+    @Column({ name: "is_required" })
+    public isRequired: boolean;
+
+    @Column({ name: "domain_magic_id" })
+    public domainMagicId: number;
+
+    @Column({ name: "magic_item_source"})
+    public magicItemSource: string;
+
+    @Column({ name: "organisation_id" })
+    public organisationId: number;
+
+    @Column()
+    public name: string;
+
+    @Column({ name: "value_points" })
+    public valuePoints: number;
+
+    @Column({ name: "use_points"})
+    public usePoints: string;
+
+    @Column()
+    public max: number;
+
+    @Column({ name: "has_choices" })
+    public hasChoices: boolean;
+
+    @Column()
+    public weight: number;
+
+    @Column({ name: "change_profile"})
+    public changeProfile: boolean;
+
+    @Column()
+    public base: string;
+
+    @Column()
+    public height: string;
+
+    @Column({ name: "enchantment_limit" })
+    public enchantmentLimit: number;
+
+    @Column({ name: "unit_option_limits" })
+    public unitOptionLimits: string;
+
+    @Column()
+    public availabilities: string;
+
+    @Column({ name: "magic_item_category_ids", type: "int", array: true })
+    public magicItemCategoryIds: number[];
+
+    @Column({ name: "equipment_ids", type: "int", array: true })
+    public equipmentIds: number[];
+
+    @Column({ name: "unit_option_change_special_rules" })
+    public unitOptionChangeSpecialRules: string;
+
+    @Column({ name: "unit_option_change_equipments" })
+    public unitOptionChangeEquipments: string;
+
+    @Column({ name: "unit_option_change_profiles"})
+    public unitOptionChangeProfiles: string;
+}
+
+
+@Entity("equipment_unit_troops")
+class ProphecyEquipmentUnitTroop {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column({ name: "unit_id" })
+    public unitId: number;
+
+    @Column({ name: "troop_id" })
+    public troopId: number;
+
+    @Column()
+    public info: string;
+
+    @Column({ name: "equipment_id" })
+    public equipmentId: number;
+
+    @Column({ name: "type_lvl" })
+    public typeLvl: string;
+
+    @Column()
+    public name: string;
+}
+
+
+@Entity("special_rule_unit_troops")
+class ProphecySpecialRuleUnitTroop {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column({ name: "unit_id" })
+    public unitId: number;
+
+    @Column({ name: "troop_id" })
+    public troopId: number;
+
+    @Column()
+    public info: string;
+
+    @Column({ name: "special_rule_id" })
+    public specialRuleId: number;
+
+    @Column({ name: "type_lvl" })
+    public typeLvl: string;
+
+    @Column()
+    public name: string;
+}
+
+
+class ProphecyTroopCharacteristics {
+    public M: string;
+    public WS: string;
+    public BS: string;
+    public S: string;
+    public T: string;
+    public W: string;
+    public I: string;
+    public A: string;
+    public LD: string;
+    public E: string;
+    public type: string;
+    public size: number;
+    public att: string;
+    public of: string;
+    public str: string;
+    public ap: string;
+    public agi: string;
+    public type_id: string;
+    public type_name: string;
+}
+
+@Entity("troops")
+export class ProphecyTroop {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column()
+    public name: string;
+
+    @Column({ type: "json" })
+    public characteristics: ProphecyTroopCharacteristics;
+}
+
+class ProphecyUnitCharacteristic {
+    public type: string;
+    public base: string;
+    public height: string;
+    public unitTypeId: string;
+    public adv: string;
+    public mar: string;
+    public dis: string;
+    public evoked: string;
+    public hp: string;
+    public def: string;
+    public res: string;
+    public arm: string;
+    public aeg: string;
+}
+
+@Entity("units")
+class ProphecyUnit {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column()
+    public name: string;
+
+    @Column({ name: "unit_category_id" })
+    public unitCategoryId: number;
+
+    @Column({ name: "principal_organisation_id" })
+    public principalOrganisationId: number;
+
+    @Column({ name: "min_size" })
+    public minSize: number;
+
+    @Column({ name: "max_size" })
+    public maxSize: number;
+
+    @Column({ name: "can_be_general_and_bsb" })
+    public canBeGeneralAndBsb: boolean;
+
+    @Column()
+    public position: number;
+
+    @Column()
+    public magic: string; // todo: check type
+
+    @Column()
+    public notes: string; // todo: check type
+
+    @Column({ name: "is_mount" })
+    public isMount: boolean;
+
+    @Column({ name: "unit_type_id" })
+    public unitTypeId: number;
+
+    @Column({ name: "army_organisation_id" })
+    public armyOrganisationId: number;
+
+    @Column({ name: "value_points" })
+    public valuePoints: number;
+
+    @Column({ name: "add_value_points" })
+    public addValuePoints: number;
+
+    @Column({ type: "json" })
+    public characteristics: ProphecyUnitCharacteristic;
+
+    @Column({ name: "troop_ids", type: "int", array: true })
+    public troopIds: number[];
+
+    @Column({ name: "special_rule_unit_troop_ids", type: "int", array: true })
+    public specialRuleUnitTroopIds: number[];
+
+    @Column({ name: "equipment_unit_troop_ids", type: "int", array: true })
+    public equipmentUnitTroopIds: number[];
+
+    @Column({ name: "unit_option_ids", type: "int", array: true })
+    public unitOptionIds: number[];
+}
+
+
+@Entity("armies")
+class ProphecyArmy {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column()
+    public name: string;
+
+    @Column({name: "version_id"})
+    public versionId: number;
+
+    @Column({name: "category_id"})
+    public categoryId: number;
+
+    @Column()
+    public source: string;
+
+    @Column({name: "equipment_limits"})
+    public equipmentLimits: string;
+
+    @Column({name: "special_rule_limits"})
+    public specialRuleLimits: string;
+
+    @Column({name: "organisation_ids", type: "int", array: true})
+    public organisationIds: number[];
+
+    @Column({name: "magic_item_category_ids", type: "int", array: true})
+    public magicItemCategoryIds: number[];
+
+    @Column({name: "magic_item_ids", type: "int", array: true})
+    public magicItemIds: number[];
+
+    @Column({name: "magic_standard_ids", type: "int", array: true})
+    public magicStandardIds: number[];
+
+    @Column({name: "equipment_ids", type: "int", array: true})
+    public equipmentIds: number[];
+
+    @Column({name: "rule_ids", type: "int", array: true})
+    public ruleIds: number[];
+
+    @Column({name: "unit_ids", type: "int", array: true})
+    public unitIds: number[];
+}
+
+@Entity("army_organisations")
+class ProphecyArmyOrganisation {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column()
+    public name: string;
+
+    @Column()
+    public description: string;
+
+    @Column({ name: "is_default" })
+    public isDefault: boolean;
+
+    @Column({ name: "organisation_group_ids", type: "int", array: true})
+    public organisationGroupIds: number[];
+}
+
+class ProphecyArmyOrganisationGroupLimit {
+    id: number;
+    army_organisation_group_id: number;
+    points_min: number;
+    points_max: number;
+    target: string;
+    value: number;
+    repeat_interval: number;
+    repeat_value: number;
+}
+
+class ProphecyArmyOrganisationUnitLimit {
+    public id: number;
+    public unit_min: number;
+    public unit_max: number;
+    public model_max: number;
+    public unit_ids: number[];
+    public availabilities: number[]
+}
+@Entity("army_organisation_groups")
+class ArmyOrganisationGroup {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column({ name: "army_organisation_id" })
+    public armyOrganisationId: number;
+
+    @Column()
+    public name: string;
+
+    @Column({ type: "json", name: "organisation_group_limits", array: true })
+    public organisationGroupLimits: ProphecyArmyOrganisationGroupLimit[];
+
+    @Column({ type: "json", name: "organisation_unit_limits", array: true})
+    public organisationUnitLimits: ProphecyArmyOrganisationUnitLimit[];
+
+    @Column({ type: "varchar", name: "change_item_limits" })
+    public changeItemLimits: string;
+}
+
+@Entity("magic_item_categories")
+class ProphecyMagicItemCategory {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column({ name: "version_id" })
+    public versionId: number;
+
+    @Column()
+    public name: string;
+
+    @Column({ name: "is_multiple" })
+    public isMultiple: boolean;
+
+    @Column()
+    public max: number;
+}
+
+@Entity("magic_items")
+class ProphecyMagicItem {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column()
+    public name: string;
+
+    @Column()
+    public description: string;
+
+    @Column({ name: "magic_item_category_id" })
+    public magicItemCategoryId: number;
+
+    @Column({ name: "is_multiple" })
+    public isMultiple: boolean;
+
+    @Column()
+    public max: number;
+
+    @Column({ name: "is_dominant" })
+    public isDominant: boolean;
+
+    @Column({ name: "version_id" })
+    public versionId: number;
+
+    @Column({ name: "value_points"})
+    public valuePoints: number;
+
+    @Column({ name: "foot_only" })
+    public footOnly: boolean;
+
+    @Column({ name: "disable_magic_path_limit" })
+    public disableMagicPathLimit: boolean;
+
+    @Column({ name: "wizard_only", array: true, type: "varchar" })
+    public wizardOnly: string[];
+
+    @Column({ name: "required_organisation_ids", type: "int", array: true })
+    public requiredOrganisationIds: number[];
+}
+
+@Entity("magic_standards")
+class ProphecyMagicStandard {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column({ name: "version_id" })
+    public versionId: number;
+
+    @Column()
+    public name: string;
+
+    @Column()
+    public description: string;
+
+    @Column({ name: "is_multiple" })
+    public isMultiple: boolean;
+
+    @Column()
+    public infos: string;
+
+    @Column({ name: "value_points" })
+    public valuePoints: number;
+
+    @Column()
+    public max: number;
+
+    @Column({ type: "varchar", array: true })
+    public availabilities: string[];
+}
+
+@Entity("equipments")
+class ProphecyEquipment {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column({ name: "version_id"})
+    public versionId: number;
+
+    @Column()
+    public name: string;
+
+    @Column()
+    public description: string;
+
+    @Column({ name: "type_lvl" })
+    public typeLvl: string;
+
+    @Column({ name: "can_be_enchanted"})
+    public canBeEnchanted: boolean;
+
+    @Column({ name: "equipment_categories", type: "int", array: true })
+    public equipmentCategoriesIds: number[];
+
+}
+
+@Entity("equipment_categories")
+class ProphecyEquipmentCategory {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column({ name: "version_id" })
+    public versionId: number;
+
+    @Column()
+    public name: string;
+}
+
+@Entity("special_rules")
+class ProphecySpecialRule {
+    @PrimaryColumn()
+    public id: number;
+
+    @Column({ name: "version_id" })
+    public versionId: number;
+
+    @Column()
+    public name: string;
+
+    @Column()
+    public description: string;
+
+    @Column({ name: "type_lvl" })
+    public typeLvl: string;
+}
+
+
+//
+// class ProphecyArmiesDatasource extends DataSource {
+//     constructor() {
+//         super({
+//             type: DB_DIALECT,
+//             host: DB_HOST,
+//             port: DB_PORT,
+//             username: DB_USERNAME,
+//             password: DB_PASSWORD,
+//             database: DB,
+//             entities: [
+//                 ProphecyArmy,
+//                 ProphecyArmyOrganisation,
+//                 ArmyOrganisationGroup,
+//                 ProphecyMagicItemCategory,
+//                 ProphecyMagicItem,
+//                 ProphecyMagicStandard,
+//                 ProphecyEquipment,
+//                 ProphecyEquipmentCategory,
+//                 ProphecyUnit,
+//                 ProphecyUnitOption,
+//                 ProphecyTroop,
+//                 ProphecySpecialRuleUnitTroop,
+//                 ProphecyEquipmentUnitTroop,
+//                 ProphecyUnitOption,
+//                 ProphecySpecialRule,
+//             ],
+//         });
+//     }
+// }
+
+/**
+ *
+ */
 
 class ArmyCredentials {
     id: number;
@@ -392,7 +951,7 @@ async function getArmyData(id): Promise<BuilderArmy> {
 
 async function saveMagicItemCategory(queryBuilder: any, category: BuilderMagicItemCategory) {
     try {
-        await queryBuilder.insert().into(MagicItemCategory).values({
+        await queryBuilder.insert().into(ProphecyMagicItemCategory).values({
             id: category.id,
             versionId: category.version_id,
             name: category.name,
@@ -407,7 +966,7 @@ async function saveEquipmentAndCategories(queryBuilder: any, equipment: BuilderE
     for (const cat of equipment.equipment_categories) {
         equipmentCategories.push(cat.id);
         try {
-            await queryBuilder.insert().into(EquipmentCategory).values({
+            await queryBuilder.insert().into(ProphecyEquipmentCategory).values({
                 id: cat.id,
                 versionId: cat.version_id,
                 name: cat.name,
@@ -415,7 +974,7 @@ async function saveEquipmentAndCategories(queryBuilder: any, equipment: BuilderE
         } catch(error) { logError(error); }
     }
     try {
-            await queryBuilder.insert().into(Equipment).values({
+            await queryBuilder.insert().into(ProphecyEquipment).values({
             id: equipment.id,
             versionId: equipment.version_id,
             name: equipment.name,
@@ -435,7 +994,7 @@ async function saveUnit(queryBuilder: any, unit: BuilderUnit) {
     for (const troop of unit.troops) {
         troops.push(troop.id);
         try {
-            await queryBuilder.insert().into(Troop).values({
+            await queryBuilder.insert().into(ProphecyTroop).values({
                 id: troop.id,
                 name: troop.name,
                 characteristics: troop.carac,
@@ -445,7 +1004,7 @@ async function saveUnit(queryBuilder: any, unit: BuilderUnit) {
     for (const rule of unit.special_rule_unit_troops) {
         specialRules.push(rule.id);
         try {
-            await queryBuilder.insert().into(SpecialRuleUnitTroop).values({
+            await queryBuilder.insert().into(ProphecySpecialRuleUnitTroop).values({
                 id: rule.id,
                 unitId: rule.unit_id,
                 troopId: rule.troop_id,
@@ -459,7 +1018,7 @@ async function saveUnit(queryBuilder: any, unit: BuilderUnit) {
     for (const equipment of unit.equipment_unit_troops) {
         equipments.push(equipment.id);
         try {
-            await queryBuilder.insert().into(EquipmentUnitTroop).values({
+            await queryBuilder.insert().into(ProphecyEquipmentUnitTroop).values({
                 id: equipment.id,
                 unitId: equipment.unit_id,
                 troopId: equipment.troop_id,
@@ -483,7 +1042,7 @@ async function saveUnit(queryBuilder: any, unit: BuilderUnit) {
             await saveEquipmentAndCategories(queryBuilder, equipment)
         }
         try {
-            await queryBuilder.insert().into(UnitOption).values({
+            await queryBuilder.insert().into(ProphecyUnitOption).values({
                 id: option.id,
                 unitId: option.unit_id,
                 parentId: option.parent_id,
@@ -524,7 +1083,7 @@ async function saveUnit(queryBuilder: any, unit: BuilderUnit) {
         } catch (error) { logError(error); }
     }
     try {
-        await queryBuilder.insert().into(Unit).values({
+        await queryBuilder.insert().into(ProphecyUnit).values({
             id: unit.id,
             name: unit.name,
             unitCategoryId: unit.unit_category_id,
@@ -549,17 +1108,45 @@ async function saveUnit(queryBuilder: any, unit: BuilderUnit) {
 }
 
 async function saveArmy() {
-    let dataSource = new ProphecyDatasource();
+    let dataSource:  DataSource = new DataSource({
+            type: DB_DIALECT,
+            host: DB_HOST,
+            port: DB_PORT,
+            username: DB_USERNAME,
+            password: DB_PASSWORD,
+            database: DB,
+            entities: [
+                ProphecyArmy,
+                ProphecyArmyOrganisation,
+                ArmyOrganisationGroup,
+                ProphecyMagicItemCategory,
+                ProphecyMagicItem,
+                ProphecyMagicStandard,
+                ProphecyEquipment,
+                ProphecyEquipmentCategory,
+                ProphecyUnit,
+                ProphecyUnitOption,
+                ProphecyTroop,
+                ProphecySpecialRuleUnitTroop,
+                ProphecyEquipmentUnitTroop,
+                ProphecyUnitOption,
+                ProphecySpecialRule,
+            ],
+        });
 
     await dataSource.initialize();
     let queryBuilder = dataSource.createQueryBuilder();
-
     const credentials: ArmyCredentials[] = await getArmiesCredentials();
+    const nbArmies: number = credentials.length;
+
+    console.log(`Retrieving ${nbArmies} armies.`);
+    let i: number = 0;
     for (const c of credentials) {
         if (c.source !== "Official")
             continue;
-        console.log(`Saving ${c.name}...`)
+        console.log(`Saving ${c.name}... [${i + 1}/${nbArmies}]`)
         let army: BuilderArmy = await getArmyData(c.id);
+        i++;
         try {
             let organisations: number[] = [];
             let magicItemCategories: number[] = [];
@@ -586,7 +1173,7 @@ async function saveArmy() {
                     } catch(error) { logError(error); }
                 }
                 try {
-                    await queryBuilder.insert().into(ArmyOrganisation).values({
+                    await queryBuilder.insert().into(ProphecyArmyOrganisation).values({
                         id: organisation.id,
                         name: organisation.name,
                         description: organisation.description,
@@ -602,7 +1189,7 @@ async function saveArmy() {
             for (const item of army.magic_items) {
                 magicItems.push(item.id);
                 try {
-                    await queryBuilder.insert().into(MagicItem).values({
+                    await queryBuilder.insert().into(ProphecyMagicItem).values({
                         id: item.id,
                         name: item.name,
                         description: item.description,
@@ -622,7 +1209,7 @@ async function saveArmy() {
             for (const standard of army.magic_standards) {
                 magicStandards.push(standard.id);
                 try {
-                    await queryBuilder.insert().into(MagicStandard).values({
+                    await queryBuilder.insert().into(ProphecyMagicStandard).values({
                         id: standard.id,
                         versionId: standard.version_id,
                         name: standard.name,
@@ -642,7 +1229,7 @@ async function saveArmy() {
             for (const rule of army.special_rules) {
                 rules.push(rule.id);
                 try {
-                    await queryBuilder.insert().into(SpecialRule).values({
+                    await queryBuilder.insert().into(ProphecySpecialRule).values({
                         id: rule.id,
                         versionId: rule.version_id,
                         name: rule.name,
@@ -656,7 +1243,7 @@ async function saveArmy() {
                 await saveUnit(queryBuilder, unit);
             }
             try {
-                await queryBuilder.insert().into(Army).values({
+                await queryBuilder.insert().into(ProphecyArmy).values({
                     id: army.id,
                     name: army.name,
                     versionId: army.version_id,
@@ -678,7 +1265,6 @@ async function saveArmy() {
         }
         console.log("  Done!")
     }
-
     await dataSource.destroy();
 }
 

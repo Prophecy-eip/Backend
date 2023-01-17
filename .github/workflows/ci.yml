@@ -31,8 +31,8 @@ jobs:
 
       - name: Build & Run Docker
         run: | 
-          docker-compose -f docker-compose.yml up --build -d db server
-          docker-compose up run_migration
+          docker-compose -f docker-compose.yml up --build -d database server-prod
+          docker-compose up migration-run
 
       - name: Run Unit Tests
         run: docker-compose -f docker-compose.yml up tests

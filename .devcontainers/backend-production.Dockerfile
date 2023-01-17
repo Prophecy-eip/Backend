@@ -1,7 +1,7 @@
 FROM node:alpine
-#
+
 WORKDIR server
-#
+
 COPY src src
 COPY package.json .
 COPY .env .

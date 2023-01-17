@@ -2,7 +2,7 @@ services:
   database:
     build:
       context: .
-      dockerfile: .dev-containers/database.Dockerfile
+      dockerfile: .devcontainers/database.Dockerfile
     container_name: prophecy-database
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
@@ -18,7 +18,7 @@ services:
   server-dev:
     build:
       context: .
-      dockerfile: .dev-containers/backend-development.Dockerfile
+      dockerfile: .devcontainers/backend-development.Dockerfile
     container_name: prophecy-server-dev
     command: ["yarn", "start"]
     ports:
@@ -29,7 +29,7 @@ services:
   server-prod:
     build:
       context: .
-      dockerfile: .dev-containers/backend-production.Dockerfile
+      dockerfile: .devcontainers/backend-production.Dockerfile
     container_name: prophecy-server-prod
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
@@ -37,10 +37,10 @@ services:
       - prophecy
 
   migration-run:
-    image: backend_server-dev
+    image: backend_server-prod
     build:
       context: .
-      dockerfile: .dev-containers/backend-production.Dockerfile
+      dockerfile: .devcontainers/backend-production.Dockerfile
     command: ["yarn",  "run", "typeorm", "migration:run", "-d", "./src/database/migration/ormconfig.ts"]
     ports:
       - "${MIGRATION_PORT}:${MIGRATION_PORT}"
@@ -48,10 +48,10 @@ services:
       - prophecy
 
   migration-revert:
-    image: backend_server-dev
+    image: backend_server-prod
     build:
       context: .
-      dockerfile: .dev-containers/backend-production.Dockerfile
+      dockerfile: .devcontainers/backend-production.Dockerfile
     command: ["yarn",  "run", "typeorm", "migration:revert", "-d", "src/database/migration/ormconfig.ts"]
     ports:
       - "${MIGRATION_PORT}:${MIGRATION_PORT}"
@@ -69,6 +69,15 @@ services:
         - "${TESTS_PORT}:${TESTS_PORT}"
       networks:
         - prophecy
+
+  script_armies-data:
+    build:
+      context: .
+      dockerfile: .devcontainers/armies-data.Dockerfile
+    ports:
+      - "${MIGRATION_PORT}:${MIGRATION_PORT}"
+    networks:
+      - prophecy
 
 volumes:
   prophecy:
