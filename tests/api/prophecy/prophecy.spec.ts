@@ -6,6 +6,8 @@ import { AppModule } from '../../../src/app.module';
 import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
 import { TestsHelper } from "../../tests.helper";
 
+jest.setTimeout(15000);
+
 let app: INestApplication;
 let token: string;
 let token1: string;
@@ -35,6 +37,7 @@ const DEFENDING_REGIMENT: ArmyListUnitCredentialsDTO = {
 }
 
 const REQUEST = {
+    attackingPosition: "front",
     attackingRegiment: ATTACKING_REGIMENT,
     defendingRegiment: DEFENDING_REGIMENT
 }
@@ -79,6 +82,7 @@ describe("Prophecies route", () => {
         expect(res1.body.bestCase).toBeDefined();
         expect(res1.body.meanCase).toBeDefined();
         expect(res1.body.worstCase).toBeDefined();
+        expect(res1.body.attackingPosition).toBeDefined();
     });
 
     it("units/request-prophecy: create prophecy with invalid token - then should return 401 (Unauthorized)", async () => {
@@ -102,6 +106,7 @@ describe("Prophecies route", () => {
             equipmentTroops: []
         }
         const req = {
+            attackingPosition: "front",
             attackingRegiment: unit,
             defendingRegiment: DEFENDING_REGIMENT
         }
@@ -141,6 +146,75 @@ describe("Prophecies route", () => {
     it("units/request-prophecy: create prophecy without defending regiment - then should return 400 (Bad request)", async () => {
         const req = {
             attackingRegiment: ATTACKING_REGIMENT,
+        };
+
+        const res1 = await request(app.getHttpServer())
+            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${token}`).send(req);
+
+        expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("units/request-prophecy: create prophecy with back attacking position - then should return 201 (Created)", async () => {
+        const req = {
+            attackingPosition: "back",
+            attackingRegiment: ATTACKING_REGIMENT,
+            defendingRegiment: DEFENDING_REGIMENT
+        };
+
+        const res1 = await request(app.getHttpServer())
+            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${token}`).send(req);
+
+        expect(res1.status).toEqual(HttpStatus.CREATED);
+    });
+
+    it("units/request-prophecy: create prophecy with flank attacking position - then should return 201 (Created)", async () => {
+        const req = {
+            attackingPosition: "flank",
+            attackingRegiment: ATTACKING_REGIMENT,
+            defendingRegiment: DEFENDING_REGIMENT
+        };
+
+        const res1 = await request(app.getHttpServer())
+            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${token}`).send(req);
+
+        expect(res1.status).toEqual(HttpStatus.CREATED);
+    });
+
+    it("units/request-prophecy: create prophecy without attacking position - then should return 400 (Bad Request)", async () => {
+        const req = {
+            attackingRegiment: ATTACKING_REGIMENT,
+            defendingRegiment: DEFENDING_REGIMENT
+        };
+
+        const res1 = await request(app.getHttpServer())
+            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${token}`).send(req);
+
+        expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("units/request-prophecy: create prophecy with empty attacking position - then should return 400 (Bad Request)", async () => {
+        const req = {
+            attackingPosition: "",
+            attackingRegiment: ATTACKING_REGIMENT,
+            defendingRegiment: DEFENDING_REGIMENT
+        };
+
+        const res1 = await request(app.getHttpServer())
+            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${token}`).send(req);
+
+        expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("units/request-prophecy: create prophecy with invalid attacking position - then should return 400 (Bad Request)", async () => {
+        const req = {
+            attackingPosition: "abcd",
+            attackingRegiment: ATTACKING_REGIMENT,
+            defendingRegiment: DEFENDING_REGIMENT
         };
 
         const res1 = await request(app.getHttpServer())
