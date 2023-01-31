@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { randomUUID } from "crypto";
 
-import { ProphecyUnit, ProphecyUnitCase } from "./prophecy-unit.entity";
+import { ProphecyUnit, ProphecyUnitAttackingPosition, ProphecyUnitCase } from "./prophecy-unit.entity";
 import { ProphecyUnitMathsResponseDTO } from "./prophecy-unit-maths.dto";
 
 @Injectable()
@@ -17,14 +17,15 @@ export class ProphecyUnitService {
         owner: string,
         attackingRegimentUnitId: string,
         defendingRegimentUnitId: string,
+        attackingPosition: ProphecyUnitAttackingPosition,
         mathsResponse: ProphecyUnitMathsResponseDTO): Promise<ProphecyUnit> {
         const id: string = randomUUID();
-        const bestCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.BEST);
-        const meanCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.MEAN);
-        const worstCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.WORST);
+        const bestCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.best_case);
+        const meanCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.average_case);
+        const worstCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.worst_case);
 
         return this.repository.create({ id, attackingRegimentUnitId, defendingRegimentUnitId, owner, bestCase, meanCase,
-            worstCase
+            worstCase, attackingPosition
         });
     }
 

@@ -1,13 +1,14 @@
 import { ArmyListUnit } from "../../army-list/army-list-unit/army-list-unit.entity";
 import { UnitCharacteristic } from "../../army/unit/unit.entity";
 import { Troop, TroopCharacteristics } from "../../army/unit/troop/troop.entity";
+import { ProphecyUnitModifierGlobal } from "./prophecy-unit.entity";
 
 export class ProphecyUnitModelStatsMathsDTO {
     constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics) {
         this.advance = +unitCharacteristics.adv;
         this.march = +unitCharacteristics.mar;
         this.discipline = +unitCharacteristics.dis;
-        this.health_point = +unitCharacteristics.hp;
+        this.health_points = +unitCharacteristics.hp;
         this.defense = +unitCharacteristics.def;
         this.resilience = +unitCharacteristics.res;
         this.armour = +unitCharacteristics.arm;
@@ -22,7 +23,7 @@ export class ProphecyUnitModelStatsMathsDTO {
     public advance: number;
     public march: number;
     public discipline: number;
-    public health_point: number;
+    public health_points: number;
     public defense: number;
     public resilience: number;
     public armour: number;
@@ -34,11 +35,25 @@ export class ProphecyUnitModelStatsMathsDTO {
     public agility: number;
 }
 
+export class ProphecyUnitModifierDefensiveMathsDTO {
+    public health_points: number;
+    public defense: number;
+    public resilience: number;
+    public armor: number;
+}
+
+export class ProphecyUnitModifierOffensiveMathsDTO {
+    public attack: number;
+    public offensive: number;
+    public strength: number;
+    public armor_penetration: number;
+    public agility: number;
+}
+
 export class ProphecyUnitModifierMathsDTO {
-    public stat: ProphecyUnitModelStatsMathsDTO;
-    public bonus: boolean;
-    public nb_dice: number;
-    public requirements: any[] = [];
+    public global: ProphecyUnitModifierGlobal;
+    public defensive: ProphecyUnitModifierDefensiveMathsDTO;
+    public  offensive: ProphecyUnitModifierOffensiveMathsDTO;
 }
 
 export class ProphecyUnitModelMathsDTO {
@@ -46,9 +61,11 @@ export class ProphecyUnitModelMathsDTO {
     constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics) {
         this.stats = new ProphecyUnitModelStatsMathsDTO(unitCharacteristics, troopCharacteristics);
         this.modifiers = []; // TODO
+        this.banner_bearer = false; // TODO
     }
     public stats: ProphecyUnitModelStatsMathsDTO;
     public modifiers: ProphecyUnitModifierMathsDTO[];
+    public banner_bearer: boolean;
 }
 export class ProphecyUnitRegimentMathsDTO {
     constructor(unit: ArmyListUnit) {
@@ -68,26 +85,35 @@ export class ProphecyUnitRegimentMathsDTO {
     public points: number;
 }
 
+export class ProphecyUnitCaseRegimentMathsDTO {
+    public nb_rows: number;
+    public nb_cols: number;
+    public nb_models: number;
+    public points: number;
+}
+
 export class ProphecyUnitCaseMathsDTO {
-    public attacking_regiment: ProphecyUnitRegimentMathsDTO;
-    public defending_regiment: ProphecyUnitRegimentMathsDTO;
+    public attacking_regiment: ProphecyUnitCaseRegimentMathsDTO;
+    public defending_regiment: ProphecyUnitCaseRegimentMathsDTO;
     public occurrence_probability: number;
 }
 
 export class ProphecyUnitMathsRequestDTO {
-    constructor(key: string, attackingRegiment: ArmyListUnit, defendingRegiment: ArmyListUnit) {
+    constructor(key: string, attackingRegiment: ArmyListUnit, defendingRegiment: ArmyListUnit, attackingPosition: string) {
         this.key = key;
         this.attacking_regiment = new ProphecyUnitRegimentMathsDTO(attackingRegiment)
         this.defending_regiment = new ProphecyUnitRegimentMathsDTO(defendingRegiment);
+        this.attacking_position = attackingPosition;
     }
 
     public key: string;
+    public attacking_position: string;
     public attacking_regiment: ProphecyUnitRegimentMathsDTO;
     public defending_regiment: ProphecyUnitRegimentMathsDTO;
 }
 
 export class ProphecyUnitMathsResponseDTO {
-    public WORST: ProphecyUnitCaseMathsDTO;
-    public MEAN: ProphecyUnitCaseMathsDTO;
-    public BEST: ProphecyUnitCaseMathsDTO;
+    public worst_case: ProphecyUnitCaseMathsDTO;
+    public average_case: ProphecyUnitCaseMathsDTO;
+    public best_case: ProphecyUnitCaseMathsDTO;
 }
