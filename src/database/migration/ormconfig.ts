@@ -24,6 +24,7 @@ import { ArmiesInitialization1671123394624 } from "./1671123394624-ArmiesInitial
 import { ArmyListsInitialization1672323186772 } from "./1672323186772-ArmyListsInitialization";
 import { ProphecyUnitInitialization1672968324920 } from "./1672968324920-ProphecyUnitInitialization";
 import { ProphecyUnit } from "../../prophecy/unit/prophecy-unit.entity";
+import { AddProphecyUnitAttackingPosition1675176923116 } from "./1675176923116-AddProphecyUnitAttackingPosition";
 
 dotenv.config()
 
@@ -65,5 +66,6 @@ export const connectionSource = new DataSource({
         ArmiesInitialization1671123394624,
         ArmyListsInitialization1672323186772,
         ProphecyUnitInitialization1672968324920,
+        AddProphecyUnitAttackingPosition1675176923116,
     ]
 });

@@ -16,7 +16,7 @@ import { ProphecyUnitMathsRequestDTO, ProphecyUnitMathsResponseDTO } from "./uni
 import { ArmyListUnit } from "../army-list/army-list-unit/army-list-unit.entity";
 import { ArmyListUnitService } from "../army-list/army-list-unit/army-list-unit.service";
 import { ArmyListUnitCredentialsDTO } from "../army-list/army-list-unit/army-list-unit-credentials.dto";
-import { ProphecyUnit } from "./unit/prophecy-unit.entity";
+import { ProphecyUnit, ProphecyUnitAttackingPosition } from "./unit/prophecy-unit.entity";
 import { ProphecyUnitService } from "./unit/prophecy-unit.service";
 import { ProphecyUnitDTO, ProphecyUnitWithIdDTO } from "./unit/prophecy-unit.dto";
 import { ParamHelper } from "../helper/param.helper";
@@ -39,13 +39,17 @@ export class ProphecyController {
     @HttpCode(HttpStatus.CREATED)
     async getUnitsProphecy(@Request() req,
         @Body("attackingRegiment") attackingRegiment: ArmyListUnitCredentialsDTO,
-        @Body("defendingRegiment") defendingRegiment: ArmyListUnitCredentialsDTO): Promise<ProphecyUnitDTO> {
-        if (!ParamHelper.isValid(attackingRegiment) || !ParamHelper.isValid(defendingRegiment)) {
+        @Body("defendingRegiment") defendingRegiment: ArmyListUnitCredentialsDTO,
+        @Body("attackingPosition") attackingPosition: ProphecyUnitAttackingPosition): Promise<ProphecyUnitDTO> {
+        if (!ParamHelper.isValid(attackingRegiment) || !ParamHelper.isValid(defendingRegiment)
+            || !ParamHelper.isValid(attackingPosition) || !this.checkAttackingPosition(attackingPosition)) {
             throw new BadRequestException();
         }
         try {
-            const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(attackingRegiment.unitId, attackingRegiment.quantity, attackingRegiment.formation, null, attackingRegiment.troopIds);
-            const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(defendingRegiment.unitId, defendingRegiment.quantity, defendingRegiment.formation, null, defendingRegiment.troopIds);
+            const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(attackingRegiment.unitId,
+                attackingRegiment.quantity, attackingRegiment.formation, null, attackingRegiment.troopIds);
+            const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(defendingRegiment.unitId,
+                defendingRegiment.quantity, defendingRegiment.formation, null, defendingRegiment.troopIds);
 
             await attackingRegimentUnit.load();
             await defendingRegimentUnit.load();
@@ -54,9 +58,9 @@ export class ProphecyController {
             if (attackingRegimentUnit.troopIds.length != 1 || defendingRegimentUnit.troopIds.length != 1) {
                 throw new BadRequestException("The troopIds must contain one (and only one) id");
             }
-            let request: ProphecyUnitMathsRequestDTO = new ProphecyUnitMathsRequestDTO(MATHS_KEY, attackingRegimentUnit, defendingRegimentUnit);
+            let request: ProphecyUnitMathsRequestDTO = new ProphecyUnitMathsRequestDTO(MATHS_KEY, attackingRegimentUnit,
+                defendingRegimentUnit, attackingPosition);
             const content: string = JSON.stringify(request);
-
             const response: Response = await fetch(MATHS_UNITS_REQUEST_URL, {
                 method: "POST",
                 body: content,
@@ -68,7 +72,7 @@ export class ProphecyController {
             }
             const mathsResponse: ProphecyUnitMathsResponseDTO = (await response.json()) as ProphecyUnitMathsResponseDTO;
             const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username, attackingRegimentUnit.id,
-                defendingRegimentUnit.id, mathsResponse);
+                defendingRegimentUnit.id, attackingPosition, mathsResponse);
             await prophecy.load();
             await this.prophecyUnitService.save(prophecy);
             return new ProphecyUnitDTO(prophecy);
@@ -114,5 +118,9 @@ export class ProphecyController {
             throw new ForbiddenException();
         }
         await this.prophecyUnitService.delete(id);
+    }
+
+    private checkAttackingPosition(position: string): boolean {
+        return (position === "front" || position === "back" || position === "flank");
     }
 }

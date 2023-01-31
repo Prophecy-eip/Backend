@@ -643,7 +643,7 @@ paths:
               $ref: '#/components/schemas/prophecyRequest'
       responses:
         201:
-          description: Created
+          description: OK
           content:
             application/json:
               schema:
@@ -3223,15 +3223,23 @@ components:
       description: A prophecy request data
       type: object
       properties:
+        attackingPosition:
+          $ref: "#/components/schemas/prophecyUnitAttackingPosition"
         attackingRegiment:
           $ref: "#/components/schemas/armyListUnit"
         defendingRegiment:
           $ref: "#/components/schemas/armyListUnit"
 
+    prophecyUnitAttackingPosition:
+      enum: ["front", "back", "flank"]
+
+
     prophecyObject:
       description: A prophecy data
       type: object
       properties:
+        attackingPosition:
+          $ref: "#/components/schemas/prophecyUnitAttackingPosition"
         attackingRegiment:
           $ref: "#/components/schemas/armyListUnit"
         defendingRegiment:
@@ -3263,13 +3271,11 @@ components:
     prophecyUnitRegiment:
       type: object
       properties:
-        model:
-          $ref: "#/components/schemas/prophecyUnitModel"
         nbRows:
           type: number
         nbCols:
           type: number
-        regimentHealthPoints:
+        nbModels:
           type: number
         points:
           type: number
