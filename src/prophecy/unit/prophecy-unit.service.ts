@@ -21,11 +21,12 @@ export class ProphecyUnitService {
         mathsResponse: ProphecyUnitMathsResponseDTO): Promise<ProphecyUnit> {
         const id: string = randomUUID();
         const bestCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.best_case);
-        const meanCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.average_case);
+        const meanCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.mean_case);
         const worstCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.worst_case);
 
-        return this.repository.create({ id, attackingRegimentUnitId, defendingRegimentUnitId, owner, bestCase, meanCase,
-            worstCase, attackingPosition
+        return this.repository.create({ id: id, attackingRegimentUnitId: attackingRegimentUnitId,
+            defendingRegimentUnitId: defendingRegimentUnitId, owner: owner, bestCase: bestCase, meanCase: meanCase,
+            worstCase: worstCase, attackingPosition: attackingPosition
         });
     }
 

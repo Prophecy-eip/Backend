@@ -83,6 +83,7 @@ export class ProphecyController {
             if (error.message.includes("insert or update on table \"army_list_units\" violates foreign key constraint")) {
                 throw new NotFoundException();
             }
+            console.error(error)
             throw new InternalServerErrorException();
         }
     }

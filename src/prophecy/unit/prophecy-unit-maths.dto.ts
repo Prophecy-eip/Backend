@@ -95,7 +95,7 @@ export class ProphecyUnitCaseRegimentMathsDTO {
 export class ProphecyUnitCaseMathsDTO {
     public attacking_regiment: ProphecyUnitCaseRegimentMathsDTO;
     public defending_regiment: ProphecyUnitCaseRegimentMathsDTO;
-    public occurrence_probability: number;
+    public probability: number;
 }
 
 export class ProphecyUnitMathsRequestDTO {
@@ -114,6 +114,6 @@ export class ProphecyUnitMathsRequestDTO {
 
 export class ProphecyUnitMathsResponseDTO {
     public worst_case: ProphecyUnitCaseMathsDTO;
-    public average_case: ProphecyUnitCaseMathsDTO;
+    public mean_case: ProphecyUnitCaseMathsDTO;
     public best_case: ProphecyUnitCaseMathsDTO;
 }

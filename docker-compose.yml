@@ -59,16 +59,15 @@ services:
       - prophecy
 
   tests:
-      depends_on:
-        - "database"
-        - "server-dev"
-      image: backend_server
-      container_name: backend_tests
-      command: ["yarn", "test", "--coverage"]
-      ports:
-        - "${TESTS_PORT}:${TESTS_PORT}"
-      networks:
-        - prophecy
+    build:
+      context: .
+      dockerfile: .devcontainers/backend-development.Dockerfile
+    container_name: backend_tests
+    command: ["yarn", "test", "--coverage"]
+    ports:
+      - "${TESTS_PORT}:${TESTS_PORT}"
+    networks:
+      - prophecy
 
   script_armies-data:
     build:

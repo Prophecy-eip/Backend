@@ -144,7 +144,7 @@ export class ProphecyUnitCase {
     constructor(caseDto: ProphecyUnitCaseMathsDTO) {
         this.attackingRegiment = new ProphecyUnitCaseRegiment(caseDto.attacking_regiment);
         this.defendingRegiment = new ProphecyUnitCaseRegiment(caseDto.attacking_regiment);
-        this.occurrenceProbability = caseDto.occurrence_probability;
+        this.occurrenceProbability = caseDto.probability;
     }
 
     public attackingRegiment: ProphecyUnitCaseRegiment;
