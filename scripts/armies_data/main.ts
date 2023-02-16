@@ -10,6 +10,7 @@ const DB_PORT: number = +process.env.DATABASE_PORT;
 const DB_USERNAME = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DIALECT = "postgres";
+let IS_TEST: boolean = false;
 
 /**
  * PROPHECY ENTITIES
@@ -1264,11 +1265,18 @@ async function saveArmy() {
             console.error(error);
         }
         console.log("  Done!")
+        if (IS_TEST) {
+            return;
+        }
     }
     await dataSource.destroy();
 }
 
 function main() {
+    if (process.argv.length > 2 && process.argv[2] === "--test") {
+        IS_TEST = true;
+        console.log("Filling database for test, only one army will be retrieved.");
+    }
     saveArmy().then(() => { console.log("Armies were saved successfully !")});
 }
 

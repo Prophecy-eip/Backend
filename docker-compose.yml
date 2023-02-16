@@ -37,7 +37,6 @@ services:
       - prophecy
 
   migration-run:
-    image: backend_server-prod
     build:
       context: .
       dockerfile: .devcontainers/backend-production.Dockerfile
@@ -48,7 +47,6 @@ services:
       - prophecy
 
   migration-revert:
-    image: backend_server-prod
     build:
       context: .
       dockerfile: .devcontainers/backend-production.Dockerfile
@@ -73,6 +71,15 @@ services:
     build:
       context: .
       dockerfile: .devcontainers/armies-data.Dockerfile
+    ports:
+      - "${MIGRATION_PORT}:${MIGRATION_PORT}"
+    networks:
+      - prophecy
+
+  script_armies-data_test:
+    build:
+      context: .
+      dockerfile: .devcontainers/armies-data_test.Dockerfile
     ports:
       - "${MIGRATION_PORT}:${MIGRATION_PORT}"
     networks:
