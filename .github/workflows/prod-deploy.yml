@@ -1,11 +1,11 @@
-name: "Deploy"
+name: "Deploy production"
 on:
   push:
     branches:
       - master
 
 jobs:
-  deploy:
+  prod-deploy:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -16,11 +16,11 @@ jobs:
       - name: "Setup environement"
         run: |
           printf "SERVER_PORT=${{ secrets.SERVER_PORT }}\n
-          POSTGRES_DB=${{ secrets.POSTGRES_DB }}\n
-          POSTGRES_USER=${{ secrets.POSTGRES_USER }}\n
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}\n
-          DATABASE_IP=${{ secrets.DATABASES_IP }}\n
-          DATABASE_PORT=${{ secrets.DATABASES_PORT }}\n
+          POSTGRES_DB=${{ secrets.PROD_DATABASE_NAME}}\n
+          POSTGRES_USER=${{ secrets.PROD_DATABASE_USER }}\n
+          POSTGRES_PASSWORD=${{ secrets.PROD_DATABASE_PASSWORD }}\n
+          DATABASE_IP=${{ secrets.PROD_DATABASE_IP }}\n
+          DATABASE_PORT=${{ secrets.DATABASE_PORT }}\n
           JWT_SECRET=${{ secrets.JWT_SECRET }}\n
           TESTS_PORT=${{ secrets.TESTS_PORT }}\n
           MIGRATION_PORT=${{ secrets.MIGRATION_PORT }}\n
@@ -28,8 +28,10 @@ jobs:
           SES_ACCESS_KEY=${{ secrets.AWS_SES_ACCESS_KEY }}\n
           SES_SECRET_ACCESS_KEY=${{ secrets.AWS_SES_SECRET_ACCESS_KEY }}\n
           SES_FROM_ADDRESS=${{ secrets.AWS_SES_FROM_ADDRESS }}\n
-          API_URL=${{ secrets.API_URL }}\n
-          MATHS_KEY=${{ secrets.MATHS_KEY }}\n" > .env
+          API_URL=${{ secrets.PROD_API_URL }}\n
+          MATHS_KEY=${{ secrets.MATHS_KEY }}\n
+          WEBSITE_URL=${{ secrets.PROD_WEBSITE_URL }}\n" > .env
+
       - name: "Configure AWS credentials"
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -44,5 +46,5 @@ jobs:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: 032910807353.dkr.ecr.us-east-1.amazonaws.com
         run: |
-          docker build -t $REPOSITORY/prophecy_backend:v0.$GITHUB_RUN_NUMBER.0 -f .devcontainers/backend-production.Dockerfile
+          docker build -t $REPOSITORY/prophecy_backend:v0.$GITHUB_RUN_NUMBER.0 -f .devcontainers/backend-production.Dockerfile .
           docker push $REPOSITORY/prophecy_backend:v0.$GITHUB_RUN_NUMBER.0
