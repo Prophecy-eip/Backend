@@ -24,5 +24,5 @@ export class ArmyList {
     public isShared: boolean;
 
     @Column({ name: "is_favourite" })
-    public isFavourite: boolean;
+    public isFavorite: boolean;
 }
