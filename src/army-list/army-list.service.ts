@@ -13,10 +13,10 @@ export class ArmyListService {
     ) {}
 
     async create(name: string, owner: string, armyId: number, valuePoints: number, isShared: boolean,
-        isFavourite: boolean): Promise<ArmyList> {
+        isFavorite: boolean): Promise<ArmyList> {
         const id: string = randomUUID();
 
-        return this.repository.create({ id, name, owner, armyId, valuePoints, isShared, isFavourite });
+        return this.repository.create({ id, name, owner, armyId, valuePoints, isShared, isFavorite: isFavorite });
     }
 
     save(list: ArmyList): Promise<ArmyList> {
@@ -39,8 +39,8 @@ export class ArmyListService {
         await this.repository.delete(id);
     }
 
-    async update(id: string, name: string, armyId: number, valuePoints: number, isShared: boolean, isFavourite: boolean) {
+    async update(id: string, name: string, armyId: number, valuePoints: number, isShared: boolean, isFavorite: boolean) {
         await this.repository.update({ id: id }, { name: name, armyId: armyId,
-            valuePoints: valuePoints, isShared: isShared, isFavourite: isFavourite });
+            valuePoints: valuePoints, isShared: isShared, isFavorite: isFavorite });
     }
 }

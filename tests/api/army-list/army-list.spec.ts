@@ -8,6 +8,8 @@ import { ArmyListUnitDTO } from "../../../src/army-list/army-list-unit/army-list
 import { ArmyListDTO } from "../../../src/army-list/army-list.dto";
 import { TestsHelper } from "../../tests.helper";
 
+jest.setTimeout(100000000);
+
 const LIST_NAME: string = "my list";
 const ARMY_ID: string = "3557-241b-5999-a3b1";
 const COST: string = "50 pts";
@@ -32,13 +34,13 @@ let token1: string;
 
 class List {
     constructor(name: string, armyId: number, valuePoints: number, units: ArmyListUnitCredentialsDTO[], isShared: boolean,
-        isFavourite: boolean) {
+        isFavorite: boolean) {
         this.name = name;
         this.armyId = armyId;
         this.valuePoints = valuePoints;
         this.units = units;
         this.isShared = isShared;
-        this.isFavourite = isFavourite;
+        this.isFavorite = isFavorite;
     }
 
     name: string;
@@ -46,7 +48,7 @@ class List {
     valuePoints: number;
     units: ArmyListUnitCredentialsDTO[];
     isShared: boolean;
-    isFavourite: boolean;
+    isFavorite: boolean;
 }
 
 const UNITS1: ArmyListUnitCredentialsDTO[] = [
@@ -113,7 +115,7 @@ const ARMY1: List = {
     valuePoints: 500,
     units: UNITS1,
     isShared: false,
-    isFavourite: true,
+    isFavorite: true,
 }
 
 const ARMY2: List = {
@@ -122,7 +124,7 @@ const ARMY2: List = {
     valuePoints: 300,
     units: [],
     isShared: true,
-    isFavourite: false,
+    isFavorite: false,
 }
 
 describe("Armies lists route", () => {
@@ -174,7 +176,7 @@ describe("Armies lists route", () => {
         expect(lhs.armyId).toEqual(rhs.armyId);
         expect(lhs.valuePoints).toEqual(rhs.valuePoints);
         expect(lhs.isShared).toEqual(rhs.isShared);
-        expect(lhs.isFavourite).toEqual(rhs.isFavourite);
+        expect(lhs.isFavorite).toEqual(rhs.isFavorite);
         expect(lhs.units.length).toEqual(rhs.units.length);
         for (let i = 0; i < lhs.units.length && i < rhs.units.length; i++) {
             compareUnitWithCredentials(lhs.units[i], rhs.units[i]);

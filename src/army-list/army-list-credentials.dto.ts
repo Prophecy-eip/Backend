@@ -6,7 +6,7 @@ export class ArmyListCredentialsDTO {
         this.name = list.name;
         this.valuePoints = list.valuePoints;
         this.isShared = list.isShared;
-        this.isFavourite = list.isFavourite;
+        this.isFavorite = list.isFavorite;
         this.armyId = list.armyId;
     }
     public id: string;
@@ -14,5 +14,5 @@ export class ArmyListCredentialsDTO {
     public armyId: number;
     public valuePoints: number;
     public isShared: boolean;
-    public isFavourite: boolean;
+    public isFavorite: boolean;
 }

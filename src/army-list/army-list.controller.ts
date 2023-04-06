@@ -66,9 +66,9 @@ export class ArmyListController {
         @Body("valuePoints") valuePoints: number,
         @Body("units") units: ArmyListUnitCredentialsDTO[],
         @Body("isShared") isShared: boolean,
-        @Body("isFavourite") isFavourite: boolean) {
+        @Body("isFavorite") isFavorite: boolean) {
         if (!ParamHelper.isValid(name) || !ParamHelper.isValid(armyId) || !ParamHelper.isValid(valuePoints) ||
-            !ParamHelper.isValid(units) || !ParamHelper.isValid(isFavourite)) {
+            !ParamHelper.isValid(units) || !ParamHelper.isValid(isFavorite)) {
             throw new BadRequestException();
         }
         const army: Army = await this.armyService.findOneById(armyId);
@@ -76,7 +76,7 @@ export class ArmyListController {
             throw new NotFoundException(`The army ${armyId} does not exist.`)
         }
         const list: ArmyList = await this.armyListService.create(name, req.user.username, armyId, valuePoints, isShared,
-            isFavourite)
+            isFavorite)
 
         try {
             await this.armyListService.save(list);
@@ -144,7 +144,7 @@ export class ArmyListController {
             @Body("valuePoints") valuePoints: number,
             @Body("units") units: ArmyListUnitCredentialsDTO[],
             @Body("isShared") isShared: boolean,
-            @Body("isFavourite") isFavourite) {
+            @Body("isFavorite") isFavorite) {
             let list: ArmyList = await this.armyListService.findOneById(id);
 
             if (list === null) {
@@ -153,7 +153,7 @@ export class ArmyListController {
             if (list.owner !== req.user.username) {
                 throw new ForbiddenException();
             }
-            await this.armyListService.update(id, name, armyId, valuePoints, isShared, isFavourite);
+            await this.armyListService.update(id, name, armyId, valuePoints, isShared, isFavorite);
             await this.armyListUnitService.deleteByList(list.id)
             await this.saveUnits(list.id, units);
     }

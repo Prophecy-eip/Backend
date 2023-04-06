@@ -3035,7 +3035,7 @@ components:
             $ref: "#/components/schemas/armyListUnit"
         isShared:
           type: boolean
-        isFavourite:
+        isFavorite:
           type: boolean
 
     armyListObject:
@@ -3061,7 +3061,7 @@ components:
             $ref: "#/components/schemas/armyListUnit"
         isShared:
           type: boolean
-        isFavourite:
+        isFavorite:
           type: boolean
       required:
         - name
@@ -3069,7 +3069,7 @@ components:
         - armyId
         - units
         - isShared
-        - isFavourite
+        - isFavorite
 
     armyListUnit:
       type: object
@@ -3417,7 +3417,7 @@ components:
         isShared:
           type: boolean
           example: true
-        isFavourite:
+        isFavorite:
           type: boolean
 
 

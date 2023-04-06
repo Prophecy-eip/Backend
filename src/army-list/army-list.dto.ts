@@ -8,7 +8,7 @@ export class ArmyListDTO {
         this.name = list.name;
         this.valuePoints = list.valuePoints;
         this.isShared = list.isShared;
-        this.isFavourite = list.isFavourite;
+        this.isFavorite = list.isFavorite;
         this.armyId = list.armyId;
         for (const unit of units) {
             this.units.push(new ArmyListUnitDTO(unit));
@@ -19,6 +19,6 @@ export class ArmyListDTO {
     public armyId: number;
     public valuePoints: number;
     public isShared: boolean;
-    public isFavourite: boolean;
+    public isFavorite: boolean;
     public units: ArmyListUnitDTO[] = [];
 }
