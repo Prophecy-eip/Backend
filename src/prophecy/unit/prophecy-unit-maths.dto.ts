@@ -4,7 +4,7 @@ import { Troop, TroopCharacteristics } from "../../army/unit/troop/troop.entity"
 import { ProphecyUnitModifierGlobal } from "./prophecy-unit.entity";
 
 export class ProphecyUnitModelStatsMathsDTO {
-    constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics) {
+    constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics | undefined) {
         this.advance = +unitCharacteristics.adv;
         this.march = +unitCharacteristics.mar;
         this.discipline = +unitCharacteristics.dis;
@@ -13,11 +13,11 @@ export class ProphecyUnitModelStatsMathsDTO {
         this.resilience = +unitCharacteristics.res;
         this.armour = +unitCharacteristics.arm;
         this.aegis = +unitCharacteristics.aeg;
-        this.attack = +troopCharacteristics.att;
-        this.offensive = +troopCharacteristics.of;
-        this.strength = +troopCharacteristics.str;
-        this.armour_penetration = +troopCharacteristics.ap;
-        this.agility = +troopCharacteristics.agi;
+        this.attack = (troopCharacteristics !== undefined) ? +troopCharacteristics?.att : 0;
+        this.offensive = (troopCharacteristics !== undefined) ? +troopCharacteristics?.of : 0;
+        this.strength = (troopCharacteristics !== undefined) ? +troopCharacteristics?.str : 0;
+        this.armour_penetration = (troopCharacteristics !== undefined) ? +troopCharacteristics?.ap : 0;
+        this.agility = (troopCharacteristics !== undefined) ? +troopCharacteristics?.agi : 0;
     }
 
     public advance: number;
@@ -58,7 +58,7 @@ export class ProphecyUnitModifierMathsDTO {
 
 export class ProphecyUnitModelMathsDTO {
 
-    constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics) {
+    constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics | undefined) {
         this.stats = new ProphecyUnitModelStatsMathsDTO(unitCharacteristics, troopCharacteristics);
         this.modifiers = []; // TODO
         this.banner_bearer = false; // TODO
@@ -70,7 +70,7 @@ export class ProphecyUnitModelMathsDTO {
 export class ProphecyUnitRegimentMathsDTO {
     constructor(unit: ArmyListUnit) {
         let pos: number = unit.formation.indexOf("x");
-        this.model = new ProphecyUnitModelMathsDTO(unit.unit.characteristics, unit.troops[0].characteristics);
+        this.model = new ProphecyUnitModelMathsDTO(unit.unit.characteristics, unit.troops[0]?.characteristics);
         this.nb_rows = +unit.formation.substring(pos + 1);
         this.nb_cols = +unit.formation.substring(0, pos);
         this.nb_models = unit.quantity;

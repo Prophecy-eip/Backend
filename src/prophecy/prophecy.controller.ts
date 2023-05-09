@@ -55,19 +55,20 @@ export class ProphecyController {
             await defendingRegimentUnit.load();
             await this.armyListUnitService.save(attackingRegimentUnit);
             await this.armyListUnitService.save(defendingRegimentUnit);
-            if (attackingRegimentUnit.troopIds.length != 1 || defendingRegimentUnit.troopIds.length != 1) {
-                throw new BadRequestException("The troopIds must contain one (and only one) id");
+            if (attackingRegimentUnit.troopIds.length > 1 || defendingRegimentUnit.troopIds.length > 1) {
+                throw new BadRequestException("The troopIds must contain one troop max");
             }
             let request: ProphecyUnitMathsRequestDTO = new ProphecyUnitMathsRequestDTO(MATHS_KEY, attackingRegimentUnit,
                 defendingRegimentUnit, attackingPosition);
             const content: string = JSON.stringify(request);
+            console.log(content)
             const response: Response = await fetch(MATHS_UNITS_REQUEST_URL, {
                 method: "POST",
                 body: content,
                 headers: {"Content-Type": "application/json"}
             });
-            if (response.status === HttpStatus.BAD_REQUEST) {
-                console.log(response);
+            if (response.status === HttpStatus.BAD_REQUEST || response.status === HttpStatus.INTERNAL_SERVER_ERROR) {
+                console.error(response);
                 throw new BadRequestException();
             }
             const mathsResponse: ProphecyUnitMathsResponseDTO = (await response.json()) as ProphecyUnitMathsResponseDTO;
@@ -84,6 +85,7 @@ export class ProphecyController {
                 throw new NotFoundException();
             }
             console.error(error)
+    
             throw new InternalServerErrorException();
         }
     }
