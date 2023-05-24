@@ -5,14 +5,14 @@ import { ProphecyUnitModifierGlobal } from "./prophecy-unit.entity";
 
 export class ProphecyUnitModelStatsMathsDTO {
     constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics | undefined) {
-        this.advance = +unitCharacteristics.adv;
-        this.march = +unitCharacteristics.mar;
-        this.discipline = +unitCharacteristics.dis;
-        this.health_points = +unitCharacteristics.hp;
-        this.defense = +unitCharacteristics.def;
-        this.resilience = +unitCharacteristics.res;
-        this.armour = +unitCharacteristics.arm;
-        this.aegis = +unitCharacteristics.aeg;
+        this.advance = (unitCharacteristics.adv !== null || true) ? +unitCharacteristics.adv : 0;
+        this.march = (unitCharacteristics.mar !== null || true) ? +unitCharacteristics.mar : 0;
+        this.discipline = (unitCharacteristics.dis !== null || true) ? +unitCharacteristics.dis : 0;
+        this.health_points = (unitCharacteristics.hp !== null || true) ? +unitCharacteristics.hp : 0;
+        this.defense = (unitCharacteristics.def !== null || true) ? +unitCharacteristics.def: 0;
+        this.resilience = (unitCharacteristics.res !== null || true) ? +unitCharacteristics.res : 0;
+        this.armour = (unitCharacteristics.arm !== null || true) ? +unitCharacteristics.arm : 0;
+        this.aegis = (unitCharacteristics.aeg !== null || true) ? +unitCharacteristics.aeg : 0;
         this.attack = (troopCharacteristics !== undefined) ? +troopCharacteristics?.att : 0;
         this.offensive = (troopCharacteristics !== undefined) ? +troopCharacteristics?.of : 0;
         this.strength = (troopCharacteristics !== undefined) ? +troopCharacteristics?.str : 0;
