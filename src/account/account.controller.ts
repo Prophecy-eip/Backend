@@ -90,7 +90,7 @@ export class AccountController {
         await this.emailConfirmationService.confirmEmail(email);
     }
 
-    @Get("send-password-reset-link")
+    @Post("send-password-reset-link")
     @HttpCode(HttpStatus.OK)
     async sendPasswordResetLink(@Body("email") email: string) {
         if (!this.isFieldValid(email) || await this.profileService.findOneByEmail(email) === null) {
