@@ -55,6 +55,9 @@ const DB_DIALECT = "postgres"
             username: DB_USERNAME,
             password: DB_PASSWORD,
             database: DB,
+            extra: {
+                connectionLimit: 5
+            },
             entities: [
                 Profile,
                 Army,
