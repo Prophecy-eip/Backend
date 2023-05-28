@@ -29,7 +29,7 @@ export class EmailService {
                     Html: {
                         Charset: "UTF-8",
                         Data: emailBody
-                    },
+                    }
                 },
                 Subject: {
                     Charset: "UTF-8",

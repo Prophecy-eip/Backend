@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm"
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 const ARMIES_TABLE: Table = new Table({
     name: "armies",
@@ -6,65 +6,65 @@ const ARMIES_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "name",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "version_id",
-            type: "int",
+            type: "int"
         }, {
             name: "category_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "source",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "equipment_limits",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "special_rule_limits",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "organisation_ids",
             type: "int",
             isArray: true,
-            isNullable: true,
+            isNullable: true
         }, {
             name: "magic_item_category_ids",
             type: "int",
             isArray: true,
-            isNullable: true,
+            isNullable: true
         }, {
             name: "magic_item_ids",
             type: "int",
             isArray: true,
-            isNullable: true,
+            isNullable: true
         }, {
             name: "magic_standard_ids",
             type: "int",
             isArray: true,
-            isNullable: true,
+            isNullable: true
         }, {
             name: "equipment_ids",
             type: "int",
             isArray: true,
-            isNullable: true,
+            isNullable: true
         }, {
             name: "rule_ids",
             type: "int",
             isArray: true,
-            isNullable: true,
+            isNullable: true
         }, {
             name: "unit_ids",
             type: "int",
             isArray: true,
-            isNullable: true,
+            isNullable: true
         }
     ]
 });
@@ -75,16 +75,16 @@ const EQUIPMENT_CATEGORIES_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "version_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "name",
             type: "varchar",
-            isNullable: true,
-        },
+            isNullable: true
+        }
     ]
 });
 
@@ -98,27 +98,27 @@ const EQUIPMENTS_TABLE: Table = new Table({
         }, {
             name: "version_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "name",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "description",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "type_lvl",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "can_be_enchanted",
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "equipment_categories",
             type: "int",
             isArray: true,
-            isNullable: true,
+            isNullable: true
         }
     ]
 });
@@ -129,7 +129,7 @@ const ARMY_ORGANISATION_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "name",
             type: "varchar",
@@ -141,12 +141,12 @@ const ARMY_ORGANISATION_TABLE: Table = new Table({
         }, {
             name: "is_default",
             type: "boolean",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "organisation_group_ids",
             type: "int",
             isNullable: true,
-            isArray: true,
+            isArray: true
         }
     ]
 });
@@ -157,11 +157,11 @@ const ARMY_ORGANISATION_GROUP_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "army_organisation_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "name",
             type: "varchar",
@@ -169,17 +169,17 @@ const ARMY_ORGANISATION_GROUP_TABLE: Table = new Table({
         }, {
             name: "organisation_group_limits",
             type: "json",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "organisation_unit_limits",
             type: "varchar",
             isNullable: true,
-            isArray: true,
+            isArray: true
         }, {
             name: "change_item_limits",
             type: "varchar",
-            isNullable: true,
-        },
+            isNullable: true
+        }
     ]
 });
 
@@ -189,24 +189,24 @@ const MAGIC_ITEM_CATEGORIES_TABLE: Table = new Table({
        {
            name: "id",
            type: "int",
-           isPrimary: true,
+           isPrimary: true
        }, {
            name: "version_id",
            isNullable: true,
-           type: "int",
+           type: "int"
        }, {
            name: "name",
            type: "varchar",
-           isNullable: true,
+           isNullable: true
        }, {
            name: "is_multiple",
            isNullable: true,
-           type: "boolean",
+           type: "boolean"
        }, {
            name: "max",
            type: "int",
            isNullable: true
-       },
+       }
    ]
 });
 
@@ -216,11 +216,11 @@ const MAGIC_ITEMS_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "name",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "description",
             type: "varchar",
@@ -228,46 +228,46 @@ const MAGIC_ITEMS_TABLE: Table = new Table({
         }, {
             name: "magic_item_category_id",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "is_multiple",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "max",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "is_dominant",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "version_id",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "value_points",
             isNullable: true,
-            type: "float",
+            type: "float"
         }, {
             name: "foot_only",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "disable_magic_path_limit",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "wizard_only",
             type: "varchar",
             isNullable: true,
-            isArray: true,
+            isArray: true
         },  {
             name: "required_organisation_ids",
             type: "int",
             isNullable: true,
-            isArray: true,
-        },
+            isArray: true
+        }
     ]
 });
 
@@ -277,7 +277,7 @@ const MAGIC_ITEMS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         referencedColumnNames: ["id"],
         referencedTableName: "magic_item_categories",
         onDelete: "CASCADE"
-    }),
+    })
 ];
 
 const MAGIC_STANDARDS_TABLE: Table = new Table({
@@ -286,7 +286,7 @@ const MAGIC_STANDARDS_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "version_id",
             isNullable: true,
@@ -298,7 +298,7 @@ const MAGIC_STANDARDS_TABLE: Table = new Table({
         }, {
             name: "description",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "is_multiple",
             isNullable: true,
@@ -306,7 +306,7 @@ const MAGIC_STANDARDS_TABLE: Table = new Table({
         }, {
             name: "infos",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "value_points",
             isNullable: true,
@@ -319,7 +319,7 @@ const MAGIC_STANDARDS_TABLE: Table = new Table({
             name: "availabilities",
             type: "varchar",
             isNullable: true,
-            isArray: true,
+            isArray: true
         }
     ]
 });
@@ -342,7 +342,7 @@ const SPECIAL_RULES_TABLE: Table = new Table({
         }, {
             name: "description",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "type_lvl",
             isNullable: true,
@@ -389,11 +389,11 @@ const UNITS_TABLE: Table = new Table({
         }, {
             name: "magic",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "notes",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "is_mount",
             isNullable: true,
@@ -405,7 +405,7 @@ const UNITS_TABLE: Table = new Table({
         }, {
             name: "army_organisation_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "value_points",
             isNullable: true,
@@ -413,7 +413,7 @@ const UNITS_TABLE: Table = new Table({
         }, {
             name: "add_value_points",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "characteristics",
             isNullable: true,
@@ -421,19 +421,19 @@ const UNITS_TABLE: Table = new Table({
         }, {
             name: "troop_ids",
             type: "int",
-            isArray: true,
+            isArray: true
         }, {
             name: "special_rule_unit_troop_ids",
             type: "int",
-            isArray: true,
+            isArray: true
         }, {
             name: "equipment_unit_troop_ids",
             type: "int",
-            isArray: true,
+            isArray: true
         }, {
             name: "unit_option_ids",
             type: "int",
-            isArray: true,
+            isArray: true
         }
     ]
 });
@@ -444,15 +444,15 @@ const TROOPS_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "name",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "characteristics",
             isNullable: true,
-            type: "json",
+            type: "json"
         }
     ]
 });
@@ -463,31 +463,31 @@ const SPECIAL_RULE_UNIT_TROOP_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "unit_id",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "troop_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "info",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "special_rule_id",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "type_lvl",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "name",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }
     ]
 });
@@ -498,31 +498,31 @@ const EQUIPMENT_UNIT_TROOPS_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "unit_id",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "troop_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "info",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "equipment_id",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "type_lvl",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "name",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }
     ]
 });
@@ -533,147 +533,147 @@ const UNIT_OPTIONS_TABLE: Table = new Table({
         {
             name: "id",
             type: "int",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "unit_id",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "parent_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "category",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "magic_item_factor",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "army_organisation_activator_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "army_organisation_desactivator_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "use_all_activators",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "army_organisation_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "is_per_model",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "is_foot_only",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "mount_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "mount_and_characteristics_points",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "organisation_mode",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "is_multiple",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "is_required",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "domain_magic_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "magic_item_source",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "organisation_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "name",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "value_points",
             type: "float",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "use_points",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "max",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "has_choices",
             type: "boolean",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "weight",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "change_profile",
             isNullable: true,
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "base",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "height",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "enchantment_limit",
             isNullable: true,
-            type: "int",
+            type: "int"
         }, {
             name: "unit_option_limits",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "availabilities",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "magic_item_category_ids",
             type: "int",
-            isArray: true,
+            isArray: true
         }, {
             name: "equipment_ids",
             type: "int",
-            isArray: true,
+            isArray: true
         }, {
             name: "unit_option_change_special_rules",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "unit_option_change_equipments",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "unit_option_change_profiles",
             isNullable: true,
-            type: "varchar",
+            type: "varchar"
         }
     ]
 });

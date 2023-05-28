@@ -41,7 +41,7 @@ import { ArmyListController } from "./army-list.controller";
             ArmyListUnitTroopSpecialRule,
             ArmyListUnitTroopEquipment,
             Army,
-            Unit,
+            Unit
         ])
     ],
     providers: [
@@ -52,7 +52,7 @@ import { ArmyListController } from "./army-list.controller";
         ArmyListUnitMagicStandardService,
         ArmyListUnitOptionService,
         ArmyListUnitTroopSpecialRuleService,
-        ArmyListUnitTroopEquipmentService,
+        ArmyListUnitTroopEquipmentService
     ],
     exports: [],
     controllers: [ArmyListController]

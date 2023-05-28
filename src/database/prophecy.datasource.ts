@@ -23,7 +23,7 @@ import { ArmyListUnitOption } from "../army-list/army-list-unit/option/army-list
 import { ArmyListUnitTroopEquipment } from "../army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 import { ArmyListUnitTroopSpecialRule } from "../army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
 
-dotenv.config()
+dotenv.config();
 
 const DB = process.env.POSTGRES_DB;
 const DB_HOST = process.env.DATABASE_IP;
@@ -63,8 +63,8 @@ export class ProphecyDatasource extends DataSource {
                 ArmyListUnitMagicStandard,
                 ArmyListUnitOption,
                 ArmyListUnitTroopEquipment,
-                ArmyListUnitTroopSpecialRule,
-            ],
+                ArmyListUnitTroopSpecialRule
+            ]
         });
     }
 }

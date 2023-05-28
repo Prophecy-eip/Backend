@@ -100,7 +100,7 @@ class ProphecyUnitModifier {
 
 class ProphecyUnitModel {
     constructor(model: ProphecyUnitModelMathsDTO) {
-        this.stats = new ProphecyUnitModelStats(model.stats)
+        this.stats = new ProphecyUnitModelStats(model.stats);
         for (const modifier of model.modifiers) {
             this.modifiers.push(new ProphecyUnitModifier(modifier));
         }
@@ -112,7 +112,7 @@ class ProphecyUnitModel {
 
 export class ProphecyUnitRegiment {
     constructor(regiment: ProphecyUnitRegimentMathsDTO) {
-        this.model = new ProphecyUnitModel(regiment.model)
+        this.model = new ProphecyUnitModel(regiment.model);
         this.nbRows = regiment.nb_rows;
         this.nbCols = regiment.nb_cols;
         this.regimentHealthPoints = regiment.regiment_health_point;

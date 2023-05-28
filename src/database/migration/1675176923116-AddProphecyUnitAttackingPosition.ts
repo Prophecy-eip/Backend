@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, TableColumn } from "typeorm"
+import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
 
 const PROPHECY_UNIT_ATTACKING_POSITION_COLUMN: TableColumn = new TableColumn({
     name: "attacking_position",
