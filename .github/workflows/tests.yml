@@ -1,7 +1,7 @@
 on: [ pull_request ]
 
 jobs:
-  docker-ci:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -13,8 +13,8 @@ jobs:
           POSTGRES_DB=prophecy\n
           POSTGRES_USER=prophecy\n
           POSTGRES_PASSWORD=prophecy\n
-          DATABASE_IP=database\n
-          DATABASE_PORT=${{ secrets.DATABASES_PORT }}\n
+          DATABASE_IP=localhost\n
+          DATABASE_PORT=${{ secrets.DATABASE_PORT }}\n
           JWT_SECRET=${{ secrets.JWT_SECRET }}\n
           TESTS_PORT=${{ secrets.TESTS_PORT }}\n
           MIGRATION_PORT=${{ secrets.MIGRATION_PORT }}\n
@@ -28,12 +28,13 @@ jobs:
           POSTGRES_DB=prophecy\n
           POSTGRES_USER=prophecy\n
           POSTGRES_PASSWORD=prophecy\n" > ./scripts/armies_data/.env
+          yarn
 
-      - name: Build & Run Docker
-        run: |
-          docker-compose -f docker-compose.yml up --build -d database server-prod
-          docker-compose up --exit-code-from migration-run migration-run
+      - name: Setup Database & Run migrations
+        run: | 
+          docker-compose -f docker-compose.yml up --build -d database
+          yarn run typeorm migration:run -d ./src/database/migration/ormconfig.ts 
           docker-compose -f docker-compose.yml up --exit-code-from script_armies-data_test script_armies-data_test
 
       - name: Run Unit Tests
-        run: docker-compose -f docker-compose.yml up --exit-code-from tests tests
+        run: yarn run test
