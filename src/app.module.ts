@@ -3,7 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import * as dotenv from "dotenv";
 
 import { Profile } from "./account/profile/profile.entity";
-import { Army } from "./army/army.entity"
+import { Army } from "./army/army.entity";
 import { Unit } from "./army/unit/unit.entity";
 import { Equipment } from "./army/equipment/equipment.entity";
 import { EquipmentCategory } from "./army/equipment/category/equipment-category.entity";
@@ -31,20 +31,20 @@ import {
 } from "./army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 import { ProphecyUnit } from "./prophecy/unit/prophecy-unit.entity";
 
-import { ArmyModule } from "./army/army.module"
+import { ArmyModule } from "./army/army.module";
 import { AccountModule } from "./account/account.module";
 import { ArmyListModule } from "./army-list/army-list.module";
 import { HeartbeatModule } from "./heartbeat/heartbeat.module";
 import { ProphecyModule } from "./prophecy/prophecy.module";
 
-dotenv.config()
+dotenv.config();
 
 const DB = process.env.POSTGRES_DB;
 const DB_HOST = process.env.DATABASE_IP;
 const DB_PORT: number = +process.env.DATABASE_PORT;
 const DB_USERNAME = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
-const DB_DIALECT = "postgres"
+const DB_DIALECT = "postgres";
 
 @Module({
     imports: [
@@ -80,7 +80,7 @@ const DB_DIALECT = "postgres"
                 ArmyListUnitOption,
                 ArmyListUnitTroopSpecialRule,
                 ArmyListUnitTroopEquipment,
-                ProphecyUnit,
+                ProphecyUnit
             ],
             synchronize: false
         }),
@@ -89,6 +89,6 @@ const DB_DIALECT = "postgres"
         ArmyListModule,
         HeartbeatModule,
         ProphecyModule
-    ],
+    ]
 })
 export class AppModule {}

@@ -32,7 +32,7 @@ import { ArmyController } from "./army.controller";
             UnitOption,
             Troop,
             EquipmentUnitTroop,
-            SpecialRuleUnitTroop,
+            SpecialRuleUnitTroop
         ])
     ],
     providers: [ArmyService],

@@ -3,8 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { hash } from "bcrypt";
 
-import { Profile } from "./profile.entity"
-import { ProfileDTO } from "./profile.dto"
+import { Profile } from "./profile.entity";
+import { ProfileDTO } from "./profile.dto";
 
 @Injectable()
 export class ProfileService {
@@ -15,7 +15,7 @@ export class ProfileService {
 
     async exists(username: string, email: string): Promise<boolean> {
         let p = await this.repository.findOneBy([
-            { username: username },
+            { username: username }
         ]);
         return p !== null && p.email === email;
     }

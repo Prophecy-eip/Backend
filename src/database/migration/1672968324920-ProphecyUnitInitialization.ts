@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm"
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 const PROPHECY_UNIT_TABLE: Table = new Table({
     name: "unit_prophecies",
@@ -6,25 +6,25 @@ const PROPHECY_UNIT_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "attacking_regiment_unit_id",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "defending_regiment_unit_id",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "owner",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "best_case",
-            type: "json",
+            type: "json"
         }, {
             name: "mean_case",
-            type: "json",
+            type: "json"
         }, {
             name: "worst_case",
-            type: "json",
+            type: "json"
         }
     ]
 });
@@ -34,25 +34,25 @@ const PROPHECY_UNIT_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         columnNames: ["attacking_regiment_unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "army_list_units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["defending_regiment_unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "army_list_units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["owner"],
         referencedColumnNames: ["username"],
         referencedTableName: "profiles",
-        onDelete: "CASCADE",
-    }),
+        onDelete: "CASCADE"
+    })
 ];
 export class ProphecyUnitInitialization1672968324920 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         // unit prophecies
         await queryRunner.createTable(PROPHECY_UNIT_TABLE);
-        await queryRunner.createForeignKeys(PROPHECY_UNIT_TABLE, PROPHECY_UNIT_TABLE_FOREIGN_KEYS)
+        await queryRunner.createForeignKeys(PROPHECY_UNIT_TABLE, PROPHECY_UNIT_TABLE_FOREIGN_KEYS);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

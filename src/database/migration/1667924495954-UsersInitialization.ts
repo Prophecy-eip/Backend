@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm"
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 const PROFILES_TABLES: Table = new Table({
     name: "profiles",
@@ -8,21 +8,21 @@ const PROFILES_TABLES: Table = new Table({
             type: "varchar",
             isPrimary: true,
             isNullable: false,
-            isUnique: true,
+            isUnique: true
         }, {
             name: "email",
             type: "varchar",
             isNullable: false,
-            isUnique: true,
+            isUnique: true
         }, {
             name: "password",
             type: "varchar",
-            isNullable: false,
+            isNullable: false
         }, {
             name: "is_email_verified",
             type: "boolean",
             default: false,
-            isNullable: false,
+            isNullable: false
         }, {
             name: "profile_picture_path",
             type: "varchar",
@@ -31,8 +31,8 @@ const PROFILES_TABLES: Table = new Table({
         }, {
             name: "account_type",
             type: "varchar",
-            isNullable: false,
-        },
+            isNullable: false
+        }
     ]
 });
 

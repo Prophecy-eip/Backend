@@ -45,7 +45,7 @@ export class ArmyListUnit {
         await dataSource.initialize();
         this.unit = await dataSource.getRepository(Unit).findOneBy({ id: this.unitId });
         for (const id of this.troopIds) {
-            this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }))
+            this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }));
         }
         this.magicItems = await dataSource.getRepository(ArmyListUnitMagicItem).findBy({ armyListUnitId: this.id });
         this.options = await dataSource.getRepository(ArmyListUnitOption).findBy({ armyListUnitId: this.id });

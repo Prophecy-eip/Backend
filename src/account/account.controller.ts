@@ -79,7 +79,7 @@ export class AccountController {
         if (profile.isEmailVerified) {
             throw new BadRequestException("The email address is already verified");
         }
-        await this.emailConfirmationService.sendVerificationLink(profile.email)
+        await this.emailConfirmationService.sendVerificationLink(profile.email);
     }
 
     @Get("verify-email")
@@ -129,7 +129,7 @@ export class AccountController {
         const username = req.user.username;
 
         if (!this.isFieldValid(password)) {
-            throw new BadRequestException()
+            throw new BadRequestException();
         }
         await this.profileService.updatePassword(username, password);
     }
@@ -142,7 +142,7 @@ export class AccountController {
         const profile = await this.profileService.findOneByUsername(username);
 
         if (!this.isFieldValid(email)) {
-            throw new BadRequestException()
+            throw new BadRequestException();
         }
         await this.profileService.updateEmail(username, email);
         await this.emailConfirmationService.sendVerificationLink(email);
@@ -155,11 +155,11 @@ export class AccountController {
         const username = req.user.username;
 
         if (!this.isFieldValid(newUsername)) {
-            throw new BadRequestException()
+            throw new BadRequestException();
         }
         await this.profileService.updateUsername(username, newUsername);
         return {
-            username: newUsername,
+            username: newUsername
         };
     }
 

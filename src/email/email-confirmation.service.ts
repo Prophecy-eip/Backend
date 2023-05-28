@@ -10,7 +10,7 @@ import { jwtConstants } from "../account/auth/constants";
 dotenv.config();
 
 const API_URL: string = process.env.API_URL;
-const EMAIL_VERIFICATION_ROUTE: string = `${API_URL}/account/verify-email`
+const EMAIL_VERIFICATION_ROUTE: string = `${API_URL}/account/verify-email`;
 const FROM_ADDRESS: string = process.env.SES_FROM_ADDRESS;
 const WEBSITE_URL: string = process.env.WEBSITE_URL;
 
