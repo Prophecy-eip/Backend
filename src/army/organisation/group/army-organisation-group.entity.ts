@@ -17,8 +17,9 @@ class ArmyOrganisationUnitLimit {
     public unit_max: number;
     public model_max: number;
     public unit_ids: number[];
-    public availabilities: number[]
+    public availabilities: number[];
 }
+
 @Entity("army_organisation_groups")
 export class ArmyOrganisationGroup {
     @PrimaryColumn()

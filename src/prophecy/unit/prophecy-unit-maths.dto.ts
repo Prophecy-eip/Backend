@@ -101,7 +101,7 @@ export class ProphecyUnitCaseMathsDTO {
 export class ProphecyUnitMathsRequestDTO {
     constructor(key: string, attackingRegiment: ArmyListUnit, defendingRegiment: ArmyListUnit, attackingPosition: string) {
         this.key = key;
-        this.attacking_regiment = new ProphecyUnitRegimentMathsDTO(attackingRegiment)
+        this.attacking_regiment = new ProphecyUnitRegimentMathsDTO(attackingRegiment);
         this.defending_regiment = new ProphecyUnitRegimentMathsDTO(defendingRegiment);
         this.attacking_position = attackingPosition;
     }

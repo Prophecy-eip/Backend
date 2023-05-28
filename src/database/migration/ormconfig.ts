@@ -3,8 +3,8 @@ import { DataSource } from "typeorm";
 
 import { Profile } from "../../account/profile/profile.entity";
 
-import { Army } from "../../army/army.entity"
-import { ArmyOrganisation } from "../../army/organisation/army-organisation.entity"
+import { Army } from "../../army/army.entity";
+import { ArmyOrganisation } from "../../army/organisation/army-organisation.entity";
 import { ArmyOrganisationGroup } from "../../army/organisation/group/army-organisation-group.entity";
 import { Equipment } from "../../army/equipment/equipment.entity";
 import { EquipmentCategory } from "../../army/equipment/category/equipment-category.entity";
@@ -26,7 +26,7 @@ import { ProphecyUnitInitialization1672968324920 } from "./1672968324920-Prophec
 import { ProphecyUnit } from "../../prophecy/unit/prophecy-unit.entity";
 import { AddProphecyUnitAttackingPosition1675176923116 } from "./1675176923116-AddProphecyUnitAttackingPosition";
 
-dotenv.config()
+dotenv.config();
 
 const DB = process.env.POSTGRES_DB;
 const DB_HOST = process.env.DATABASE_IP;
@@ -59,13 +59,13 @@ export const connectionSource = new DataSource({
         ArmyListUnitMagicStandard,
         ArmyListUnitOption,
         Troop,
-        ProphecyUnit,
+        ProphecyUnit
     ],
     migrations: [
         UsersInitialization1667924495954,
         ArmiesInitialization1671123394624,
         ArmyListsInitialization1672323186772,
         ProphecyUnitInitialization1672968324920,
-        AddProphecyUnitAttackingPosition1675176923116,
+        AddProphecyUnitAttackingPosition1675176923116
     ]
 });
