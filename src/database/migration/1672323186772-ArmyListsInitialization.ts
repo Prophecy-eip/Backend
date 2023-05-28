@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm"
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 const ARMY_LISTS_TABLE: Table = new Table({
     name: "army_lists",
@@ -6,26 +6,26 @@ const ARMY_LISTS_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "name",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "owner",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "army_id",
-            type: "int",
+            type: "int"
         }, {
             name: "value_points",
-            type: "int",
+            type: "int"
         }, {
             name: "is_shared",
-            type: "boolean",
+            type: "boolean"
         }, {
             name: "is_favourite",
-            type: "boolean",
-        },
+            type: "boolean"
+        }
     ]
 });
 
@@ -34,13 +34,13 @@ const ARMY_LISTS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         columnNames: ["owner"],
         referencedColumnNames: ["username"],
         referencedTableName: "profiles",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["army_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "armies",
-        onDelete: "CASCADE",
-    }),
+        onDelete: "CASCADE"
+    })
 ];
 
 const ARMY_LIST_UNITS_TABLE: Table = new Table({
@@ -49,25 +49,25 @@ const ARMY_LIST_UNITS_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "unit_id",
-            type: "int",
+            type: "int"
         }, {
             name: "quantity",
-            type: "int",
+            type: "int"
         }, {
             name: "formation",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "army_list_id",
             type: "varchar",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "troop_ids",
             type: "int",
-            isArray: true,
-        },
+            isArray: true
+        }
     ]
 });
 
@@ -76,13 +76,13 @@ const ARMY_LIST_UNITS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         columnNames: ["unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["army_list_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "army_lists",
-        onDelete: "CASCADE",
-    }),
+        onDelete: "CASCADE"
+    })
 ];
 
 const ARMY_LIST_UNIT_MAGIC_ITEMS_TABLE: Table = new Table({
@@ -91,31 +91,31 @@ const ARMY_LIST_UNIT_MAGIC_ITEMS_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "army_list_unit_id",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "unit_id",
-            type: "int",
+            type: "int"
         }, {
             name: "magic_item_id",
-            type: "int",
+            type: "int"
         }, {
             name: "unit_option_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "equipment_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "quantity",
-            type: "int",
+            type: "int"
         }, {
             name: "value_points",
-            type: "int",
-        },
+            type: "int"
+        }
     ]
 });
 
@@ -124,28 +124,28 @@ const ARMY_LIST_UNIT_MAGIC_ITEMS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         columnNames: ["army_list_unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "army_list_units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["magic_item_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "magic_items",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["unit_option_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "unit_options",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["equipment_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "equipments",
-        onDelete: "CASCADE",
-    }),
+        onDelete: "CASCADE"
+    })
 ];
 
 const ARMY_LIST_UNIT_MAGIC_STANDARDS_TABLE: Table = new Table({
@@ -154,24 +154,24 @@ const ARMY_LIST_UNIT_MAGIC_STANDARDS_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "army_list_unit_id",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "magic_standard_id",
-            type: "int",
+            type: "int"
         }, {
             name: "unit_option_id",
             type: "int",
-            isNullable: true,
+            isNullable: true
         }, {
             name: "quantity",
-            type: "int",
+            type: "int"
         }, {
             name: "value_points",
-            type: "int",
-        },
+            type: "int"
+        }
     ]
 });
 
@@ -180,18 +180,18 @@ const ARMY_LIST_UNIT_MAGIC_STANDARDS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         columnNames: ["army_list_unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "army_list_units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["magic_standard_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "magic_standards",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["unit_option_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "unit_options",
-        onDelete: "CASCADE",
-    }),
+        onDelete: "CASCADE"
+    })
 ];
 
 const ARMY_LIST_UNIT_OPTIONS_TABLE: Table = new Table({
@@ -200,23 +200,23 @@ const ARMY_LIST_UNIT_OPTIONS_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "army_list_unit_id",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "unit_id",
-            type: "int",
+            type: "int"
         }, {
             name: "option_id",
-            type: "int",
+            type: "int"
         }, {
             name: "quantity",
-            type: "int",
+            type: "int"
         }, {
             name: "value_points",
-            type: "int",
-        },
+            type: "int"
+        }
     ]
 });
 
@@ -225,18 +225,18 @@ const ARMY_LIST_UNIT_OPTIONS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         columnNames: ["army_list_unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "army_list_units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["option_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "unit_options",
-        onDelete: "CASCADE",
-    }),
+        onDelete: "CASCADE"
+    })
 ];
 
 const ARMY_LIST_UNIT_TROOP_EQUIPMENTS_TABLE: Table = new Table({
@@ -245,17 +245,17 @@ const ARMY_LIST_UNIT_TROOP_EQUIPMENTS_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "army_list_unit_id",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "troop_id",
-            type: "int",
+            type: "int"
         }, {
             name: "equipment_id",
-            type: "int",
-        },
+            type: "int"
+        }
     ]
 });
 
@@ -264,18 +264,18 @@ const ARMY_LIST_UNIT_TROOP_EQUIPMENTS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         columnNames: ["army_list_unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "army_list_units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["troop_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "troops",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["equipment_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "equipments",
-        onDelete: "CASCADE",
-    }),
+        onDelete: "CASCADE"
+    })
 ];
 
 const ARMY_LIST_UNIT_TROOP_SPECIAL_RULES_TABLE: Table = new Table({
@@ -284,17 +284,17 @@ const ARMY_LIST_UNIT_TROOP_SPECIAL_RULES_TABLE: Table = new Table({
         {
             name: "id",
             type: "varchar",
-            isPrimary: true,
+            isPrimary: true
         }, {
             name: "army_list_unit_id",
-            type: "varchar",
+            type: "varchar"
         }, {
             name: "troop_id",
-            type: "int",
+            type: "int"
         }, {
             name: "special_rule_id",
-            type: "int",
-        },
+            type: "int"
+        }
     ]
 });
 
@@ -303,18 +303,18 @@ const ARMY_LIST_UNIT_TROOP_SPECIAL_RULES_TABLE_FOREIGN_KEYS: TableForeignKey[] =
         columnNames: ["army_list_unit_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "army_list_units",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["troop_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "troops",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
     }), new TableForeignKey({
         columnNames: ["special_rule_id"],
         referencedColumnNames: ["id"],
         referencedTableName: "special_rules",
-        onDelete: "CASCADE",
-    }),
+        onDelete: "CASCADE"
+    })
 ];
 
 export class ArmyListsInitialization1672323186772 implements MigrationInterface {

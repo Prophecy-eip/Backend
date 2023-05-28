@@ -13,6 +13,7 @@ import { ForgottenPasswordService } from "../../email/forgotten-password.service
 @Module({
     imports: [TypeOrmModule.forFeature([Profile])],
     providers: [ProfileService, AuthService, JwtService, EmailService, EmailConfirmationService, ForgottenPasswordService],
-    controllers: [AccountController],
+    controllers: [AccountController]
 })
+
 export class ProfileModule {}

@@ -12,7 +12,7 @@ dotenv.config();
 const FROM_ADDRESS: string = process.env.SES_FROM_ADDRESS;
 const WEBSITE_URL: string = process.env.WEBSITE_URL;
 
-const NEW_PASSWORD_ROUTE: string = `${WEBSITE_URL}/account/password-reset`
+const NEW_PASSWORD_ROUTE: string = `${WEBSITE_URL}/account/password-reset`;
 
 @Injectable()
 export class ForgottenPasswordService {
@@ -29,7 +29,7 @@ export class ForgottenPasswordService {
             secret: jwtConstants.secret,
             expiresIn: "3d"
         });
-        const url: string = `${NEW_PASSWORD_ROUTE}?token=${token}`
+        const url: string = `${NEW_PASSWORD_ROUTE}?token=${token}`;
         const text: string = `<p>Hi ${profile.username}!</p><p>To reset your Prophecy password, click <a href="${url}">here</a>.</p><p>If you did not request a password reset, please ignore this email.</p>`;
 
         return this.emailService.sendEmail([profile.email], FROM_ADDRESS, "Reset your password", text);
@@ -44,7 +44,7 @@ export class ForgottenPasswordService {
                 return payload.username;
             }
         } catch (error) {
-            console.error(error)
+            console.error(error);
             if (error?.name === "TokenExpiredError") {
                 throw new BadRequestException("Password reset token expired");
             }

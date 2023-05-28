@@ -1,7 +1,7 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory } from "@nestjs/core";
 import * as dotenv from "dotenv";
 
-import { AppModule } from './app.module';
+import { AppModule } from "./app.module";
 
 dotenv.config();
 
@@ -14,9 +14,10 @@ async function bootstrap() {
 
   if (DEV !== undefined && DEV === "true") {
     app.enableCors();
-    console.log("dev !")
+    console.log("dev !");
   }
   
   await app.listen(PORT);
 }
+
 bootstrap();

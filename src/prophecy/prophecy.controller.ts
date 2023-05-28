@@ -61,7 +61,7 @@ export class ProphecyController {
             let request: ProphecyUnitMathsRequestDTO = new ProphecyUnitMathsRequestDTO(MATHS_KEY, attackingRegimentUnit,
                 defendingRegimentUnit, attackingPosition);
             const content: string = JSON.stringify(request);
-            console.log(content)
+            console.log(content);
             const response: Response = await fetch(MATHS_UNITS_REQUEST_URL, {
                 method: "POST",
                 body: content,
@@ -84,8 +84,7 @@ export class ProphecyController {
             if (error.message.includes("insert or update on table \"army_list_units\" violates foreign key constraint")) {
                 throw new NotFoundException();
             }
-            console.error(error)
-    
+            console.error(error);
             throw new InternalServerErrorException();
         }
     }

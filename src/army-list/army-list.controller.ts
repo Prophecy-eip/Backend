@@ -73,15 +73,15 @@ export class ArmyListController {
         }
         const army: Army = await this.armyService.findOneById(armyId);
         if (army === null) {
-            throw new NotFoundException(`The army ${armyId} does not exist.`)
+            throw new NotFoundException(`The army ${armyId} does not exist.`);
         }
         const list: ArmyList = await this.armyListService.create(name, req.user.username, armyId, valuePoints, isShared,
-            isFavorite)
+            isFavorite);
 
         try {
             await this.armyListService.save(list);
         } catch (error) {
-            console.error(error)
+            console.error(error);
             if (error instanceof QueryFailedError) {
                 throw new NotFoundException(`The army ${list.armyId} was not found`);
             }
@@ -154,7 +154,7 @@ export class ArmyListController {
                 throw new ForbiddenException();
             }
             await this.armyListService.update(id, name, armyId, valuePoints, isShared, isFavorite);
-            await this.armyListUnitService.deleteByList(list.id)
+            await this.armyListUnitService.deleteByList(list.id);
             await this.saveUnits(list.id, units);
     }
 
