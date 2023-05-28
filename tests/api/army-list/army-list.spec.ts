@@ -127,6 +127,8 @@ const ARMY2: List = {
     isFavorite: false,
 }
 
+// TODO
+
 describe("Armies lists route", () => {
 
     beforeAll(async () => {
