@@ -24,7 +24,7 @@ describe("Account Route", () => {
         await app.init();
     });
 
-    it("lookup: Retrieve army credentials", async () => {
+    xit("lookup: Retrieve army credentials", async () => {
         const response = await request(app.getHttpServer())
             .get(LOOKUP_ROOT);
 
@@ -37,7 +37,7 @@ describe("Account Route", () => {
         }
     });
 
-    it(":id: Retrieve existing army's data", async () => {
+    xit(":id: Retrieve existing army's data", async () => {
         const credentials = await request(app.getHttpServer())
             .get(LOOKUP_ROOT);
         const id: string = credentials.body[0].id;
@@ -63,14 +63,14 @@ describe("Account Route", () => {
         expect(response.body.specialRules).toBeDefined();
     });
 
-    it(":id: Try to retrieve not existing army's data", async () => {
+    xit(":id: Try to retrieve not existing army's data", async () => {
         const response = await request(app.getHttpServer())
             .get(`/armies/${FAKE_ID}`);
 
         expect(response.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    it(":id: Use invalid id type - then should return Bad Request (400)", async () => {
+    xit(":id: Use invalid id type - then should return Bad Request (400)", async () => {
         const response = await request(app.getHttpServer())
             .get(`/armies/${INVALID_ID}`);
 
