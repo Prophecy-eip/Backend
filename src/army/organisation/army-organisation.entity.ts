@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column, AfterLoad } from "typeorm";
 
 import { ArmyOrganisationGroup } from "./group/army-organisation-group.entity";
-import { ProphecyDatasource } from "../../database/prophecy.datasource";
+import { ProphecyDatasource } from "@database/prophecy.datasource";
 
 @Entity("army_organisations")
 export class ArmyOrganisation {

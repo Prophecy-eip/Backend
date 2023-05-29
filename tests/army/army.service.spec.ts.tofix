@@ -2,9 +2,9 @@ import { Test } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import * as dotenv from "dotenv";
 
-import { Army } from "../../src/army/army.entity";
-import { ArmyService } from "../../src/army/army.service";
-import { ArmyModule } from "../../src/army/army.module";
+import { Army } from "@army/army.entity";
+import { ArmyService } from "@army/army.service";
+import { ArmyModule } from "@army/army.module";
 
 dotenv.config()
 

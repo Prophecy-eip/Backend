@@ -12,13 +12,13 @@ import {
 } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
-import { LocalAuthGuard } from "./auth/guards/local-auth.guard";
-import { JwtAuthGuard } from "./auth/guards/jwt-auth.guard";
-import { Profile } from "./profile/profile.entity";
-import { ProfileService } from "./profile/profile.service";
-import { AuthService } from "./auth/auth.service";
-import { EmailConfirmationService } from "../email/email-confirmation.service";
-import { ForgottenPasswordService } from "../email/forgotten-password.service";
+import { LocalAuthGuard } from "@auth/guards/local-auth.guard";
+import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
+import { Profile } from "@profile/profile.entity";
+import { ProfileService } from "@profile/profile.service";
+import { AuthService } from "@auth/auth.service";
+import { EmailConfirmationService } from "@email/email-confirmation.service";
+import { ForgottenPasswordService } from "@email/forgotten-password.service";
 
 dotenv.config();
 

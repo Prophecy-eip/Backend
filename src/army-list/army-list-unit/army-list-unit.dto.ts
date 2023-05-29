@@ -2,7 +2,7 @@ import { ArmyListUnit } from "./army-list-unit.entity";
 import { ArmyListUnitMagicItemDTO } from "./magic-item/army-list-unit-magic-item.dto";
 import { ArmyListUnitMagicStandardDTO } from "./magic-standard/army-list-unit-magic-standard.dto";
 import { ArmyListUnitOptionDTO } from "./option/army-list-unit-option.dto";
-import { Troop } from "../../army/unit/troop/troop.entity";
+import { Troop } from "@army/unit/troop/troop.entity";
 import { ArmyListUnitTroopSpecialRuleDTO } from "./troop/special-rule/army-list-unit-troop-special-rule.dto";
 import { ArmyListUnitTroopEquipmentDTO } from "./troop/equipment/army-list-unit-troop-equipment.dto";
 

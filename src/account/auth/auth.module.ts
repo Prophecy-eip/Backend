@@ -4,10 +4,10 @@ import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AuthService } from "./auth.service";
-import { ProfileModule } from "../profile/profile.module";
+import { ProfileModule } from "@profile/profile.module";
 import { LocalStrategy } from "./strategies/local.strategy";
-import { ProfileService } from "../profile/profile.service";
-import { Profile } from "../profile/profile.entity";
+import { ProfileService } from "@profile/profile.service";
+import { Profile } from "@profile/profile.entity";
 import { jwtConstants } from "./constants";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 

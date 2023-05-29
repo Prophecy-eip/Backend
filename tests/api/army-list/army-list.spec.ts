@@ -3,11 +3,11 @@ import { HttpStatus, INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 import { faker } from "@faker-js/faker";
 
-import { AppModule } from '../../../src/app.module';
-import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
-import { ArmyListUnitDTO } from "../../../src/army-list/army-list-unit/army-list-unit.dto";
-import { ArmyListDTO } from "../../../src/army-list/army-list.dto";
-import { TestsHelper } from "../../tests.helper";
+import { AppModule } from "@app/app.module";
+import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
+import { ArmyListUnitDTO } from "@army-list/army-list-unit/army-list-unit.dto";
+import { ArmyListDTO } from "@army-list/army-list.dto";
+import { TestsHelper } from "@tests/tests.helper";
 
 jest.setTimeout(100000000);
 

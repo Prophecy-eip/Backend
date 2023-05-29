@@ -2,9 +2,9 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { BadRequestException, HttpCode, HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 
-import { AppModule } from '../../../src/app.module';
-import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
-import { TestsHelper } from "../../tests.helper";
+import { AppModule } from "@app/app.module";
+import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
+import { TestsHelper } from "@tests/tests.helper";
 import { faker } from "@faker-js/faker";
 
 jest.setTimeout(15000);
