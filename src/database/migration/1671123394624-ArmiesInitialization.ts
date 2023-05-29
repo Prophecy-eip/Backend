@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
+import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
 const ARMIES_TABLE: Table = new Table({
     name: "armies",
@@ -271,14 +271,14 @@ const MAGIC_ITEMS_TABLE: Table = new Table({
     ]
 });
 
-const MAGIC_ITEMS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
-    new TableForeignKey({
-        columnNames: ["magic_item_category_id"],
-        referencedColumnNames: ["id"],
-        referencedTableName: "magic_item_categories",
-        onDelete: "CASCADE"
-    })
-];
+// const MAGIC_ITEMS_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
+//     new TableForeignKey({
+//         columnNames: ["magic_item_category_id"],
+//         referencedColumnNames: ["id"],
+//         referencedTableName: "magic_item_categories",
+//         onDelete: "CASCADE"
+//     })
+// ];
 
 const MAGIC_STANDARDS_TABLE: Table = new Table({
     name: "magic_standards",

@@ -6,22 +6,6 @@ import { faker } from "@faker-js/faker";
 import { AppModule } from "@app/app.module";
 import { TestsHelper } from "@tests/tests.helper";
 
-// const SIGNUP_ROUTE: string = "/account/sign-up";
-// const SIGNIN_ROUTE: string = "/account/sign-in";
-// const SIGNOUT_ROUTE: string = "/account/sign-out";
-// const DELETE_ACCOUNT_ROUTE: string = "/account/settings/delete-account";
-// const UPDATE_PASSWORD_ROUTE: string = "/account/settings/update-password";
-// const UPDATE_EMAIL_ROUTE: string = "/account/settings/update-email-address";
-// const UPDATE_USERNAME_ROUTE: string = "/account/settings/update-username";
-
-// const USERNAME = "username";
-// const EMAIL = "email@prophecy.com";
-// const PASSWORD = "password";
-//
-// const USERNAME1 = "username1";
-// const EMAIL1 = "email1@prophecy.com";
-// const PASSWORD1 = "password1";
-
 const USERNAME = faker.internet.userName();
 const EMAIL = faker.internet.email();
 const PASSWORD = faker.internet.password();
@@ -56,10 +40,10 @@ describe("Account Route", () => {
     });
 
     /**
-     * SETTINGS DELETE ACCOUNT
+     * DELETE ACCOUNT
      */
 
-    it("settings/delete-account: Delete existing account", async () => {
+    it("delete-account: Delete existing account", async () => {
         // creating account
         const r = await TestsHelper.signUp(app.getHttpServer(), USERNAME, EMAIL, PASSWORD);
 
@@ -84,14 +68,14 @@ describe("Account Route", () => {
         expect(response2.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    it("settings/delete-account: Delete with invalid token", async () => {
+    it("delete-account: Delete with invalid token", async () => {
         const token = "token"
         const response1 = await TestsHelper.deleteAccount(app.getHttpServer(), token)
 
         expect(response1.status == HttpStatus.UNAUTHORIZED);
     });
 
-    it("settings/delete-account: Delete not existing account", async () => {
+    it("delete-account: Delete not existing account", async () => {
         const response1 = await TestsHelper.signUp(app.getHttpServer(), USERNAME1, EMAIL1, PASSWORD1);
 
         expect(response1.status).toEqual(HttpStatus.CREATED);

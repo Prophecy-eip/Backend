@@ -17,6 +17,15 @@ module.exports = {
     "eol-last": ["error", "always"],
     "quotes": ["error", "double"],
     "comma-dangle": ["error", "never"],
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_"
+      }
+    ],
   },
 };
