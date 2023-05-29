@@ -13,8 +13,8 @@ import {
 } from "@nestjs/common";
 import { QueryFailedError } from "typeorm";
 
-import { JwtAuthGuard } from "../account/auth/guards/jwt-auth.guard";
-import { ParamHelper } from "../helper/param.helper";
+import { JwtAuthGuard } from "@account/auth/guards/jwt-auth.guard";
+import { ParamHelper } from "@helper/param.helper";
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
 import {
@@ -41,8 +41,8 @@ import {
 import {
     ArmyListUnitTroopSpecialRuleService
 } from "./army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.service";
-import { ArmyService } from "../army/army.service";
-import { Army } from "../army/army.entity";
+import { ArmyService } from "@army/army.service";
+import { Army } from "@army/army.entity";
 
 @Controller("armies-lists")
 export class ArmyListController {

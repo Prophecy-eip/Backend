@@ -1,29 +1,29 @@
 import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
 
-import { Profile } from "../../account/profile/profile.entity";
+import { Profile } from "@account/profile/profile.entity";
 
-import { Army } from "../../army/army.entity";
-import { ArmyOrganisation } from "../../army/organisation/army-organisation.entity";
-import { ArmyOrganisationGroup } from "../../army/organisation/group/army-organisation-group.entity";
-import { Equipment } from "../../army/equipment/equipment.entity";
-import { EquipmentCategory } from "../../army/equipment/category/equipment-category.entity";
-import { MagicItem } from "../../army/magic-item/magic-item.entity";
-import { MagicItemCategory } from "../../army/magic-item/category/magic-item-category.entity";
-import { MagicStandard } from "../../army/magic-standard/magic-standard.entity";
-import { SpecialRule } from "../../army/special-rule/special-rule.entity";
-import { ArmyList } from "../../army-list/army-list.entity";
-import { ArmyListUnit } from "../../army-list/army-list-unit/army-list-unit.entity";
-import { ArmyListUnitMagicItem } from "../../army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
-import { ArmyListUnitMagicStandard } from "../../army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
-import { ArmyListUnitOption } from "../../army-list/army-list-unit/option/army-list-unit-option.entity";
-import { Troop } from "../../army/unit/troop/troop.entity";
+import { Army } from "@army/army.entity";
+import { ArmyOrganisation } from "@army/organisation/army-organisation.entity";
+import { ArmyOrganisationGroup } from "@army/organisation/group/army-organisation-group.entity";
+import { Equipment } from "@army/equipment/equipment.entity";
+import { EquipmentCategory } from "@army/equipment/category/equipment-category.entity";
+import { MagicItem } from "@army/magic-item/magic-item.entity";
+import { MagicItemCategory } from "@army/magic-item/category/magic-item-category.entity";
+import { MagicStandard } from "@army/magic-standard/magic-standard.entity";
+import { SpecialRule } from "@army/special-rule/special-rule.entity";
+import { ArmyList } from "@army-list/army-list.entity";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { ArmyListUnitMagicItem } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
+import { ArmyListUnitMagicStandard } from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
+import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
+import { Troop } from "@army/unit/troop/troop.entity";
+import { ProphecyUnit } from "@prophecy/unit/prophecy-unit.entity";
 
 import { UsersInitialization1667924495954 } from "./1667924495954-UsersInitialization";
 import { ArmiesInitialization1671123394624 } from "./1671123394624-ArmiesInitialization";
 import { ArmyListsInitialization1672323186772 } from "./1672323186772-ArmyListsInitialization";
 import { ProphecyUnitInitialization1672968324920 } from "./1672968324920-ProphecyUnitInitialization";
-import { ProphecyUnit } from "../../prophecy/unit/prophecy-unit.entity";
 import { AddProphecyUnitAttackingPosition1675176923116 } from "./1675176923116-AddProphecyUnitAttackingPosition";
 
 dotenv.config();

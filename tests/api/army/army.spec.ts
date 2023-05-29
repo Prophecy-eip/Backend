@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 
-import { AppModule } from '../../../src/app.module';
+import { AppModule } from "@app/app.module";
 
 let app: INestApplication;
 

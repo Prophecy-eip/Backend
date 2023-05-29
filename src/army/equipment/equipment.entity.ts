@@ -1,6 +1,6 @@
 import { AfterLoad, Column, Entity, PrimaryColumn } from "typeorm";
 import { EquipmentCategory } from "./category/equipment-category.entity";
-import { ProphecyDatasource } from "../../database/prophecy.datasource";
+import { ProphecyDatasource } from "@database/prophecy.datasource";
 
 @Entity("equipments")
 export class Equipment {

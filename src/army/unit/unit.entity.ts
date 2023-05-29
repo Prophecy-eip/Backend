@@ -4,7 +4,7 @@ import { Troop } from "./troop/troop.entity";
 import { SpecialRuleUnitTroop } from "./troop/special-rule/special-rule-unit-troop.entity";
 import { EquipmentUnitTroop } from "./troop/equipment/equipment-unit-troop.entity";
 import { UnitOption } from "./option/unit-option.entity";
-import { ProphecyDatasource } from "../../database/prophecy.datasource";
+import { ProphecyDatasource } from "@database/prophecy.datasource";
 
 export class UnitCharacteristic {
     public type: string;

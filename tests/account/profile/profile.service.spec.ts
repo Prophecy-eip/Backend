@@ -3,10 +3,10 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import * as dotenv from "dotenv";
 import * as bcrypt from "bcrypt";
 
-import { AccountType, Profile } from "../../../src/account/profile/profile.entity";
-import { ProfileService } from "../../../src/account/profile/profile.service";
-import { ProfileModule } from "../../../src/account/profile/profile.module";
-import { ArmyList } from "../../../src/army-list/army-list.entity";
+import { AccountType, Profile } from "@account/profile/profile.entity";
+import { ProfileService } from "@account/profile/profile.service";
+import { ProfileModule } from "@account/profile/profile.module";
+import { ArmyList } from "@army-list/army-list.entity";
 
 
 dotenv.config()

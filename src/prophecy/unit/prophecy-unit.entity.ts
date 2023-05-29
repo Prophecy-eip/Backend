@@ -8,8 +8,8 @@ import {
     ProphecyUnitModifierOffensiveMathsDTO,
     ProphecyUnitRegimentMathsDTO
 } from "./prophecy-unit-maths.dto";
-import { ArmyListUnit } from "../../army-list/army-list-unit/army-list-unit.entity";
-import { ProphecyDatasource } from "../../database/prophecy.datasource";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { ProphecyDatasource } from "@database/prophecy.datasource";
 
 export enum ProphecyUnitAttackingPosition {
     FRONT = "front",

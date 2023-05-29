@@ -2,8 +2,8 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { JwtService, JwtSignOptions } from "@nestjs/jwt";
 
-import { ProfileService } from "../profile/profile.service";
-import { Profile } from "../profile/profile.entity";
+import { ProfileService } from "@profile/profile.service";
+import { Profile } from "@profile/profile.entity";
 import { jwtConstants } from "./constants";
 
 @Injectable()

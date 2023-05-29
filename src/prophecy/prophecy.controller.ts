@@ -11,15 +11,15 @@ import {
 } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
-import { JwtAuthGuard } from "../account/auth/guards/jwt-auth.guard";
+import { JwtAuthGuard } from "@account/auth/guards/jwt-auth.guard";
 import { ProphecyUnitMathsRequestDTO, ProphecyUnitMathsResponseDTO } from "./unit/prophecy-unit-maths.dto";
-import { ArmyListUnit } from "../army-list/army-list-unit/army-list-unit.entity";
-import { ArmyListUnitService } from "../army-list/army-list-unit/army-list-unit.service";
-import { ArmyListUnitCredentialsDTO } from "../army-list/army-list-unit/army-list-unit-credentials.dto";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { ArmyListUnitService } from "@army-list/army-list-unit/army-list-unit.service";
+import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
 import { ProphecyUnit, ProphecyUnitAttackingPosition } from "./unit/prophecy-unit.entity";
 import { ProphecyUnitService } from "./unit/prophecy-unit.service";
 import { ProphecyUnitDTO, ProphecyUnitWithIdDTO } from "./unit/prophecy-unit.dto";
-import { ParamHelper } from "../helper/param.helper";
+import { ParamHelper } from "@helper/param.helper";
 
 dotenv.config();
 

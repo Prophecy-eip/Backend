@@ -1,8 +1,8 @@
 import { Entity, Column, PrimaryColumn, AfterLoad } from "typeorm";
 
-import { Equipment } from "../../equipment/equipment.entity";
-import { MagicItemCategory } from "../../magic-item/category/magic-item-category.entity";
-import { ProphecyDatasource } from "../../../database/prophecy.datasource";
+import { Equipment } from "@army/equipment/equipment.entity";
+import { MagicItemCategory } from "@army/magic-item/category/magic-item-category.entity";
+import { ProphecyDatasource } from "@database/prophecy.datasource";
 
 @Entity("unit_options")
 export class UnitOption {

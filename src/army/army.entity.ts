@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, Column } from "typeorm";
 import { ArmyOrganisation } from "./organisation/army-organisation.entity";
-import { ProphecyDatasource } from "../database/prophecy.datasource";
+import { ProphecyDatasource } from "@database/prophecy.datasource";
 import { MagicItemCategory } from "./magic-item/category/magic-item-category.entity";
 import { MagicItem } from "./magic-item/magic-item.entity";
 import { MagicStandard } from "./magic-standard/magic-standard.entity";

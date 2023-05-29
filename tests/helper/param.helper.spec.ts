@@ -1,4 +1,4 @@
-import { ParamHelper } from "../../src/helper/param.helper";
+import { ParamHelper } from "@helper/param.helper";
 
 describe("Param helper", () => {
 
