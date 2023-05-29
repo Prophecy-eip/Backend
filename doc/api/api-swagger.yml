@@ -38,7 +38,7 @@ paths:
 
   # ACCOUNT
 
-  /account/sign-in:
+  /sign-in:
     post:
       summary: Enables the user to sign in
       description: "**Request body:**\n\nThe *username* field can either be the username or the email address."
@@ -68,7 +68,7 @@ paths:
         500:
           description: Inernal Server Error (unable to connect to the database)
 
-  /account/sign-up:
+  /sign-up:
     post:
       summary: Enables the user to create an account
       description: "Sends a email confirmation link and doesn't sign in the user"
@@ -91,7 +91,7 @@ paths:
         500:
           description: Internal Server Error (unable to connect to the database)
 
-  /account/sign-out:
+  /sign-out:
     post:
       summary: Enables the user to logout
       description: ""

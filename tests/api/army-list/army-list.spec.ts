@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { HttpStatus, INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import { HttpStatus, INestApplication } from "@nestjs/common";
+import * as request from "supertest";
+import { faker } from "@faker-js/faker";
 
 import { AppModule } from '../../../src/app.module';
 import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
@@ -22,11 +23,19 @@ const IS_SHARED: boolean = false;
 
 const DELETE_ACCOUNT_ROUTE: string = "/account/settings/delete-account";
 
-const ARMIES_LIST_ROUTE: string = "/armies-lists";
-const CREATE_ROUTE: string = "/armies-lists/create";
-const LOOKUP_ROUTE: string = "/armies-lists/lookup";
-const DELETE_ROUTE: string = ARMIES_LIST_ROUTE + "/delete";
-const UPDATE_ROUTE: string = ARMIES_LIST_ROUTE + "/update";
+// const ARMIES_LIST_ROUTE: string = "/armies-lists";
+// const CREATE_ROUTE: string = "/armies-lists/create";
+// const LOOKUP_ROUTE: string = "/armies-lists/lookup";
+// const DELETE_ROUTE: string = ARMIES_LIST_ROUTE + "/delete";
+// const UPDATE_ROUTE: string = ARMIES_LIST_ROUTE + "/update";
+
+const USERNAME = faker.internet.userName();
+const EMAIL = faker.internet.email();
+const PASSWORD = faker.internet.password();
+
+const USERNAME1 = faker.internet.userName();
+const EMAIL1 = faker.internet.email();
+const PASSWORD1 = faker.internet.password();
 
 let app: INestApplication;
 let token: string;
@@ -139,20 +148,20 @@ describe("Armies lists route", () => {
         app = module.createNestApplication();
         await app.init();
 
-        token = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), TestsHelper.USERNAME, TestsHelper.EMAIL,
-            TestsHelper.PASSWORD);
-        token1 = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), TestsHelper.USERNAME1, TestsHelper.EMAIL1,
-            TestsHelper.PASSWORD);
+        token = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), USERNAME, EMAIL,
+            PASSWORD);
+        token1 = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), USERNAME1, EMAIL1,
+            PASSWORD);
     });
 
     afterAll(async () => {
         const res = await  request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
         for (const a of res.body) {
             await request(app.getHttpServer())
-                .delete(`${DELETE_ROUTE}/${a.id}`)
+                .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${a.id}`)
                 .set("Authorization", `Bearer ${token}`);
         }
         await TestsHelper.deleteAccount(app.getHttpServer(), token);
@@ -191,32 +200,32 @@ describe("Armies lists route", () => {
      */
     xit("create: create basic lists - then should return 201 (created)", async () => {
         const res1 = await request(app.getHttpServer())
-            .post(CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(ARMY1);
 
         expect(res1.status).toEqual(HttpStatus.CREATED);
 
         const a1 = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id1: string = a1.body[0].id;
         const listRes1 = await request(app.getHttpServer())
-            .get(`${ARMIES_LIST_ROUTE}/${id1}`)
+            .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id1}`)
             .set("Authorization", `Bearer ${token}`);
         compareLists(ARMY1, listRes1.body);
 
         const res2 = await request(app.getHttpServer())
-            .post(CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(ARMY2);
 
         expect(res2.status).toEqual(HttpStatus.CREATED);
 
         const a2 = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id2: string = a2.body[1].id;
         const listRes2 = await request(app.getHttpServer())
-            .get(`${ARMIES_LIST_ROUTE}/${id2}`)
+            .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id2}`)
             .set("Authorization", `Bearer ${token}`);
         compareLists(ARMY2, listRes2.body);
     });
@@ -224,7 +233,7 @@ describe("Armies lists route", () => {
     xit("create: create list with invalid armyId - then should return 404 (not found)", async () => {
         const list: List = new List(LIST_NAME, 123456, 123, [], false, false);
         const res = await request(app.getHttpServer())
-            .post(CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
@@ -232,7 +241,7 @@ describe("Armies lists route", () => {
 
     xit("create: create list with invalid token - then should return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
-            .post(CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
             .set("Authorization", `Bearer abcd`).send(ARMY1);
 
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
@@ -243,7 +252,7 @@ describe("Armies lists route", () => {
      */
     xit("lookup: basic lookup - then return armies lists credentials", async () => {
         const res = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.OK);
@@ -252,7 +261,7 @@ describe("Armies lists route", () => {
 
     xit("lookup: with invalid token - then return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer abcd`);
 
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
@@ -263,11 +272,11 @@ describe("Armies lists route", () => {
      */
     xit(":id: basic get - then return 200 (ok)", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .get(`${ARMIES_LIST_ROUTE}/${id}`)
+            .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.OK);
@@ -276,11 +285,11 @@ describe("Armies lists route", () => {
 
     xit(":id: with invalid token - then return 401 (unauthorized)", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .get(`${ARMIES_LIST_ROUTE}/${id}`)
+            .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer abcd`);
 
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
@@ -288,11 +297,11 @@ describe("Armies lists route", () => {
 
     xit(":id: user does not own a not-shared list - then return 403 (forbidden)", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body.find(army => army.isShared === false).id;
         const res = await request(app.getHttpServer())
-            .get(`${ARMIES_LIST_ROUTE}/${id}`)
+            .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token1}`);
 
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
@@ -300,11 +309,11 @@ describe("Armies lists route", () => {
 
     xit(":id: user does not own a shared list - then should return 200 (OK)", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body.find(army => army.isShared === true).id;
         const res = await request(app.getHttpServer())
-            .get(`${ARMIES_LIST_ROUTE}/${id}`)
+            .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token1}`);
 
         expect(res.status).toEqual(HttpStatus.OK);
@@ -313,7 +322,7 @@ describe("Armies lists route", () => {
     xit(":id: with invalid id - then return 404 (not found)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
-            .get(`${ARMIES_LIST_ROUTE}/${id}`)
+            .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND)
@@ -326,17 +335,17 @@ describe("Armies lists route", () => {
 
     xit("delete: basic delete - then should return 200 (ok)", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .delete(`${DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.OK);
 
         const res2 = await request(app.getHttpServer())
-            .get(`${ARMIES_LIST_ROUTE}/${id}`)
+            .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res2.status).toEqual(HttpStatus.NOT_FOUND);
@@ -344,11 +353,11 @@ describe("Armies lists route", () => {
 
     xit("delete: use invalid token - then should return unauthorised (401)", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .delete(`${DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
             .set("Authorization", `Bearer abcd`);
 
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
@@ -357,11 +366,11 @@ describe("Armies lists route", () => {
 
     xit("delete: not the owner - then should return forbidden (403)", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .delete(`${DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token1}`);
 
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
@@ -370,7 +379,7 @@ describe("Armies lists route", () => {
     xit("delete: use invalid army list id - then should return not found (404)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
-            .delete(`${DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
@@ -382,18 +391,18 @@ describe("Armies lists route", () => {
 
     xit("update: basic - then should return 200 (ok) and values should have changed", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .put(`${UPDATE_ROUTE}/${id}`)
+            .put(`${TestsHelper.ARMIES_LISTS_UPDATE_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`)
             .send(ARMY2);
 
         expect(res.status).toEqual(HttpStatus.OK);
 
         const listRes = await request(app.getHttpServer())
-            .get(`${ARMIES_LIST_ROUTE}/${id}`)
+            .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`)
         compareLists(ARMY2, listRes.body);
     });
@@ -401,7 +410,7 @@ describe("Armies lists route", () => {
     xit("update: use invalid armyId - then should return 404 (not found)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
-            .put(`${UPDATE_ROUTE}/${id}`)
+            .put(`${TestsHelper.ARMIES_LISTS_UPDATE_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`)
             .send(ARMY2);
 
@@ -410,11 +419,11 @@ describe("Armies lists route", () => {
 
     xit("update: try update not owned list - then should return 403 (forbidden)", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .put(`${UPDATE_ROUTE}/${id}`)
+            .put(`${TestsHelper.ARMIES_LISTS_UPDATE_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token1}`)
             .send(ARMY2);
 
@@ -423,11 +432,11 @@ describe("Armies lists route", () => {
 
     xit("update: use invalid token - then should return 401 (unauthorized)", async () => {
         const a = await request(app.getHttpServer())
-            .get(LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .put(`${UPDATE_ROUTE}/${id}`)
+            .put(`${TestsHelper.ARMIES_LISTS_UPDATE_ROUTE}/${id}`)
             .set("Authorization", `Bearer abcd`)
             .send(ARMY2);
 

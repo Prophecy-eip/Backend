@@ -31,45 +31,45 @@ export class AccountController {
         private readonly forgottenPasswordService: ForgottenPasswordService,
     ) {}
 
-    @Post("sign-up")
-    @HttpCode(HttpStatus.CREATED)
-    async create(@Body("username") username: string, @Body("email") email: string, @Body("password") password: string, @Body("sendEmail") sendEmail: boolean) {
-        if (!this.isFieldValid(username) || !this.isFieldValid(email) || !this.isFieldValid(password)) {
-            throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
-        }
-        if (await this.profileService.credentialsAlreadyInUse(username, email)) {
-            throw new ConflictException();
-        }
-        try {
-            const profile = await this.profileService.create({username, email, password});
-
-            await this.profileService.save(profile);
-        } catch (err) {
-            throw new BadRequestException();
-        }
-        try {
-            if (sendEmail === false ) {
-                return;
-            }
-            await this.emailConfirmationService.sendVerificationLink(email);
-        } catch(error) {
-            console.error(error);
-            throw new InternalServerErrorException("Unable to send email address validation");
-        }
-    }
-
-    @UseGuards(LocalAuthGuard)
-    @Post("sign-in")
-    @HttpCode(HttpStatus.OK)
-    async login(@Request() req) {
-        return this.authService.login(req.user);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Post("sign-out")
-    @HttpCode(HttpStatus.OK)
-    async logout(@Request() req) {}
-
+    // @Post("sign-up")
+    // @HttpCode(HttpStatus.CREATED)
+    // async create(@Body("username") username: string, @Body("email") email: string, @Body("password") password: string, @Body("sendEmail") sendEmail: boolean) {
+    //     if (!this.isFieldValid(username) || !this.isFieldValid(email) || !this.isFieldValid(password)) {
+    //         throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
+    //     }
+    //     if (await this.profileService.credentialsAlreadyInUse(username, email)) {
+    //         throw new ConflictException();
+    //     }
+    //     try {
+    //         const profile = await this.profileService.create({username, email, password});
+    //
+    //         await this.profileService.save(profile);
+    //     } catch (err) {
+    //         throw new BadRequestException();
+    //     }
+    //     try {
+    //         if (sendEmail === false ) {
+    //             return;
+    //         }
+    //         await this.emailConfirmationService.sendVerificationLink(email);
+    //     } catch(error) {
+    //         console.error(error);
+    //         throw new InternalServerErrorException("Unable to send email address validation");
+    //     }
+    // }
+    //
+    // @UseGuards(LocalAuthGuard)
+    // @Post("sign-in")
+    // @HttpCode(HttpStatus.OK)
+    // async login(@Request() req) {
+    //     return this.authService.login(req.user);
+    // }
+    //
+    // @UseGuards(JwtAuthGuard)
+    // @Post("sign-out")
+    // @HttpCode(HttpStatus.OK)
+    // async logout(@Request() req) {}
+    //
     @UseGuards(JwtAuthGuard)
     @Get("send-email-verification-link")
     @HttpCode(HttpStatus.OK)
