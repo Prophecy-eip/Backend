@@ -3,8 +3,8 @@ import { HttpStatus, INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 import { faker } from "@faker-js/faker";
 
-import { AppModule } from '../../../src/app.module';
-import { TestsHelper } from "../../tests.helper";
+import { AppModule } from "@app/app.module";
+import { TestsHelper } from "@tests/tests.helper";
 
 // const SIGNUP_ROUTE: string = "/account/sign-up";
 // const SIGNIN_ROUTE: string = "/account/sign-in";

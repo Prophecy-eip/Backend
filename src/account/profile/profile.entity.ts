@@ -1,6 +1,6 @@
 import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { hash } from "bcrypt";
-import { ArmyList } from "../../army-list/army-list.entity";
+import { ArmyList } from "@army-list/army-list.entity";
 
 export enum AccountType {
     PLAYER,

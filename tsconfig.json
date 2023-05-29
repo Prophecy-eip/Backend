@@ -16,7 +16,45 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@army-list/*": [
+        "src/army-list/*"
+      ],
+      "@account/*": [
+        "src/account/*"
+      ],
+      "@profile/*": [
+        "src/account/profile/*"
+      ],
+      "@auth/*": [
+        "src/account/auth/*"
+      ],
+      "@army/*": [
+        "src/army/*"
+      ],
+      "@database/*": [
+        "src/database/*"
+      ],
+      "@email/*": [
+        "src/email/*"
+      ],
+      "@heartbeat/*": [
+        "src/heartbeat/*"
+      ],
+      "@helper/*": [
+        "src/helper/*"
+      ],
+      "@prophecy/*": [
+        "src/prophecy/*"
+      ],
+      "@tests/*": [
+        "tests/*"
+      ],
+      "@app/*": [
+        "src/*"
+      ]
+    }
   },
   "include": ["src/**/*"]
 }

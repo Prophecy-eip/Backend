@@ -3,9 +3,9 @@ import { JwtService } from "@nestjs/jwt";
 import * as dotenv from "dotenv";
 
 import { EmailService } from "./email.service";
-import { ProfileService } from "../account/profile/profile.service";
-import { Profile } from "../account/profile/profile.entity";
-import { jwtConstants } from "../account/auth/constants";
+import { ProfileService } from "@account/profile/profile.service";
+import { Profile } from "@account/profile/profile.entity";
+import { jwtConstants } from "@account/auth/constants";
 
 dotenv.config();
 
