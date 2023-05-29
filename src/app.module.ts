@@ -2,47 +2,42 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import * as dotenv from "dotenv";
 
-import { Profile } from "./account/profile/profile.entity";
-import { Army } from "./army/army.entity";
-import { Unit } from "./army/unit/unit.entity";
-import { Equipment } from "./army/equipment/equipment.entity";
-import { EquipmentCategory } from "./army/equipment/category/equipment-category.entity";
-import { MagicItem } from "./army/magic-item/magic-item.entity";
-import { MagicItemCategory } from "./army/magic-item/category/magic-item-category.entity";
-import { ArmyOrganisation } from "./army/organisation/army-organisation.entity";
-import { ArmyOrganisationGroup } from "./army/organisation/group/army-organisation-group.entity";
-import { SpecialRule } from "./army/special-rule/special-rule.entity";
-import { UnitOption } from "./army/unit/option/unit-option.entity";
-import { Troop } from "./army/unit/troop/troop.entity";
-import { EquipmentUnitTroop } from "./army/unit/troop/equipment/equipment-unit-troop.entity";
-import { SpecialRuleUnitTroop } from "./army/unit/troop/special-rule/special-rule-unit-troop.entity";
-import { ArmyList } from "./army-list/army-list.entity";
-import { ArmyListUnit } from "./army-list/army-list-unit/army-list-unit.entity";
-import { ArmyListUnitMagicItem } from "./army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
+import { Profile } from "@account/profile/profile.entity";
+import { Army } from "@army/army.entity";
+import { Unit } from "@army/unit/unit.entity";
+import { Equipment } from "@army/equipment/equipment.entity";
+import { EquipmentCategory } from "@army/equipment/category/equipment-category.entity";
+import { MagicItem } from "@army/magic-item/magic-item.entity";
+import { MagicItemCategory } from "@army/magic-item/category/magic-item-category.entity";
+import { ArmyOrganisation } from "@army/organisation/army-organisation.entity";
+import { ArmyOrganisationGroup } from "@army/organisation/group/army-organisation-group.entity";
+import { SpecialRule } from "@army/special-rule/special-rule.entity";
+import { UnitOption } from "@army/unit/option/unit-option.entity";
+import { Troop } from "@army/unit/troop/troop.entity";
+import { EquipmentUnitTroop } from "@army/unit/troop/equipment/equipment-unit-troop.entity";
+import { SpecialRuleUnitTroop } from "@army/unit/troop/special-rule/special-rule-unit-troop.entity";
+import { ArmyList } from "@army-list/army-list.entity";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { ArmyListUnitMagicItem } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
 import {
     ArmyListUnitMagicStandard
-} from "./army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
-import { ArmyListUnitOption } from "./army-list/army-list-unit/option/army-list-unit-option.entity";
+} from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
+import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
 import {
     ArmyListUnitTroopSpecialRule
-} from "./army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
+} from "@army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
 import {
     ArmyListUnitTroopEquipment
-} from "./army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
-import { ProphecyUnit } from "./prophecy/unit/prophecy-unit.entity";
+} from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
+import { ProphecyUnit } from "@prophecy/unit/prophecy-unit.entity";
 
-import { ArmyModule } from "./army/army.module";
-import { AccountModule } from "./account/account.module";
-import { ArmyListModule } from "./army-list/army-list.module";
-import { HeartbeatModule } from "./heartbeat/heartbeat.module";
-import { ProphecyModule } from "./prophecy/prophecy.module";
+import { ArmyModule } from "@army/army.module";
+import { AccountModule } from "@account/account.module";
+import { ArmyListModule } from "@army-list/army-list.module";
+import { HeartbeatModule } from "@heartbeat/heartbeat.module";
+import { ProphecyModule } from "@prophecy/prophecy.module";
 import { AppController } from "./app.controller";
-import { AuthModule } from "./account/auth/auth.module";
-import { EmailModule } from "./email/email.module";
-import { ProfileService } from "./account/profile/profile.service";
-import { ProfileModule } from "./account/profile/profile.module";
-import { EmailConfirmationService } from "./email/email-confirmation.service";
-import { AuthService } from "./account/auth/auth.service";
+import { ProfileModule } from "@account/profile/profile.module";
 
 dotenv.config();
 

@@ -11,6 +11,7 @@ tags:
   - name: events
     description: Everything about the events
   - name: armies
+  - name: armies
     description: Everything about the armies
   - name: prophecies
     description: Everything about the prophecies
@@ -839,13 +840,12 @@ paths:
   # SETTINGS
 
   # update
-  /account/settings/update-password:
+  /account/password:
     put:
       summary: Updates the user's password
       description: ""
       tags:
         - account
-        - settings
       security:
         - bearerAuth: []
       parameters:
@@ -867,13 +867,13 @@ paths:
           description: Internal Server Error
 
 
-  /account/settings/update-username:
+  /account/username:
     put:
       summary: Updates the user's username
       description: ""
       tags:
         - account
-        - settings
+
       security:
         - bearerAuth: []
       parameters:
@@ -898,13 +898,12 @@ paths:
         500:
           description: Internal Server Error (unable to connect to the database)
 
-  /account/settings/update-email-address:
+  /account/email:
     put:
       summary: Updates the user's email address
       description: ""
       tags:
         - account
-        - settings
       security:
         - bearerAuth: []
       parameters:
@@ -930,13 +929,12 @@ paths:
           description: Internal Server Error (unable to connect to the database)
 
   # delete
-  /account/settings/delete-account:
+  /account:
     delete:
       summary: Deletes the user's account
       description: ""
       tags:
         - account
-        - settings
       security:
         - bearerAuth: []
       parameters:
