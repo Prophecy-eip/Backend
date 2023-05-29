@@ -5,6 +5,7 @@ import * as request from 'supertest';
 import { AppModule } from '../../../src/app.module';
 import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
 import { TestsHelper } from "../../tests.helper";
+import { faker } from "@faker-js/faker";
 
 jest.setTimeout(15000);
 
@@ -42,9 +43,13 @@ const REQUEST = {
     defendingRegiment: DEFENDING_REGIMENT
 }
 
-const REQUEST_UNIT_PROPHECY_ROUTE: string = "/prophecies/units/request-prophecy";
-const UNIT_PROPHECY_LOOKUP_ROUTE: string = "/prophecies/units/lookup";
-const UNIT_PROPHECY_DELETE_ROUTE: string = "/prophecies/units/delete";
+const USERNAME = faker.internet.userName();
+const EMAIL = faker.internet.email();
+const PASSWORD = faker.internet.password();
+
+const USERNAME1 = faker.internet.userName();
+const EMAIL1 = faker.internet.email();
+const PASSWORD1 = faker.internet.password();
 
 describe("Prophecies route", () => {
 
@@ -55,10 +60,10 @@ describe("Prophecies route", () => {
 
         app = module.createNestApplication();
         await app.init();
-        token = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), TestsHelper.USERNAME, TestsHelper.EMAIL,
-            TestsHelper.PASSWORD);
-        token1 = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), TestsHelper.USERNAME1, TestsHelper.EMAIL1,
-            TestsHelper.PASSWORD);
+        token = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), USERNAME, EMAIL,
+            PASSWORD);
+        token1 = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), USERNAME1, EMAIL1,
+            PASSWORD);
 
     });
 
@@ -73,7 +78,7 @@ describe("Prophecies route", () => {
 
     xit("units/request-prophecy: create basic prophecy - then should return 201 (Created)", async () => {
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(REQUEST);
 
         expect(res1.status).toEqual(HttpStatus.CREATED);
@@ -87,7 +92,7 @@ describe("Prophecies route", () => {
 
     xit("units/request-prophecy: create prophecy with invalid token - then should return 401 (Unauthorized)", async () => {
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer abcd`).send(REQUEST);
 
         expect(res1.status).toEqual(HttpStatus.UNAUTHORIZED);
@@ -112,7 +117,7 @@ describe("Prophecies route", () => {
         }
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.NOT_FOUND);
@@ -124,7 +129,7 @@ describe("Prophecies route", () => {
         };
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -137,7 +142,7 @@ describe("Prophecies route", () => {
         };
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -149,7 +154,7 @@ describe("Prophecies route", () => {
         };
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -163,7 +168,7 @@ describe("Prophecies route", () => {
         };
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.CREATED);
@@ -177,7 +182,7 @@ describe("Prophecies route", () => {
         };
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.CREATED);
@@ -190,7 +195,7 @@ describe("Prophecies route", () => {
         };
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -204,7 +209,7 @@ describe("Prophecies route", () => {
         };
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -218,7 +223,7 @@ describe("Prophecies route", () => {
         };
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -231,7 +236,7 @@ describe("Prophecies route", () => {
         };
 
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -254,7 +259,7 @@ describe("Prophecies route", () => {
             defendingRegiment: DEFENDING_REGIMENT
         };
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -277,7 +282,7 @@ describe("Prophecies route", () => {
             defendingRegiment: DEFENDING_REGIMENT
         };
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(req);
 
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
@@ -289,7 +294,7 @@ describe("Prophecies route", () => {
 
     xit("units/lookup: basic lookup - then should return 200 (Ok)", async () => {
         const res = await request(app.getHttpServer())
-            .get(UNIT_PROPHECY_LOOKUP_ROUTE)
+            .get(TestsHelper.UNIT_PROPHECY_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.OK);
@@ -305,7 +310,7 @@ describe("Prophecies route", () => {
 
     xit("units/lookup: lookup with invalid token - then should return 401 (Unauthorized)", async () => {
         const res = await request(app.getHttpServer())
-            .get(UNIT_PROPHECY_LOOKUP_ROUTE)
+            .get(TestsHelper.UNIT_PROPHECY_LOOKUP_ROUTE)
             .set("Authorization", `Bearer abcd`);
 
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
@@ -317,37 +322,37 @@ describe("Prophecies route", () => {
 
     xit("units/delete: basic delete - then should return 200 (Ok)", async () => {
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(REQUEST);
 
         const propheciesRes = await request(app.getHttpServer())
-            .get(UNIT_PROPHECY_LOOKUP_ROUTE)
+            .get(TestsHelper.UNIT_PROPHECY_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = propheciesRes.body[0].id;
 
         const res = await request(app.getHttpServer())
-            .delete(`${UNIT_PROPHECY_DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.UNIT_PROPHECY_DELETE_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.OK);
         const propheciesRes2 = await request(app.getHttpServer())
-            .get(UNIT_PROPHECY_LOOKUP_ROUTE)
+            .get(TestsHelper.UNIT_PROPHECY_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         expect(propheciesRes2.body.find(prophecy => prophecy.id === id)).toEqual(undefined);
     });
 
     xit("units/delete: delete with invalid token - then should return 401 (Unauthorized)", async () => {
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(REQUEST);
 
         const propheciesRes = await request(app.getHttpServer())
-            .get(UNIT_PROPHECY_LOOKUP_ROUTE)
+            .get(TestsHelper.UNIT_PROPHECY_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = propheciesRes.body[0].id;
 
         const res = await request(app.getHttpServer())
-            .delete(`${UNIT_PROPHECY_DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.UNIT_PROPHECY_DELETE_ROUTE}/${id}`)
             .set("Authorization", `Bearer abcd`);
 
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
@@ -355,15 +360,15 @@ describe("Prophecies route", () => {
 
     xit("units/delete: delete not owned prophecy - then should return 403 (Forbidden)", async () => {
         const res1 = await request(app.getHttpServer())
-            .post(REQUEST_UNIT_PROPHECY_ROUTE)
+            .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(REQUEST);
 
         const propheciesRes = await request(app.getHttpServer())
-            .get(UNIT_PROPHECY_LOOKUP_ROUTE)
+            .get(TestsHelper.UNIT_PROPHECY_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = propheciesRes.body[0].id;
         const res = await request(app.getHttpServer())
-            .delete(`${UNIT_PROPHECY_DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.UNIT_PROPHECY_DELETE_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token1}`);
 
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
@@ -371,7 +376,7 @@ describe("Prophecies route", () => {
 
     xit("units/delete: delete without id - then should return 404 (Not found)", async () => {
         const res = await request(app.getHttpServer())
-            .delete(`${UNIT_PROPHECY_DELETE_ROUTE}`)
+            .delete(`${TestsHelper.UNIT_PROPHECY_DELETE_ROUTE}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
@@ -380,7 +385,7 @@ describe("Prophecies route", () => {
     xit("units/delete: delete un-existing prophecy - then should return 404 (Not found)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
-            .delete(`${UNIT_PROPHECY_DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.UNIT_PROPHECY_DELETE_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
