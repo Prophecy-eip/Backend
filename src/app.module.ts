@@ -36,6 +36,13 @@ import { AccountModule } from "./account/account.module";
 import { ArmyListModule } from "./army-list/army-list.module";
 import { HeartbeatModule } from "./heartbeat/heartbeat.module";
 import { ProphecyModule } from "./prophecy/prophecy.module";
+import { AppController } from "./app.controller";
+import { AuthModule } from "./account/auth/auth.module";
+import { EmailModule } from "./email/email.module";
+import { ProfileService } from "./account/profile/profile.service";
+import { ProfileModule } from "./account/profile/profile.module";
+import { EmailConfirmationService } from "./email/email-confirmation.service";
+import { AuthService } from "./account/auth/auth.service";
 
 dotenv.config();
 
@@ -88,7 +95,9 @@ const DB_DIALECT = "postgres";
         ArmyModule,
         ArmyListModule,
         HeartbeatModule,
-        ProphecyModule
-    ]
+        ProphecyModule,
+        ProfileModule
+    ],
+    controllers: [AppController]
 })
 export class AppModule {}
