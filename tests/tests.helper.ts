@@ -2,22 +2,6 @@ import * as request from "supertest";
 
 export class TestsHelper {
     static async createAccountAndGetToken(httpServer: any, username: string, email: string, password: string): Promise<string> {
-        // const r1 = await request(httpServer)
-        //     .post(this.SIGN_UP_ROUTE)
-        //     .send({
-        //         username: username,
-        //         email: email,
-        //         password: password,
-        //         sendEmail: false
-        //     });
-        // const signInRes = await this.signIn
-        // const r2 = await request(httpServer)
-        //     .post(this.SIGN_IN_ROUTE)
-        //     .send({
-        //         username: username,
-        //         password: password
-        //     });
-        // return r2.body.access_token;
         const signUpRes = await this.signUp(httpServer, username, email, password);
 
         return await this.getToken(httpServer, username, password);
@@ -57,10 +41,10 @@ export class TestsHelper {
     /**
      * ACCOUNT
      */
-    static DELETE_ACCOUNT_ROUTE: string = "/account/settings/delete-account";
-    static UPDATE_PASSWORD_ROUTE: string = "/account/settings/update-password";
-    static UPDATE_EMAIL_ROUTE: string = "/account/settings/update-email-address";
-    static UPDATE_USERNAME_ROUTE: string = "/account/settings/update-username";
+    static DELETE_ACCOUNT_ROUTE: string = "/account";
+    static UPDATE_PASSWORD_ROUTE: string = "/account/password";
+    static UPDATE_EMAIL_ROUTE: string = "/account/email";
+    static UPDATE_USERNAME_ROUTE: string = "/account/username";
 
     /**
      * PROPHECIES
