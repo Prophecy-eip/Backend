@@ -97,7 +97,7 @@
       "!src/database/migration/*.(t|j)s",
       "!src/email/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "./coverage",
     "testEnvironment": "node"
   }
 }

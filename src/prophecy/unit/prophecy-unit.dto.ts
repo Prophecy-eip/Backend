@@ -1,5 +1,5 @@
 import { ProphecyUnit, ProphecyUnitAttackingPosition, ProphecyUnitCase } from "./prophecy-unit.entity";
-import { ArmyListUnitDTO } from "../../army-list/army-list-unit/army-list-unit.dto";
+import { ArmyListUnitDTO } from "@army-list/army-list-unit/army-list-unit.dto";
 
 export class ProphecyUnitDTO {
     constructor(prophecy: ProphecyUnit) {

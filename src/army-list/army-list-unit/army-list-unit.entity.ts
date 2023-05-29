@@ -1,13 +1,13 @@
 import { AfterLoad, Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 
-import { ProphecyDatasource } from "../../database/prophecy.datasource";
+import { ProphecyDatasource } from "@database/prophecy.datasource";
 import { ArmyListUnitMagicItem } from "./magic-item/army-list-unit-magic-item.entity";
 import { ArmyListUnitMagicStandard } from "./magic-standard/army-list-unit-magic-standard.entity";
 import { ArmyListUnitOption } from "./option/army-list-unit-option.entity";
-import { Troop } from "../../army/unit/troop/troop.entity";
+import { Troop } from "@army/unit/troop/troop.entity";
 import { ArmyListUnitTroopSpecialRule } from "./troop/special-rule/army-list-unit-troop-special-rule.entity";
 import { ArmyListUnitTroopEquipment } from "./troop/equipment/army-list-unit-troop-equipment.entity";
-import { Unit } from "../../army/unit/unit.entity";
+import { Unit } from "@army/unit/unit.entity";
 
 @Entity("army_list_units")
 export class ArmyListUnit {

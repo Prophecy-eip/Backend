@@ -1,6 +1,6 @@
-import { ArmyListUnit } from "../../army-list/army-list-unit/army-list-unit.entity";
-import { UnitCharacteristic } from "../../army/unit/unit.entity";
-import { Troop, TroopCharacteristics } from "../../army/unit/troop/troop.entity";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { UnitCharacteristic } from "@army/unit/unit.entity";
+import { Troop, TroopCharacteristics } from "@army/unit/troop/troop.entity";
 import { ProphecyUnitModifierGlobal } from "./prophecy-unit.entity";
 
 export class ProphecyUnitModelStatsMathsDTO {

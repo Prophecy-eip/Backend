@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import { AppModule } from "../../../src/app.module";
+import { AppModule } from "@app/app.module";
 import * as request from "supertest";
-import { TestsHelper } from "../../tests.helper";
+import { TestsHelper } from "@tests/tests.helper";
 
 jest.setTimeout(10000);
 

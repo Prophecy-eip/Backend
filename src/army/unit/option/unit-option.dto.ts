@@ -1,8 +1,8 @@
 import { UnitOption } from "./unit-option.entity";
 import { Column, PrimaryColumn } from "typeorm";
-import { Equipment } from "../../equipment/equipment.entity";
-import { MagicItemCategory } from "../../magic-item/category/magic-item-category.entity";
-import { EquipmentDTO } from "../../equipment/equipment.dto";
+import { Equipment } from "@army/equipment/equipment.entity";
+import { MagicItemCategory } from "@army/magic-item/category/magic-item-category.entity";
+import { EquipmentDTO } from "@army/equipment/equipment.dto";
 
 export class UnitOptionDTO {
     constructor(option: UnitOption) {
