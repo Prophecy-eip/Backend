@@ -53,7 +53,7 @@ export class ForgottenPasswordService {
     }
 
     public async resetPassword(username: string, password: string): Promise<void> {
-        const profile: Profile = await this.profileService.findOneByUsername(username);
+        const _profile: Profile = await this.profileService.findOneByUsername(username);
 
         await this.profileService.updatePassword(username, password);
     }

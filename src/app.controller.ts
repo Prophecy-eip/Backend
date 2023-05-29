@@ -2,19 +2,17 @@ import {
     BadRequestException,
     Body,
     ConflictException,
-    Controller, Get,
+    Controller,
     HttpCode,
     HttpException,
     HttpStatus, InternalServerErrorException,
-    Post, Query, Request, UseGuards
+    Post, Request, UseGuards
 } from "@nestjs/common";
-import { LocalAuthGuard } from "./account/auth/guards/local-auth.guard";
-import { JwtAuthGuard } from "./account/auth/guards/jwt-auth.guard";
-import { Profile } from "./account/profile/profile.entity";
-import { ProfileService } from "./account/profile/profile.service";
-import { AuthService } from "./account/auth/auth.service";
-import { EmailConfirmationService } from "./email/email-confirmation.service";
-import { ForgottenPasswordService } from "./email/forgotten-password.service";
+import { LocalAuthGuard } from "@account/auth/guards/local-auth.guard";
+import { JwtAuthGuard } from "@account/auth/guards/jwt-auth.guard";
+import { ProfileService } from "@account/profile/profile.service";
+import { AuthService } from "@account/auth/auth.service";
+import { EmailConfirmationService } from "@email/email-confirmation.service";
 
 @Controller("/")
 export class AppController {
@@ -61,7 +59,7 @@ export class AppController {
     @UseGuards(JwtAuthGuard)
     @Post("sign-out")
     @HttpCode(HttpStatus.OK)
-    async logout(@Request() req) {}
+    async logout(@Request() _req) {}
 
     private _isFieldValid(str: string): boolean {
         return (str !== undefined && str !== null && str !== "");

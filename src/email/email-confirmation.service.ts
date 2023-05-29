@@ -14,7 +14,7 @@ const EMAIL_VERIFICATION_ROUTE: string = `${API_URL}/account/verify-email`;
 const FROM_ADDRESS: string = process.env.SES_FROM_ADDRESS;
 const WEBSITE_URL: string = process.env.WEBSITE_URL;
 
-const EMAIL_CONFIRMATION_ROUTE: string = `${WEBSITE_URL}/account/email-confirm`;
+const _EMAIL_CONFIRMATION_ROUTE: string = `${WEBSITE_URL}/account/email-confirm`;
 
 @Injectable()
 export class EmailConfirmationService {
