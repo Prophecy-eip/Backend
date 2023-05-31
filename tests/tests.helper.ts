@@ -49,9 +49,9 @@ export class TestsHelper {
     /**
      * PROPHECIES
      */
-    static REQUEST_UNIT_PROPHECY_ROUTE: string = "/prophecies/units/request-prophecy";
-    static UNIT_PROPHECY_LOOKUP_ROUTE: string = "/prophecies/units/lookup";
-    static UNIT_PROPHECY_DELETE_ROUTE: string = "/prophecies/units/delete";
+    static REQUEST_UNIT_PROPHECY_ROUTE: string = "/prophecies/units";
+    static UNIT_PROPHECY_LOOKUP_ROUTE: string = "/prophecies/units";
+    static UNIT_PROPHECY_DELETE_ROUTE: string = "/prophecies/units";
 
     /**
      * ARMIES LISTS
