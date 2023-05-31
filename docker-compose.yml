@@ -40,7 +40,7 @@ services:
     build:
       context: .
       dockerfile: .devcontainers/backend-production.Dockerfile
-    command: ["yarn",  "run", "typeorm", "migration:run", "-d", "./src/database/migration/ormconfig.ts"]
+    command: ["yarn",  "migration:run"]
     ports:
       - "${MIGRATION_PORT}:${MIGRATION_PORT}"
     networks:
@@ -50,7 +50,7 @@ services:
     build:
       context: .
       dockerfile: .devcontainers/backend-production.Dockerfile
-    command: ["yarn",  "run", "typeorm", "migration:revert", "-d", "src/database/migration/ormconfig.ts"]
+    command: ["yarn",  "migration:revert"]
     ports:
       - "${MIGRATION_PORT}:${MIGRATION_PORT}"
     networks:
