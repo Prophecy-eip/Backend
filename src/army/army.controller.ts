@@ -12,7 +12,7 @@ export class ArmyController {
         private readonly armyService: ArmyService,
     ) {}
 
-    @Get("lookup")
+    @Get("")
     @HttpCode(HttpStatus.OK)
     async lookup() {
         const armies: Army[] =  await this.armyService.getAll();

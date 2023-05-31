@@ -2,20 +2,19 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 
-import { AppModule } from "@app/app.module";
+import { AppModule } from "../../../src/app.module";
+import { TestsHelper } from "../../tests.helper";
 
 let app: INestApplication;
 
-const ARMIES = "/armies";
-const LOOKUP_ROOT = ARMIES + "/lookup";
 const FAKE_ID: number = 12345;
 const INVALID_ID: string = "12345678910111213";
 
-jest.setTimeout(15000)
+jest.setTimeout(55000)
 
 // TODO
 
-describe("Account Route", () => {
+xdescribe("Armies Routes", () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -26,9 +25,9 @@ describe("Account Route", () => {
         await app.init();
     });
 
-    xit("lookup: Retrieve army credentials", async () => {
+    it("lookup: Retrieve army credentials", async () => {
         const response = await request(app.getHttpServer())
-            .get(LOOKUP_ROOT);
+            .get(TestsHelper.ARMIES_ROUTE);
 
         expect(response.status).toEqual(HttpStatus.OK);
         expect(response.body).toBeDefined();
@@ -39,13 +38,13 @@ describe("Account Route", () => {
         }
     });
 
-    xit(":id: Retrieve existing army's data", async () => {
+    it(":id: Retrieve existing army's data", async () => {
         const credentials = await request(app.getHttpServer())
-            .get(LOOKUP_ROOT);
+            .get(TestsHelper.ARMIES_ROUTE);
         const id: string = credentials.body[0].id;
         const name: string = credentials.body[0].name;
         const response = await request(app.getHttpServer())
-            .get(`/armies/${id}`);
+            .get(`${TestsHelper.ARMIES_ROUTE}/${id}`);
 
         expect(response.status).toEqual(HttpStatus.OK);
         expect(response.body).toBeDefined();
@@ -65,16 +64,16 @@ describe("Account Route", () => {
         expect(response.body.specialRules).toBeDefined();
     });
 
-    xit(":id: Try to retrieve not existing army's data", async () => {
+    it(":id: Try to retrieve not existing army's data", async () => {
         const response = await request(app.getHttpServer())
-            .get(`/armies/${FAKE_ID}`);
+            .get(`${TestsHelper.ARMIES_ROUTE}/${FAKE_ID}`);
 
         expect(response.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    xit(":id: Use invalid id type - then should return Bad Request (400)", async () => {
+    it(":id: Use invalid id type - then should return Bad Request (400)", async () => {
         const response = await request(app.getHttpServer())
-            .get(`/armies/${INVALID_ID}`);
+            .get(`${TestsHelper.ARMIES_ROUTE}/${INVALID_ID}`);
 
         expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
     });
