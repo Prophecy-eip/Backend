@@ -626,7 +626,7 @@ paths:
   # PROPHECIES
 
   # read
-  /prophecies/units/request-prophecy:
+  /prophecies/units:
     post:
       summary: Retrieves a unit prophecy for the user
       description: ""
@@ -652,7 +652,7 @@ paths:
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
 
-  /prophecies/units/lookup:
+  /prophecies/units:
     get:
       summary: Retrieves the prophecies history
       description: ""
@@ -676,7 +676,7 @@ paths:
         404:
           $ref: '#/components/schemas/notFoundResponse'
 
-  /prophecies/units/delete/{prophecyId}:
+  /prophecies/units/{prophecyId}:
     delete:
       summary: Deletes a prophecy
       description: ""
@@ -1665,20 +1665,8 @@ paths:
 
   # ARMIES
 
-  # create
-  # /armies/create-army:
-  #   post:
-  #     summary: Creates a new army
-  #     description: ""
-  #     tags:
-  #       - armies
-  #     parameters: []
-  #       # TODO
-  #     responses:
-  #       # TODO
-
   # read
-  /armies/lookup:
+  /armies:
     get:
       summary: Retrieves the armies ids
       description: ""
