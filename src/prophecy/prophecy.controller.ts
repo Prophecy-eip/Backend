@@ -35,7 +35,7 @@ export class ProphecyController {
         ) {}
 
     @UseGuards(JwtAuthGuard)
-    @Post("units/request-prophecy")
+    @Post("units")
     @HttpCode(HttpStatus.CREATED)
     async getUnitsProphecy(@Request() req,
         @Body("attackingRegiment") attackingRegiment: ArmyListUnitCredentialsDTO,
@@ -61,7 +61,6 @@ export class ProphecyController {
             let request: ProphecyUnitMathsRequestDTO = new ProphecyUnitMathsRequestDTO(MATHS_KEY, attackingRegimentUnit,
                 defendingRegimentUnit, attackingPosition);
             const content: string = JSON.stringify(request);
-            console.log(content);
             const response: Response = await fetch(MATHS_UNITS_REQUEST_URL, {
                 method: "POST",
                 body: content,
@@ -90,7 +89,7 @@ export class ProphecyController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get("units/lookup")
+    @Get("units")
     @HttpCode(HttpStatus.OK)
     async lookupUnitsProphecy(@Request() req): Promise<ProphecyUnitWithIdDTO[]> {
         const prophecies: ProphecyUnit[] = await this.prophecyUnitService.findByOwner(req.user.username);
@@ -103,7 +102,7 @@ export class ProphecyController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete("units/delete/:id")
+    @Delete("units/:id")
     @HttpCode(HttpStatus.OK)
     async deleteUnitsProphecy(
         @Request() req,
