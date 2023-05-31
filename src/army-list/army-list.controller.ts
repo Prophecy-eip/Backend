@@ -58,7 +58,7 @@ export class ArmyListController {
     ) {}
 
     @UseGuards(JwtAuthGuard)
-    @Post("create")
+    @Post("")
     @HttpCode(HttpStatus.CREATED)
     async create(@Request() req,
         @Body("name") name: string,
@@ -91,7 +91,7 @@ export class ArmyListController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get("lookup")
+    @Get("")
     @HttpCode(HttpStatus.OK)
     async lookup(@Request() req) {
         const lists: ArmyList[] = await this.armyListService.findByOwner(req.user.username);
@@ -120,7 +120,7 @@ export class ArmyListController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Delete("/delete/:id")
+    @Delete("/:id")
     @HttpCode(HttpStatus.OK)
     async delete(@Request() req, @Param("id") id: string) {
         let list: ArmyList = await this.armyListService.findOneById(id);
@@ -135,7 +135,7 @@ export class ArmyListController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Put("/update/:id")
+    @Put("/:id")
     @HttpCode(HttpStatus.OK)
     async update(@Request() req,
             @Param("id") id: string,

@@ -3,11 +3,11 @@ import { HttpStatus, INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 import { faker } from "@faker-js/faker";
 
-import { AppModule } from "@app/app.module";
-import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
-import { ArmyListUnitDTO } from "@army-list/army-list-unit/army-list-unit.dto";
-import { ArmyListDTO } from "@army-list/army-list.dto";
-import { TestsHelper } from "@tests/tests.helper";
+import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
+import { AppModule } from "../../../src/app.module";
+import { TestsHelper } from "../../tests.helper";
+import { ArmyListUnitDTO } from "../../../src/army-list/army-list-unit/army-list-unit.dto";
+import { ArmyListDTO } from "../../../src/army-list/army-list.dto";
 
 jest.setTimeout(100000000);
 
@@ -20,14 +20,6 @@ const UPGRADES_ID: string[] = ["8534-d1f1-73a1-48e9"];
 const NUMBER: number = 3;
 const FORMATION = "3x1";
 const IS_SHARED: boolean = false;
-
-const DELETE_ACCOUNT_ROUTE: string = "/account/settings/delete-account";
-
-// const ARMIES_LIST_ROUTE: string = "/armies-lists";
-// const CREATE_ROUTE: string = "/armies-lists/create";
-// const LOOKUP_ROUTE: string = "/armies-lists/lookup";
-// const DELETE_ROUTE: string = ARMIES_LIST_ROUTE + "/delete";
-// const UPDATE_ROUTE: string = ARMIES_LIST_ROUTE + "/update";
 
 const USERNAME = faker.internet.userName();
 const EMAIL = faker.internet.email();
@@ -138,7 +130,7 @@ const ARMY2: List = {
 
 // TODO
 
-describe("Armies lists route", () => {
+xdescribe("Armies lists route", () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -192,13 +184,12 @@ describe("Armies lists route", () => {
         for (let i = 0; i < lhs.units.length && i < rhs.units.length; i++) {
             compareUnitWithCredentials(lhs.units[i], rhs.units[i]);
         }
-
     }
 
     /**
      * CREATE
      */
-    xit("create: create basic lists - then should return 201 (created)", async () => {
+    it("create: create basic lists - then should return 201 (created)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(ARMY1);
@@ -230,7 +221,7 @@ describe("Armies lists route", () => {
         compareLists(ARMY2, listRes2.body);
     });
 
-    xit("create: create list with invalid armyId - then should return 404 (not found)", async () => {
+    it("create: create list with invalid armyId - then should return 404 (not found)", async () => {
         const list: List = new List(LIST_NAME, 123456, 123, [], false, false);
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
@@ -239,7 +230,7 @@ describe("Armies lists route", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    xit("create: create list with invalid token - then should return 401 (unauthorized)", async () => {
+    it("create: create list with invalid token - then should return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
             .set("Authorization", `Bearer abcd`).send(ARMY1);
@@ -250,7 +241,7 @@ describe("Armies lists route", () => {
     /**
      * LOOKUP
      */
-    xit("lookup: basic lookup - then return armies lists credentials", async () => {
+    it("lookup: basic lookup - then return armies lists credentials", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -259,7 +250,7 @@ describe("Armies lists route", () => {
         expect(res.body).toBeDefined();
     });
 
-    xit("lookup: with invalid token - then return 401 (unauthorized)", async () => {
+    it("lookup: with invalid token - then return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer abcd`);
@@ -270,7 +261,7 @@ describe("Armies lists route", () => {
     /**
      * :ID
      */
-    xit(":id: basic get - then return 200 (ok)", async () => {
+    it(":id: basic get - then return 200 (ok)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -283,7 +274,7 @@ describe("Armies lists route", () => {
         expect(res.status).toBeDefined();
     });
 
-    xit(":id: with invalid token - then return 401 (unauthorized)", async () => {
+    it(":id: with invalid token - then return 401 (unauthorized)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -295,7 +286,7 @@ describe("Armies lists route", () => {
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    xit(":id: user does not own a not-shared list - then return 403 (forbidden)", async () => {
+    it(":id: user does not own a not-shared list - then return 403 (forbidden)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -307,7 +298,7 @@ describe("Armies lists route", () => {
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    xit(":id: user does not own a shared list - then should return 200 (OK)", async () => {
+    it(":id: user does not own a shared list - then should return 200 (OK)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -319,7 +310,7 @@ describe("Armies lists route", () => {
         expect(res.status).toEqual(HttpStatus.OK);
     });
 
-    xit(":id: with invalid id - then return 404 (not found)", async () => {
+    it(":id: with invalid id - then return 404 (not found)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
@@ -333,7 +324,7 @@ describe("Armies lists route", () => {
      * DELETE
      */
 
-    xit("delete: basic delete - then should return 200 (ok)", async () => {
+    it("delete: basic delete - then should return 200 (ok)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -351,7 +342,7 @@ describe("Armies lists route", () => {
         expect(res2.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    xit("delete: use invalid token - then should return unauthorised (401)", async () => {
+    it("delete: use invalid token - then should return unauthorised (401)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -364,7 +355,7 @@ describe("Armies lists route", () => {
     });
 
 
-    xit("delete: not the owner - then should return forbidden (403)", async () => {
+    it("delete: not the owner - then should return forbidden (403)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -376,7 +367,7 @@ describe("Armies lists route", () => {
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
     });
 
-    xit("delete: use invalid army list id - then should return not found (404)", async () => {
+    it("delete: use invalid army list id - then should return not found (404)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
@@ -389,7 +380,7 @@ describe("Armies lists route", () => {
      * UPDATE
      */
 
-    xit("update: basic - then should return 200 (ok) and values should have changed", async () => {
+    it("update: basic - then should return 200 (ok) and values should have changed", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -407,7 +398,7 @@ describe("Armies lists route", () => {
         compareLists(ARMY2, listRes.body);
     });
 
-    xit("update: use invalid armyId - then should return 404 (not found)", async () => {
+    it("update: use invalid armyId - then should return 404 (not found)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
             .put(`${TestsHelper.ARMIES_LISTS_UPDATE_ROUTE}/${id}`)
@@ -417,7 +408,7 @@ describe("Armies lists route", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    xit("update: try update not owned list - then should return 403 (forbidden)", async () => {
+    it("update: try update not owned list - then should return 403 (forbidden)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -430,7 +421,7 @@ describe("Armies lists route", () => {
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
     });
 
-    xit("update: use invalid token - then should return 401 (unauthorized)", async () => {
+    it("update: use invalid token - then should return 401 (unauthorized)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
