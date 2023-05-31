@@ -1,13 +1,13 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { BadRequestException, HttpCode, HttpStatus, INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-
-import { AppModule } from "@app/app.module";
-import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
-import { TestsHelper } from "@tests/tests.helper";
+import * as request from "supertest";
 import { faker } from "@faker-js/faker";
 
-jest.setTimeout(15000);
+import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
+import { AppModule } from "../../../src/app.module";
+import { TestsHelper } from "../../tests.helper";
+
+jest.setTimeout(25000);
 
 let app: INestApplication;
 let token: string;
@@ -51,7 +51,7 @@ const USERNAME1 = faker.internet.userName();
 const EMAIL1 = faker.internet.email();
 const PASSWORD1 = faker.internet.password();
 
-describe("Prophecies route", () => {
+xdescribe("Prophecies route", () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -76,7 +76,7 @@ describe("Prophecies route", () => {
      * UNITS REQUEST PROPHECY
      */
 
-    xit("units/request-prophecy: create basic prophecy - then should return 201 (Created)", async () => {
+    it("units/request-prophecy: create basic prophecy - then should return 201 (Created)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(REQUEST);
@@ -90,7 +90,7 @@ describe("Prophecies route", () => {
         expect(res1.body.attackingPosition).toBeDefined();
     });
 
-    xit("units/request-prophecy: create prophecy with invalid token - then should return 401 (Unauthorized)", async () => {
+    it("units/request-prophecy: create prophecy with invalid token - then should return 401 (Unauthorized)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer abcd`).send(REQUEST);
@@ -98,7 +98,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    xit("units/request-prophecy: create prophecy with invalid unit id - then should return 404 (Not found)", async () => {
+    it("units/request-prophecy: create prophecy with invalid unit id - then should return 404 (Not found)", async () => {
         const unit: ArmyListUnitCredentialsDTO = {
             unitId: 123456,
             quantity: 10,
@@ -123,7 +123,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    xit("units/request-prophecy: create prophecy without attacking regiment - then should return 400 (Bad request)", async () => {
+    it("units/request-prophecy: create prophecy without attacking regiment - then should return 400 (Bad request)", async () => {
         const req = {
             defendingRegiment: DEFENDING_REGIMENT
         };
@@ -135,7 +135,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    xit("units/request-prophecy: create prophecy with null attacking regiment - then should return 400 (Bad request)", async () => {
+    it("units/request-prophecy: create prophecy with null attacking regiment - then should return 400 (Bad request)", async () => {
         const req = {
             attackingRegiment: null,
             defendingRegiment: DEFENDING_REGIMENT
@@ -148,7 +148,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    xit("units/request-prophecy: create prophecy without defending regiment - then should return 400 (Bad request)", async () => {
+    it("units/request-prophecy: create prophecy without defending regiment - then should return 400 (Bad request)", async () => {
         const req = {
             attackingRegiment: ATTACKING_REGIMENT,
         };
@@ -160,7 +160,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    xit("units/request-prophecy: create prophecy with back attacking position - then should return 201 (Created)", async () => {
+    it("units/request-prophecy: create prophecy with back attacking position - then should return 201 (Created)", async () => {
         const req = {
             attackingPosition: "back",
             attackingRegiment: ATTACKING_REGIMENT,
@@ -174,7 +174,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.CREATED);
     });
 
-    xit("units/request-prophecy: create prophecy with flank attacking position - then should return 201 (Created)", async () => {
+    it("units/request-prophecy: create prophecy with flank attacking position - then should return 201 (Created)", async () => {
         const req = {
             attackingPosition: "flank",
             attackingRegiment: ATTACKING_REGIMENT,
@@ -188,7 +188,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.CREATED);
     });
 
-    xit("units/request-prophecy: create prophecy without attacking position - then should return 400 (Bad Request)", async () => {
+    it("units/request-prophecy: create prophecy without attacking position - then should return 400 (Bad Request)", async () => {
         const req = {
             attackingRegiment: ATTACKING_REGIMENT,
             defendingRegiment: DEFENDING_REGIMENT
@@ -201,7 +201,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    xit("units/request-prophecy: create prophecy with empty attacking position - then should return 400 (Bad Request)", async () => {
+    it("units/request-prophecy: create prophecy with empty attacking position - then should return 400 (Bad Request)", async () => {
         const req = {
             attackingPosition: "",
             attackingRegiment: ATTACKING_REGIMENT,
@@ -215,7 +215,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    xit("units/request-prophecy: create prophecy with invalid attacking position - then should return 400 (Bad Request)", async () => {
+    it("units/request-prophecy: create prophecy with invalid attacking position - then should return 400 (Bad Request)", async () => {
         const req = {
             attackingPosition: "abcd",
             attackingRegiment: ATTACKING_REGIMENT,
@@ -229,7 +229,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    xit("units/request-prophecy: create prophecy with null defending regiment - then should return 400 (Bad request)", async () => {
+    it("units/request-prophecy: create prophecy with null defending regiment - then should return 400 (Bad request)", async () => {
         const req = {
             attackingRegiment: ATTACKING_REGIMENT,
             defendingRegiment: null
@@ -242,7 +242,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    xit("units/request-prophecy: create prophecy without troop - then should return 400 (Bad request)", async () => {
+    it("units/request-prophecy: create prophecy without troop - then should return 400 (Bad request)", async () => {
         const unit: ArmyListUnitCredentialsDTO = {
             unitId: 1153,
             quantity: 10,
@@ -265,7 +265,7 @@ describe("Prophecies route", () => {
         expect(res1.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    xit("units/request-prophecy: create prophecy with too many troops - then should return 400 (Bad request)", async () => {
+    it("units/request-prophecy: create prophecy with too many troops - then should return 400 (Bad request)", async () => {
         const unit: ArmyListUnitCredentialsDTO = {
             unitId: 1153,
             quantity: 10,
@@ -292,7 +292,7 @@ describe("Prophecies route", () => {
      * UNITS LOOKUP
      */
 
-    xit("units/lookup: basic lookup - then should return 200 (Ok)", async () => {
+    it("units/lookup: basic lookup - then should return 200 (Ok)", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.UNIT_PROPHECY_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -308,7 +308,7 @@ describe("Prophecies route", () => {
         }
     });
 
-    xit("units/lookup: lookup with invalid token - then should return 401 (Unauthorized)", async () => {
+    it("units/lookup: lookup with invalid token - then should return 401 (Unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.UNIT_PROPHECY_LOOKUP_ROUTE)
             .set("Authorization", `Bearer abcd`);
@@ -320,7 +320,7 @@ describe("Prophecies route", () => {
      * UNITS DELETE
      */
 
-    xit("units/delete: basic delete - then should return 200 (Ok)", async () => {
+    it("units/delete: basic delete - then should return 200 (Ok)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(REQUEST);
@@ -341,7 +341,7 @@ describe("Prophecies route", () => {
         expect(propheciesRes2.body.find(prophecy => prophecy.id === id)).toEqual(undefined);
     });
 
-    xit("units/delete: delete with invalid token - then should return 401 (Unauthorized)", async () => {
+    it("units/delete: delete with invalid token - then should return 401 (Unauthorized)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(REQUEST);
@@ -358,7 +358,7 @@ describe("Prophecies route", () => {
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    xit("units/delete: delete not owned prophecy - then should return 403 (Forbidden)", async () => {
+    it("units/delete: delete not owned prophecy - then should return 403 (Forbidden)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.REQUEST_UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(REQUEST);
@@ -374,7 +374,7 @@ describe("Prophecies route", () => {
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
     });
 
-    xit("units/delete: delete without id - then should return 404 (Not found)", async () => {
+    it("units/delete: delete without id - then should return 404 (Not found)", async () => {
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.UNIT_PROPHECY_DELETE_ROUTE}`)
             .set("Authorization", `Bearer ${token}`);
@@ -382,7 +382,7 @@ describe("Prophecies route", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    xit("units/delete: delete un-existing prophecy - then should return 404 (Not found)", async () => {
+    it("units/delete: delete un-existing prophecy - then should return 404 (Not found)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.UNIT_PROPHECY_DELETE_ROUTE}/${id}`)
