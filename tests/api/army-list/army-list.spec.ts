@@ -130,7 +130,7 @@ const ARMY2: List = {
 
 // TODO
 
-xdescribe("Armies lists route", () => {
+describe("Armies lists route", () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
