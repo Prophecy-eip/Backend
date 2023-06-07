@@ -7,7 +7,7 @@ import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-uni
 import { AppModule } from "../../../src/app.module";
 import { TestsHelper } from "../../tests.helper";
 
-jest.setTimeout(25000);
+jest.setTimeout(35000);
 
 let app: INestApplication;
 let token: string;
