@@ -10,10 +10,10 @@ jobs:
       - name: Setup & Install
         run: | 
           printf "SERVER_PORT=${{ secrets.SERVER_PORT }}\n
-          POSTGRES_DB=prophecy\n
-          POSTGRES_USER=prophecy\n
-          POSTGRES_PASSWORD=prophecy\n
-          DATABASE_IP=localhost\n
+          POSTGRES_DB=${{ secrets.TESTS_DATABASE_NAME }}\n
+          POSTGRES_USER=${{ secrets.TESTS_DATABASE_USER }}\n
+          POSTGRES_PASSWORD=${{ secrets.TESTS_DATABASE_PASSWORD }}\n
+          DATABASE_IP=${{ secrets.TESTS_DATABASE_IP }}\n
           DATABASE_PORT=${{ secrets.DATABASE_PORT }}\n
           JWT_SECRET=${{ secrets.JWT_SECRET }}\n
           TESTS_PORT=${{ secrets.TESTS_PORT }}\n
@@ -24,17 +24,12 @@ jobs:
           SES_FROM_ADDRESS=${{ secrets.AWS_SES_FROM_ADDRESS }}\n
           API_URL=${{ secrets.API_URL }}\n
           MATHS_KEY=${{ secrets.MATHS_KEY }}\n" > .env
-          printf "DATABASE_IP=database\n
-          POSTGRES_DB=prophecy\n
-          POSTGRES_USER=prophecy\n
-          POSTGRES_PASSWORD=prophecy\n" > ./scripts/armies_data/.env
           yarn
 
       - name: Setup Database & Run migrations
         run: | 
           docker-compose -f docker-compose.yml up --build -d database
           yarn migration:run 
-#          docker-compose -f docker-compose.yml up --exit-code-from script_armies-data_test script_armies-data_test
 
       - name: Run Unit Tests
         run: yarn run test
