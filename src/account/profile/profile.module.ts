@@ -9,12 +9,13 @@ import { AuthService } from "@auth/auth.service";
 import { EmailService } from "@email/email.service";
 import { EmailConfirmationService } from "@email/email-confirmation.service";
 import { ForgottenPasswordService } from "@email/forgotten-password.service";
+import { PasswordUpdateService } from "@email/password-update.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Profile])],
-    providers: [ProfileService, AuthService, JwtService, EmailService, EmailConfirmationService, ForgottenPasswordService],
+    providers: [ProfileService, AuthService, JwtService, EmailService, EmailConfirmationService, ForgottenPasswordService, PasswordUpdateService],
     controllers: [AccountController],
-    exports: [ProfileService, EmailConfirmationService, AuthService, JwtService, ForgottenPasswordService]
+    exports: [ProfileService, EmailConfirmationService, AuthService, JwtService, ForgottenPasswordService, PasswordUpdateService]
 })
 
 export class ProfileModule {}
