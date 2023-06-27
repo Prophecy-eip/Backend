@@ -25,6 +25,8 @@ import { ArmiesInitialization1671123394624 } from "./1671123394624-ArmiesInitial
 import { ArmyListsInitialization1672323186772 } from "./1672323186772-ArmyListsInitialization";
 import { ProphecyUnitInitialization1672968324920 } from "./1672968324920-ProphecyUnitInitialization";
 import { AddProphecyUnitAttackingPosition1675176923116 } from "./1675176923116-AddProphecyUnitAttackingPosition";
+import { GamesInitialization1687856012071 } from "@database/migration/1687856012071-GamesInitialization";
+import { Game } from "@app/game/game.entity";
 
 dotenv.config();
 
@@ -59,13 +61,15 @@ export const connectionSource = new DataSource({
         ArmyListUnitMagicStandard,
         ArmyListUnitOption,
         Troop,
-        ProphecyUnit
+        ProphecyUnit,
+        Game
     ],
     migrations: [
         UsersInitialization1667924495954,
         ArmiesInitialization1671123394624,
         ArmyListsInitialization1672323186772,
         ProphecyUnitInitialization1672968324920,
-        AddProphecyUnitAttackingPosition1675176923116
+        AddProphecyUnitAttackingPosition1675176923116,
+        GamesInitialization1687856012071
     ]
 });
