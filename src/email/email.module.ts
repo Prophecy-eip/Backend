@@ -8,22 +8,9 @@ import { ProfileService } from "@account/profile/profile.service";
 import { ProfileModule } from "@account/profile/profile.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ForgottenPasswordService } from "./forgotten-password.service";
-import { PasswordUpdateService } from "@email/password-update.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Profile]), ProfileModule],
-    providers: [
-        EmailService,
-        EmailConfirmationService,
-        ForgottenPasswordService,
-        JwtService,
-        ProfileService,
-        PasswordUpdateService
-    ],
-    exports: [
-        EmailService,
-        EmailConfirmationService,
-        JwtService,
-        PasswordUpdateService
-    ]
+    providers: [EmailService, EmailConfirmationService, ForgottenPasswordService, JwtService, ProfileService],
+    exports: [EmailService, EmailConfirmationService, JwtService]
 }) export class EmailModule {}

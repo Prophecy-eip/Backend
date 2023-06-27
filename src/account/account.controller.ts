@@ -17,7 +17,6 @@ import { ProfileService } from "@profile/profile.service";
 import { AuthService } from "@auth/auth.service";
 import { EmailConfirmationService } from "@email/email-confirmation.service";
 import { ForgottenPasswordService } from "@email/forgotten-password.service";
-import { PasswordUpdateService } from "@email/password-update.service";
 
 dotenv.config();
 
@@ -28,7 +27,6 @@ export class AccountController {
         private readonly authService: AuthService,
         private readonly emailConfirmationService: EmailConfirmationService,
         private readonly forgottenPasswordService: ForgottenPasswordService,
-        private readonly passwordUpdateService: PasswordUpdateService
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -88,13 +86,11 @@ export class AccountController {
     @HttpCode(HttpStatus.OK)
     async updatePassword(@Request() req, @Body("password") password: string) {
         const username = req.user.username;
-        const profile = await this.profileService.findOneByUsername(username);
 
         if (!this.isFieldValid(password)) {
             throw new BadRequestException();
         }
         await this.profileService.updatePassword(username, password);
-        await this.passwordUpdateService.sendPasswordUpdateEmail(profile.email);
     }
 
     @UseGuards(JwtAuthGuard)

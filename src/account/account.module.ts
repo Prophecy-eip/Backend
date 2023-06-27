@@ -12,7 +12,6 @@ import { EmailModule } from "@email/email.module";
 import { ProfileModule } from "@profile/profile.module";
 import { AuthModule } from "@auth/auth.module";
 import { ForgottenPasswordService } from "@email/forgotten-password.service";
-import { PasswordUpdateService } from "@email/password-update.service";
 
 @Module({
     imports: [
@@ -25,7 +24,7 @@ import { PasswordUpdateService } from "@email/password-update.service";
         }),
         EmailModule
     ],
-    providers: [ProfileService, AuthService, EmailService, EmailConfirmationService, ForgottenPasswordService, PasswordUpdateService],
+    providers: [ProfileService, AuthService, EmailService, EmailConfirmationService, ForgottenPasswordService],
     exports: [ProfileModule]
 })
 export class AccountModule {}
