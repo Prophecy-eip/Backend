@@ -38,6 +38,8 @@ import { HeartbeatModule } from "@heartbeat/heartbeat.module";
 import { ProphecyModule } from "@prophecy/prophecy.module";
 import { AppController } from "./app.controller";
 import { ProfileModule } from "@account/profile/profile.module";
+import { GameModule } from "@app/game/game.module";
+import { Game } from "@app/game/game.entity";
 
 dotenv.config();
 
@@ -82,7 +84,8 @@ const DB_DIALECT = "postgres";
                 ArmyListUnitOption,
                 ArmyListUnitTroopSpecialRule,
                 ArmyListUnitTroopEquipment,
-                ProphecyUnit
+                ProphecyUnit,
+                Game
             ],
             synchronize: false
         }),
@@ -91,7 +94,8 @@ const DB_DIALECT = "postgres";
         ArmyListModule,
         HeartbeatModule,
         ProphecyModule,
-        ProfileModule
+        ProfileModule,
+        GameModule
     ],
     controllers: [AppController]
 })

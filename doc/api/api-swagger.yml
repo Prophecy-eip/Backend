@@ -704,7 +704,7 @@ paths:
   # GAMES
 
   # create
-  /games/create-game:
+  /games:
     post:
       summary: Creates a new game
       description: ""

@@ -67,4 +67,8 @@ export class TestsHelper {
      */
     static ARMIES_ROUTE = "/armies";
 
+    /**
+     * GAMES
+     */
+    static GAMES_ROUTE = "/games";
 }
