@@ -8,6 +8,7 @@ import { AppModule } from "../../../src/app.module";
 import { TestsHelper } from "../../tests.helper";
 import { ArmyListUnitDTO } from "../../../src/army-list/army-list-unit/army-list-unit.dto";
 import { ArmyListDTO } from "../../../src/army-list/army-list.dto";
+import { ARMY1, ARMY2, List } from "../../fixtures/army-list/armies-lists";
 
 jest.setTimeout(100000000);
 
@@ -32,103 +33,6 @@ const PASSWORD1 = faker.internet.password();
 let app: INestApplication;
 let token: string;
 let token1: string;
-
-class List {
-    constructor(name: string, armyId: number, valuePoints: number, units: ArmyListUnitCredentialsDTO[], isShared: boolean,
-        isFavorite: boolean) {
-        this.name = name;
-        this.armyId = armyId;
-        this.valuePoints = valuePoints;
-        this.units = units;
-        this.isShared = isShared;
-        this.isFavorite = isFavorite;
-    }
-
-    name: string;
-    armyId: number;
-    valuePoints: number;
-    units: ArmyListUnitCredentialsDTO[];
-    isShared: boolean;
-    isFavorite: boolean;
-}
-
-const UNITS1: ArmyListUnitCredentialsDTO[] = [
-    {
-        unitId: 396,
-        quantity: 5,
-        formation: "3x2",
-        troopIds: [727],
-        magicItems: [{
-            unitId: 396,
-            magicItemId: 80,
-            unitOptionId: null,
-            equipmentId: null,
-            quantity: 1,
-            valuePoints: 40
-        }],
-        magicStandards: [{
-            magicStandardId: 11,
-            unitOptionId: 2340,
-            quantity: 1,
-            valuePoints: 50,
-        }],
-        options: [{
-            unitId: 396,
-            optionId: 2342,
-            quantity: 1,
-            valuePoints: 20
-        }],
-        specialRuleTroops: [{
-            troopId: 727,
-            ruleId: 5628
-        }],
-        equipmentTroops: []
-    }, {
-        unitId: 392,
-        quantity: 6,
-        formation: "3x2",
-        troopIds: [723],
-        magicItems: [],
-        magicStandards: [],
-        options: [],
-        specialRuleTroops: [],
-        equipmentTroops: []
-    }
-];
-
-const UNITS2: ArmyListUnitCredentialsDTO[] = [
-    {
-        unitId: 687,
-        quantity: 15,
-        formation: "5x3",
-        troopIds: [1270],
-        magicItems: [],
-        magicStandards: [],
-        options: [],
-        specialRuleTroops: [],
-        equipmentTroops: []
-    }
-]
-
-const ARMY1: List = {
-    name: "list 1",
-    armyId: 2,
-    valuePoints: 500,
-    units: UNITS1,
-    isShared: false,
-    isFavorite: true,
-}
-
-const ARMY2: List = {
-    name: "list 2",
-    armyId: 21,
-    valuePoints: 300,
-    units: [],
-    isShared: true,
-    isFavorite: false,
-}
-
-// TODO
 
 describe("Armies lists route", () => {
 
