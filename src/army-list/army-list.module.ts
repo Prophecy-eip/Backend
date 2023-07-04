@@ -58,4 +58,5 @@ import { ArmyListController } from "./army-list.controller";
     controllers: [ArmyListController]
 
 })
+
 export class ArmyListModule {}
