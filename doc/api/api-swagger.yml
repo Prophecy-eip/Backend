@@ -651,8 +651,6 @@ paths:
                 $ref: '#/components/schemas/prophecyObject'
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
-
-  /prophecies/units:
     get:
       summary: Retrieves the prophecies history
       description: ""
@@ -723,15 +721,11 @@ paths:
       responses:
         201:
           description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/uuid'
         401:
           $ref: '#/components/schemas/unauthorizedResponse'
-
-  # read
-  /games/get-games:
+        404:
+          description: An element was not found (army list, opponent, ...)
+    # read
     get:
       summary: Retrieves the user's games list
       description: ""
@@ -3170,40 +3164,31 @@ components:
       description: A game's data
       type: object
       properties:
-        date:
+        opponent:
           allOf:
-            - description: The game's date
-            - $ref: '#/components/schemas/date'
-        opponentsId:
-          allOf:
-            - description: The opponent's user id
+            - description: The opponent's user id (can be null)
             - $ref: '#/components/schemas/uuid'
-        playersArmy:
+        ownerArmyListId:
           allOf:
-            - description: The player's army list
-            - $ref: '#/components/schemas/armyListObject'
-        opponentsArmy:
+            - description: The player's army list's id (can be null)
+            - $ref: '#/components/schemas/uuid'
+        opponentArmyListId:
           allOf:
-            - description: The opponents's army list
-            - $ref: '#/components/schemas/armyListObject'
-        playersScore:
+            - description: The opponents's army list's id (can be null)
+            - $ref: '#/components/schemas/uuid'
+        ownerScore:
           description: The player's score
           type: number
           example: 15
-        opponentsScore:
+        opponentScore:
           description: The opponent's score
           type: number
           example: 5
-        official:
-          description: Describes if the game took place on a tournament
-          type: boolean
-          example: true
       required:
         - playersArmy
         - opponentsArmy
         - playerSocre
         - opponentsScore
-        - official
 
     prophecyRequest:
       description: A prophecy request data
@@ -3583,3 +3568,8 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /Victoire-Rabeau/Prophecy/1.0.0
+schemes:
+  - https
