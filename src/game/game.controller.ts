@@ -13,8 +13,6 @@ import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
 import { ArmyList } from "@army-list/army-list.entity";
 import { ArmyListService } from "@army-list/army-list.service";
 import { ProfileService } from "@profile/profile.service";
-import { Profile } from "@profile/profile.entity";
-import { ParamHelper } from "@helper/param.helper";
 
 @Controller("games")
 export class GameController {
