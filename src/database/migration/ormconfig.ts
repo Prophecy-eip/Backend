@@ -43,6 +43,8 @@ import {
 import {
     ArmyListUnitTroopEquipment
 } from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
+import { ProphecyArmyInitialization1688721594196 } from "@database/migration/1688721594196-ProphecyArmyInitialization";
+import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 
 dotenv.config();
 
@@ -82,7 +84,8 @@ export const connectionSource: DataSource = new DataSource({
         Game,
         SpecialRuleUnitTroop,
         ArmyListUnitTroopSpecialRule,
-        ArmyListUnitTroopEquipment
+        ArmyListUnitTroopEquipment,
+        ProphecyArmy
     ],
     migrations: [
         UsersInitialization1667924495954,
@@ -91,6 +94,7 @@ export const connectionSource: DataSource = new DataSource({
         ProphecyUnitInitialization1672968324920,
         AddProphecyUnitAttackingPosition1675176923116,
         GamesInitialization1687856012071,
-        ArmyListUnitRelationsRefactoring1690531446154
+        ArmyListUnitRelationsRefactoring1690531446154,
+        ProphecyArmyInitialization1688721594196
     ]
 });
