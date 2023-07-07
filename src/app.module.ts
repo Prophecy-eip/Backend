@@ -40,6 +40,7 @@ import { AppController } from "./app.controller";
 import { ProfileModule } from "@account/profile/profile.module";
 import { GameModule } from "@app/game/game.module";
 import { Game } from "@app/game/game.entity";
+import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 
 dotenv.config();
 
@@ -85,7 +86,8 @@ const DB_DIALECT = "postgres";
                 ArmyListUnitTroopSpecialRule,
                 ArmyListUnitTroopEquipment,
                 ProphecyUnit,
-                Game
+                Game,
+                ProphecyArmy
             ],
             synchronize: false
         }),
