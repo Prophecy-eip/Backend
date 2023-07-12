@@ -5,19 +5,37 @@ import { ProphecyUnitModifierGlobal } from "./prophecy-unit.entity";
 
 export class ProphecyUnitModelStatsMathsDTO {
     constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics | undefined) {
-        this.advance = (unitCharacteristics.adv !== null || true) ? +unitCharacteristics.adv : 0;
-        this.march = (unitCharacteristics.mar !== null || true) ? +unitCharacteristics.mar : 0;
-        this.discipline = (unitCharacteristics.dis !== null || true) ? +unitCharacteristics.dis : 0;
-        this.health_points = (unitCharacteristics.hp !== null || true) ? +unitCharacteristics.hp : 0;
-        this.defense = (unitCharacteristics.def !== null || true) ? +unitCharacteristics.def: 0;
-        this.resilience = (unitCharacteristics.res !== null || true) ? +unitCharacteristics.res : 0;
-        this.armour = (unitCharacteristics.arm !== null || true) ? +unitCharacteristics.arm : 0;
-        this.aegis = (unitCharacteristics.aeg !== null || true) ? +unitCharacteristics.aeg : 0;
-        this.attack = (troopCharacteristics !== undefined) ? +troopCharacteristics?.att : 0;
-        this.offensive = (troopCharacteristics !== undefined) ? +troopCharacteristics?.of : 0;
-        this.strength = (troopCharacteristics !== undefined) ? +troopCharacteristics?.str : 0;
-        this.armour_penetration = (troopCharacteristics !== undefined) ? +troopCharacteristics?.ap : 0;
-        this.agility = (troopCharacteristics !== undefined) ? +troopCharacteristics?.agi : 0;
+        this.advance = this._parseValue(unitCharacteristics.adv);
+        this.march = this._parseValue(unitCharacteristics.mar);
+        this.discipline = this._parseValue(unitCharacteristics.dis);
+        this.health_points = this._parseValue(unitCharacteristics.hp);
+        this.defense = this._parseValue(unitCharacteristics.def);
+        this.resilience = this._parseValue(unitCharacteristics.res);
+        this.armour = this._parseValue(unitCharacteristics.arm);
+        this.aegis = this._parseValue(unitCharacteristics.aeg);
+        this.attack = this._parseValue(troopCharacteristics?.att);
+        this.offensive = this._parseValue(troopCharacteristics?.of);
+        this.strength = this._parseValue(troopCharacteristics?.str);
+        this.armour_penetration = this._parseValue(troopCharacteristics?.ap);
+        this.agility = this._parseValue(troopCharacteristics?.agi);
+    }
+
+    private _parseValue(value: any): number {
+        if (value === null || value === undefined) {
+            return 0;
+        }
+        if (typeof value === "string") {
+            const str: string = value as string;
+            let val: number = 0;
+
+            for (const c of str) {
+                if (c >= "0" && c <= "9") {
+                    val = val * 10 + (+c);
+                }
+            }
+            return val;
+        }
+        return +value;
     }
 
     public advance: number;
