@@ -20,10 +20,17 @@ import { ProphecyUnit, ProphecyUnitAttackingPosition } from "./unit/prophecy-uni
 import { ProphecyUnitService } from "./unit/prophecy-unit.service";
 import { ProphecyUnitDTO, ProphecyUnitWithIdDTO } from "./unit/prophecy-unit.dto";
 import { ParamHelper } from "@helper/param.helper";
+import ProphecyArmyDTO from "@prophecy/army/prophecy-army.dto";
+import ProphecyArmyService from "@prophecy/army/prophecy-army.service";
+import { ProphecyArmyMathResponseDTO } from "@prophecy/prophecy.service";
+import ProphecyService from "@prophecy/prophecy.service";
+import { ArmyList } from "@army-list/army-list.entity";
+import { ArmyListService } from "@army-list/army-list.service";
+import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 
 dotenv.config();
 
-const WEBSITE_URL = process.env.WEBSITE_URL;
+const WEBSITE_URL: string = process.env.WEBSITE_URL;
 const MATHS_UNITS_REQUEST_URL: string = `${WEBSITE_URL}/maths/units`;
 const MATHS_KEY: string = process.env.MATHS_KEY;
 
@@ -32,6 +39,9 @@ export class ProphecyController {
     constructor(
             private readonly armyListUnitService: ArmyListUnitService,
             private readonly prophecyUnitService: ProphecyUnitService,
+            private readonly prophecyArmyService: ProphecyArmyService,
+            private readonly prophecyService: ProphecyService,
+            private readonly armyListService: ArmyListService
         ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -111,6 +121,28 @@ export class ProphecyController {
             throw new ForbiddenException();
         }
         await this.prophecyUnitService.delete(id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post("/armies")
+    @HttpCode(HttpStatus.CREATED)
+    async getArmiesProphecy(
+        @Request() req,
+        @Body("armyList1") armyList1Id: string,
+        @Body("armyList2") armyList2Id: string,
+    ): Promise<ProphecyArmyDTO> {
+        const username: string = req.user.username;
+        const armyList1: ArmyList = await this.armyListService.findOneById(armyList1Id);
+        const armyList2: ArmyList = await this.armyListService.findOneById(armyList2Id);
+        const armyList1Units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(armyList1Id);
+        const armyList2Units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(armyList2Id);
+        const mathsResponse: ProphecyArmyMathResponseDTO = await this.prophecyService.requestArmiesProphecy(armyList1Units, armyList2Units);
+        const prophecy: ProphecyArmy = await this.prophecyArmyService.create(username, armyList1, armyList2,
+            mathsResponse.first_player_score, mathsResponse.second_player_score);
+
+        await this.prophecyArmyService.save(prophecy);
+        
+        return {}; // TODO
     }
 
     private checkAttackingPosition(position: string): boolean {
