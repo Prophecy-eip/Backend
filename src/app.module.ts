@@ -41,6 +41,7 @@ import { ProfileModule } from "@account/profile/profile.module";
 import { GameModule } from "@app/game/game.module";
 import { Game } from "@app/game/game.entity";
 import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
+import { MagicStandard } from "@army/magic-standard/magic-standard.entity";
 
 dotenv.config();
 
@@ -76,6 +77,7 @@ const DB_DIALECT = "postgres";
                 Unit,
                 UnitOption,
                 Troop,
+                MagicStandard,
                 EquipmentUnitTroop,
                 SpecialRuleUnitTroop,
                 ArmyList,
