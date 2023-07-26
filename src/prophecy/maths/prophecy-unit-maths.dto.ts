@@ -1,57 +1,8 @@
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 import { UnitCharacteristic } from "@army/unit/unit.entity";
 import { TroopCharacteristics } from "@army/unit/troop/troop.entity";
-import { ProphecyUnitModifierGlobal } from "./prophecy-unit.entity";
-
-export class ProphecyUnitModelStatsMathsDTO {
-    constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics | undefined) {
-        this.advance = this._parseValue(unitCharacteristics.adv);
-        this.march = this._parseValue(unitCharacteristics.mar);
-        this.discipline = this._parseValue(unitCharacteristics.dis);
-        this.health_points = this._parseValue(unitCharacteristics.hp);
-        this.defense = this._parseValue(unitCharacteristics.def);
-        this.resilience = this._parseValue(unitCharacteristics.res);
-        this.armour = this._parseValue(unitCharacteristics.arm);
-        this.aegis = this._parseValue(unitCharacteristics.aeg);
-        this.attack = this._parseValue(troopCharacteristics?.att);
-        this.offensive = this._parseValue(troopCharacteristics?.of);
-        this.strength = this._parseValue(troopCharacteristics?.str);
-        this.armour_penetration = this._parseValue(troopCharacteristics?.ap);
-        this.agility = this._parseValue(troopCharacteristics?.agi);
-    }
-
-    private _parseValue(value: any): number {
-        if (value === null || value === undefined) {
-            return 0;
-        }
-        if (typeof value === "string") {
-            const str: string = value as string;
-            let val: number = 0;
-
-            for (const c of str) {
-                if (c >= "0" && c <= "9") {
-                    val = val * 10 + (+c);
-                }
-            }
-            return val;
-        }
-        return +value;
-    }
-
-    public advance: number;
-    public march: number;
-    public discipline: number;
-    public health_points: number;
-    public defense: number;
-    public resilience: number;
-    public armour: number;
-    public aegis: number;
-    public attack: number;
-    public offensive: number;
-    public strength: number;
-    public armour_penetration: number;
-    public agility: number;
-}
+import { ProphecyUnitModifierGlobal } from "../unit/prophecy-unit.entity";
+import { ProphecyModelStatsMathsDTO } from "@prophecy/maths/prophecy-maths.dto";
 
 export class ProphecyUnitModifierDefensiveMathsDTO {
     public health_points: number;
@@ -71,17 +22,17 @@ export class ProphecyUnitModifierOffensiveMathsDTO {
 export class ProphecyUnitModifierMathsDTO {
     public global: ProphecyUnitModifierGlobal;
     public defensive: ProphecyUnitModifierDefensiveMathsDTO;
-    public  offensive: ProphecyUnitModifierOffensiveMathsDTO;
+    public offensive: ProphecyUnitModifierOffensiveMathsDTO;
 }
 
 export class ProphecyUnitModelMathsDTO {
 
     constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics | undefined) {
-        this.stats = new ProphecyUnitModelStatsMathsDTO(unitCharacteristics, troopCharacteristics);
+        this.stats = new ProphecyModelStatsMathsDTO(unitCharacteristics, troopCharacteristics);
         this.modifiers = []; // TODO
         this.banner_bearer = false; // TODO
     }
-    public stats: ProphecyUnitModelStatsMathsDTO;
+    public stats: ProphecyModelStatsMathsDTO;
     public modifiers: ProphecyUnitModifierMathsDTO[];
     public banner_bearer: boolean;
 }

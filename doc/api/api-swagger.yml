@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: |
     This is the Prophecy Api documentation
-  version: 1.0.0
+  version: dev
   title: "Prophecy Api"
 
 tags:
@@ -10,7 +10,6 @@ tags:
     description: Everything about the user's account
   - name: events
     description: Everything about the events
-  - name: armies
   - name: armies
     description: Everything about the armies
   - name: prophecies
@@ -697,6 +696,29 @@ paths:
         404:
           description: The prophecy was not found
 
+  /prophecies/armies:
+    post:
+      summary: Requests an army vs army prophecy
+      description: ""
+      tags:
+        - prophecies
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/armyProphecyRequest'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/armyProphecyDTO'
 
 
   # GAMES
@@ -2233,7 +2255,7 @@ paths:
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/Victoire-Rabeau/Prophecy/1.0.0
+    url: https://virtserver.swaggerhub.com/Victoire-Rabeau/Prophecy/dev
   - description: Prophecy's server
     url: https://prophecy-eip.com
     variables:
@@ -3391,6 +3413,28 @@ components:
         isFavorite:
           type: boolean
 
+    armyProphecyRequest:
+      type: object
+      properties:
+        armyList1:
+          $ref: '#/components/schemas/uuid'
+        armyList2:
+          $ref: '#/components/schemas/uuid'
+
+    armyProphecyDTO:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        armyList1:
+          $ref: '#/components/schemas/uuid'
+        armyList2:
+          $ref: '#/components/schemas/uuid'
+        player1Score:
+          type: number
+        player2Score:
+          type: number
+
 
     # RESPONSES
 
@@ -3568,8 +3612,11 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/uuid'
+
+
+
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
-basePath: /Victoire-Rabeau/Prophecy/1.0.0
+basePath: /Victoire-Rabeau/Prophecy/dev
 schemes:
   - https
