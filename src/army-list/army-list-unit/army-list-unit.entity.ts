@@ -1,4 +1,4 @@
-import { AfterLoad, Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
+import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { ProphecyDatasource } from "@database/prophecy.datasource";
 import { ArmyListUnitMagicItem } from "./magic-item/army-list-unit-magic-item.entity";
@@ -8,6 +8,7 @@ import { Troop } from "@army/unit/troop/troop.entity";
 import { ArmyListUnitTroopSpecialRule } from "./troop/special-rule/army-list-unit-troop-special-rule.entity";
 import { ArmyListUnitTroopEquipment } from "./troop/equipment/army-list-unit-troop-equipment.entity";
 import { Unit } from "@army/unit/unit.entity";
+import { ArmyList } from "@army-list/army-list.entity";
 
 @Entity("army_list_units")
 export class ArmyListUnit {
@@ -24,11 +25,16 @@ export class ArmyListUnit {
     @Column({ type: "varchar" })
     public formation: string;
 
-    @Column({ name: "army_list_id", type: "varchar" })
-    public armyListId: string;
+    // public armyListId: string;
 
     @Column({ name: "troop_ids", type: "int", array: true })
     public troopIds: number[];
+
+    @ManyToOne(() => ArmyList, (armyList: ArmyList) => armyList.units)
+    @JoinColumn({
+        name: "army_list_id"
+    })
+    public armyList: ArmyList;
 
     public unit: Unit;
     public magicItems: ArmyListUnitMagicItem[] = [];

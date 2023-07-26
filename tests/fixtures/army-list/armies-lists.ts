@@ -90,7 +90,7 @@ export const ARMY2: List = {
     name: "list 2",
     armyId: 21,
     valuePoints: 300,
-    units: [],
+    units: UNITS2,
     isShared: true,
     isFavorite: false,
 }

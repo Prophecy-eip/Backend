@@ -47,9 +47,9 @@ export class ProphecyController {
         }
         try {
             const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(attackingRegiment.unitId,
-                attackingRegiment.quantity, attackingRegiment.formation, null, attackingRegiment.troopIds);
+                attackingRegiment.quantity, attackingRegiment.formation, attackingRegiment.troopIds);
             const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(defendingRegiment.unitId,
-                defendingRegiment.quantity, defendingRegiment.formation, null, defendingRegiment.troopIds);
+                defendingRegiment.quantity, defendingRegiment.formation, defendingRegiment.troopIds);
 
             await attackingRegimentUnit.load();
             await defendingRegimentUnit.load();
