@@ -3,12 +3,13 @@ import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 import {
     ProphecyUnitCaseMathsDTO, ProphecyUnitCaseRegimentMathsDTO,
     ProphecyUnitModelMathsDTO,
-    ProphecyUnitModelStatsMathsDTO, ProphecyUnitModifierDefensiveMathsDTO,
+    ProphecyUnitModifierDefensiveMathsDTO,
     ProphecyUnitModifierMathsDTO,
     ProphecyUnitModifierOffensiveMathsDTO,
     ProphecyUnitRegimentMathsDTO
-} from "./prophecy-unit-maths.dto";
+} from "../maths/prophecy-unit-maths.dto";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { ProphecyModelStatsMathsDTO } from "@prophecy/maths/prophecy-maths.dto";
 
 export enum ProphecyUnitAttackingPosition {
     FRONT = "front",
@@ -17,7 +18,7 @@ export enum ProphecyUnitAttackingPosition {
 }
 
 class ProphecyUnitModelStats {
-    constructor(stats: ProphecyUnitModelStatsMathsDTO) {
+    constructor(stats: ProphecyModelStatsMathsDTO) {
         this.advance = stats.advance;
         this.march = stats.march;
         this.discipline = stats.discipline;
