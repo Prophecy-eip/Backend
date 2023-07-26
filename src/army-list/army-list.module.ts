@@ -29,6 +29,8 @@ import {
 } from "./army-list-unit/troop/equipment/army-list-unit-troop-equipment.service";
 
 import { ArmyListController } from "./army-list.controller";
+import { UnitService } from "@army/unit/troop/unit.service";
+import { UnitModule } from "@army/unit/unit.module";
 
 @Module({
     imports: [
@@ -41,8 +43,8 @@ import { ArmyListController } from "./army-list.controller";
             ArmyListUnitTroopSpecialRule,
             ArmyListUnitTroopEquipment,
             Army,
-            Unit
-        ])
+        ]),
+        UnitModule,
     ],
     providers: [
         ArmyListService,

@@ -16,6 +16,8 @@ import { EquipmentUnitTroop } from "./unit/troop/equipment/equipment-unit-troop.
 import { SpecialRuleUnitTroop } from "./unit/troop/special-rule/special-rule-unit-troop.entity";
 import { ArmyService } from "./army.service";
 import { ArmyController } from "./army.controller";
+import { UnitService } from "@army/unit/troop/unit.service";
+import { UnitModule } from "@army/unit/unit.module";
 
 @Module({
     imports: [
@@ -28,15 +30,15 @@ import { ArmyController } from "./army.controller";
             ArmyOrganisation,
             ArmyOrganisationGroup,
             SpecialRule,
-            Unit,
             UnitOption,
             Troop,
             EquipmentUnitTroop,
             SpecialRuleUnitTroop
-        ])
+        ]),
+        UnitModule
     ],
     providers: [ArmyService],
-    exports: [],
+    exports: [ArmyService, UnitModule],
     controllers: [ArmyController]
 })
 export class ArmyModule {}
