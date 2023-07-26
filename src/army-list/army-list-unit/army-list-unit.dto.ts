@@ -7,24 +7,24 @@ import { ArmyListUnitTroopSpecialRuleDTO } from "./troop/special-rule/army-list-
 import { ArmyListUnitTroopEquipmentDTO } from "./troop/equipment/army-list-unit-troop-equipment.dto";
 
 export class ArmyListUnitDTO {
-    constructor(unit: ArmyListUnit) {
-        this.unitId = unit.unitId;
-        this.quantity = unit.quantity;
-        this.formation = unit.formation;
-        this.troops = unit.troops;
-        for (const item of unit.magicItems) {
+    constructor(armyListUnit: ArmyListUnit) {
+        this.unitId = armyListUnit.unit.id;
+        this.quantity = armyListUnit.quantity;
+        this.formation = armyListUnit.formation;
+        this.troops = armyListUnit.troops;
+        for (const item of armyListUnit.magicItems) {
             this.magicItems.push(new ArmyListUnitMagicItemDTO(item));
         }
-        for (const standard of unit.magicStandards) {
+        for (const standard of armyListUnit.magicStandards) {
             this.magicStandards.push(new ArmyListUnitMagicStandardDTO(standard));
         }
-        for (const option of unit.options) {
+        for (const option of armyListUnit.options) {
             this.options.push(new ArmyListUnitOptionDTO(option));
         }
-        for (const rule of unit.specialRuleTroops) {
+        for (const rule of armyListUnit.specialRuleTroops) {
             this.specialRuleTroops.push(new ArmyListUnitTroopSpecialRuleDTO(rule));
         }
-        for (const equipment of unit.equipmentTroops) {
+        for (const equipment of armyListUnit.equipmentTroops) {
             this.equipmentTroops.push(new ArmyListUnitTroopEquipmentDTO(equipment));
         }
     }

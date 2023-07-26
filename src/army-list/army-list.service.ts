@@ -5,7 +5,6 @@ import { randomUUID } from "crypto";
 
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
-import { ArmyListUnitService } from "@army-list/army-list-unit/army-list-unit.service";
 
 export type ArmyListServiceOptions = {
     retrieveUnits?: boolean;
@@ -38,12 +37,13 @@ export class ArmyListService {
     });
     }
 
-    async findOneById(id: string,  options?: ArmyListServiceOptions): Promise<ArmyList> {
+    async findOneById(id: string,  _options?: ArmyListServiceOptions): Promise<ArmyList> {
         return this.repository.findOne({
             where: { id: id },
-            relations: {
-                units: (options?.retrieveUnits === true)
-            }
+            relations: [
+                "units",
+                "units.unit"
+            ]
         });
     }
 

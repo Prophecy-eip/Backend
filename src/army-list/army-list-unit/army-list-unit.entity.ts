@@ -15,9 +15,9 @@ export class ArmyListUnit {
     @PrimaryGeneratedColumn("uuid")
     public id: string;
 
-    @Column({ type: "int", name: "unit_id" })
-    @JoinColumn({ name: "units", referencedColumnName: "id" })
-    public unitId: number;
+    // @Column({ type: "int", name: "unit_id" })
+    // @JoinColumn({ name: "units", referencedColumnName: "id" })
+    // public unitId: number;
 
     @Column({ type: "int" })
     public quantity: number;
@@ -25,18 +25,17 @@ export class ArmyListUnit {
     @Column({ type: "varchar" })
     public formation: string;
 
-    // public armyListId: string;
-
     @Column({ name: "troop_ids", type: "int", array: true })
     public troopIds: number[];
 
     @ManyToOne(() => ArmyList, (armyList: ArmyList) => armyList.units)
-    @JoinColumn({
-        name: "army_list_id"
-    })
+    @JoinColumn({ name: "army_list_id" })
     public armyList: ArmyList;
 
+    @ManyToOne(() => Unit)
+    @JoinColumn({ name: "unit_id" })
     public unit: Unit;
+
     public magicItems: ArmyListUnitMagicItem[] = [];
     public magicStandards: ArmyListUnitMagicStandard[] = [];
     public options: ArmyListUnitOption[] = [];
@@ -49,7 +48,7 @@ export class ArmyListUnit {
         let dataSource: ProphecyDatasource = new ProphecyDatasource();
 
         await dataSource.initialize();
-        this.unit = await dataSource.getRepository(Unit).findOneBy({ id: this.unitId });
+        // this.unit = await dataSource.getRepository(Unit).findOneBy({ id: this.unitId });
         for (const id of this.troopIds) {
             this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }));
         }
