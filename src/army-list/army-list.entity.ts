@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { JoinColumn } from "typeorm";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
 
 @Entity("army_lists")
 export class ArmyList {
@@ -25,4 +27,7 @@ export class ArmyList {
 
     @Column({ name: "is_favourite" })
     public isFavorite: boolean;
+
+    @OneToMany(() => ArmyListUnit, (unit: ArmyListUnit) => unit.armyList)
+    public units: ArmyListUnit[];
 }

@@ -43,6 +43,7 @@ import {
 } from "./army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.service";
 import { ArmyService } from "@army/army.service";
 import { Army } from "@army/army.entity";
+import { ArmyListUnitDTO } from "@army-list/army-list-unit/army-list-unit.dto";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -76,10 +77,11 @@ export class ArmyListController {
             throw new NotFoundException(`The army ${armyId} does not exist.`);
         }
         const list: ArmyList = await this.armyListService.create(name, req.user.username, armyId, valuePoints, isShared,
-            isFavorite);
+            isFavorite, []);
 
         try {
             await this.armyListService.save(list);
+            list.units = await this.saveUnits(list.id, units, list);
         } catch (error) {
             console.error(error);
             if (error instanceof QueryFailedError) {
@@ -87,7 +89,7 @@ export class ArmyListController {
             }
 
         }
-        await this.saveUnits(list.id, units);
+        // await this.saveUnits(list.id, units);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -107,7 +109,7 @@ export class ArmyListController {
     @Get(":id")
     @HttpCode(HttpStatus.OK)
     async get(@Request() req, @Param("id") id: string) {
-        let list: ArmyList = await this.armyListService.findOneById(id);
+        let list: ArmyList = await this.armyListService.findOneById(id, { retrieveUnits: true });
 
         if (list === null) {
             throw new NotFoundException();
@@ -115,8 +117,8 @@ export class ArmyListController {
         if (list.owner !== req.user.username && !list.isShared) {
             throw new UnauthorizedException();
         }
-        let units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(list.id);
-        return new ArmyListDTO(list, units);
+        // let units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(list.id);
+        return new ArmyListDTO(list, list.units); // TODO
     }
 
     @UseGuards(JwtAuthGuard)
@@ -145,7 +147,7 @@ export class ArmyListController {
             @Body("units") units: ArmyListUnitCredentialsDTO[],
             @Body("isShared") isShared: boolean,
             @Body("isFavorite") isFavorite) {
-            let list: ArmyList = await this.armyListService.findOneById(id);
+            let list: ArmyList = await this.armyListService.findOneById(id, { retrieveUnits: true});
 
             if (list === null) {
                 throw new NotFoundException();
@@ -153,16 +155,23 @@ export class ArmyListController {
             if (list.owner !== req.user.username) {
                 throw new ForbiddenException();
             }
-            await this.armyListService.update(id, name, armyId, valuePoints, isShared, isFavorite);
             await this.armyListUnitService.deleteByList(list.id);
-            await this.saveUnits(list.id, units);
+
+            const armyListUnits: ArmyListUnit[] = await this.saveUnits(list.id, units, list);
+
+            await this.armyListService.update(id, name, armyId, valuePoints, isShared, isFavorite, armyListUnits);
+            // await this.armyListUnitService.deleteByList(list.id);
+            // await this.saveUnits(list.id, units);
     }
 
-    private async saveUnits(listId: string, units: ArmyListUnitCredentialsDTO[]) {
+    private async saveUnits(listId: string, units: ArmyListUnitCredentialsDTO[], armyList: ArmyList): Promise<ArmyListUnit[]> {
+        let armyListUnits: ArmyListUnit[] = [];
+
         for (const unit of units) {
             const u: ArmyListUnit = await this.armyListUnitService.create(unit.unitId, unit.quantity, unit.formation,
-                listId, unit.troopIds);
+                unit.troopIds, armyList);
             await this.armyListUnitService.save(u);
+            armyListUnits.push(u);
             for (const item of unit.magicItems) {
                 const i: ArmyListUnitMagicItem = await this.armyListUnitMagicItemService.create(u.id, item.unitId,
                     item.magicItemId, item.unitOptionId, item.equipmentId, item.quantity, item.valuePoints);
@@ -189,5 +198,6 @@ export class ArmyListController {
                 await this.armyListUnitTroopEquipmentService.save(e);
             }
         }
+        return armyListUnits;
     }
 }
