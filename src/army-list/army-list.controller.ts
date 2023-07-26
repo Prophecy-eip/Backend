@@ -44,6 +44,8 @@ import {
 import { ArmyService } from "@army/army.service";
 import { Army } from "@army/army.entity";
 import { ArmyListUnitDTO } from "@army-list/army-list-unit/army-list-unit.dto";
+import { UnitService } from "@army/unit/troop/unit.service";
+import { Unit } from "@army/unit/unit.entity";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -56,6 +58,7 @@ export class ArmyListController {
         private readonly armyListUnitTroopSpecialRuleService: ArmyListUnitTroopSpecialRuleService,
         private readonly armyListUnitTroopEquipmentService: ArmyListUnitTroopEquipmentService,
         private readonly armyService: ArmyService,
+        private readonly unitService: UnitService
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -155,44 +158,43 @@ export class ArmyListController {
             if (list.owner !== req.user.username) {
                 throw new ForbiddenException();
             }
-            await this.armyListUnitService.deleteByList(list.id);
+            await this.armyListUnitService.deleteByArmyList(list.id);
 
             const armyListUnits: ArmyListUnit[] = await this.saveUnits(list.id, units, list);
 
             await this.armyListService.update(id, name, armyId, valuePoints, isShared, isFavorite, armyListUnits);
-            // await this.armyListUnitService.deleteByList(list.id);
-            // await this.saveUnits(list.id, units);
     }
 
     private async saveUnits(listId: string, units: ArmyListUnitCredentialsDTO[], armyList: ArmyList): Promise<ArmyListUnit[]> {
         let armyListUnits: ArmyListUnit[] = [];
 
-        for (const unit of units) {
-            const u: ArmyListUnit = await this.armyListUnitService.create(unit.unitId, unit.quantity, unit.formation,
-                unit.troopIds, armyList);
+        for (const unitCredential of units) {
+            // const unit: Unit = await this.unitService.findOneById(unitCredential.unitId);
+            const u: ArmyListUnit = await this.armyListUnitService.create(unitCredential.unitId, unitCredential.quantity, unitCredential.formation,
+                unitCredential.troopIds, armyList);
             await this.armyListUnitService.save(u);
             armyListUnits.push(u);
-            for (const item of unit.magicItems) {
+            for (const item of unitCredential.magicItems) {
                 const i: ArmyListUnitMagicItem = await this.armyListUnitMagicItemService.create(u.id, item.unitId,
                     item.magicItemId, item.unitOptionId, item.equipmentId, item.quantity, item.valuePoints);
                 await this.armyListUnitMagicItemService.save(i);
             }
-            for (const standard of unit.magicStandards) {
+            for (const standard of unitCredential.magicStandards) {
                 const s: ArmyListUnitMagicStandard = await this.armyListUnitMagicStandardService.create(u.id,
                     standard.magicStandardId, standard.unitOptionId, standard.quantity, standard.valuePoints);
                 await this.armyListUnitMagicStandardService.save(s);
             }
-            for (const option of unit.options) {
+            for (const option of unitCredential.options) {
                 const o: ArmyListUnitOption = await this.armyListUnitOptionService.create(u.id, option.unitId,
                     option.optionId, option.quantity, option.valuePoints);
                 await this.armyListUnitOptionService.save(o);
             }
-            for (const rule of unit.specialRuleTroops) {
+            for (const rule of unitCredential.specialRuleTroops) {
                 const r: ArmyListUnitTroopSpecialRule = await this.armyListUnitTroopSpecialRuleService.create(u.id,
                     rule.troopId, rule.ruleId);
                 await this.armyListUnitTroopSpecialRuleService.save(r);
             }
-            for (const equipment of unit.equipmentTroops) {
+            for (const equipment of unitCredential.equipmentTroops) {
                 const e: ArmyListUnitTroopEquipment = await this.armyListUnitTroopEquipmentService.create(u.id,
                     equipment.troopId, equipment.equipmentId);
                 await this.armyListUnitTroopEquipmentService.save(e);
