@@ -1,12 +1,14 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 
 @Entity("army_list_unit_options")
 export class ArmyListUnitOption {
     @PrimaryColumn()
     public id: string;
 
-    @Column({ name: "army_list_unit_id" })
-    public armyListUnitId: string;
+    @ManyToOne(() => ArmyListUnit, (armyListUnit: ArmyListUnit) => armyListUnit.options)
+    @JoinColumn({ name: "army_list_unit_id" })
+    public armyListUnit: ArmyListUnit;
 
     @Column({ type: "int", name: "unit_id" })
     public unitId: number;

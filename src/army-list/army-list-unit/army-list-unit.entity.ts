@@ -45,7 +45,8 @@ export class ArmyListUnit {
     @OneToMany(() => ArmyListUnitMagicStandard, (standard: ArmyListUnitMagicStandard) => standard.armyListUnit)
     public magicStandards: ArmyListUnitMagicStandard[];
 
-    public options: ArmyListUnitOption[] = [];
+    @OneToMany(() => ArmyListUnitOption, (option: ArmyListUnitOption) => option.armyListUnit)
+    public options: ArmyListUnitOption[];
 
     public troops: Troop[] = [];
 
@@ -61,8 +62,6 @@ export class ArmyListUnit {
         for (const id of this.troopIds) {
             this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }));
         }
-        this.options = await dataSource.getRepository(ArmyListUnitOption).findBy({ armyListUnitId: this.id });
-        // this.magicStandards = await dataSource.getRepository(ArmyListUnitMagicStandard).findBy({ armyListUnitId: this.id });
         this.specialRuleTroops = await dataSource.getRepository(ArmyListUnitTroopSpecialRule).findBy({ armyListUnitId: this.id });
         this.equipmentTroops = await dataSource.getRepository(ArmyListUnitTroopEquipment).findBy({ armyListUnitId: this.id });
         await dataSource.destroy();

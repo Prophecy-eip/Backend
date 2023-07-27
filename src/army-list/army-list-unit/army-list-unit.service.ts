@@ -55,10 +55,6 @@ export class ArmyListUnitService {
         return this.repository.save(unit);
     }
 
-    // async addMagicItem(unit: ArmyListUnit, item: ArmyListUnitMagicItem): Promise<void> {
-    //     await this.repository.createQueryBuilder().relation(ArmyListUnit, "magicItems").of(unit).add(item);
-    // }
-
     async addOption(unit: ArmyListUnit, option: ArmyListUnitOptionType): Promise<void> {
         await this.repository.createQueryBuilder().relation(ArmyListUnit, this._getRelation(option)).of(unit).add(option);
     }
@@ -69,7 +65,8 @@ export class ArmyListUnitService {
             relations: {
                 unit: (options?.loadAll === true || options?.loadUnit === true),
                 magicItems: (options?.loadAll === true || options?.loadMagicItems === true),
-                magicStandards: (options?.loadAll === true || options?.loadMagicStandards === true)
+                magicStandards: (options?.loadAll === true || options?.loadMagicStandards === true),
+                options: (options?.loadAll === true || options?.loadOptions === true)
         }});
     }
 
