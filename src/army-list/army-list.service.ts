@@ -75,6 +75,8 @@ export class ArmyListService {
             relations.push("units.magicStandards");
         if (options?.loadAll === true || options?.armyListUnitOptions?.loadOptions === true)
             relations.push("units.options");
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadSpecialRules === true)
+            relations.push("units.specialRuleTroops");
         return relations;
     }
 }
