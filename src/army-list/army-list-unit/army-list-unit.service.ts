@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { FindOptionsRelations, QueryBuilder, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomUUID } from "crypto";
 
@@ -7,10 +7,8 @@ import { ArmyListUnit } from "./army-list-unit.entity";
 import { ArmyList } from "@army-list/army-list.entity";
 import { Unit } from "@army/unit/unit.entity";
 import { UnitService } from "@army/unit/troop/unit.service";
-import { MagicItem } from "@army/magic-item/magic-item.entity";
 import { ArmyListUnitMagicItem } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
 import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
-import { query } from "express";
 import {
     ArmyListUnitMagicStandard
 } from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
@@ -21,7 +19,6 @@ import {
 import {
     ArmyListUnitTroopEquipment
 } from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
-import { ArmyListUnitDTO } from "@army-list/army-list-unit/army-list-unit.dto";
 
 export type ArmyListUnitServiceOptions = {
     loadAll?: boolean;
@@ -64,9 +61,10 @@ export class ArmyListUnitService {
             where: { armyList: { id: listId }},
             relations: {
                 unit: (options?.loadAll === true || options?.loadUnit === true),
-                magicItems: (options?.loadAll === true || options?.loadMagicItems === true),
+                magicItems: (   options?.loadAll === true || options?.loadMagicItems === true),
                 magicStandards: (options?.loadAll === true || options?.loadMagicStandards === true),
-                options: (options?.loadAll === true || options?.loadOptions === true)
+                options: (options?.loadAll === true || options?.loadOptions === true),
+                specialRuleTroops: (options?.loadAll === true || options?.loadSpecialRules === true)
         }});
     }
 

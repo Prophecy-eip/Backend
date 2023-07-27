@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { randomUUID } from "crypto";
 
 import { ArmyListUnitTroopSpecialRule } from "./army-list-unit-troop-special-rule.entity";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 
 @Injectable()
 export class ArmyListUnitTroopSpecialRuleService {
@@ -12,10 +13,10 @@ export class ArmyListUnitTroopSpecialRuleService {
         private repository: Repository<ArmyListUnitTroopSpecialRule>
     ) {}
 
-    async create(armyListUnitId: string, troopId: number, ruleId: number): Promise<ArmyListUnitTroopSpecialRule> {
+    async create(armyListUnit: ArmyListUnit, troopId: number, ruleId: number): Promise<ArmyListUnitTroopSpecialRule> {
         const id: string = randomUUID();
 
-        return this.repository.create({ id,  armyListUnitId, troopId, ruleId });
+        return this.repository.create({ id,  armyListUnit, troopId, ruleId });
     }
 
     async save(equipment: ArmyListUnitTroopSpecialRule): Promise<ArmyListUnitTroopSpecialRule> {

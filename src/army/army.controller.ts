@@ -14,7 +14,7 @@ export class ArmyController {
 
     @Get("")
     @HttpCode(HttpStatus.OK)
-    async lookup() {
+    async lookup(): Promise<ArmyCredentialsDTO[]> {
         const armies: Army[] =  await this.armyService.getAll();
         let arr: ArmyCredentialsDTO[] = [];
 
@@ -26,7 +26,7 @@ export class ArmyController {
 
     @Get(":id")
     @HttpCode(HttpStatus.OK)
-    async get(@Param("id") id: number) {
+    async get(@Param("id") id: number): Promise<ArmyDTO> {
         try {
             let army: Army = await this.armyService.findOneById(id);
             if (army === null) {
