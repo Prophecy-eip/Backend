@@ -43,9 +43,7 @@ import {
 } from "./army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.service";
 import { ArmyService } from "@army/army.service";
 import { Army } from "@army/army.entity";
-import { ArmyListUnitDTO } from "@army-list/army-list-unit/army-list-unit.dto";
 import { UnitService } from "@army/unit/troop/unit.service";
-import { Unit } from "@army/unit/unit.entity";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -112,7 +110,7 @@ export class ArmyListController {
     @Get(":id")
     @HttpCode(HttpStatus.OK)
     async get(@Request() req, @Param("id") id: string) {
-        let list: ArmyList = await this.armyListService.findOneById(id, { retrieveUnits: true });
+        let list: ArmyList = await this.armyListService.findOneById(id, { loadUnits: true });
 
         if (list === null) {
             throw new NotFoundException();
@@ -120,8 +118,7 @@ export class ArmyListController {
         if (list.owner !== req.user.username && !list.isShared) {
             throw new UnauthorizedException();
         }
-        // let units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(list.id);
-        return new ArmyListDTO(list, list.units); // TODO
+        return new ArmyListDTO(list);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -150,7 +147,7 @@ export class ArmyListController {
             @Body("units") units: ArmyListUnitCredentialsDTO[],
             @Body("isShared") isShared: boolean,
             @Body("isFavorite") isFavorite) {
-            let list: ArmyList = await this.armyListService.findOneById(id, { retrieveUnits: true});
+            let list: ArmyList = await this.armyListService.findOneById(id, { loadUnits: true});
 
             if (list === null) {
                 throw new NotFoundException();
@@ -169,15 +166,14 @@ export class ArmyListController {
         let armyListUnits: ArmyListUnit[] = [];
 
         for (const unitCredential of units) {
-            // const unit: Unit = await this.unitService.findOneById(unitCredential.unitId);
             const u: ArmyListUnit = await this.armyListUnitService.create(unitCredential.unitId, unitCredential.quantity, unitCredential.formation,
-                unitCredential.troopIds, armyList);
+                unitCredential.troopIds, [], armyList);
             await this.armyListUnitService.save(u);
-            armyListUnits.push(u);
             for (const item of unitCredential.magicItems) {
-                const i: ArmyListUnitMagicItem = await this.armyListUnitMagicItemService.create(u.id, item.unitId,
+                const i: ArmyListUnitMagicItem = await this.armyListUnitMagicItemService.create(u, item.unitId,
                     item.magicItemId, item.unitOptionId, item.equipmentId, item.quantity, item.valuePoints);
                 await this.armyListUnitMagicItemService.save(i);
+                await this.armyListUnitService.addMagicItem(u, i);
             }
             for (const standard of unitCredential.magicStandards) {
                 const s: ArmyListUnitMagicStandard = await this.armyListUnitMagicStandardService.create(u.id,
@@ -199,6 +195,7 @@ export class ArmyListController {
                     equipment.troopId, equipment.equipmentId);
                 await this.armyListUnitTroopEquipmentService.save(e);
             }
+            armyListUnits.push(u);
         }
         return armyListUnits;
     }

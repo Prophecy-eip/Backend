@@ -5,9 +5,12 @@ import { randomUUID } from "crypto";
 
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { ArmyListUnitServiceOptions } from "@army-list/army-list-unit/army-list-unit.service";
 
 export type ArmyListServiceOptions = {
-    retrieveUnits?: boolean;
+    loadAll?: boolean;
+    loadUnits?: boolean;
+    armyListUnitOptions?: ArmyListUnitServiceOptions;
 }
 
 @Injectable()
@@ -31,28 +34,21 @@ export class ArmyListService {
     async findByOwner(username: string, options?: ArmyListServiceOptions): Promise<ArmyList[]> {
         return this.repository.find({
             where: { owner: username },
-            relations: {
-                units: (options?.retrieveUnits === true)
-            }
-    });
+            relations: this._getRelations(options)
+        });
     }
 
-    async findOneById(id: string,  _options?: ArmyListServiceOptions): Promise<ArmyList> {
+    async findOneById(id: string,  options?: ArmyListServiceOptions): Promise<ArmyList> {
         return this.repository.findOne({
             where: { id: id },
-            relations: [
-                "units",
-                "units.unit"
-            ]
+            relations: this._getRelations(options)
         });
     }
 
     async findOneByOwnerAndId(username: string, id: string, options?: ArmyListServiceOptions): Promise<ArmyList> {
         return this.repository.findOne({
             where: [{ id: id }, { owner: username }],
-            relations: {
-                units: (options?.retrieveUnits === true)
-            }
+            relations: this._getRelations(options)
         });
     }
 
@@ -60,9 +56,21 @@ export class ArmyListService {
         await this.repository.delete(id);
     }
 
-async update(id: string, name: string, armyId: number, valuePoints: number, isShared: boolean, isFavorite: boolean, units: ArmyListUnit[]): Promise<void> {
+    async update(id: string, name: string, armyId: number, valuePoints: number, isShared: boolean, isFavorite: boolean, units: ArmyListUnit[]): Promise<void> {
         await this.repository.update({ id: id }, { name: name, armyId: armyId,
             valuePoints: valuePoints, isShared: isShared, isFavorite: isFavorite});
         await this.repository.createQueryBuilder().relation(ArmyList, "units").of(id).add(units);
+    }
+
+    private _getRelations(options: ArmyListServiceOptions): string[] {
+        let relations: string[];
+
+        if (options?.loadAll === true || options?.loadUnits === true)
+            relations.push("units");
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadUnit)
+            relations.push("units.unit");
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadMagicItems)
+            relations.push("units.magicItems");
+        return relations;
     }
 }
