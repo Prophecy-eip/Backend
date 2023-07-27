@@ -31,7 +31,7 @@ export class GameController {
         @Body("opponentScore") opponentScore: number,
         @Body("ownerArmyListId") ownerArmyListId: string | null,
         @Body("opponentArmyListId") opponentArmyListId: string | null,
-        ) {
+        ): Promise<void> {
         const username = req.user.username;
         const ownerArmyList: ArmyList = await this.armyListService.findOneById(ownerArmyListId);
         const opponentArmyList: ArmyList = await this.armyListService.findOneById(opponentArmyListId);
