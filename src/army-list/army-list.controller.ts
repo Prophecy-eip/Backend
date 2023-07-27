@@ -110,7 +110,7 @@ export class ArmyListController {
     @Get(":id")
     @HttpCode(HttpStatus.OK)
     async get(@Request() req, @Param("id") id: string) {
-        let list: ArmyList = await this.armyListService.findOneById(id, { loadUnits: true });
+        let list: ArmyList = await this.armyListService.findOneById(id, { loadAll: true });
 
         if (list === null) {
             throw new NotFoundException();
@@ -173,12 +173,13 @@ export class ArmyListController {
                 const i: ArmyListUnitMagicItem = await this.armyListUnitMagicItemService.create(u, item.unitId,
                     item.magicItemId, item.unitOptionId, item.equipmentId, item.quantity, item.valuePoints);
                 await this.armyListUnitMagicItemService.save(i);
-                await this.armyListUnitService.addMagicItem(u, i);
+                await this.armyListUnitService.addOption(u, i);
             }
             for (const standard of unitCredential.magicStandards) {
-                const s: ArmyListUnitMagicStandard = await this.armyListUnitMagicStandardService.create(u.id,
+                const s: ArmyListUnitMagicStandard = await this.armyListUnitMagicStandardService.create(u,
                     standard.magicStandardId, standard.unitOptionId, standard.quantity, standard.valuePoints);
                 await this.armyListUnitMagicStandardService.save(s);
+                await this.armyListUnitService.addOption(u, s);
             }
             for (const option of unitCredential.options) {
                 const o: ArmyListUnitOption = await this.armyListUnitOptionService.create(u.id, option.unitId,

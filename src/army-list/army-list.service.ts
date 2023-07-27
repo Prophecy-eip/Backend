@@ -63,14 +63,16 @@ export class ArmyListService {
     }
 
     private _getRelations(options: ArmyListServiceOptions): string[] {
-        let relations: string[];
+        let relations: string[] = [];
 
         if (options?.loadAll === true || options?.loadUnits === true)
             relations.push("units");
-        if (options?.loadAll === true || options?.armyListUnitOptions?.loadUnit)
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadUnit === true)
             relations.push("units.unit");
-        if (options?.loadAll === true || options?.armyListUnitOptions?.loadMagicItems)
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadMagicItems === true)
             relations.push("units.magicItems");
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadMagicStandards === true)
+            relations.push("units.magicStandards");
         return relations;
     }
 }
