@@ -6,6 +6,8 @@ import { Troop } from "@army/unit/troop/troop.entity";
 import { ArmyListUnitTroopSpecialRuleDTO } from "./troop/special-rule/army-list-unit-troop-special-rule.dto";
 import { ArmyListUnitTroopEquipmentDTO } from "./troop/equipment/army-list-unit-troop-equipment.dto";
 
+// TODO: optimisation
+
 export class ArmyListUnitDTO {
     constructor(armyListUnit: ArmyListUnit) {
         this.unitId = armyListUnit.unit.id;
