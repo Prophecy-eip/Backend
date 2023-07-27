@@ -188,9 +188,10 @@ export class ArmyListController {
                 await this.armyListUnitService.addOption(u, o);
             }
             for (const rule of unitCredential.specialRuleTroops) {
-                const r: ArmyListUnitTroopSpecialRule = await this.armyListUnitTroopSpecialRuleService.create(u.id,
+                const r: ArmyListUnitTroopSpecialRule = await this.armyListUnitTroopSpecialRuleService.create(u,
                     rule.troopId, rule.ruleId);
                 await this.armyListUnitTroopSpecialRuleService.save(r);
+                await this.armyListUnitService.addOption(u, r);
             }
             for (const equipment of unitCredential.equipmentTroops) {
                 const e: ArmyListUnitTroopEquipment = await this.armyListUnitTroopEquipmentService.create(u.id,

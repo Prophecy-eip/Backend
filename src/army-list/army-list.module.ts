@@ -4,7 +4,6 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
 import { Army } from "@army/army.entity";
-import { Unit } from "@army/unit/unit.entity";
 import { ArmyListUnitMagicItem } from "./army-list-unit/magic-item/army-list-unit-magic-item.entity";
 import { ArmyListUnitMagicStandard } from "./army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
 import { ArmyListUnitOption } from "./army-list-unit/option/army-list-unit-option.entity";
@@ -29,8 +28,8 @@ import {
 } from "./army-list-unit/troop/equipment/army-list-unit-troop-equipment.service";
 
 import { ArmyListController } from "./army-list.controller";
-import { UnitService } from "@army/unit/troop/unit.service";
 import { UnitModule } from "@army/unit/unit.module";
+import { ArmyModule } from "@army/army.module";
 
 @Module({
     imports: [
@@ -42,9 +41,10 @@ import { UnitModule } from "@army/unit/unit.module";
             ArmyListUnitOption,
             ArmyListUnitTroopSpecialRule,
             ArmyListUnitTroopEquipment,
-            Army,
+            Army
         ]),
         UnitModule,
+        ArmyModule
     ],
     providers: [
         ArmyListService,
