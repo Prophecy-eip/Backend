@@ -182,9 +182,10 @@ export class ArmyListController {
                 await this.armyListUnitService.addOption(u, s);
             }
             for (const option of unitCredential.options) {
-                const o: ArmyListUnitOption = await this.armyListUnitOptionService.create(u.id, option.unitId,
+                const o: ArmyListUnitOption = await this.armyListUnitOptionService.create(u, option.unitId,
                     option.optionId, option.quantity, option.valuePoints);
                 await this.armyListUnitOptionService.save(o);
+                await this.armyListUnitService.addOption(u, o);
             }
             for (const rule of unitCredential.specialRuleTroops) {
                 const r: ArmyListUnitTroopSpecialRule = await this.armyListUnitTroopSpecialRuleService.create(u.id,
