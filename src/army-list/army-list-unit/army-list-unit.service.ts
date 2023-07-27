@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { QueryBuilder, Repository } from "typeorm";
+import { FindOptionsRelations, QueryBuilder, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomUUID } from "crypto";
 
@@ -11,6 +11,17 @@ import { MagicItem } from "@army/magic-item/magic-item.entity";
 import { ArmyListUnitMagicItem } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
 import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
 import { query } from "express";
+import {
+    ArmyListUnitMagicStandard
+} from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
+import { Troop } from "@army/unit/troop/troop.entity";
+import {
+    ArmyListUnitTroopSpecialRule
+} from "@army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
+import {
+    ArmyListUnitTroopEquipment
+} from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
+import { ArmyListUnitDTO } from "@army-list/army-list-unit/army-list-unit.dto";
 
 export type ArmyListUnitServiceOptions = {
     loadAll?: boolean;
@@ -22,6 +33,8 @@ export type ArmyListUnitServiceOptions = {
     loadSpecialRules?: boolean;
     loadEquipment?: boolean;
 }
+
+type ArmyListUnitOptionType = ArmyListUnitMagicItem | ArmyListUnitMagicStandard | ArmyListUnitOption | Troop | ArmyListUnitTroopSpecialRule | ArmyListUnitTroopEquipment;
 
 @Injectable()
 export class ArmyListUnitService {
@@ -42,8 +55,12 @@ export class ArmyListUnitService {
         return this.repository.save(unit);
     }
 
-    async addMagicItem(unit: ArmyListUnit, item: ArmyListUnitMagicItem): Promise<void> {
-        await this.repository.createQueryBuilder().relation(ArmyListUnit, "magicItems").of(unit).add(item);
+    // async addMagicItem(unit: ArmyListUnit, item: ArmyListUnitMagicItem): Promise<void> {
+    //     await this.repository.createQueryBuilder().relation(ArmyListUnit, "magicItems").of(unit).add(item);
+    // }
+
+    async addOption(unit: ArmyListUnit, option: ArmyListUnitOptionType): Promise<void> {
+        await this.repository.createQueryBuilder().relation(ArmyListUnit, this._getRelation(option)).of(unit).add(option);
     }
 
     async findByArmyList(listId: string, options?: ArmyListUnitServiceOptions): Promise<ArmyListUnit[]> {
@@ -51,11 +68,30 @@ export class ArmyListUnitService {
             where: { armyList: { id: listId }},
             relations: {
                 unit: (options?.loadAll === true || options?.loadUnit === true),
-                magicItems: (options?.loadAll === true || options?.loadMagicItems === true)
+                magicItems: (options?.loadAll === true || options?.loadMagicItems === true),
+                magicStandards: (options?.loadAll === true || options?.loadMagicStandards === true)
         }});
     }
 
     async deleteByArmyList(listId: string): Promise<void> {
         await this.repository.delete({ armyList: { id : listId }});
+    }
+
+    // TODO: add tests
+    private _getRelation(option: ArmyListUnitOptionType): string {
+        switch (option.constructor) {
+            case ArmyListUnitMagicItem:
+                return "magicItems";
+            case ArmyListUnitMagicStandard:
+                return "magicStandards";
+            case ArmyListUnitOption:
+                return "options";
+            case Troop:
+                return "troops";
+            case ArmyListUnitTroopSpecialRule:
+                return "specialRuleTroops";
+            case ArmyListUnitTroopEquipment:
+                return "equipmentTroops";
+        }
     }
 }

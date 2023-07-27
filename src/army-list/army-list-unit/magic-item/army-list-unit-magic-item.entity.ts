@@ -6,9 +6,6 @@ export class ArmyListUnitMagicItem {
     @PrimaryColumn()
     public id: string;
 
-    // @Column({ name: "army_list_unit_id" })
-    // public armyListUnitId: string;
-
     @Column({ name: "unit_id", type: "int" })
     public unitId: number;
 
