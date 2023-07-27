@@ -194,9 +194,10 @@ export class ArmyListController {
                 await this.armyListUnitService.addOption(u, r);
             }
             for (const equipment of unitCredential.equipmentTroops) {
-                const e: ArmyListUnitTroopEquipment = await this.armyListUnitTroopEquipmentService.create(u.id,
+                const e: ArmyListUnitTroopEquipment = await this.armyListUnitTroopEquipmentService.create(u,
                     equipment.troopId, equipment.equipmentId);
                 await this.armyListUnitTroopEquipmentService.save(e);
+                await this.armyListUnitService.addOption(u, e);
             }
             armyListUnits.push(u);
         }
