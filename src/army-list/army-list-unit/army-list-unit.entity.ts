@@ -54,7 +54,8 @@ export class ArmyListUnit {
     @OneToMany(() => ArmyListUnitTroopSpecialRule, (rule: ArmyListUnitTroopSpecialRule) => rule.armyListUnit)
     public specialRuleTroops: ArmyListUnitTroopSpecialRule[];
 
-    public equipmentTroops: ArmyListUnitTroopEquipment[] = [];
+    @OneToMany(() => ArmyListUnitTroopEquipment, (equipment: ArmyListUnitTroopEquipment) => equipment.armyListUnit)
+    public equipmentTroops: ArmyListUnitTroopEquipment[];
 
     @AfterLoad()
     public async load() {
@@ -64,7 +65,6 @@ export class ArmyListUnit {
         for (const id of this.troopIds) {
             this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }));
         }
-        this.equipmentTroops = await dataSource.getRepository(ArmyListUnitTroopEquipment).findBy({ armyListUnitId: this.id });
         await dataSource.destroy();
     }
 }
