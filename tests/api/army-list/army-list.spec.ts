@@ -3,12 +3,10 @@ import { HttpStatus, INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 import { faker } from "@faker-js/faker";
 
-import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
 import { AppModule } from "../../../src/app.module";
 import { TestsHelper } from "../../tests.helper";
-import { ArmyListUnitDTO } from "../../../src/army-list/army-list-unit/army-list-unit.dto";
-import { ArmyListDTO } from "../../../src/army-list/army-list.dto";
 import { ARMY1, ARMY2, List } from "../../fixtures/army-list/armies-lists";
+import ArmyListHelper from "../../helper/army-list.helper";
 
 jest.setTimeout(100000000);
 
@@ -64,32 +62,6 @@ describe("Armies lists route", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), token1);
     });
 
-    function compareUnitWithCredentials(lhs: ArmyListUnitCredentialsDTO, rhs: ArmyListUnitDTO) {
-        expect(lhs.unitId).toEqual(rhs.unitId);
-        expect(lhs.quantity).toEqual(rhs.quantity);
-        expect(lhs.formation).toEqual(rhs.formation);
-        expect(lhs.troopIds.length).toEqual(rhs.troops.length);
-        for (const id of lhs.troopIds) {
-            expect(rhs.troops.find(troop => troop.id === id)).toBeDefined();
-        }
-        expect(lhs.magicStandards).toEqual(rhs.magicStandards);
-        expect(lhs.options).toEqual(rhs.options);
-        expect(lhs.specialRuleTroops).toEqual(rhs.specialRuleTroops);
-        expect(lhs.equipmentTroops).toEqual(rhs.equipmentTroops);
-    }
-
-    function compareLists(lhs: List, rhs: ArmyListDTO) {
-        expect(lhs.name).toEqual(rhs.name);
-        expect(lhs.armyId).toEqual(rhs.armyId);
-        expect(lhs.valuePoints).toEqual(rhs.valuePoints);
-        expect(lhs.isShared).toEqual(rhs.isShared);
-        expect(lhs.isFavorite).toEqual(rhs.isFavorite);
-        expect(lhs.units.length).toEqual(rhs.units.length);
-        for (let i = 0; i < lhs.units.length && i < rhs.units.length; i++) {
-            compareUnitWithCredentials(lhs.units[i], rhs.units[i]);
-        }
-    }
-
     /**
      * CREATE
      */
@@ -107,7 +79,7 @@ describe("Armies lists route", () => {
         const listRes1 = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id1}`)
             .set("Authorization", `Bearer ${token}`);
-        compareLists(ARMY1, listRes1.body);
+        ArmyListHelper.compareLists(ARMY1, listRes1.body);
 
         const res2 = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
@@ -122,7 +94,7 @@ describe("Armies lists route", () => {
         const listRes2 = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id2}`)
             .set("Authorization", `Bearer ${token}`);
-        compareLists(ARMY2, listRes2.body);
+        ArmyListHelper.compareLists(ARMY2, listRes2.body);
     });
 
     it("create: create list with invalid armyId - then should return 404 (not found)", async () => {
@@ -299,7 +271,7 @@ describe("Armies lists route", () => {
         const listRes = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`)
-        compareLists(ARMY2, listRes.body);
+        ArmyListHelper.compareLists(ARMY2, listRes.body);
     });
 
     it("update: use invalid armyId - then should return 404 (not found)", async () => {

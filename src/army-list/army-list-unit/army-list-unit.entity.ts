@@ -1,4 +1,11 @@
-import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+    AfterLoad,
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne, OneToMany,
+    PrimaryGeneratedColumn
+} from "typeorm";
 
 import { ProphecyDatasource } from "@database/prophecy.datasource";
 import { ArmyListUnitMagicItem } from "./magic-item/army-list-unit-magic-item.entity";
@@ -14,10 +21,6 @@ import { ArmyList } from "@army-list/army-list.entity";
 export class ArmyListUnit {
     @PrimaryGeneratedColumn("uuid")
     public id: string;
-
-    // @Column({ type: "int", name: "unit_id" })
-    // @JoinColumn({ name: "units", referencedColumnName: "id" })
-    // public unitId: number;
 
     @Column({ type: "int" })
     public quantity: number;
@@ -36,7 +39,11 @@ export class ArmyListUnit {
     @JoinColumn({ name: "unit_id" })
     public unit: Unit;
 
-    public magicItems: ArmyListUnitMagicItem[] = [];
+    @OneToMany(() => ArmyListUnitMagicItem, (item: ArmyListUnitMagicItem) => item.armyListUnit)
+    // @JoinColumn({ name: "magic_items_ids"})
+    public magicItems: ArmyListUnitMagicItem[];
+
+
     public magicStandards: ArmyListUnitMagicStandard[] = [];
     public options: ArmyListUnitOption[] = [];
     public troops: Troop[] = [];
@@ -48,11 +55,9 @@ export class ArmyListUnit {
         let dataSource: ProphecyDatasource = new ProphecyDatasource();
 
         await dataSource.initialize();
-        // this.unit = await dataSource.getRepository(Unit).findOneBy({ id: this.unitId });
         for (const id of this.troopIds) {
             this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }));
         }
-        this.magicItems = await dataSource.getRepository(ArmyListUnitMagicItem).findBy({ armyListUnitId: this.id });
         this.options = await dataSource.getRepository(ArmyListUnitOption).findBy({ armyListUnitId: this.id });
         this.magicStandards = await dataSource.getRepository(ArmyListUnitMagicStandard).findBy({ armyListUnitId: this.id });
         this.specialRuleTroops = await dataSource.getRepository(ArmyListUnitTroopSpecialRule).findBy({ armyListUnitId: this.id });

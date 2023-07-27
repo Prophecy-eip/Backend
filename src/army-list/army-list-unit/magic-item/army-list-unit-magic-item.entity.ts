@@ -1,12 +1,13 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 
 @Entity("army_list_units_magic_items")
 export class ArmyListUnitMagicItem {
     @PrimaryColumn()
     public id: string;
 
-    @Column({ name: "army_list_unit_id" })
-    public armyListUnitId: string;
+    // @Column({ name: "army_list_unit_id" })
+    // public armyListUnitId: string;
 
     @Column({ name: "unit_id", type: "int" })
     public unitId: number;
@@ -25,4 +26,8 @@ export class ArmyListUnitMagicItem {
 
     @Column({ name: "value_points" })
     public valuePoints: number;
+
+    @ManyToOne(() => ArmyListUnit, (unit: ArmyListUnit) => unit.magicItems)
+    @JoinColumn({ name: "army_list_unit_id" })
+    public armyListUnit: ArmyListUnit;
 }
