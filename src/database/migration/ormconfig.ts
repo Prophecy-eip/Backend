@@ -27,6 +27,7 @@ import { ProphecyUnitInitialization1672968324920 } from "./1672968324920-Prophec
 import { AddProphecyUnitAttackingPosition1675176923116 } from "./1675176923116-AddProphecyUnitAttackingPosition";
 import { GamesInitialization1687856012071 } from "@database/migration/1687856012071-GamesInitialization";
 import { Game } from "@app/game/game.entity";
+import { Unit } from "@army/unit/unit.entity";
 
 dotenv.config();
 
@@ -47,6 +48,7 @@ export const connectionSource = new DataSource({
     entities: [
         Profile,
         Army,
+        Unit,
         ArmyOrganisation,
         ArmyOrganisationGroup,
         Equipment,
