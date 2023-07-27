@@ -64,7 +64,8 @@ export class ArmyListUnitService {
                 magicItems: (   options?.loadAll === true || options?.loadMagicItems === true),
                 magicStandards: (options?.loadAll === true || options?.loadMagicStandards === true),
                 options: (options?.loadAll === true || options?.loadOptions === true),
-                specialRuleTroops: (options?.loadAll === true || options?.loadSpecialRules === true)
+                specialRuleTroops: (options?.loadAll === true || options?.loadSpecialRules === true),
+                equipmentTroops: (options?.loadAll === true || options?.loadEquipment === true)
         }});
     }
 
