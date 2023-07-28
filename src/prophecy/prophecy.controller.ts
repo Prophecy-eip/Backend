@@ -55,7 +55,7 @@ export class ProphecyController {
             await defendingRegimentUnit.load();
             await this.armyListUnitService.save(attackingRegimentUnit);
             await this.armyListUnitService.save(defendingRegimentUnit);
-            if (attackingRegimentUnit.troopIds.length > 1 || defendingRegimentUnit.troopIds.length > 1) {
+            if (attackingRegimentUnit.troops.length > 1 || defendingRegimentUnit.troops.length > 1) {
                 throw new BadRequestException("The troopIds must contain one troop max");
             }
             let request: ProphecyUnitMathsRequestDTO = new ProphecyUnitMathsRequestDTO(MATHS_KEY, attackingRegimentUnit,

@@ -6,7 +6,7 @@ import { randomUUID } from "crypto";
 import { ArmyListUnit } from "./army-list-unit.entity";
 import { ArmyList } from "@army-list/army-list.entity";
 import { Unit } from "@army/unit/unit.entity";
-import { UnitService } from "@army/unit/troop/unit.service";
+import { UnitService } from "@army/unit/unit.service";
 import { ArmyListUnitMagicItem } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
 import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
 import {
@@ -19,6 +19,7 @@ import {
 import {
     ArmyListUnitTroopEquipment
 } from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
+import { TroopService } from "@army/unit/troop/troop.service";
 
 export type ArmyListUnitServiceOptions = {
     loadAll?: boolean;
@@ -38,14 +39,16 @@ export class ArmyListUnitService {
     constructor(
         @InjectRepository(ArmyListUnit)
         private readonly repository: Repository<ArmyListUnit>,
-        private readonly unitService: UnitService
+        private readonly unitService: UnitService,
+        private readonly troopService: TroopService
     ) {}
 
     async create(unitId: number, quantity: number, formation: string, troopIds: number[], magicItems: ArmyListUnitMagicItem[], armyList?: ArmyList): Promise<ArmyListUnit> {
         const id: string = randomUUID();
         const unit: Unit = await this.unitService.findOneById(unitId);
+        const troops: Troop[] = await this.troopService.findByIds(troopIds);
 
-        return this.repository.create({ id, unit, quantity, formation, troopIds, armyList, magicItems: ([] as ArmyListUnitMagicItem[])});
+        return this.repository.create({ id, unit, quantity, formation, troops, armyList, magicItems: ([] as ArmyListUnitMagicItem[])});
     }
 
     async save(unit: ArmyListUnit): Promise<ArmyListUnit> {
@@ -65,7 +68,8 @@ export class ArmyListUnitService {
                 magicStandards: (options?.loadAll === true || options?.loadMagicStandards === true),
                 options: (options?.loadAll === true || options?.loadOptions === true),
                 specialRuleTroops: (options?.loadAll === true || options?.loadSpecialRules === true),
-                equipmentTroops: (options?.loadAll === true || options?.loadEquipment === true)
+                equipmentTroops: (options?.loadAll === true || options?.loadEquipment === true),
+                troops: (options?.loadAll === true || options?.loadTroops === true)
         }});
     }
 
