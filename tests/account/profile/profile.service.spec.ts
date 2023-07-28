@@ -2,29 +2,30 @@ import { Test } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import * as dotenv from "dotenv";
 import * as bcrypt from "bcrypt";
+import { faker } from "@faker-js/faker";
 
 import { AccountType, Profile } from "@account/profile/profile.entity";
 import { ProfileService } from "@account/profile/profile.service";
 import { ProfileModule } from "@account/profile/profile.module";
-import { ArmyList } from "@army-list/army-list.entity";
 
+dotenv.config();
 
-dotenv.config()
+jest.setTimeout(30000);
 
-const DB = process.env.POSTGRES_DB;
-const DB_HOST = process.env.DATABASE_IP;
+const DB: string = process.env.POSTGRES_DB;
+const DB_HOST: string = process.env.DATABASE_IP;
 const DB_PORT: number = +process.env.DATABASE_PORT;
-const DB_USERNAME = process.env.POSTGRES_USER;
-const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
-const DB_DIALECT = "postgres"
+const DB_USERNAME: string = process.env.POSTGRES_USER;
+const DB_PASSWORD: string = process.env.POSTGRES_PASSWORD;
+const DB_DIALECT = "postgres";
 
-const USERNAME = "username";
-const EMAIL = "email@prophecy.com"
-const PASSWORD = "password";
+const USERNAME: string = faker.internet.userName();
+const EMAIL: string = faker.internet.email();
+const PASSWORD: string = faker.internet.password();
 
-const USERNAME1 = "username1";
-const EMAIL1 = "email1@prophecy.com";
-const PASSWORD1 = "password1";
+const USERNAME1: string = faker.internet.userName();
+const EMAIL1: string = faker.internet.email();
+const PASSWORD1: string = faker.internet.password();
 
 function initDefaultProfile(username: string, email: string, password: string): Profile {
     const profile = new Profile();
@@ -44,16 +45,17 @@ describe("ProfileService", () => {
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule(({
             imports: [TypeOrmModule.forRoot({
-                type: DB_DIALECT,
-                host: DB_HOST,
-                port: DB_PORT,
-                username: DB_USERNAME,
-                password: DB_PASSWORD,
-                database: DB,
-                entities: [Profile, ArmyList],
-                synchronize: true,
-            }),
-            ProfileModule],
+                    type: DB_DIALECT,
+                    host: DB_HOST,
+                    port: DB_PORT,
+                    username: DB_USERNAME,
+                    password: DB_PASSWORD,
+                    database: DB,
+                    entities: [Profile],
+                    synchronize: true,
+                }),
+                ProfileModule,
+            ],
         })).compile();
 
         service = moduleRef.get<ProfileService>(ProfileService);
