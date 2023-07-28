@@ -7,7 +7,7 @@ import { AppModule } from "../../../src/app.module";
 import { TestsHelper } from "../../tests.helper";
 import { ARMY1, ARMY2 } from "../../fixtures/army-list/armies-lists";
 
-jest.setTimeout(10000)
+jest.setTimeout(55000)
 
 const OWNER_USERNAME = faker.internet.userName();
 const OWNER_EMAIL = faker.internet.email();

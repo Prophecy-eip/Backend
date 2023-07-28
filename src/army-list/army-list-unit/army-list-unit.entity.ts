@@ -29,9 +29,6 @@ export class ArmyListUnit {
     @Column({ type: "varchar" })
     public formation: string;
 
-    // @Column({ name: "troop_ids", type: "int", array: true })
-    // public troopIds: number[];
-
     @ManyToOne(() => ArmyList, (armyList: ArmyList) => armyList.units)
     @JoinColumn({ name: "army_list_id" })
     public armyList: ArmyList;
@@ -67,15 +64,4 @@ export class ArmyListUnit {
 
     @OneToMany(() => ArmyListUnitTroopEquipment, (equipment: ArmyListUnitTroopEquipment) => equipment.armyListUnit)
     public equipmentTroops: ArmyListUnitTroopEquipment[];
-
-    @AfterLoad()
-    public async load() {
-        // let dataSource: ProphecyDatasource = new ProphecyDatasource();
-        //
-        // await dataSource.initialize();
-        // for (const id of this.troopIds) {
-        //     this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }));
-        // }
-        // await dataSource.destroy();
-    }
 }
