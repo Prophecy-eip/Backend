@@ -28,6 +28,16 @@ import { AddProphecyUnitAttackingPosition1675176923116 } from "./1675176923116-A
 import { GamesInitialization1687856012071 } from "@database/migration/1687856012071-GamesInitialization";
 import { Game } from "@app/game/game.entity";
 import { Unit } from "@army/unit/unit.entity";
+import {
+    ArmyListUnitRelationsRefactoring1690531446154
+} from "@database/migration/1690531446154-ArmyListUnitRelationsRefactoring";
+import { SpecialRuleUnitTroop } from "@army/unit/troop/special-rule/special-rule-unit-troop.entity";
+import {
+    ArmyListUnitTroopSpecialRule
+} from "@army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
+import {
+    ArmyListUnitTroopEquipment
+} from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 
 dotenv.config();
 
@@ -64,7 +74,10 @@ export const connectionSource = new DataSource({
         ArmyListUnitOption,
         Troop,
         ProphecyUnit,
-        Game
+        Game,
+        SpecialRuleUnitTroop,
+        ArmyListUnitTroopSpecialRule,
+        ArmyListUnitTroopEquipment
     ],
     migrations: [
         UsersInitialization1667924495954,
@@ -72,6 +85,7 @@ export const connectionSource = new DataSource({
         ArmyListsInitialization1672323186772,
         ProphecyUnitInitialization1672968324920,
         AddProphecyUnitAttackingPosition1675176923116,
-        GamesInitialization1687856012071
+        GamesInitialization1687856012071,
+        ArmyListUnitRelationsRefactoring1690531446154
     ]
 });
