@@ -43,7 +43,7 @@ import {
 } from "./army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.service";
 import { ArmyService } from "@army/army.service";
 import { Army } from "@army/army.entity";
-import { UnitService } from "@army/unit/troop/unit.service";
+import { UnitService } from "@army/unit/unit.service";
 
 @Controller("armies-lists")
 export class ArmyListController {
