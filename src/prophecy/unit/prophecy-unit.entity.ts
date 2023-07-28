@@ -177,7 +177,13 @@ export class ProphecyUnit {
 
     @Column({ name: "attacking_position", type: "enum", enum: ProphecyUnitAttackingPosition })
     public attackingPosition: ProphecyUnitAttackingPosition;
+
+    // @OneToOne(() => ArmyListUnit)
+    // @JoinColumn({ name: "attacking_regiment_unit_id" })
     public attackingRegimentUnit: ArmyListUnit;
+    //
+    // @OneToOne(() => ArmyListUnit)
+    // @JoinColumn({ name: "defending_regiment_unit_id" })
     public defendingRegimentUnit: ArmyListUnit;
 
     @AfterLoad()
