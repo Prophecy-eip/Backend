@@ -45,6 +45,10 @@ import { ArmyService } from "@army/army.service";
 import { Army } from "@army/army.entity";
 import { UnitService } from "@army/unit/unit.service";
 
+type Id = {
+    id: string;
+}
+
 @Controller("armies-lists")
 export class ArmyListController {
     constructor(
@@ -68,7 +72,7 @@ export class ArmyListController {
         @Body("valuePoints") valuePoints: number,
         @Body("units") units: ArmyListUnitCredentialsDTO[],
         @Body("isShared") isShared: boolean,
-        @Body("isFavorite") isFavorite: boolean) {
+        @Body("isFavorite") isFavorite: boolean): Promise<Id> {
         if (!ParamHelper.isValid(name) || !ParamHelper.isValid(armyId) || !ParamHelper.isValid(valuePoints) ||
             !ParamHelper.isValid(units) || !ParamHelper.isValid(isFavorite)) {
             throw new BadRequestException();
@@ -83,20 +87,19 @@ export class ArmyListController {
         try {
             await this.armyListService.save(list);
             list.units = await this.saveUnits(list.id, units, list);
+            return { id: list.id };
         } catch (error) {
             console.error(error);
             if (error instanceof QueryFailedError) {
                 throw new NotFoundException(`The army ${list.armyId} was not found`);
             }
-
         }
-        // await this.saveUnits(list.id, units);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get("")
     @HttpCode(HttpStatus.OK)
-    async lookup(@Request() req) {
+    async lookup(@Request() req): Promise<ArmyListCredentialsDTO[]> {
         const lists: ArmyList[] = await this.armyListService.findByOwner(req.user.username);
         let credentials: ArmyListCredentialsDTO[] = [];
 
@@ -109,7 +112,7 @@ export class ArmyListController {
     @UseGuards(JwtAuthGuard)
     @Get(":id")
     @HttpCode(HttpStatus.OK)
-    async get(@Request() req, @Param("id") id: string) {
+    async get(@Request() req, @Param("id") id: string): Promise<ArmyListDTO> {
         let list: ArmyList = await this.armyListService.findOneById(id, { loadAll: true });
 
         if (list === null) {
@@ -124,7 +127,7 @@ export class ArmyListController {
     @UseGuards(JwtAuthGuard)
     @Delete("/:id")
     @HttpCode(HttpStatus.OK)
-    async delete(@Request() req, @Param("id") id: string) {
+    async delete(@Request() req, @Param("id") id: string): Promise<void> {
         let list: ArmyList = await this.armyListService.findOneById(id);
 
         if (list === null) {
@@ -146,7 +149,7 @@ export class ArmyListController {
             @Body("valuePoints") valuePoints: number,
             @Body("units") units: ArmyListUnitCredentialsDTO[],
             @Body("isShared") isShared: boolean,
-            @Body("isFavorite") isFavorite) {
+            @Body("isFavorite") isFavorite): Promise<void> {
             let list: ArmyList = await this.armyListService.findOneById(id, { loadUnits: true});
 
             if (list === null) {

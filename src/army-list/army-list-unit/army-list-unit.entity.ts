@@ -1,13 +1,12 @@
 import {
-    AfterLoad,
     Column,
     Entity,
     JoinColumn, ManyToMany,
     ManyToOne, OneToMany,
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn,
+    JoinTable
 } from "typeorm";
 
-// import { ProphecyDatasource } from "@database/prophecy.datasource";
 import { ArmyListUnitMagicItem } from "./magic-item/army-list-unit-magic-item.entity";
 import { ArmyListUnitMagicStandard } from "./magic-standard/army-list-unit-magic-standard.entity";
 import { ArmyListUnitOption } from "./option/army-list-unit-option.entity";
@@ -16,7 +15,6 @@ import { ArmyListUnitTroopSpecialRule } from "./troop/special-rule/army-list-uni
 import { ArmyListUnitTroopEquipment } from "./troop/equipment/army-list-unit-troop-equipment.entity";
 import { Unit } from "@army/unit/unit.entity";
 import { ArmyList } from "@army-list/army-list.entity";
-import { JoinTable } from "typeorm";
 
 @Entity("army_list_units")
 export class ArmyListUnit {
@@ -28,9 +26,6 @@ export class ArmyListUnit {
 
     @Column({ type: "varchar" })
     public formation: string;
-
-    // @Column({ name: "troop_ids", type: "int", array: true })
-    // public troopIds: number[];
 
     @ManyToOne(() => ArmyList, (armyList: ArmyList) => armyList.units)
     @JoinColumn({ name: "army_list_id" })
@@ -54,7 +49,7 @@ export class ArmyListUnit {
         name: "army_list_units_troops",
         joinColumn: {
             name: "army_list_unit_id",
-            referencedColumnName: "id",
+            referencedColumnName: "id"
         }, inverseJoinColumn: {
             name: "troop_id",
             referencedColumnName: "id"
@@ -67,15 +62,4 @@ export class ArmyListUnit {
 
     @OneToMany(() => ArmyListUnitTroopEquipment, (equipment: ArmyListUnitTroopEquipment) => equipment.armyListUnit)
     public equipmentTroops: ArmyListUnitTroopEquipment[];
-
-    @AfterLoad()
-    public async load() {
-        // let dataSource: ProphecyDatasource = new ProphecyDatasource();
-        //
-        // await dataSource.initialize();
-        // for (const id of this.troopIds) {
-        //     this.troops.push(await dataSource.getRepository(Troop).findOneBy({ id: id }));
-        // }
-        // await dataSource.destroy();
-    }
 }
