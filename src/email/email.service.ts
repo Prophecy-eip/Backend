@@ -1,4 +1,4 @@
-import * as AWS from "aws-sdk";
+import { SES } from "@aws-sdk/client-ses";
 import * as dotenv from "dotenv";
 import { Injectable } from "@nestjs/common";
 
@@ -12,10 +12,12 @@ const SES_SECRET_ACCESS_KEY: string = process.env.SES_SECRET_ACCESS_KEY;
 export class EmailService {
 
     constructor() {
-        this.awsSes = new AWS.SES({
-            accessKeyId: SES_ACCESS_KEY,
-            secretAccessKey: SES_SECRET_ACCESS_KEY,
-            region: SES_REGION
+        this.awsSes = new SES({
+            region: SES_REGION,
+            credentials: {
+                accessKeyId: SES_ACCESS_KEY,
+                secretAccessKey: SES_SECRET_ACCESS_KEY
+            }
         });
     }
 
@@ -39,8 +41,8 @@ export class EmailService {
             Source: fromAddress
         };
 
-        return this.awsSes.sendEmail(params).promise();
+        return this.awsSes.sendEmail(params);
     }
 
-    private awsSes: AWS.SES;
+    private awsSes: SES;
 }
