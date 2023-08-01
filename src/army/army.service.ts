@@ -15,10 +15,10 @@ export class ArmyService {
             .createQueryBuilder("armies")
             .select("armies");
 
-        return await query.getMany();
+        return query.getMany();
     }
 
     async findOneById(id: number): Promise<Army> {
-        return await this.repository.findOneBy([{ id: id }]);
+        return this.repository.findOneBy([{ id: id }]);
     }
 }

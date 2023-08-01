@@ -6,6 +6,9 @@ import { MagicStandard } from "./magic-standard/magic-standard.entity";
 import { EquipmentDTO } from "./equipment/equipment.dto";
 import { SpecialRule } from "./special-rule/special-rule.entity";
 import { UnitDTO } from "./unit/unit.dto";
+import { ArmyOrganisation } from "@army/organisation/army-organisation.entity";
+import { Equipment } from "@army/equipment/equipment.entity";
+import { Unit } from "@army/unit/unit.entity";
 
 export class ArmyDTO {
     constructor(army: Army) {
@@ -16,16 +19,13 @@ export class ArmyDTO {
         this.source = army.source;
         this.equipmentLimits = army.equipmentLimits;
         this.specialRuleLimits = army.specialRuleLimits;
-        for (const o of army.organisations)
-            this.organisations.push(new ArmyOrganisationDTO(o));
+        this.organisations = army.organisations.map((o: ArmyOrganisation) => new ArmyOrganisationDTO(o));
         this.magicItemCategories = army.magicItemCategories;
         this.magicItems = army.magicItems;
         this.magicStandards = army.magicStandards;
-        for (const e of army.equipments)
-            this.equipments.push(new EquipmentDTO(e));
+        this.equipments = army.equipments.map((e: Equipment) => new EquipmentDTO(e));
         this.specialRules = army.specialRules;
-        for (const u of army.units)
-            this.units.push(new UnitDTO(u));
+        this.units = army.units.map((u: Unit) => new UnitDTO(u));
     }
 
     public id: number;
