@@ -1,6 +1,7 @@
 import { UnitOption } from "./unit-option.entity";
 import { MagicItemCategory } from "@army/magic-item/category/magic-item-category.entity";
 import { EquipmentDTO } from "@army/equipment/equipment.dto";
+import { Equipment } from "@army/equipment/equipment.entity";
 
 export class UnitOptionDTO {
     constructor(option: UnitOption) {
@@ -39,8 +40,7 @@ export class UnitOptionDTO {
         this.unitOptionChangeEquipments = option.unitOptionChangeEquipments;
         this.unitOptionChangeProfiles = option.unitOptionChangeProfiles;
         this.magicItemCategories = option.magicItemCategories;
-        for (const e of option.equipments)
-            this.equipments.push(new EquipmentDTO(e));
+        this.equipments = option.equipments.map((e: Equipment) => new EquipmentDTO(e));
     }
 
     public id: number;

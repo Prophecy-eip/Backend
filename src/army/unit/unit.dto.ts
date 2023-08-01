@@ -3,6 +3,7 @@ import { SpecialRuleUnitTroop } from "./troop/special-rule/special-rule-unit-tro
 import { EquipmentUnitTroop } from "./troop/equipment/equipment-unit-troop.entity";
 import { UnitOptionDTO } from "./option/unit-option.dto";
 import { Unit, UnitCharacteristic } from "./unit.entity";
+import { UnitOption } from "@army/unit/option/unit-option.entity";
 
 export class UnitDTO {
     constructor(unit: Unit) {
@@ -25,8 +26,7 @@ export class UnitDTO {
         this.troops = unit.troops;
         this.specialRuleUnitTroops = unit.specialRuleUnitTroops;
         this.equipmentUnitTroops = unit.equipmentUnitTroops;
-        for (const o of unit.unitOptions)
-            this.unitOptions.push(new UnitOptionDTO(o));
+        this.unitOptions = unit.unitOptions.map((o: UnitOption) => new UnitOptionDTO(o));
     }
 
     public id: number;
