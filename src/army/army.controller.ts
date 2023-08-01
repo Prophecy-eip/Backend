@@ -16,12 +16,8 @@ export class ArmyController {
     @HttpCode(HttpStatus.OK)
     async lookup(): Promise<ArmyCredentialsDTO[]> {
         const armies: Army[] =  await this.armyService.getAll();
-        let arr: ArmyCredentialsDTO[] = [];
 
-        for (const army of armies) {
-            arr.push(new ArmyCredentialsDTO(army));
-        }
-        return arr;
+        return armies.map((army: Army) => new ArmyCredentialsDTO(army));
     }
 
     @Get(":id")
