@@ -10,11 +10,9 @@ let app: INestApplication;
 const FAKE_ID: number = 12345;
 const INVALID_ID: string = "12345678910111213";
 
-jest.setTimeout(15500000)
+jest.setTimeout(40000)
 
-// TODO
-
-xdescribe("Armies Routes", () => {
+describe("Armies Routes", () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -23,19 +21,6 @@ xdescribe("Armies Routes", () => {
 
         app = module.createNestApplication();
         await app.init();
-    });
-
-    it("lookup: Retrieve army credentials", async () => {
-        const response = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_ROUTE);
-
-        expect(response.status).toEqual(HttpStatus.OK);
-        expect(response.body).toBeDefined();
-        expect(response.body.length).toBeGreaterThan(0);
-        for (const it of response.body) {
-            expect(it.id).toBeDefined();
-            expect(it.name).toBeDefined();
-        }
     });
 
     it(":id: Retrieve existing army's data", async () => {
@@ -63,18 +48,18 @@ xdescribe("Armies Routes", () => {
         expect(response.body.equipments).toBeDefined();
         expect(response.body.specialRules).toBeDefined();
     });
-    //
-    // it(":id: Try to retrieve not existing army's data", async () => {
-    //     const response = await request(app.getHttpServer())
-    //         .get(`${TestsHelper.ARMIES_ROUTE}/${FAKE_ID}`);
-    //
-    //     expect(response.status).toEqual(HttpStatus.NOT_FOUND);
-    // });
-    //
-    // it(":id: Use invalid id type - then should return Bad Request (400)", async () => {
-    //     const response = await request(app.getHttpServer())
-    //         .get(`${TestsHelper.ARMIES_ROUTE}/${INVALID_ID}`);
-    //
-    //     expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
-    // });
+
+    it(":id: Try to retrieve not existing army's data", async () => {
+        const response = await request(app.getHttpServer())
+            .get(`${TestsHelper.ARMIES_ROUTE}/${FAKE_ID}`);
+
+        expect(response.status).toEqual(HttpStatus.NOT_FOUND);
+    });
+
+    it(":id: Use invalid id type - then should return Bad Request (400)", async () => {
+        const response = await request(app.getHttpServer())
+            .get(`${TestsHelper.ARMIES_ROUTE}/${INVALID_ID}`);
+
+        expect(response.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
 });
