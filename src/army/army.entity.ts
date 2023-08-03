@@ -64,20 +64,20 @@ export class Army {
         let datasource: ProphecyDatasource = new ProphecyDatasource();
 
         await datasource.initialize();
-        for (const id of this.organisationIds)
-            this.organisations.push(await datasource.getRepository(ArmyOrganisation).findOneBy({ id: id }));
-        for (const id of this.magicItemCategoryIds)
-            this.magicItemCategories.push(await datasource.getRepository(MagicItemCategory).findOneBy({ id: id }));
-        for (const id of this.magicItemIds)
-            this.magicItems.push(await datasource.getRepository(MagicItem).findOneBy({ id: id }));
-        for (const id of this.magicStandardIds)
-            this.magicStandards.push(await datasource.getRepository(MagicStandard).findOneBy({ id: id }));
-        for (const id of this.equipmentIds)
-            this.equipments.push(await datasource.getRepository(Equipment).findOneBy({ id: id }));
-        for (const id of this.ruleIds)
-            this.specialRules.push(await datasource.getRepository(SpecialRule).findOneBy({ id: id }));
-        for (const id of this.unitIds)
-            this.units.push(await datasource.getRepository(Unit).findOneBy({ id: id }));
+        this.organisations = await Promise.all(this.organisationIds.map(
+            async (value: number): Promise<ArmyOrganisation> => await datasource.getRepository(ArmyOrganisation).findOneBy({ id: value })));
+        this.magicItemCategories = await Promise.all(this.magicItemCategoryIds.map(
+            async (value: number): Promise<MagicItemCategory> => await datasource.getRepository(MagicItemCategory).findOneBy({ id: value })));
+        this.magicItems = await Promise.all(this.magicItemIds.map(
+            async (value: number): Promise<MagicItem> => await datasource.getRepository(MagicItem).findOneBy({ id: value })));
+        this.magicStandards = await Promise.all(this.magicStandardIds.map(
+            async (value: number): Promise<MagicStandard> => await datasource.getRepository(MagicStandard).findOneBy({ id: value })));
+        this.equipments = await Promise.all(this.equipmentIds.map(
+            async (value: number): Promise<Equipment> => await datasource.getRepository(Equipment).findOneBy({ id: value })));
+        this.specialRules = await Promise.all(this.equipmentIds.map(
+            async (value: number): Promise<SpecialRule> => await datasource.getRepository(SpecialRule).findOneBy({ id: value })));
+        this.units = await Promise.all(this.unitIds.map(
+            async (value: number): Promise<Unit> => await datasource.getRepository(Unit).findOneBy({ id: value })));
         await datasource.destroy();
     }
 }
