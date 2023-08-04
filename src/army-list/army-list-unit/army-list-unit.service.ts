@@ -20,6 +20,29 @@ import {
     ArmyListUnitTroopEquipment
 } from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 import { TroopService } from "@army/unit/troop/troop.service";
+import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
+import { ArmyListUnitMagicItemService } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.service";
+import {
+    ArmyListUnitMagicStandardService
+} from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.service";
+import { ArmyListUnitOptionService } from "@army-list/army-list-unit/option/army-list-unit-option.service";
+import {
+    ArmyListUnitTroopSpecialRuleService
+} from "@army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.service";
+import {
+    ArmyListUnitTroopEquipmentService
+} from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.service";
+import { ArmyListUnitMagicItemDTO } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.dto";
+import {
+    ArmyListUnitMagicStandardDTO
+} from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.dto";
+import { ArmyListUnitOptionDTO } from "@army-list/army-list-unit/option/army-list-unit-option.dto";
+import {
+    ArmyListUnitTroopSpecialRuleDTO
+} from "@army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.dto";
+import {
+    ArmyListUnitTroopEquipmentDTO
+} from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.dto";
 
 export type ArmyListUnitServiceOptions = {
     loadAll?: boolean;
@@ -40,15 +63,57 @@ export class ArmyListUnitService {
         @InjectRepository(ArmyListUnit)
         private readonly repository: Repository<ArmyListUnit>,
         private readonly unitService: UnitService,
-        private readonly troopService: TroopService
+        private readonly troopService: TroopService,
+        private readonly armyListUnitMagicItemService: ArmyListUnitMagicItemService,
+        private readonly armyListUnitMagicStandardService: ArmyListUnitMagicStandardService,
+        private readonly armyListUnitOptionService: ArmyListUnitOptionService,
+        private readonly armyListUnitTroopSpecialRuleService: ArmyListUnitTroopSpecialRuleService,
+        private readonly armyListUnitTroopEquipmentService: ArmyListUnitTroopEquipmentService,
     ) {}
 
-    async create(unitId: number, quantity: number, formation: string, troopIds: number[], magicItems: ArmyListUnitMagicItem[], armyList?: ArmyList): Promise<ArmyListUnit> {
+    async createAndSaveWithRelations(
+        credentials: ArmyListUnitCredentialsDTO,
+        armyList?: ArmyList
+    ): Promise<ArmyListUnit> {
         const id: string = randomUUID();
-        const unit: Unit = await this.unitService.findOneById(unitId);
-        const troops: Troop[] = await this.troopService.findByIds(troopIds);
-
-        return this.repository.create({ id, unit, quantity, formation, troops, armyList, magicItems: ([] as ArmyListUnitMagicItem[])});
+        const unit: Unit = await this.unitService.findOneById(credentials.unitId);
+        const troops: Troop[] = await this.troopService.findByIds(credentials.troopIds);
+        const armyListUnit: ArmyListUnit = await this.repository.save(await this.repository.create({
+            id,
+            unit,
+            quantity: credentials.quantity,
+            formation: credentials.formation,
+            troops,
+            armyList,
+            magicItems: ([] as ArmyListUnitMagicItem[]),
+            magicStandards: ([] as ArmyListUnitMagicStandard[]),
+            options: ([] as ArmyListUnitOption[]),
+            specialRuleTroops: ([] as ArmyListUnitTroopSpecialRule[]),
+            equipmentTroops: ([] as ArmyListUnitTroopEquipment[])
+        }));
+        armyListUnit.magicItems = await Promise.all(credentials.magicItems.map(
+            async (item: ArmyListUnitMagicItemDTO): Promise<ArmyListUnitMagicItem> => await this.armyListUnitMagicItemService.save(
+                await this.armyListUnitMagicItemService.create(armyListUnit, item)
+        )));
+        armyListUnit.magicStandards = await Promise.all(credentials.magicStandards.map(
+            async (standard: ArmyListUnitMagicStandardDTO): Promise<ArmyListUnitMagicStandard> => await this.armyListUnitMagicStandardService.save(
+                await this.armyListUnitMagicStandardService.create(armyListUnit, standard)
+            )
+        ));
+        armyListUnit.options = await Promise.all(credentials.options.map(
+            async (option: ArmyListUnitOptionDTO): Promise<ArmyListUnitOption> => await this.armyListUnitOptionService.save(
+                await this.armyListUnitOptionService.create(armyListUnit, option)
+        )));
+        armyListUnit.specialRuleTroops = await Promise.all(credentials.specialRuleTroops.map(
+            async (rule: ArmyListUnitTroopSpecialRuleDTO): Promise<ArmyListUnitTroopSpecialRule> => await this.armyListUnitTroopSpecialRuleService.save(
+                await this.armyListUnitTroopSpecialRuleService.create(armyListUnit, rule)
+        )));
+        armyListUnit.equipmentTroops = await Promise.all(credentials.equipmentTroops.map(
+            async (equipment: ArmyListUnitTroopEquipmentDTO): Promise<ArmyListUnitTroopEquipment> => await this.armyListUnitTroopEquipmentService.save(
+                await this.armyListUnitTroopEquipmentService.create(armyListUnit, equipment)
+            )
+        ));
+        return this.repository.save(armyListUnit);
     }
 
     async save(unit: ArmyListUnit): Promise<ArmyListUnit> {

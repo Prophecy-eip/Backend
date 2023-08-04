@@ -1,4 +1,4 @@
-import { AfterLoad, Column, Entity, PrimaryColumn } from "typeorm";
+import { AfterLoad, Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 
 import {
     ProphecyUnitCaseMathsDTO, ProphecyUnitCaseRegimentMathsDTO,
@@ -157,11 +157,11 @@ export class ProphecyUnit {
     @PrimaryColumn()
     public id: string;
 
-    @Column({ name: "attacking_regiment_unit_id" })
-    public attackingRegimentUnitId: string;
-
-    @Column({ name: "defending_regiment_unit_id" })
-    public defendingRegimentUnitId: string;
+    // @Column({ name: "attacking_regiment_unit_id" })
+    // public attackingRegimentUnitId: string;
+    //
+    // @Column({ name: "defending_regiment_unit_id" })
+    // public defendingRegimentUnitId: string;
 
     @Column()
     public owner: string;
@@ -178,23 +178,23 @@ export class ProphecyUnit {
     @Column({ name: "attacking_position", type: "enum", enum: ProphecyUnitAttackingPosition })
     public attackingPosition: ProphecyUnitAttackingPosition;
 
-    // @OneToOne(() => ArmyListUnit)
-    // @JoinColumn({ name: "attacking_regiment_unit_id" })
+    @OneToOne(() => ArmyListUnit)
+    @JoinColumn({ name: "attacking_regiment_unit_id" })
     public attackingRegimentUnit: ArmyListUnit;
-    //
-    // @OneToOne(() => ArmyListUnit)
-    // @JoinColumn({ name: "defending_regiment_unit_id" })
+
+    @OneToOne(() => ArmyListUnit)
+    @JoinColumn({ name: "defending_regiment_unit_id" })
     public defendingRegimentUnit: ArmyListUnit;
 
     @AfterLoad()
     public async load() {
-        let datasource: ProphecyDatasource = new ProphecyDatasource();
-
-        await datasource.initialize();
-        this.attackingRegimentUnit = await datasource.getRepository(ArmyListUnit)
-            .findOneBy({ id: this.attackingRegimentUnitId });
-        this.defendingRegimentUnit = await datasource.getRepository(ArmyListUnit)
-            .findOneBy({ id: this.defendingRegimentUnitId });
-        await datasource.destroy();
+        // let datasource: ProphecyDatasource = new ProphecyDatasource();
+        //
+        // await datasource.initialize();
+        // this.attackingRegimentUnit = await datasource.getRepository(ArmyListUnit)
+        //     .findOneBy({ id: this.attackingRegimentUnitId });
+        // this.defendingRegimentUnit = await datasource.getRepository(ArmyListUnit)
+        //     .findOneBy({ id: this.defendingRegimentUnitId });
+        // await datasource.destroy();
     }
 }
