@@ -23,7 +23,7 @@ let token1: string;
 let user1ListId: string;
 let user2ListId: string;
 
-describe("armies-lists/create", () => {
+describe("armies-lists/get", () => {
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [AppModule]
@@ -51,11 +51,10 @@ describe("armies-lists/create", () => {
             .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
-        for (const a of res.body) {
-            await request(app.getHttpServer())
-                .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${a.id}`)
-                .set("Authorization", `Bearer ${token}`);
-        }
+        await Promise.all(res.body.map(async (id: string) => await request(app.getHttpServer())
+                .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
+                .set("Authorization", `Bearer ${token}`)
+        ));
         await TestsHelper.deleteAccount(app.getHttpServer(), token);
         await TestsHelper.deleteAccount(app.getHttpServer(), token1);
     });
@@ -64,6 +63,7 @@ describe("armies-lists/create", () => {
         const res = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${user1ListId}`)
             .set("Authorization", `Bearer ${token}`);
+
         expect(res.status).toEqual(HttpStatus.OK);
         expect(res.status).toBeDefined();
         ArmyListHelper.compareLists(ARMY1, res.body);

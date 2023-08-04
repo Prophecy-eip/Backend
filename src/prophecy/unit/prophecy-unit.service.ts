@@ -5,6 +5,7 @@ import { randomUUID } from "crypto";
 
 import { ProphecyUnit, ProphecyUnitAttackingPosition, ProphecyUnitCase } from "./prophecy-unit.entity";
 import { ProphecyUnitMathsResponseDTO } from "./prophecy-unit-maths.dto";
+import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 
 @Injectable()
 export class ProphecyUnitService {
@@ -15,8 +16,8 @@ export class ProphecyUnitService {
 
     public async create(
         owner: string,
-        attackingRegimentUnitId: string,
-        defendingRegimentUnitId: string,
+        attackingRegimentUnit: ArmyListUnit,
+        defendingRegimentUnit: ArmyListUnit,
         attackingPosition: ProphecyUnitAttackingPosition,
         mathsResponse: ProphecyUnitMathsResponseDTO): Promise<ProphecyUnit> {
         const id: string = randomUUID();
@@ -24,8 +25,8 @@ export class ProphecyUnitService {
         const meanCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.mean_case);
         const worstCase: ProphecyUnitCase = new ProphecyUnitCase(mathsResponse.worst_case);
 
-        return this.repository.create({ id: id, attackingRegimentUnitId: attackingRegimentUnitId,
-            defendingRegimentUnitId: defendingRegimentUnitId, owner: owner, bestCase: bestCase, meanCase: meanCase,
+        return this.repository.create({ id: id, attackingRegimentUnit: attackingRegimentUnit,
+            defendingRegimentUnit: defendingRegimentUnit, owner: owner, bestCase: bestCase, meanCase: meanCase,
             worstCase: worstCase, attackingPosition: attackingPosition
         });
     }

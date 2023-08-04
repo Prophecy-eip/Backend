@@ -23,7 +23,7 @@ let token1: string;
 let user1ListId: string;
 let user2ListId: string;
 
-describe("armies-lists/create", () => {
+describe("armies-lists/update", () => {
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [AppModule]

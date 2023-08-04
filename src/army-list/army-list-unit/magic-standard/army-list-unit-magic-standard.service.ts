@@ -5,6 +5,9 @@ import { randomUUID } from "crypto";
 
 import { ArmyListUnitMagicStandard } from "./army-list-unit-magic-standard.entity";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import {
+    ArmyListUnitMagicStandardDTO
+} from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.dto";
 
 @Injectable()
 export class ArmyListUnitMagicStandardService {
@@ -13,11 +16,17 @@ export class ArmyListUnitMagicStandardService {
         private repository: Repository<ArmyListUnitMagicStandard>
     ) {}
 
-    async create(armyListUnit: ArmyListUnit, magicStandardId: number, unitOptionId: number, quantity: number,
-        valuePoints: number): Promise<ArmyListUnitMagicStandard> {
+    async create(armyListUnit: ArmyListUnit, standard: ArmyListUnitMagicStandardDTO): Promise<ArmyListUnitMagicStandard> {
         const id: string = randomUUID();
 
-        return this.repository.create({ id, armyListUnit, magicStandardId, unitOptionId, quantity, valuePoints });
+        return this.repository.create({
+            id,
+            armyListUnit,
+            magicStandardId: standard.magicStandardId,
+            unitOptionId: standard.unitOptionId,
+            quantity: standard.quantity,
+            valuePoints: standard.valuePoints
+        });
     }
 
     async save(standard: ArmyListUnitMagicStandard): Promise<ArmyListUnitMagicStandard> {
