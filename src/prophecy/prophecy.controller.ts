@@ -24,7 +24,8 @@ import { ParamHelper } from "@helper/param.helper";
 dotenv.config();
 
 const WEBSITE_URL = process.env.WEBSITE_URL;
-const MATHS_UNITS_REQUEST_URL: string = `${WEBSITE_URL}/maths/units`;
+// const MATHS_UNITS_REQUEST_URL: string = `${WEBSITE_URL}/maths/units`;
+const MATHS_UNITS_REQUEST_URL = "http://0.0.0.0:8080/units";
 const MATHS_KEY: string = process.env.MATHS_KEY;
 
 @Controller("prophecies")
@@ -46,13 +47,9 @@ export class ProphecyController {
             throw new BadRequestException();
         }
         try {
-            const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(attackingRegiment.unitId,
-                attackingRegiment.quantity, attackingRegiment.formation, attackingRegiment.troopIds, []); // TODO
-            const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.create(defendingRegiment.unitId,
-                defendingRegiment.quantity, defendingRegiment.formation, defendingRegiment.troopIds, []); // TODO
+            const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(attackingRegiment);
+            const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(defendingRegiment);
 
-            await this.armyListUnitService.save(attackingRegimentUnit);
-            await this.armyListUnitService.save(defendingRegimentUnit);
             if (attackingRegimentUnit.troops.length > 1 || defendingRegimentUnit.troops.length > 1) {
                 throw new BadRequestException("The troopIds must contain one troop max");
             }
@@ -69,9 +66,9 @@ export class ProphecyController {
                 throw new BadRequestException();
             }
             const mathsResponse: ProphecyUnitMathsResponseDTO = (await response.json()) as ProphecyUnitMathsResponseDTO;
-            const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username, attackingRegimentUnit.id,
-                defendingRegimentUnit.id, attackingPosition, mathsResponse);
-            await prophecy.load();
+            const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username, attackingRegimentUnit,
+                defendingRegimentUnit, attackingPosition, mathsResponse);
+            // await prophecy.load();
             await this.prophecyUnitService.save(prophecy);
             return new ProphecyUnitDTO(prophecy);
         } catch (error) {

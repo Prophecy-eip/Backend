@@ -20,7 +20,7 @@ let app: INestApplication;
 let token: string;
 let token1: string;
 
-describe("armies-lists/create", () => {
+describe("armies-lists/lookup", () => {
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [AppModule]
