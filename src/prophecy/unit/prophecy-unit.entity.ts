@@ -1,4 +1,4 @@
-import { AfterLoad, Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 
 import {
     ProphecyUnitCaseMathsDTO, ProphecyUnitCaseRegimentMathsDTO,
@@ -9,7 +9,6 @@ import {
     ProphecyUnitRegimentMathsDTO
 } from "./prophecy-unit-maths.dto";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
-import { ProphecyDatasource } from "@database/prophecy.datasource";
 
 export enum ProphecyUnitAttackingPosition {
     FRONT = "front",
@@ -157,12 +156,6 @@ export class ProphecyUnit {
     @PrimaryColumn()
     public id: string;
 
-    // @Column({ name: "attacking_regiment_unit_id" })
-    // public attackingRegimentUnitId: string;
-    //
-    // @Column({ name: "defending_regiment_unit_id" })
-    // public defendingRegimentUnitId: string;
-
     @Column()
     public owner: string;
 
@@ -185,16 +178,4 @@ export class ProphecyUnit {
     @OneToOne(() => ArmyListUnit)
     @JoinColumn({ name: "defending_regiment_unit_id" })
     public defendingRegimentUnit: ArmyListUnit;
-
-    @AfterLoad()
-    public async load() {
-        // let datasource: ProphecyDatasource = new ProphecyDatasource();
-        //
-        // await datasource.initialize();
-        // this.attackingRegimentUnit = await datasource.getRepository(ArmyListUnit)
-        //     .findOneBy({ id: this.attackingRegimentUnitId });
-        // this.defendingRegimentUnit = await datasource.getRepository(ArmyListUnit)
-        //     .findOneBy({ id: this.defendingRegimentUnitId });
-        // await datasource.destroy();
-    }
 }
