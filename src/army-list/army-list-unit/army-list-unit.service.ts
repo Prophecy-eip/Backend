@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { randomUUID } from "crypto";
@@ -77,6 +77,11 @@ export class ArmyListUnitService {
     ): Promise<ArmyListUnit> {
         const id: string = randomUUID();
         const unit: Unit = await this.unitService.findOneById(credentials.unitId);
+
+        if (unit === null) {
+            throw new NotFoundException(`Unit ${credentials.unitId} not found.`);
+        }
+
         const troops: Troop[] = await this.troopService.findByIds(credentials.troopIds);
         const armyListUnit: ArmyListUnit = await this.repository.save(await this.repository.create({
             id,
