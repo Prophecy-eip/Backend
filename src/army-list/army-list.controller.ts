@@ -69,6 +69,7 @@ export class ArmyListController {
             if (error instanceof QueryFailedError) {
                 throw new NotFoundException(`The army ${list.armyId} was not found`);
             }
+            throw error;
         }
     }
 
