@@ -7,7 +7,7 @@ import {
     Post,
     UseGuards,
     Request,
-    Get, Delete, NotFoundException, Param, ForbiddenException, InternalServerErrorException
+    Get, Delete, NotFoundException, Param, ForbiddenException
 } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
@@ -24,8 +24,7 @@ import { ParamHelper } from "@helper/param.helper";
 dotenv.config();
 
 const WEBSITE_URL = process.env.WEBSITE_URL;
-// const MATHS_UNITS_REQUEST_URL: string = `${WEBSITE_URL}/maths/units`;
-const MATHS_UNITS_REQUEST_URL = "http://0.0.0.0:8080/units";
+const MATHS_UNITS_REQUEST_URL: string = `${WEBSITE_URL}/maths/units`;
 const MATHS_KEY: string = process.env.MATHS_KEY;
 
 @Controller("prophecies")
@@ -68,18 +67,16 @@ export class ProphecyController {
             const mathsResponse: ProphecyUnitMathsResponseDTO = (await response.json()) as ProphecyUnitMathsResponseDTO;
             const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username, attackingRegimentUnit,
                 defendingRegimentUnit, attackingPosition, mathsResponse);
-            // await prophecy.load();
             await this.prophecyUnitService.save(prophecy);
             return new ProphecyUnitDTO(prophecy);
         } catch (error) {
-            if (error instanceof BadRequestException) {
-                throw error;
+            if (error instanceof NotFoundException) {
+                throw new NotFoundException(error.message);
             }
             if (error.message.includes("insert or update on table \"army_list_units\" violates foreign key constraint")) {
                 throw new NotFoundException();
             }
-            console.error(error);
-            throw new InternalServerErrorException();
+            throw error;
         }
     }
 
@@ -87,7 +84,7 @@ export class ProphecyController {
     @Get("units")
     @HttpCode(HttpStatus.OK)
     async lookupUnitsProphecy(@Request() req): Promise<ProphecyUnitWithIdDTO[]> {
-        const prophecies: ProphecyUnit[] = await this.prophecyUnitService.findByOwner(req.user.username);
+        const prophecies: ProphecyUnit[] = await this.prophecyUnitService.findByOwner(req.user.username, { loadAll: true });
         let propheciesDto: ProphecyUnitWithIdDTO[] = [];
 
         for (const p of prophecies) {

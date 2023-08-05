@@ -51,7 +51,7 @@ const USERNAME1 = faker.internet.userName();
 const EMAIL1 = faker.internet.email();
 const PASSWORD1 = faker.internet.password();
 
-xdescribe("Prophecies route", () => {
+describe("Prophecies route", () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
