@@ -7,6 +7,12 @@ import { ProphecyUnit, ProphecyUnitAttackingPosition, ProphecyUnitCase } from ".
 import { ProphecyUnitMathsResponseDTO } from "./prophecy-unit-maths.dto";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 
+export type ProphecyUnitServiceOptions = {
+    loadAll?: boolean;
+    loadAttackingRegimentUnit?: boolean;
+    loadDefendingRegimentUnit?: boolean;
+}
+
 @Injectable()
 export class ProphecyUnitService {
     constructor(
@@ -35,15 +41,46 @@ export class ProphecyUnitService {
         return this.repository.save(prophecy);
     }
 
-    public async findByOwner(owner: string): Promise<ProphecyUnit[]> {
-        return this.repository.findBy({ owner: owner });
+    public async findByOwner(owner: string, options?: ProphecyUnitServiceOptions): Promise<ProphecyUnit[]> {
+        return this.repository.find({
+            where: {owner: owner},
+            relations: this._getRelations(options)
+        });
     }
 
-    public async findOneById(id: string): Promise<ProphecyUnit> {
-        return this.repository.findOneBy({ id: id });
+    public async findOneById(id: string, options?: ProphecyUnitServiceOptions): Promise<ProphecyUnit> {
+        return this.repository.findOne({
+            where: {id: id},
+            relations: this._getRelations(options)
+        });
     }
 
     public async delete(id: string): Promise<void> {
         await this.repository.delete(id);
+    }
+
+    private _getRelations(options: ProphecyUnitServiceOptions | undefined): string[] {
+        let relations: string[] = [];
+        if (options?.loadAll === true || options?.loadAttackingRegimentUnit === true) {
+            relations.push("attackingRegimentUnit");
+            relations.push("attackingRegimentUnit.unit");
+            relations.push("attackingRegimentUnit.magicItems");
+            relations.push("attackingRegimentUnit.magicStandards");
+            relations.push("attackingRegimentUnit.options");
+            relations.push("attackingRegimentUnit.specialRuleTroops");
+            relations.push("attackingRegimentUnit.equipmentTroops");
+            relations.push("attackingRegimentUnit.troops");
+        }
+        if (options?.loadAll === true || options?.loadDefendingRegimentUnit === true) {
+            relations.push("defendingRegimentUnit");
+            relations.push("defendingRegimentUnit.unit");
+            relations.push("defendingRegimentUnit.magicItems");
+            relations.push("defendingRegimentUnit.magicStandards");
+            relations.push("defendingRegimentUnit.options");
+            relations.push("defendingRegimentUnit.specialRuleTroops");
+            relations.push("defendingRegimentUnit.equipmentTroops");
+            relations.push("defendingRegimentUnit.troops");
+        }
+        return relations;
     }
 }
