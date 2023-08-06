@@ -3,9 +3,9 @@ import { ArmyListUnitMagicItem } from "./army-list-unit-magic-item.entity";
 export class ArmyListUnitMagicItemDTO {
     constructor(item: ArmyListUnitMagicItem) {
         this.unitId = item.unitId;
-        this.magicItemId = item.magicItemId;
-        this.unitOptionId = item.unitOptionId;
-        this.equipmentId = item.equipmentId;
+        this.magicItemId = item.magicItem.id;
+        this.unitOptionId = item.unitOption.id;
+        this.equipmentId = item.equipment.id;
         this.quantity = item.quantity;
         this.valuePoints = item.valuePoints;
     }

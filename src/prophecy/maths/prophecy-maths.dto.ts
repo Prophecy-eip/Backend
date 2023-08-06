@@ -11,6 +11,18 @@ import MagicItemService from "@army/magic-item/magic-item.service";
 import EquipmentUnitTroopService from "@army/unit/troop/equipment/equipment-unit-troop.service";
 import MagicStandardService from "@army/magic-standard/magic-standard.service";
 import SpecialRuleUnitTroopService from "@army/unit/troop/special-rule/special-rule-unit-troop.service";
+import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
+import { Repository } from "typeorm";
+import { ArmyListUnitMagicItem } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
+import {
+    ArmyListUnitMagicStandard
+} from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
+import {
+    ArmyListUnitTroopEquipment
+} from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
+import {
+    ArmyListUnitTroopSpecialRule
+} from "@army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
 
 export class ProphecyModelStatsMathsDTO {
     constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics | undefined) {
@@ -64,25 +76,14 @@ export class ProphecyModelStatsMathsDTO {
 
 export class ProphecyModelMathsDTO {
 
-    constructor(stats: ProphecyModelStatsMathsDTO, modifiers: string[], nb_rows: number, nb_cols: number, nb_models: number) {
-        this.stats = stats;
-        this.modifiers = modifiers;
-        this.nb_rows = nb_rows;
-        this.nb_cols = nb_cols;
-        this.nb_models = nb_models;
-    }
-
-    public static async create(unit: ArmyListUnit): Promise<ProphecyModelMathsDTO> {
+    constructor(unit: ArmyListUnit) {
         let pos: number = unit.formation.indexOf("x");
-        let modifiers: string[] = await this._convertArmyListUnitsModifiers(unit);
 
-        return new ProphecyModelMathsDTO(
-            new ProphecyModelStatsMathsDTO(unit.unit.characteristics, unit.troops[0]?.characteristics),
-            modifiers,
-            +unit.formation.substring(pos + 1),
-            +unit.formation.substring(0, pos),
-            unit.quantity
-        );
+        this.stats = new ProphecyModelStatsMathsDTO(unit.unit.characteristics, unit.troops[0]?.characteristics);
+        this.modifiers = this._convertArmyListUnitsModifiers(unit);
+        this.nb_rows = +unit.formation.substring(pos + 1);
+        this.nb_cols = +unit.formation.substring(0, pos);
+        this.nb_models = unit.quantity;
     }
 
     public stats: ProphecyModelStatsMathsDTO;
@@ -91,30 +92,11 @@ export class ProphecyModelMathsDTO {
     public nb_cols: number;
     public nb_models: number;
 
-    private static readonly optionService: UnitOptionService;
-    private static readonly magicItemService: MagicItemService;
-    private static readonly equipmentTroopService: EquipmentUnitTroopService;
-    private static readonly magicStandardService: MagicStandardService;
-    private static readonly specialRuleUnitTroopService: SpecialRuleUnitTroopService;
-
-    private static async _convertArmyListUnitsModifiers(unit: ArmyListUnit): Promise<string[]> {
-        let arr: string[] = [];
-
-        console.log(unit);
-
-        for (const o of unit.options)
-            arr.push(await this.optionService.findOneById(o.optionId).then((res: UnitOption) => res.name));
-        for (const i of unit.magicItems) {
-            console.log(i.magicItemId);
-            arr.push(await this.magicItemService.findOneById(i.magicItemId).then((res: MagicItem) => res.name));
-
-        }
-        for (const e of unit.equipmentTroops)
-            arr.push(await this.equipmentTroopService.findOneById(e.equipmentId).then((res: EquipmentUnitTroop) => res.name));
-        for (const m of unit.magicStandards)
-            arr.push(await this.magicStandardService.findOneById(m.magicStandardId).then((res: MagicStandard) => res.name));
-        for (const r of unit.specialRuleTroops)
-            arr.push(await this.specialRuleUnitTroopService.findOneById(r.ruleId).then((res: SpecialRuleUnitTroop) => res.name));
-        return arr;
+    private _convertArmyListUnitsModifiers(unit: ArmyListUnit): string[] {
+        return unit.options.map((o: ArmyListUnitOption): string => o.option?.name)
+            .concat(unit.magicItems.map((i: ArmyListUnitMagicItem): string => i.magicItem?.name))
+            .concat(unit.magicStandards.map((s: ArmyListUnitMagicStandard): string => s.magicStandard?.name))
+            .concat(unit.equipmentTroops.map((e: ArmyListUnitTroopEquipment): string => e.equipment?.name))
+            .concat(unit.specialRuleTroops.map((r: ArmyListUnitTroopSpecialRule): string => r.rule?.name));
     }
 }

@@ -2,8 +2,8 @@ import { ArmyListUnitMagicStandard } from "./army-list-unit-magic-standard.entit
 
 export class ArmyListUnitMagicStandardDTO {
     constructor(standard: ArmyListUnitMagicStandard) {
-        this.magicStandardId = standard.magicStandardId;
-        this.unitOptionId = standard.unitOptionId;
+        this.magicStandardId = standard.magicStandard.id;
+        this.unitOptionId = standard.unitOption.id;
         this.quantity = standard.quantity;
         this.valuePoints = standard.valuePoints;
     }
