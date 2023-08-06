@@ -7,12 +7,14 @@ import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 import {
     ArmyListUnitTroopEquipmentDTO
 } from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.dto";
+import EquipmentService from "@army/equipment/equipment.service";
 
 @Injectable()
 export class ArmyListUnitTroopEquipmentService {
     constructor(
         @InjectRepository(ArmyListUnitTroopEquipment)
-        private repository: Repository<ArmyListUnitTroopEquipment>
+        private repository: Repository<ArmyListUnitTroopEquipment>,
+        private equipmentService: EquipmentService
     ) {}
 
     async create(armyListUnit: ArmyListUnit, equipment: ArmyListUnitTroopEquipmentDTO): Promise<ArmyListUnitTroopEquipment> {
@@ -22,7 +24,7 @@ export class ArmyListUnitTroopEquipmentService {
             id,
             armyListUnit,
             troopId: equipment.troopId,
-            equipmentId: equipment.equipmentId
+            equipment: await this.equipmentService.findOneById(equipment.equipmentId)
         });
     }
 

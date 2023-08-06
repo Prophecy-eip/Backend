@@ -20,14 +20,12 @@ import { ProphecyUnit, ProphecyUnitAttackingPosition } from "./unit/prophecy-uni
 import { ProphecyUnitService } from "./unit/prophecy-unit.service";
 import { ProphecyUnitDTO, ProphecyUnitWithIdDTO } from "./unit/prophecy-unit.dto";
 import { ParamHelper } from "@helper/param.helper";
-import ProphecyArmyDTO from "@prophecy/army/prophecy-army.dto";
 import ProphecyArmyService from "@prophecy/army/prophecy-army.service";
-// import { ProphecyArmyMathResponseDTO } from "@prophecy/maths/prophecy-maths.service";
 import ProphecyMathsService from "@prophecy/maths/prophecy-maths.service";
-import { ArmyList } from "@army-list/army-list.entity";
 import { ArmyListService } from "@army-list/army-list.service";
 import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 import { ProphecyArmyMathResponseDTO } from "@prophecy/maths/prophecy-army-maths.dto";
+import { ProphecyArmyWithIdDTO } from "@prophecy/army/prophecy-army.dto";
 
 dotenv.config();
 
@@ -131,22 +129,30 @@ export class ProphecyController {
         @Request() req,
         @Body("armyList1") armyList1Id: string,
         @Body("armyList2") armyList2Id: string,
-    ): Promise<ProphecyArmyDTO> {
+    ): Promise<ProphecyArmyWithIdDTO> {
         const username: string = req.user.username;
-        const armyList1: ArmyList = await this.armyListService.findOneById(armyList1Id);
-        const armyList2: ArmyList = await this.armyListService.findOneById(armyList2Id);
-        let armyList1Units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(armyList1Id);
-        let armyList2Units: ArmyListUnit[] = await this.armyListUnitService.findByArmyList(armyList2Id);
 
-        await Promise.all(armyList1Units.map(async (unit: ArmyListUnit) => await unit.load()))
-        await Promise.all(armyList2Units.map(async (unit: ArmyListUnit) => await unit.load()))
+        try {
+            const prophecy: ProphecyArmy = await this.prophecyArmyService.create(username, {
+                armyList1: armyList1Id,
+                armyList2: armyList2Id,
+                player1Score: 0,
+                player2Score: 0
+            }, {loadAll: true});
+            const mathsResponse: ProphecyArmyMathResponseDTO = await this.prophecyService.requestArmiesProphecy(
+                prophecy.armyList1.units, prophecy.armyList2.units);
 
-        const mathsResponse: ProphecyArmyMathResponseDTO = await this.prophecyService.requestArmiesProphecy(armyList1Units, armyList2Units);
-        const prophecy: ProphecyArmy = await this.prophecyArmyService.create(username, armyList1, armyList2,
-            mathsResponse.first_player_score, mathsResponse.second_player_score);
-
-        await this.prophecyArmyService.save(prophecy);
-        return new ProphecyArmyDTO(prophecy);
+            console.log(mathsResponse)
+            prophecy.player1Score = mathsResponse.first_player_score;
+            prophecy.player2Score = mathsResponse.second_player_score;
+            await this.prophecyArmyService.save(prophecy);
+            return new ProphecyArmyWithIdDTO(prophecy);
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw new NotFoundException(error.message);
+            }
+            throw error;
+        }
     }
 
     private checkAttackingPosition(position: string): boolean {
