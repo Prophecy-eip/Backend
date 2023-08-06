@@ -1,5 +1,7 @@
 import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { UnitOption } from "@army/unit/option/unit-option.entity";
+import { MagicStandard } from "@army/magic-standard/magic-standard.entity";
 
 @Entity("army_list_unit_magic_standards")
 export class ArmyListUnitMagicStandard {
@@ -10,11 +12,13 @@ export class ArmyListUnitMagicStandard {
     @JoinColumn({ name: "army_list_unit_id" })
     public armyListUnit: ArmyListUnit;
 
-    @Column({ name: "magic_standard_id" })
-    public magicStandardId: number;
+    @ManyToOne(() => MagicStandard)
+    @JoinColumn({ name: "magic_standard_id" })
+    public magicStandard: MagicStandard;
 
-    @Column({ name: "unit_option_id" })
-    public unitOptionId: number;
+    @ManyToOne(() => UnitOption)
+    @JoinColumn({ name: "unit_option_id" })
+    public unitOption: UnitOption;
 
     @Column()
     public quantity: number;

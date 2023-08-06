@@ -1,21 +1,26 @@
 import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 
-class ProphecyArmyDTO {
+export class ProphecyArmyDTO {
 
     constructor(prophecy: ProphecyArmy) {
-        this.id = prophecy.id;
-        this.armyList1 = prophecy.armyList1;
-        this.armyList2 = prophecy.armyList2;
-        this.player1Score = prophecy.player1Score;
+        this.armyList1 = prophecy.armyList1.id;
+        this.armyList2 = prophecy.armyList2.id;
         this.player1Score = prophecy.player1Score;
         this.player2Score = prophecy.player2Score;
     }
 
-    public id: string;
     public armyList1: string;
     public armyList2: string;
     public player1Score: number;
     public player2Score: number;
 }
 
-export default ProphecyArmyDTO;
+export class ProphecyArmyWithIdDTO extends ProphecyArmyDTO {
+    constructor(prophecy: ProphecyArmy) {
+        super(prophecy);
+        this.id = prophecy.id;
+    }
+
+    public id: string;
+}
+

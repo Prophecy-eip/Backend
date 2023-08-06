@@ -3,7 +3,7 @@ import { ArmyListUnitTroopSpecialRule } from "./army-list-unit-troop-special-rul
 export class ArmyListUnitTroopSpecialRuleDTO {
     constructor(rule: ArmyListUnitTroopSpecialRule) {
         this.troopId = rule.troopId;
-        this.ruleId = rule.ruleId;
+        this.ruleId = rule.rule.id;
     }
     public troopId: number;
     public ruleId: number;

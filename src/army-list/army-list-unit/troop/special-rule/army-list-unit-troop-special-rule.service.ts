@@ -8,12 +8,14 @@ import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 import {
     ArmyListUnitTroopSpecialRuleDTO
 } from "@army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.dto";
+import SpecialRuleService from "@army/special-rule/special-rule.service";
 
 @Injectable()
 export class ArmyListUnitTroopSpecialRuleService {
     constructor(
         @InjectRepository(ArmyListUnitTroopSpecialRule)
-        private repository: Repository<ArmyListUnitTroopSpecialRule>
+        private repository: Repository<ArmyListUnitTroopSpecialRule>,
+        private specialRuleService: SpecialRuleService
     ) {}
 
     async create(armyListUnit: ArmyListUnit, rule: ArmyListUnitTroopSpecialRuleDTO): Promise<ArmyListUnitTroopSpecialRule> {
@@ -23,7 +25,7 @@ export class ArmyListUnitTroopSpecialRuleService {
             id,
             armyListUnit,
             troopId: rule.troopId,
-            ruleId: rule.ruleId
+            rule: await this.specialRuleService.findOneById(rule.ruleId)
         });
     }
 

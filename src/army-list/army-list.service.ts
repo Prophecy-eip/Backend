@@ -69,16 +69,29 @@ export class ArmyListService {
             relations.push("units");
         if (options?.loadAll === true || options?.armyListUnitOptions?.loadUnit === true)
             relations.push("units.unit");
-        if (options?.loadAll === true || options?.armyListUnitOptions?.loadMagicItems === true)
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadMagicItems === true) {
             relations.push("units.magicItems");
-        if (options?.loadAll === true || options?.armyListUnitOptions?.loadMagicStandards === true)
+            relations.push("units.magicItems.magicItem");
+            relations.push("units.magicItems.unitOption");
+            relations.push("units.magicItems.equipment");
+        }
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadMagicStandards === true) {
             relations.push("units.magicStandards");
-        if (options?.loadAll === true || options?.armyListUnitOptions?.loadOptions === true)
+            relations.push("units.magicStandards.magicStandard");
+            relations.push("units.magicStandards.unitOption");
+        }
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadOptions === true) {
             relations.push("units.options");
-        if (options?.loadAll === true || options?.armyListUnitOptions?.loadSpecialRules === true)
+            relations.push("units.options.option");
+        }
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadSpecialRules === true) {
             relations.push("units.specialRuleTroops");
-        if (options?.loadAll === true || options?.armyListUnitOptions?.loadEquipment === true)
+            relations.push("units.specialRuleTroops.rule");
+        }
+        if (options?.loadAll === true || options?.armyListUnitOptions?.loadEquipment === true) {
             relations.push("units.equipmentTroops");
+            relations.push("units.equipmentTroops.equipment");
+        }
         if (options?.loadAll === true || options?.armyListUnitOptions?.loadTroops === true)
             relations.push("units.troops");
 
