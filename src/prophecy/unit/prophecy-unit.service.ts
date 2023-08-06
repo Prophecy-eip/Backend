@@ -4,8 +4,8 @@ import { Repository } from "typeorm";
 import { randomUUID } from "crypto";
 
 import { ProphecyUnit, ProphecyUnitAttackingPosition, ProphecyUnitCase } from "./prophecy-unit.entity";
-import { ProphecyUnitMathsResponseDTO } from "./prophecy-unit-maths.dto";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { ProphecyUnitMathsResponseDTO } from "@prophecy/maths/prophecy-unit-maths.dto";
 
 export type ProphecyUnitServiceOptions = {
     loadAll?: boolean;

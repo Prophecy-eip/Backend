@@ -3,11 +3,9 @@ import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 
 class PlayerUnitMathDTO {
 
-    public static async create(unit:ArmyListUnit): Promise<PlayerUnitMathDTO> {
-        return {
-            unit: {
-                model: await ProphecyModelMathsDTO.create(unit)
-            }
+    constructor(unit: ArmyListUnit) {
+        this.unit = {
+            model: new ProphecyModelMathsDTO(unit)
         };
     }
 
@@ -18,22 +16,18 @@ class PlayerUnitMathDTO {
 }
 
 class PlayerMathsDTO {
-    public static async create(units: ArmyListUnit[]): Promise<PlayerMathsDTO> {
-        return {
-            units: await Promise.all(units.map(async (u: ArmyListUnit): Promise<PlayerUnitMathDTO> => await PlayerUnitMathDTO.create(u)))
-        };
+    constructor(units: ArmyListUnit[]) {
+        this.units = units.map((u: ArmyListUnit): PlayerUnitMathDTO => new PlayerUnitMathDTO(u));
     }
 
     public units: PlayerUnitMathDTO[];
 }
 
 export class ProphecyArmyMathRequestDTO {
-    public static async create(key: string, player1Units: ArmyListUnit[], player2Units: ArmyListUnit[]): Promise<ProphecyArmyMathRequestDTO> {
-        return {
-            key,
-            first_player: await PlayerMathsDTO.create(player1Units),
-            second_player: await PlayerMathsDTO.create(player2Units)
-        };
+    constructor(key: string, player1Units: ArmyListUnit[], player2Units: ArmyListUnit[]) {
+        this.key = key;
+        this.first_player = new PlayerMathsDTO(player1Units);
+        this.second_player = new PlayerMathsDTO(player2Units);
     }
 
     public key: string;

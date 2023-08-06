@@ -3,7 +3,7 @@ import { ArmyListUnitOption } from "./army-list-unit-option.entity";
 export class ArmyListUnitOptionDTO {
     constructor(option: ArmyListUnitOption) {
         this.unitId = option.unitId;
-        this.optionId = option.optionId;
+        this.optionId = option.option.id;
         this.quantity = option.quantity;
         this.valuePoints = option.valuePoints;
     }

@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import { Equipment } from "@army/equipment/equipment.entity";
 
 @Entity("army_list_unit_troop_equipments")
 export class ArmyListUnitTroopEquipment {
@@ -13,6 +14,7 @@ export class ArmyListUnitTroopEquipment {
     @Column({ name: "troop_id" })
     public troopId: number;
 
-    @Column({ name: "equipment_id" })
-    public equipmentId: number;
+    @ManyToOne(() => Equipment)
+    @JoinColumn({ name: "equipment_id" })
+    public equipment: Equipment;
 }
