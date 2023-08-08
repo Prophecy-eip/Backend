@@ -390,10 +390,4 @@ describe("Prophecies route", () => {
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
-
-    /**
-     * ARMIES REQUEST PROPHECY
-     */
-
-    it("/armies: basic request - then should return 201 (created)")
 });

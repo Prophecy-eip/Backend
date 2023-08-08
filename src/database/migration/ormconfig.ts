@@ -40,6 +40,7 @@ import {
 } from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 import { ProphecyArmyInitialization1688721594196 } from "@database/migration/1688721594196-ProphecyArmyInitialization";
 import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
+import { UnitOption } from "@army/unit/option/unit-option.entity";
 
 dotenv.config();
 
@@ -80,6 +81,7 @@ export const connectionSource = new DataSource({
         SpecialRuleUnitTroop,
         ArmyListUnitTroopSpecialRule,
         ArmyListUnitTroopEquipment,
+        UnitOption,
         ProphecyArmy
     ],
     migrations: [
