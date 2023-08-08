@@ -23,6 +23,7 @@ jobs:
           SES_SECRET_ACCESS_KEY=${{ secrets.AWS_SES_SECRET_ACCESS_KEY }}\n
           SES_FROM_ADDRESS=${{ secrets.AWS_SES_FROM_ADDRESS }}\n
           API_URL=${{ secrets.API_URL }}\n
+          WEBSITE_URL=${{ secrets.DEV_WEBSITE_URL }}\n
           MATHS_KEY=${{ secrets.MATHS_KEY }}\n" > .env
           yarn
 
