@@ -38,22 +38,22 @@ describe("armies-lists/update", () => {
             PASSWORD);
 
         user1ListId = await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(ARMY1).then(res => res.body.id);
 
         user2ListId = await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token1}`).send(ARMY2).then(res => res.body.id);
     });
 
     afterAll(async () => {
         const res = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
         for (const a of res.body) {
             await request(app.getHttpServer())
-                .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${a.id}`)
+                .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${a.id}`)
                 .set("Authorization", `Bearer ${token}`);
         }
         await TestsHelper.deleteAccount(app.getHttpServer(), token);
@@ -62,7 +62,7 @@ describe("armies-lists/update", () => {
 
     it("update: basic - then should return 200 (ok) and values should have changed", async () => {
         const res = await request(app.getHttpServer())
-            .put(`${TestsHelper.ARMIES_LISTS_UPDATE_ROUTE}/${user1ListId}`)
+            .put(`${TestsHelper.ARMIES_LISTS_ROUTE}/${user1ListId}`)
             .set("Authorization", `Bearer ${token}`)
             .send(ARMY2);
 
@@ -77,7 +77,7 @@ describe("armies-lists/update", () => {
     it("update: use invalid armyId - then should return 404 (not found)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
-            .put(`${TestsHelper.ARMIES_LISTS_UPDATE_ROUTE}/${id}`)
+            .put(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`)
             .send(ARMY2);
 
@@ -86,7 +86,7 @@ describe("armies-lists/update", () => {
 
     it("update: try update not owned list - then should return 403 (forbidden)", async () => {
         const res = await request(app.getHttpServer())
-            .put(`${TestsHelper.ARMIES_LISTS_UPDATE_ROUTE}/${user1ListId}`)
+            .put(`${TestsHelper.ARMIES_LISTS_ROUTE}/${user1ListId}`)
             .set("Authorization", `Bearer ${token1}`)
             .send(ARMY2);
 
@@ -95,7 +95,7 @@ describe("armies-lists/update", () => {
 
     it("update: use invalid token - then should return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
-            .put(`${TestsHelper.ARMIES_LISTS_UPDATE_ROUTE}/${user1ListId}`)
+            .put(`${TestsHelper.ARMIES_LISTS_ROUTE}/${user1ListId}`)
             .set("Authorization", `Bearer abcd`)
             .send(ARMY2);
 

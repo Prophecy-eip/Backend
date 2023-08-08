@@ -9,6 +9,7 @@ import { ArmyListUnitMagicItemDTO } from "@army-list/army-list-unit/magic-item/a
 import MagicItemService from "@army/magic-item/magic-item.service";
 import UnitOptionService from "@army/unit/option/unit-option.service";
 import EquipmentService from "@army/equipment/equipment.service";
+import { MagicItem } from "@army/magic-item/magic-item.entity";
 
 @Injectable()
 export class ArmyListUnitMagicItemService {
@@ -28,8 +29,8 @@ export class ArmyListUnitMagicItemService {
             armyListUnit: armyListUnit,
             unitId: item.unitId,
             magicItem: await this.magicItemService.findOneById(item.magicItemId),
-            unitOption: await this.unitOptionService.findOneById(item.unitOptionId),
-            equipment: await this.equipmentService.findOneById(item.equipmentId),
+            unitOption: (item.unitOptionId !== null) ? await this.unitOptionService.findOneById(item.unitOptionId) : null,
+            equipment: (item.equipmentId !== null) ? await this.equipmentService.findOneById(item.equipmentId) : null,
             quantity: item.quantity,
             valuePoints: item.valuePoints
         });

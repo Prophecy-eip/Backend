@@ -18,7 +18,7 @@ export class ArmyListUnitMagicStandard {
 
     @ManyToOne(() => UnitOption)
     @JoinColumn({ name: "unit_option_id" })
-    public unitOption: UnitOption;
+    public unitOption: UnitOption | null;
 
     @Column()
     public quantity: number;
