@@ -37,22 +37,22 @@ describe("armies-lists/delete", () => {
 
     beforeEach(async () => {
         await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(ARMY1).then(res => res.body.id);
 
         await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token1}`).send(ARMY2).then(res => res.body.id);
     });
 
     afterAll(async () => {
         const res = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
         for (const a of res.body) {
             await request(app.getHttpServer())
-                .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${a.id}`)
+                .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${a.id}`)
                 .set("Authorization", `Bearer ${token}`);
         }
         await TestsHelper.deleteAccount(app.getHttpServer(), token);
@@ -61,11 +61,11 @@ describe("armies-lists/delete", () => {
 
     it("delete: basic delete - then should return 200 (ok)", async () => {
         const a = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.OK);
@@ -79,11 +79,11 @@ describe("armies-lists/delete", () => {
 
     it("delete: use invalid token - then should return unauthorised (401)", async () => {
         const a = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer abcd`);
 
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
@@ -92,11 +92,11 @@ describe("armies-lists/delete", () => {
 
     it("delete: not the owner - then should return forbidden (403)", async () => {
         const a = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
         const id: string = a.body[0].id;
         const res = await request(app.getHttpServer())
-            .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token1}`);
 
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
@@ -105,7 +105,7 @@ describe("armies-lists/delete", () => {
     it("delete: use invalid army list id - then should return not found (404)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
-            .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
+            .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
