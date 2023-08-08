@@ -10,7 +10,6 @@ import {
 } from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.dto";
 import MagicStandardService from "@army/magic-standard/magic-standard.service";
 import UnitOptionService from "@army/unit/option/unit-option.service";
-import { MagicStandard } from "@army/magic-standard/magic-standard.entity";
 
 @Injectable()
 export class ArmyListUnitMagicStandardService {

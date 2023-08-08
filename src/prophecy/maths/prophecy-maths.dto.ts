@@ -1,18 +1,7 @@
 import { UnitCharacteristic } from "@army/unit/unit.entity";
 import { TroopCharacteristics } from "@army/unit/troop/troop.entity";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
-import { UnitOption } from "@army/unit/option/unit-option.entity";
-import { MagicItem } from "@army/magic-item/magic-item.entity";
-import { EquipmentUnitTroop } from "@army/unit/troop/equipment/equipment-unit-troop.entity";
-import { MagicStandard } from "@army/magic-standard/magic-standard.entity";
-import { SpecialRuleUnitTroop } from "@army/unit/troop/special-rule/special-rule-unit-troop.entity";
-import UnitOptionService from "@army/unit/option/unit-option.service";
-import MagicItemService from "@army/magic-item/magic-item.service";
-import EquipmentUnitTroopService from "@army/unit/troop/equipment/equipment-unit-troop.service";
-import MagicStandardService from "@army/magic-standard/magic-standard.service";
-import SpecialRuleUnitTroopService from "@army/unit/troop/special-rule/special-rule-unit-troop.service";
 import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
-import { Repository } from "typeorm";
 import { ArmyListUnitMagicItem } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
 import {
     ArmyListUnitMagicStandard

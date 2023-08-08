@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { randomUUID } from "crypto";
@@ -6,7 +6,6 @@ import { randomUUID } from "crypto";
 import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 import { ArmyList } from "@army-list/army-list.entity";
 import { ArmyListService } from "@army-list/army-list.service";
-import { ProphecyArmyDTO } from "@prophecy/army/prophecy-army.dto";
 
 export type ProphecyArmyServiceOptions = {
     loadAll?: boolean;
