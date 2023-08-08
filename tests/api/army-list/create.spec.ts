@@ -39,12 +39,12 @@ describe("armies-lists/create", () => {
 
     afterAll(async () => {
         const res = await  request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
         for (const a of res.body) {
             await request(app.getHttpServer())
-                .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${a.id}`)
+                .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${a.id}`)
                 .set("Authorization", `Bearer ${token}`);
         }
         await TestsHelper.deleteAccount(app.getHttpServer(), token);
@@ -53,7 +53,7 @@ describe("armies-lists/create", () => {
 
     it("create: create basic lists - then should return 201 (created)", async () => {
         const res1 = await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(ARMY1);
 
         expect(res1.status).toEqual(HttpStatus.CREATED);
@@ -63,7 +63,7 @@ describe("armies-lists/create", () => {
     it("create: create list with invalid armyId - then should return 404 (not found)", async () => {
         const list: List = new List(LIST_NAME, 123456, 123, [], false, false);
         const res = await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
@@ -71,7 +71,7 @@ describe("armies-lists/create", () => {
 
     it("create: create list with invalid token - then should return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer abcd`).send(ARMY1);
 
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);

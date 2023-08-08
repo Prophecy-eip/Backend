@@ -24,25 +24,20 @@ class ProphecyArmyService {
 
     public async create(
         owner: string,
-        prophecy: ProphecyArmyDTO,
-        options?: ProphecyArmyServiceOptions
+        armyList1: ArmyList,
+        armyList2: ArmyList,
+        player1Score: number,
+        player2Score: number
     ): Promise<ProphecyArmy> {
         const id: string = randomUUID();
-        const armyList1: ArmyList = await this.armyListService.findOneById(prophecy.armyList1,
-            {loadAll: options?.loadAll === true || options?.loadArmyList1 === true });
-        const armyList2: ArmyList = await this.armyListService.findOneById(prophecy.armyList2,
-            {loadAll: options?.loadAll === true || options?.loadArmyList2 === true });
 
-        if (armyList1 === null || armyList2 === null) {
-            throw new NotFoundException(`Army list ${(armyList1 === null) ? prophecy.armyList1 : prophecy.armyList2} not found.`);
-        }
         return this.repository.create({
             id,
             owner,
             armyList1,
             armyList2,
-            player1Score: prophecy.player1Score,
-            player2Score: prophecy.player2Score
+            player1Score: player1Score,
+            player2Score: player2Score
         });
     }
 

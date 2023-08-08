@@ -96,6 +96,7 @@ export class ArmyListUnitService {
             specialRuleTroops: ([] as ArmyListUnitTroopSpecialRule[]),
             equipmentTroops: ([] as ArmyListUnitTroopEquipment[])
         }));
+
         armyListUnit.magicItems = await Promise.all(credentials.magicItems.map(
             async (item: ArmyListUnitMagicItemDTO): Promise<ArmyListUnitMagicItem> => await this.armyListUnitMagicItemService.save(
                 await this.armyListUnitMagicItemService.create(armyListUnit, item)

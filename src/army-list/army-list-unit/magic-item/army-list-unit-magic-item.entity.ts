@@ -18,11 +18,11 @@ export class ArmyListUnitMagicItem {
 
     @ManyToOne(() => UnitOption)
     @JoinColumn({ name: "unit_option_id" })
-    public unitOption: UnitOption;
+    public unitOption: UnitOption | null;
 
     @ManyToOne(() => Equipment)
     @JoinColumn({ name: "equipment_id" })
-    public equipment: Equipment;
+    public equipment: Equipment | null;
 
     @Column()
     public quantity: number;
