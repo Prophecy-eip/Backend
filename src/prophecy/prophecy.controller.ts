@@ -26,6 +26,7 @@ import { ArmyListService } from "@army-list/army-list.service";
 import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 import { ProphecyArmyMathResponseDTO } from "@prophecy/maths/prophecy-army-maths.dto";
 import { ProphecyArmyWithIdDTO } from "@prophecy/army/prophecy-army.dto";
+import { ArmyList } from "@army-list/army-list.entity";
 
 dotenv.config();
 
@@ -132,17 +133,27 @@ export class ProphecyController {
     ): Promise<ProphecyArmyWithIdDTO> {
         const username: string = req.user.username;
 
+        if (armyList1Id === undefined || armyList2Id === undefined) {
+            throw new BadRequestException("Request body must contain armyList1 and armyList2");
+        }
+
+        const armyList1: ArmyList = await this.armyListService.findOneById(armyList1Id, { loadAll: true });
+        const armyList2: ArmyList = await this.armyListService.findOneById(armyList2Id, { loadAll: true });
+
+        if (armyList1 === null || armyList2 === null) {
+            throw new NotFoundException(`Army list ${(armyList1 === null) ? armyList1Id : armyList2Id} not found.`);
+        }
+        if (armyList1.owner !== username && armyList1.isShared === false) {
+            throw new ForbiddenException(`Unauthorized to access army list ${armyList1Id}`);
+        }
+        if (armyList2.owner !== username && armyList2.isShared === false) {
+            throw new ForbiddenException(`Unauthorized to access army list ${armyList2Id}`);
+        }
         try {
-            const prophecy: ProphecyArmy = await this.prophecyArmyService.create(username, {
-                armyList1: armyList1Id,
-                armyList2: armyList2Id,
-                player1Score: 0,
-                player2Score: 0
-            }, {loadAll: true});
+            const prophecy: ProphecyArmy = await this.prophecyArmyService.create(username, armyList1, armyList2, 0, 0);
             const mathsResponse: ProphecyArmyMathResponseDTO = await this.prophecyService.requestArmiesProphecy(
                 prophecy.armyList1.units, prophecy.armyList2.units);
 
-            console.log(mathsResponse)
             prophecy.player1Score = mathsResponse.first_player_score;
             prophecy.player2Score = mathsResponse.second_player_score;
             await this.prophecyArmyService.save(prophecy);
@@ -151,6 +162,7 @@ export class ProphecyController {
             if (error instanceof NotFoundException) {
                 throw new NotFoundException(error.message);
             }
+            console.error(error);
             throw error;
         }
     }
