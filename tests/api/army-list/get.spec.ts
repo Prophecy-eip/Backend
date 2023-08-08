@@ -38,21 +38,21 @@ describe("armies-lists/get", () => {
             PASSWORD);
 
         user1ListId = await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(ARMY1).then(res => res.body.id);
 
         user2ListId = await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token1}`).send(ARMY2).then(res => res.body.id);
     });
 
     afterAll(async () => {
         const res = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
         await Promise.all(res.body.map(async (id: string) => await request(app.getHttpServer())
-                .delete(`${TestsHelper.ARMIES_LISTS_DELETE_ROUTE}/${id}`)
+                .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)
                 .set("Authorization", `Bearer ${token}`)
         ));
         await TestsHelper.deleteAccount(app.getHttpServer(), token);

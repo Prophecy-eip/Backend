@@ -49,18 +49,13 @@ export class TestsHelper {
     /**
      * PROPHECIES
      */
-    static REQUEST_UNIT_PROPHECY_ROUTE: string = "/prophecies/units";
-    static UNIT_PROPHECY_LOOKUP_ROUTE: string = "/prophecies/units";
-    static UNIT_PROPHECY_DELETE_ROUTE: string = "/prophecies/units";
+    static UNIT_PROPHECY_ROUTE: string = "/prophecies/units";
+    static ARMY_PROPHECY_ROUTE: string = "/prophecies/armies";
 
     /**
      * ARMIES LISTS
      */
     static ARMIES_LISTS_ROUTE: string = "/armies-lists";
-    static ARMIES_LISTS_CREATE_ROUTE: string = "/armies-lists";
-    static ARMIES_LISTS_LOOKUP_ROUTE: string = "/armies-lists";
-    static ARMIES_LISTS_DELETE_ROUTE: string = this.ARMIES_LISTS_ROUTE;
-    static ARMIES_LISTS_UPDATE_ROUTE: string = this.ARMIES_LISTS_ROUTE;
 
     /**
      * ARMIES

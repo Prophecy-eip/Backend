@@ -40,17 +40,17 @@ describe("Games route", () => {
 
         // creating armies lists
         await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`).send(ARMY1);
         ownerArmyListId = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`).then(res => res.body[0]?.id);
 
         await request(app.getHttpServer())
-            .post(TestsHelper.ARMIES_LISTS_CREATE_ROUTE)
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`).send(ARMY2);
         opponentArmyListId = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_LOOKUP_ROUTE)
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`).then(res => res.body[0].id);
 
     });
