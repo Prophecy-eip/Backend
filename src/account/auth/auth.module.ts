@@ -11,6 +11,10 @@ import { Profile } from "@profile/profile.entity";
 import { jwtConstants } from "./constants";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
+/**
+ * @class AuthModule
+ * @brief Module that groups all requirements for users authentication
+ */
 @Module({
     imports: [
         TypeOrmModule.forFeature([Profile]),

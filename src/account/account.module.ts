@@ -14,6 +14,10 @@ import { AuthModule } from "@auth/auth.module";
 import { ForgottenPasswordService } from "@email/forgotten-password.service";
 import { PasswordUpdateService } from "@email/password-update.service";
 
+/**
+ * @class AccountModule
+ * @brief Module that regroups the requirements for accounts
+ */
 @Module({
     imports: [
         TypeOrmModule.forFeature([Profile]),
