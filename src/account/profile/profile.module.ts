@@ -11,6 +11,10 @@ import { EmailConfirmationService } from "@email/email-confirmation.service";
 import { ForgottenPasswordService } from "@email/forgotten-password.service";
 import { PasswordUpdateService } from "@email/password-update.service";
 
+/**
+ * @class ProfileModule
+ * @brief Module that groups all requirements for profile and user authentication
+ */
 @Module({
     imports: [TypeOrmModule.forFeature([Profile])],
     providers: [ProfileService, AuthService, JwtService, EmailService, EmailConfirmationService, ForgottenPasswordService, PasswordUpdateService],
