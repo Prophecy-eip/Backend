@@ -150,6 +150,16 @@ export class ProphecyController {
         }
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get("/armies")
+    @HttpCode(HttpStatus.OK)
+    async lookupArmiesProphecy(@Request() req): Promise<ProphecyArmyWithIdDTO[]> {
+        const username: string = req.user.username;
+        const prophecies: ProphecyArmy[] = await this.prophecyArmyService.findByOwner(username);
+
+        return prophecies.map((p: ProphecyArmy) => new ProphecyArmyWithIdDTO(p));
+    }
+
     private checkAttackingPosition(position: string): boolean {
         return (position === "front" || position === "back" || position === "flank");
     }

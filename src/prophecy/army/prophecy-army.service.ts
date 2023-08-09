@@ -43,6 +43,16 @@ class ProphecyArmyService {
     public async save(prophecy: ProphecyArmy): Promise<ProphecyArmy> {
         return this.repository.save(prophecy);
     }
+
+    public async findByOwner(owner: string): Promise<ProphecyArmy[]> {
+        return this.repository.find({
+            where: { owner: owner },
+            relations: {
+                armyList1: true,
+                armyList2: true
+            }
+        });
+    }
 }
 
 export default ProphecyArmyService;
