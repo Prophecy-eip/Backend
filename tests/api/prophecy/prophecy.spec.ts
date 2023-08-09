@@ -328,7 +328,7 @@ describe("Prophecies route", () => {
         const propheciesRes = await request(app.getHttpServer())
             .get(TestsHelper.UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`);
-        const id: string = propheciesRes.body[0].id;
+        const id: string = propheciesRes.body[0]?.id;
 
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.UNIT_PROPHECY_ROUTE}/${id}`)
@@ -349,7 +349,7 @@ describe("Prophecies route", () => {
         const propheciesRes = await request(app.getHttpServer())
             .get(TestsHelper.UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`);
-        const id: string = propheciesRes.body[0].id;
+        const id: string = propheciesRes.body[0]?.id;
 
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.UNIT_PROPHECY_ROUTE}/${id}`)
@@ -366,7 +366,7 @@ describe("Prophecies route", () => {
         const propheciesRes = await request(app.getHttpServer())
             .get(TestsHelper.UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`);
-        const id: string = propheciesRes.body[0].id;
+        const id: string = propheciesRes.body[0]?.id;
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.UNIT_PROPHECY_ROUTE}/${id}`)
             .set("Authorization", `Bearer ${token1}`);

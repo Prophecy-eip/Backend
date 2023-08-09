@@ -9,10 +9,8 @@ import {
     Request,
     Get, Delete, NotFoundException, Param, ForbiddenException
 } from "@nestjs/common";
-import * as dotenv from "dotenv";
 
 import { JwtAuthGuard } from "@account/auth/guards/jwt-auth.guard";
-import { ProphecyUnitMathsRequestDTO, ProphecyUnitMathsResponseDTO } from "./maths/prophecy-unit-maths.dto";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 import { ArmyListUnitService } from "@army-list/army-list-unit/army-list-unit.service";
 import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
@@ -27,12 +25,7 @@ import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 import { ProphecyArmyMathResponseDTO } from "@prophecy/maths/prophecy-army-maths.dto";
 import { ProphecyArmyWithIdDTO } from "@prophecy/army/prophecy-army.dto";
 import { ArmyList } from "@army-list/army-list.entity";
-
-dotenv.config();
-
-const WEBSITE_URL: string = process.env.WEBSITE_URL;
-const MATHS_UNITS_REQUEST_URL: string = `${WEBSITE_URL}/maths/units`;
-const MATHS_KEY: string = process.env.MATHS_KEY;
+import { ProphecyUnitMathsResponseDTO } from "@prophecy/maths/prophecy-unit-maths.dto";
 
 @Controller("prophecies")
 export class ProphecyController {
@@ -62,21 +55,11 @@ export class ProphecyController {
             if (attackingRegimentUnit.troops.length > 1 || defendingRegimentUnit.troops.length > 1) {
                 throw new BadRequestException("The troopIds must contain one troop max");
             }
-            let request: ProphecyUnitMathsRequestDTO = new ProphecyUnitMathsRequestDTO(MATHS_KEY, attackingRegimentUnit,
-                defendingRegimentUnit, attackingPosition);
-            const content: string = JSON.stringify(request);
-            const response: Response = await fetch(MATHS_UNITS_REQUEST_URL, {
-                method: "POST",
-                body: content,
-                headers: {"Content-Type": "application/json"}
-            });
-            if (response.status === HttpStatus.BAD_REQUEST || response.status === HttpStatus.INTERNAL_SERVER_ERROR) {
-                console.error(response);
-                throw new BadRequestException();
-            }
-            const mathsResponse: ProphecyUnitMathsResponseDTO = (await response.json()) as ProphecyUnitMathsResponseDTO;
+
+            const mathsResponse: ProphecyUnitMathsResponseDTO = await this.prophecyService.requestUnitsProphecy(attackingRegimentUnit, defendingRegimentUnit, attackingPosition);
             const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username, attackingRegimentUnit,
                 defendingRegimentUnit, attackingPosition, mathsResponse);
+
             await this.prophecyUnitService.save(prophecy);
             return new ProphecyUnitDTO(prophecy);
         } catch (error) {
