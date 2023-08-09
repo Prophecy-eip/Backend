@@ -1,8 +1,6 @@
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
-import { UnitCharacteristic } from "@army/unit/unit.entity";
-import { TroopCharacteristics } from "@army/unit/troop/troop.entity";
 import { ProphecyUnitModifierGlobal } from "../unit/prophecy-unit.entity";
-import { ProphecyModelStatsMathsDTO } from "@prophecy/maths/prophecy-maths.dto";
+import { ProphecyModelMathsDTO } from "@prophecy/maths/prophecy-maths.dto";
 
 export class ProphecyUnitModifierDefensiveMathsDTO {
     public health_points: number;
@@ -25,28 +23,17 @@ export class ProphecyUnitModifierMathsDTO {
     public offensive: ProphecyUnitModifierOffensiveMathsDTO;
 }
 
-export class ProphecyUnitModelMathsDTO {
-
-    constructor(unitCharacteristics: UnitCharacteristic, troopCharacteristics: TroopCharacteristics | undefined) {
-        this.stats = new ProphecyModelStatsMathsDTO(unitCharacteristics, troopCharacteristics);
-        this.modifiers = []; // TODO
-        this.banner_bearer = false; // TODO
-    }
-    public stats: ProphecyModelStatsMathsDTO;
-    public modifiers: ProphecyUnitModifierMathsDTO[];
-    public banner_bearer: boolean;
-}
 export class ProphecyUnitRegimentMathsDTO {
     constructor(unit: ArmyListUnit) {
         let pos: number = unit.formation.indexOf("x");
-        this.model = new ProphecyUnitModelMathsDTO(unit.unit.characteristics, unit.troops[0]?.characteristics);
+        this.model = new ProphecyModelMathsDTO(unit);
         this.nb_rows = +unit.formation.substring(pos + 1);
         this.nb_cols = +unit.formation.substring(0, pos);
         this.nb_models = unit.quantity;
         this.regiment_health_point = +unit.unit.characteristics.hp;
         this.points = 0;
     }
-    public model: ProphecyUnitModelMathsDTO;
+    public model: ProphecyModelMathsDTO;
     public nb_rows: number;
     public nb_cols: number;
     public nb_models: number;
