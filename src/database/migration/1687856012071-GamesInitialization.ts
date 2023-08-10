@@ -57,6 +57,11 @@ const GAMES_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
     })
 ];
 
+/**
+ * @class GamesInitialization1687856012071
+ * @brief Initialization of the games
+ *        Creates the games table and relations in the database.
+ */
 export class GamesInitialization1687856012071 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {

@@ -317,6 +317,13 @@ const ARMY_LIST_UNIT_TROOP_SPECIAL_RULES_TABLE_FOREIGN_KEYS: TableForeignKey[] =
     })
 ];
 
+/**
+ * @class ArmyListsInitialization1672323186772
+ * @brief Initialization of the army lists (and related) tables.
+ *        Creation of the army lists, army list units, army list unit magic items, army list units magic standards,
+ *        army list unit options, army list unit troop equipment and army list uint troop special rules tables and
+ *        relations in the database.
+ */
 export class ArmyListsInitialization1672323186772 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
