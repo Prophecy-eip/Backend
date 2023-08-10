@@ -22,6 +22,13 @@ const ARMY_LIST_UNITS_TROOPS_TABLE: Table = new Table({
     ]
 });
 
+/**
+ * @class ArmyListUnitRelationsRefactoring1690531446154
+ * @brief Army list unit troops refactoring
+ *        Drops the army list units troop ids column in the army list units table after an ArmyListUnit entity's
+ *        relations refactoring. Also adds a new table to join the army list units table with the army list units troops
+ *        table.
+ */
 export class ArmyListUnitRelationsRefactoring1690531446154 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {

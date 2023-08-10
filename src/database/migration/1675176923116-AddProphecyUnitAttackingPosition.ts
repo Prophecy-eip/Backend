@@ -6,6 +6,10 @@ const PROPHECY_UNIT_ATTACKING_POSITION_COLUMN: TableColumn = new TableColumn({
     enum: ["front", "flank", "back"]
 });
 
+/**
+ * @class AddProphecyUnitAttackingPosition1675176923116
+ * @brief Adds the attacking position in the units prophecies table
+ */
 export class AddProphecyUnitAttackingPosition1675176923116 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {

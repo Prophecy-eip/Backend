@@ -678,6 +678,13 @@ const UNIT_OPTIONS_TABLE: Table = new Table({
     ]
 });
 
+/**
+ * @class ArmiesInitialization1671123394624
+ * @brief Initialization ot the Armies (and related) tables
+ *        Creation of the armies, army organisations, army organisation groups, magic items, magic items categories,
+ *        magic standards, equipments categories, equipments, special rules, units, troops, special rule unit troops,
+ *        equipment unit troops and unit options tables and relations in the database.
+ */
 export class ArmiesInitialization1671123394624 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {

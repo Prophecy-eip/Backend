@@ -47,6 +47,12 @@ const PROPHECY_UNIT_TABLE_FOREIGN_KEYS: TableForeignKey[] = [
         onDelete: "CASCADE"
     })
 ];
+
+/**
+ * @class ProphecyUnitInitialization1672968324920
+ * @brief Initialization of the units prophecies
+ *        Creation of the unit prophecies table and relations in the database.
+ */
 export class ProphecyUnitInitialization1672968324920 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
