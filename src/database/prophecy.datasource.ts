@@ -32,6 +32,10 @@ const DB_USERNAME = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DIALECT = "postgres";
 
+/**
+ * @class ProphecyDatasource
+ * @brief Implements a datasource for Prophecy's features
+ */
 export class ProphecyDatasource extends DataSource {
     constructor() {
         super({

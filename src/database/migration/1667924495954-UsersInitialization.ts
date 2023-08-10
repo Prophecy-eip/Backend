@@ -36,6 +36,11 @@ const PROFILES_TABLES: Table = new Table({
     ]
 });
 
+/**
+ * @class UsersInitialization1667924495954
+ * @brief Initialization of the profiles table
+ *        Creation of the table in the database.
+ */
 export class UsersInitialization1667924495954 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {

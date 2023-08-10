@@ -1,3 +1,8 @@
+/**
+ * @file File used for database migrations
+ *       Contains all required information for the ORM to connect to the database and run the required migrations.
+ */
+
 import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
 
@@ -48,7 +53,7 @@ const DB_USERNAME = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DIALECT = "postgres";
 
-export const connectionSource = new DataSource({
+export const connectionSource: DataSource = new DataSource({
     type: DB_DIALECT,
     host: DB_HOST,
     port: DB_PORT,
