@@ -6,6 +6,7 @@ import * as dotenv from "dotenv";
 import { ProfileService } from "@account/profile/profile.service";
 import { jwtConstants } from "@account/auth/constants";
 import { Profile } from "@account/profile/profile.entity";
+import { SendEmailCommandOutput } from "@aws-sdk/client-ses";
 
 dotenv.config();
 
@@ -14,6 +15,10 @@ const WEBSITE_URL: string = process.env.WEBSITE_URL;
 
 const NEW_PASSWORD_ROUTE: string = `${WEBSITE_URL}/account/password-reset`;
 
+/**
+ * @class ForgottenPasswordService
+ * @brief Service that implements function to reset users' forgotten passwords
+ */
 @Injectable()
 export class ForgottenPasswordService {
     constructor(
@@ -22,7 +27,11 @@ export class ForgottenPasswordService {
         private readonly profileService: ProfileService
     ) {}
 
-    public async sendPasswordResetLink(email: string) {
+    /**
+     * @brief Sends a password reset link to the email address given as parameter
+     * @param email The email address to send the link to
+     */
+    public async sendPasswordResetLink(email: string): Promise<SendEmailCommandOutput> {
         const profile: Profile = await this.profileService.findOneByEmail(email);
         const payload = { username: profile.username };
         const token = this.jwtService.sign(payload, {
@@ -35,6 +44,11 @@ export class ForgottenPasswordService {
         return this.emailService.sendEmail([profile.email], FROM_ADDRESS, "Reset your password", text);
     }
 
+    /**
+     * @brief Decodes the token present in the password reset link
+     * @param token The token to decode
+     * @return The username associated to the token
+     */
     public async decodeResetToken(token: string): Promise<string> {
         try {
             const payload = await this.jwtService.verify(token, {
@@ -52,6 +66,12 @@ export class ForgottenPasswordService {
         }
     }
 
+    /**
+     * @brief Resets a user password
+     *        Updates the user's password in the database with a new value.
+     * @param username The username of the user that needs to update their password
+     * @param password The new password value
+     */
     public async resetPassword(username: string, password: string): Promise<void> {
         const _profile: Profile = await this.profileService.findOneByUsername(username);
 

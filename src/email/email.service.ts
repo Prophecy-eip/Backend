@@ -1,4 +1,4 @@
-import { SES } from "@aws-sdk/client-ses";
+import { SendEmailCommandOutput, SES } from "@aws-sdk/client-ses";
 import * as dotenv from "dotenv";
 import { Injectable } from "@nestjs/common";
 
@@ -8,6 +8,10 @@ const SES_REGION: string = process.env.SES_REGION;
 const SES_ACCESS_KEY: string = process.env.SES_ACCESS_KEY;
 const SES_SECRET_ACCESS_KEY: string = process.env.SES_SECRET_ACCESS_KEY;
 
+/**
+ * @class EmailService
+ * @brief Service that implements basic features to send emails
+ */
 @Injectable()
 export class EmailService {
 
@@ -21,7 +25,14 @@ export class EmailService {
         });
     }
 
-    async sendEmail(toAddresses: string[], fromAddress: string, subject: string, emailBody: string) {
+    /**
+     * @brief Sends an email
+     * @param toAddresses The address to send the email to
+     * @param fromAddress The address the email is sent from
+     * @param subject The email's subject
+     * @param emailBody The email's body
+     */
+    async sendEmail(toAddresses: string[], fromAddress: string, subject: string, emailBody: string): Promise<SendEmailCommandOutput> {
         const params = {
             Destination: {
                 ToAddresses: toAddresses

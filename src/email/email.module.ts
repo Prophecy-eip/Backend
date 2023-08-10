@@ -10,6 +10,10 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ForgottenPasswordService } from "./forgotten-password.service";
 import { PasswordUpdateService } from "@email/password-update.service";
 
+/**
+ * @class EmailModule
+ * @brief Module that groups features required to send emails
+ */
 @Module({
     imports: [TypeOrmModule.forFeature([Profile]), ProfileModule],
     providers: [
