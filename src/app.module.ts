@@ -50,6 +50,10 @@ const DB_USERNAME = process.env.POSTGRES_USER;
 const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
 const DB_DIALECT = "postgres";
 
+/**
+ * @class AppModule
+ * @brief Module that defines all the requirements for the application
+ */
 @Module({
     imports: [
         TypeOrmModule.forRoot({

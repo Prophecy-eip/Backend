@@ -18,6 +18,19 @@ export class ProfileService {
     ) {}
 
     /**
+     * @brief Checks if a profile with the given credentials exists
+     * @param username The profile's username
+     * @param email The profile's email address
+     * @return True if the profile exists, false otherwise
+     */
+    async exists(username: string, email: string): Promise<boolean> {
+        let p = await this.repository.findOneBy([
+            { username: username }
+        ]);
+        return p !== null && p.email === email;
+    }
+
+    /**
      * @brief Checks if a user exists
      * @param username The user's username
      * @param email The user's email address
