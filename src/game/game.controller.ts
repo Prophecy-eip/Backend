@@ -14,6 +14,10 @@ import { ArmyList } from "@army-list/army-list.entity";
 import { ArmyListService } from "@army-list/army-list.service";
 import { ProfileService } from "@profile/profile.service";
 
+/**
+ * @class GameController
+ * @brief Controller that defines the games routes
+ */
 @Controller("games")
 export class GameController {
     constructor(
@@ -22,6 +26,15 @@ export class GameController {
         private readonly profileService: ProfileService
     ) {}
 
+    /**
+     * @brief Creates a new game
+     * @param req The request
+     * @param opponent The opponent's username
+     * @param ownerScore The user's score
+     * @param opponentScore The opponent's score
+     * @param ownerArmyListId The user's army list id
+     * @param opponentArmyListId The opponent's army list id
+     */
     @UseGuards(JwtAuthGuard)
     @Post("")
     @HttpCode(HttpStatus.CREATED)
