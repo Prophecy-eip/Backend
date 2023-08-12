@@ -8,7 +8,9 @@ dotenv.config();
 const PORT = process.env.SERVER_PORT;
 const DEV = process.env.DEV;
 
-
+/**
+ * @brief The server's entry point
+ */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
