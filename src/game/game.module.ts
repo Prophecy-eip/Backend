@@ -8,6 +8,10 @@ import { ArmyListService } from "@army-list/army-list.service";
 import { Profile } from "@profile/profile.entity";
 import { ProfileService } from "@profile/profile.service";
 
+/**
+ * @class GameModule
+ * @brief Module that regroups the requirements for games
+ */
 @Module({
     imports: [
         TypeOrmModule.forFeature([

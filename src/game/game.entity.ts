@@ -1,5 +1,16 @@
 import { Column, Entity, JoinColumn, PrimaryColumn } from "typeorm";
 
+/**
+ * @class Game
+ * @brief Entity that represents a game's data in the database
+ * @member id The game's id
+ * @member owner The game's owner's username
+ * @member opponent The player's opponent's username
+ * @member owner The owner's score
+ * @member opponentScore The opponent's score
+ * @member ownerArmyList The player's army list's id
+ * @member opponentArmyList The opponent's army list's id
+ */
 @Entity("games")
 export class Game {
     @PrimaryColumn()
