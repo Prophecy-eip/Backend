@@ -73,6 +73,7 @@ export class ProphecyModelMathsDTO {
         this.nb_rows = +unit.formation.substring(pos + 1);
         this.nb_cols = +unit.formation.substring(0, pos);
         this.nb_models = unit.quantity;
+        this.banner_bearer = false;
     }
 
     public stats: ProphecyModelStatsMathsDTO;
@@ -80,6 +81,7 @@ export class ProphecyModelMathsDTO {
     public nb_rows: number;
     public nb_cols: number;
     public nb_models: number;
+    public banner_bearer: boolean; // TODO: remove
 
     private _convertArmyListUnitsModifiers(unit: ArmyListUnit): string[] {
         return unit.options.map((o: ArmyListUnitOption): string => o.option?.name)
