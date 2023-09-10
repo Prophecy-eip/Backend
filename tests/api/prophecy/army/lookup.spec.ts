@@ -10,20 +10,13 @@ const USERNAME = faker.internet.userName();
 const EMAIL = faker.internet.email();
 const PASSWORD = faker.internet.password();
 
-// const USERNAME1 = faker.internet.userName();
-// const EMAIL1 = faker.internet.email();
-
 let app: INestApplication;
 let userToken: string;
-// let user1Token: string;
 
 let userArmyListId1: string;
 let userArmyListId2: string;
 
 let nb: number;
-
-// let user1ArmyListId_notShared: string;
-// let user1ArmyListId_shared: string;
 
 jest.setTimeout(40000);
 
@@ -60,7 +53,7 @@ describe("prophecies/armies/create", () => {
 
     it("basic lookup - then should return 200 (Ok)", async () => {
         const res = await request(app.getHttpServer())
-            .get(TestsHelper.ARMIES_LISTS_ROUTE)
+            .get(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`);
 
         expect(res.status).toEqual(HttpStatus.OK);

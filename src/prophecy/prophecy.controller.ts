@@ -157,7 +157,7 @@ export class ProphecyController {
         const username: string = req.user.username;
         const prophecies: ProphecyArmy[] = await this.prophecyArmyService.findByOwner(username);
 
-        return prophecies.map((p: ProphecyArmy) => new ProphecyArmyWithIdDTO(p));
+        return prophecies.map((p: ProphecyArmy): ProphecyArmyWithIdDTO => new ProphecyArmyWithIdDTO(p));
     }
 
     private checkAttackingPosition(position: string): boolean {

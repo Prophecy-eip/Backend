@@ -22,6 +22,7 @@ import { ArmyListUnitMagicStandard } from "@army-list/army-list-unit/magic-stand
 import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
 import { ArmyListUnitTroopEquipment } from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 import { ArmyListUnitTroopSpecialRule } from "@army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
+import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 
 dotenv.config();
 
@@ -67,7 +68,8 @@ export class ProphecyDatasource extends DataSource {
                 ArmyListUnitMagicStandard,
                 ArmyListUnitOption,
                 ArmyListUnitTroopEquipment,
-                ArmyListUnitTroopSpecialRule
+                ArmyListUnitTroopSpecialRule,
+                ProphecyArmy
             ]
         });
     }
