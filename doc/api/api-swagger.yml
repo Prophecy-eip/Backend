@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
-  description: |
-    This is the Prophecy Api documentation
-  version: dev
-  title: "Prophecy Api"
+description: |
+  This is the Prophecy Api documentation
+version: dev
+title: "Prophecy Api"
 
 tags:
   - name: account
@@ -719,6 +719,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/armyProphecyDTO'
+    get:
+      summary: Retieves the history
+      description: ""
+      tags:
+        - prophecies
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/armyProphecyDTO'
 
 
   # GAMES
