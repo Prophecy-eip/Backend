@@ -53,6 +53,20 @@ class ProphecyArmyService {
             }
         });
     }
+
+    public async findOneById(id: string): Promise<ProphecyArmy> {
+        return this.repository.findOne({
+            where: {id: id},
+            relations: {
+                armyList1: true,
+                armyList2: true
+            }
+        });
+    }
+
+    public async delete(id: string): Promise<any> {
+        await this.repository.delete(id);
+    }
 }
 
 export default ProphecyArmyService;
