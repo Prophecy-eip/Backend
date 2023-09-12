@@ -738,6 +738,29 @@ paths:
                 items:
                   $ref: '#/components/schemas/armyProphecyDTO'
 
+  /prophecies/armies/{prophecyId}:
+    delete:
+      summary: Deletes a prophecy
+      description: ""
+      tags:
+        - prophecies
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+        - $ref: "#/components/parametersSchemes/prophecyId"
+      responses:
+        200:
+          description: OK
+        400:
+          description: No id provided
+        401:
+          description: The user is not authenticated
+        403:
+          description: The user tries to access data that is not his
+        404:
+          description: The prophecy was not found
+
 
   # GAMES
 

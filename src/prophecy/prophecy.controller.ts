@@ -160,6 +160,26 @@ export class ProphecyController {
         return prophecies.map((p: ProphecyArmy): ProphecyArmyWithIdDTO => new ProphecyArmyWithIdDTO(p));
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Delete("/armies/:id")
+    @HttpCode(HttpStatus.OK)
+    async deleteArmiesPorphecy(@Request() req, @Param("id") id: string): Promise<void> {
+        if (!ParamHelper.isValid(id)) {
+            throw new BadRequestException("A valid id is required");
+        }
+
+        const username: string = req.user.username;
+        const prophecy: ProphecyArmy = await this.prophecyArmyService.findOneById(id);
+
+        if (prophecy === null) {
+            throw new NotFoundException(`Prophecy ${id} not found`);
+        }
+        if (prophecy.owner !== username) {
+            throw new ForbiddenException();
+        }
+        await this.prophecyArmyService.delete(id);
+    }
+
     private checkAttackingPosition(position: string): boolean {
         return (position === "front" || position === "back" || position === "flank");
     }
