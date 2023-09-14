@@ -6,7 +6,7 @@ import {
     UseGuards,
     Request,
     Body,
-    BadRequestException, NotFoundException, Get
+    BadRequestException, NotFoundException, Get, Delete, Param, ForbiddenException
 } from "@nestjs/common";
 import { GameService } from "@app/game/game.service";
 import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
@@ -78,5 +78,21 @@ export class GameController {
         const games: Game[] = await this.gameService.findByOwner(username);
 
         return games.map((g: Game): GameDTO => new GameDTO(g));
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete("/:id")
+    @HttpCode(HttpStatus.OK)
+    async delete(@Request() req, @Param("id") id: string): Promise<void> {
+        const username = req.user.username;
+        const game: Game = await this.gameService.findOneById(id);
+
+        if (game === null) {
+            throw new NotFoundException(`Game ${id} not found.`);
+        }
+        if (game.owner !== username) {
+            throw new ForbiddenException();
+        }
+        await this.gameService.delete(id);
     }
 }
