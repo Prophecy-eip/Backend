@@ -6,13 +6,15 @@ import {
     UseGuards,
     Request,
     Body,
-    BadRequestException, NotFoundException
+    BadRequestException, NotFoundException, Get
 } from "@nestjs/common";
 import { GameService } from "@app/game/game.service";
 import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
 import { ArmyList } from "@army-list/army-list.entity";
 import { ArmyListService } from "@army-list/army-list.service";
 import { ProfileService } from "@profile/profile.service";
+import { Game } from "@app/game/game.entity";
+import { GameDTO } from "@app/game/game.dto";
 
 /**
  * @class GameController
@@ -64,6 +66,17 @@ export class GameController {
             throw new BadRequestException(`The sum of both scores must be equal to 20 (here ${ownerScore + opponentScore}).`);
         }
 
-        await this.gameService.create(username, opponent, ownerScore, opponentScore, ownerArmyListId, opponentArmyListId);
+        const game: Game = await this.gameService.create(username, opponent, ownerScore, opponentScore, ownerArmyListId, opponentArmyListId);
+        await this.gameService.save(game);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get("")
+    @HttpCode(HttpStatus.OK)
+    async lookup(@Request() req): Promise<GameDTO[]> {
+        const username = req.user.username;
+        const games: Game[] = await this.gameService.findByOwner(username);
+
+        return games.map((g: Game): GameDTO => new GameDTO(g));
     }
 }

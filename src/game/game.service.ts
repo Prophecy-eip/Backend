@@ -43,4 +43,14 @@ export class GameService {
             opponentArmyList: opponentArmyListId
         });
     }
+
+    async save(game: Game): Promise<Game> {
+        return this.repository.save(game);
+    }
+
+    async findByOwner(owner: string): Promise<Game[]> {
+        return this.repository.find({
+            where: { owner: owner }
+        });
+    }
 }
