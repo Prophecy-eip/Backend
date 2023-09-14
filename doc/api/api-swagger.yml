@@ -825,29 +825,6 @@ paths:
         404:
           $ref: '#/components/schemas/notFoundResponse'
 
-  /games/get-game/{gameId}:
-    get:
-      summary: Retrieves a statistic data
-      description: ""
-      tags:
-        - games
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parametersSchemes/authorization'
-        - $ref: '#/components/parametersSchemes/gameId'
-      responses:
-        200:
-          description: The game's data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/gameObject'
-        401:
-          $ref: '#/components/schemas/unauthorizedResponse'
-        404:
-          $ref: '#/components/schemas/notFoundResponse'
-
   # update
   /games/update-game/{gameId}:
     put:
@@ -875,7 +852,7 @@ paths:
           $ref: '#/components/schemas/notFoundResponse'
 
   # delete
-  /games/delete-game/{gameId}:
+  /games/{gameId}:
     delete:
       summary: Deletes a game
       description: ""
@@ -3661,3 +3638,4 @@ host: virtserver.swaggerhub.com
 basePath: /Victoire-Rabeau/Prophecy/dev
 schemes:
   - https
+

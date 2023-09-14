@@ -53,4 +53,14 @@ export class GameService {
             where: { owner: owner }
         });
     }
+
+    async findOneById(id: string): Promise<Game> {
+        return this.repository.findOne({
+            where: { id: id }
+        });
+    }
+
+    async delete(id: string): Promise<void> {
+        await this.repository.delete(id);
+    }
 }
