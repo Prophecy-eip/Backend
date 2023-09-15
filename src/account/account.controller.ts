@@ -180,6 +180,22 @@ export class AccountController {
         };
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get("")
+    @HttpCode(HttpStatus.OK)
+    async getAccount(@Request() req): Promise<{username: string, email: string}> {
+        const username = req.user.username;
+        const profile: Profile = await this.profileService.findOneByUsername(username);
+
+        if (profile === null) {
+            throw new UnauthorizedException();
+        }
+        return {
+            username: profile.username,
+            email: profile.email
+        };
+    }
+
     /**
      * @brief Checks if a string parameter is valid
      *        Checks if it is not undefined, null or empty
