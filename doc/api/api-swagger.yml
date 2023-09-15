@@ -113,8 +113,6 @@ paths:
 
   /account/email/send-verification-link:
     get:
-
-
       summary: Sends an email confirmation link
       description: ""
       tags:
@@ -132,6 +130,8 @@ paths:
           description: Not found
         500:
           description: Internal Server Error
+
+
 
 
   # EVENTS
@@ -964,6 +964,30 @@ paths:
 
   # delete
   /account:
+    get:
+      summary: Retrieves the account's data
+      description: ""
+      tags:
+        - account
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parametersSchemes/authorization'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  email:
+                    type: string
+
+        401:
+          description: Unauthorized
     delete:
       summary: Deletes the user's account
       description: ""
@@ -3638,4 +3662,3 @@ host: virtserver.swaggerhub.com
 basePath: /Victoire-Rabeau/Prophecy/dev
 schemes:
   - https
-
