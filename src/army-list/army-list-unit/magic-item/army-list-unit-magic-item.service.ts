@@ -28,8 +28,8 @@ export class ArmyListUnitMagicItemService {
             armyListUnit: armyListUnit,
             unitId: item.unitId,
             magicItem: await this.magicItemService.findOneById(item.magicItemId),
-            unitOption: (item.unitOptionId !== null) ? await this.unitOptionService.findOneById(item.unitOptionId) : null,
-            equipment: (item.equipmentId !== null) ? await this.equipmentService.findOneById(item.equipmentId) : null,
+            unitOption: (item.unitOptionId !== null && item.unitOptionId !== undefined) ? await this.unitOptionService.findOneById(item.unitOptionId) : null,
+            equipment: (item.equipmentId !== null && item.equipmentId !== undefined) ? await this.equipmentService.findOneById(item.equipmentId) : null,
             quantity: item.quantity,
             valuePoints: item.valuePoints
         });

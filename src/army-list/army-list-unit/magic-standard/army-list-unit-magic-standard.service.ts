@@ -27,7 +27,7 @@ export class ArmyListUnitMagicStandardService {
             id,
             armyListUnit,
             magicStandard: await this.magicStandardService.findOneById(standard.magicStandardId),
-            unitOption: (standard.unitOptionId !== null) ? await this.unitOptionService.findOneById(standard.unitOptionId) : null,
+            unitOption: (standard.unitOptionId !== null && standard.unitOptionId !== undefined) ? await this.unitOptionService.findOneById(standard.unitOptionId) : null,
             quantity: standard.quantity,
             valuePoints: standard.valuePoints
         });

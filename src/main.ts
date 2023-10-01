@@ -2,6 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import * as dotenv from "dotenv";
 
 import { AppModule } from "./app.module";
+import { ValidationPipe } from "@nestjs/common";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ async function bootstrap() {
     app.enableCors();
     console.log("dev !");
   }
-  
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(PORT);
 }
 
