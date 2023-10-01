@@ -3,10 +3,20 @@ import { ArmyListUnitMagicStandardDTO } from "./magic-standard/army-list-unit-ma
 import { ArmyListUnitOptionDTO } from "./option/army-list-unit-option.dto";
 import { ArmyListUnitTroopSpecialRuleDTO } from "./troop/special-rule/army-list-unit-troop-special-rule.dto";
 import { ArmyListUnitTroopEquipmentDTO } from "./troop/equipment/army-list-unit-troop-equipment.dto";
-import { IsArray, IsDefined, IsNotEmpty, IsNumber, IsString, Min, ValidateNested } from "class-validator";
+import {
+    ArrayMaxSize,
+    ArrayMinSize,
+    IsArray,
+    IsDefined,
+    IsNotEmpty,
+    IsNumber,
+    IsString,
+    Min,
+    ValidateNested
+} from "class-validator";
 import { Type } from "class-transformer";
 
-export class ArmyListUnitCredentialsDTO {
+class ArmyListUnitCredentialsBaseDTO {
 
     @IsDefined()
     @IsNumber()
@@ -21,10 +31,6 @@ export class ArmyListUnitCredentialsDTO {
     @IsString()
     @IsNotEmpty()
     public formation: string;
-
-    @IsDefined({ each: true })
-    @IsArray()
-    public troopIds: number[];
 
     @IsDefined({ each: true })
     @IsArray()
@@ -55,4 +61,18 @@ export class ArmyListUnitCredentialsDTO {
     @ValidateNested({ each: true })
     @Type(() => ArmyListUnitTroopEquipmentDTO)
     public equipmentTroops: ArmyListUnitTroopEquipmentDTO[];
+}
+
+export class ArmyListUnitCredentialsDTO extends ArmyListUnitCredentialsBaseDTO {
+    @IsDefined({ each: true })
+    @IsArray()
+    public troopIds: number[];
+}
+
+export class ProphecyArmyListUnitCredentialsDTO extends ArmyListUnitCredentialsBaseDTO {
+    @IsDefined({ each: true })
+    @IsArray()
+    @ArrayMinSize(0)
+    @ArrayMaxSize(1)
+    public troopIds: number[];
 }

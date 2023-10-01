@@ -1,7 +1,7 @@
-import { ArmyListUnitCredentialsDTO } from "../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
 import { ArmyListUnitDTO } from "../../src/army-list/army-list-unit/army-list-unit.dto";
 import { List } from "../fixtures/army-list/armies-lists";
 import { ArmyListDTO } from "../../src/army-list/army-list.dto";
+import { ArmyListUnitCredentialsDTO } from "../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
 
 class ArmyListHelper {
     function

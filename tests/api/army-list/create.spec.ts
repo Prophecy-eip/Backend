@@ -6,7 +6,6 @@ import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
 import { ARMY1, ARMY2, List } from "../../fixtures/army-list/armies-lists";
 import { ArmyListParameterDTO } from "../../../src/army-list/army-list.dto";
-import { ArmyListUnitCredentialsDTO } from "../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
 
 jest.setTimeout(25000)
 

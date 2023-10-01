@@ -102,5 +102,4 @@ describe("armies-lists/get", () => {
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND)
     });
-
 });
