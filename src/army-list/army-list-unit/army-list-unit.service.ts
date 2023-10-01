@@ -20,7 +20,6 @@ import {
     ArmyListUnitTroopEquipment
 } from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 import { TroopService } from "@army/unit/troop/troop.service";
-import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
 import { ArmyListUnitMagicItemService } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.service";
 import {
     ArmyListUnitMagicStandardService
@@ -43,6 +42,7 @@ import {
 import {
     ArmyListUnitTroopEquipmentDTO
 } from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.dto";
+import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
 
 export type ArmyListUnitServiceOptions = {
     loadAll?: boolean;

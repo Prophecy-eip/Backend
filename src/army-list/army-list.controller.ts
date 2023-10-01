@@ -14,10 +14,8 @@ import {
 import { QueryFailedError } from "typeorm";
 
 import { JwtAuthGuard } from "@account/auth/guards/jwt-auth.guard";
-// import { ParamHelper } from "@helper/param.helper";
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
-import { ArmyListUnitCredentialsDTO } from "./army-list-unit/army-list-unit-credentials.dto";
 import { ArmyListDTO, ArmyListParameterDTO } from "./army-list.dto";
 import { ArmyListCredentialsDTO } from "./army-list-credentials.dto";
 
@@ -26,6 +24,7 @@ import { ArmyListService } from "./army-list.service";
 import { ArmyService } from "@army/army.service";
 import { Army } from "@army/army.entity";
 import { ParamHelper } from "@helper/param.helper";
+import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
 
 type Id = {
     id: string;
