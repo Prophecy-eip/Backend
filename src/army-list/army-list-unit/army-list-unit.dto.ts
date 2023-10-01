@@ -5,8 +5,17 @@ import { ArmyListUnitOptionDTO } from "./option/army-list-unit-option.dto";
 import { Troop } from "@army/unit/troop/troop.entity";
 import { ArmyListUnitTroopSpecialRuleDTO } from "./troop/special-rule/army-list-unit-troop-special-rule.dto";
 import { ArmyListUnitTroopEquipmentDTO } from "./troop/equipment/army-list-unit-troop-equipment.dto";
-
-// TODO: optimisation
+import { ArmyListUnitMagicItem } from "@army-list/army-list-unit/magic-item/army-list-unit-magic-item.entity";
+import {
+    ArmyListUnitMagicStandard
+} from "@army-list/army-list-unit/magic-standard/army-list-unit-magic-standard.entity";
+import { ArmyListUnitOption } from "@army-list/army-list-unit/option/army-list-unit-option.entity";
+import {
+    ArmyListUnitTroopSpecialRule
+} from "@army-list/army-list-unit/troop/special-rule/army-list-unit-troop-special-rule.entity";
+import {
+    ArmyListUnitTroopEquipment
+} from "@army-list/army-list-unit/troop/equipment/army-list-unit-troop-equipment.entity";
 
 export class ArmyListUnitDTO {
     constructor(armyListUnit: ArmyListUnit) {
@@ -14,21 +23,16 @@ export class ArmyListUnitDTO {
         this.quantity = armyListUnit.quantity;
         this.formation = armyListUnit.formation;
         this.troops = armyListUnit.troops;
-        for (const item of armyListUnit.magicItems) {
-            this.magicItems.push(new ArmyListUnitMagicItemDTO(item));
-        }
-        for (const standard of armyListUnit.magicStandards) {
-            this.magicStandards.push(new ArmyListUnitMagicStandardDTO(standard));
-        }
-        for (const option of armyListUnit.options) {
-            this.options.push(new ArmyListUnitOptionDTO(option));
-        }
-        for (const rule of armyListUnit.specialRuleTroops) {
-            this.specialRuleTroops.push(new ArmyListUnitTroopSpecialRuleDTO(rule));
-        }
-        for (const equipment of armyListUnit.equipmentTroops) {
-            this.equipmentTroops.push(new ArmyListUnitTroopEquipmentDTO(equipment));
-        }
+        this.magicItems = armyListUnit.magicItems.map((i: ArmyListUnitMagicItem): ArmyListUnitMagicItemDTO =>
+            ArmyListUnitMagicItemDTO.fromArmyListUnitMagicItem(i));
+        this.magicStandards = armyListUnit.magicStandards.map((s: ArmyListUnitMagicStandard): ArmyListUnitMagicStandardDTO =>
+            ArmyListUnitMagicStandardDTO.fromArmyListUnitMagicStandard(s));
+        this.options = armyListUnit.options.map((o: ArmyListUnitOption): ArmyListUnitOptionDTO =>
+            ArmyListUnitOptionDTO.fromArmyListUnitOption(o));
+        this.specialRuleTroops = armyListUnit.specialRuleTroops.map((r: ArmyListUnitTroopSpecialRule): ArmyListUnitTroopSpecialRuleDTO =>
+            ArmyListUnitTroopSpecialRuleDTO.fromArmyListUnitTroopSpecialRule(r));
+        this.equipmentTroops = armyListUnit.equipmentTroops.map((e: ArmyListUnitTroopEquipment): ArmyListUnitTroopEquipmentDTO =>
+            ArmyListUnitTroopEquipmentDTO.fromArmyListUnitTroopEquipment(e));
     }
 
     public unitId: number;
