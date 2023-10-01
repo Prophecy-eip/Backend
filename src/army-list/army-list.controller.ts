@@ -114,26 +114,24 @@ export class ArmyListController {
     @Put("/:id")
     @HttpCode(HttpStatus.OK)
     async update(@Request() req,
-            @Param("id") id: string,
-            @Body("name") name: string,
-            @Body("armyId") armyId: number,
-            @Body("valuePoints") valuePoints: number,
-            @Body("units") units: ArmyListUnitCredentialsDTO[],
-            @Body("isShared") isShared: boolean,
-            @Body("isFavorite") isFavorite): Promise<void> {
-            let list: ArmyList = await this.armyListService.findOneById(id, { loadUnits: true});
+        @Param("id") id: string,
+        @Body() param: ArmyListParameterDTO): Promise<void> {
+        if (!ParamHelper.isValid(param)) {
+            throw new BadRequestException("army list must not be null or undefined");
+        }
+        let list: ArmyList = await this.armyListService.findOneById(id, { loadUnits: true});
 
-            if (list === null) {
-                throw new NotFoundException();
-            }
-            if (list.owner !== req.user.username) {
-                throw new ForbiddenException();
-            }
-            await this.armyListUnitService.deleteByArmyList(list.id);
+        if (list === null) {
+            throw new NotFoundException();
+        }
+        if (list.owner !== req.user.username) {
+            throw new ForbiddenException();
+        }
+        await this.armyListUnitService.deleteByArmyList(list.id);
 
-            const armyListUnits: ArmyListUnit[] = await Promise.all(units.map(async (unit: ArmyListUnitCredentialsDTO): Promise<ArmyListUnit> =>
-                this.armyListUnitService.createAndSaveWithRelations(unit, list)));
+        const armyListUnits: ArmyListUnit[] = await Promise.all(param.units.map(async (unit: ArmyListUnitCredentialsDTO): Promise<ArmyListUnit> =>
+            this.armyListUnitService.createAndSaveWithRelations(unit, list)));
 
-            await this.armyListService.update(id, name, armyId, valuePoints, isShared, isFavorite, armyListUnits);
+        await this.armyListService.update(id, param.name, param.armyId, param.valuePoints, param.isShared, param.isFavorite, armyListUnits);
     }
 }
