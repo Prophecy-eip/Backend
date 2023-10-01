@@ -14,17 +14,18 @@ import {
 import { QueryFailedError } from "typeorm";
 
 import { JwtAuthGuard } from "@account/auth/guards/jwt-auth.guard";
-import { ParamHelper } from "@helper/param.helper";
+// import { ParamHelper } from "@helper/param.helper";
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "./army-list-unit/army-list-unit.entity";
 import { ArmyListUnitCredentialsDTO } from "./army-list-unit/army-list-unit-credentials.dto";
-import { ArmyListDTO } from "./army-list.dto";
+import { ArmyListDTO, ArmyListParameterDTO } from "./army-list.dto";
 import { ArmyListCredentialsDTO } from "./army-list-credentials.dto";
 
 import { ArmyListUnitService } from "./army-list-unit/army-list-unit.service";
 import { ArmyListService } from "./army-list.service";
 import { ArmyService } from "@army/army.service";
 import { Army } from "@army/army.entity";
+import { ParamHelper } from "@helper/param.helper";
 
 type Id = {
     id: string;
@@ -41,27 +42,20 @@ export class ArmyListController {
     @UseGuards(JwtAuthGuard)
     @Post("")
     @HttpCode(HttpStatus.CREATED)
-    async create(@Request() req,
-        @Body("name") name: string,
-        @Body("armyId") armyId: number,
-        @Body("valuePoints") valuePoints: number,
-        @Body("units") units: ArmyListUnitCredentialsDTO[],
-        @Body("isShared") isShared: boolean,
-        @Body("isFavorite") isFavorite: boolean): Promise<Id> {
-        if (!ParamHelper.isValid(name) || !ParamHelper.isValid(armyId) || !ParamHelper.isValid(valuePoints) ||
-            !ParamHelper.isValid(units) || !ParamHelper.isValid(isFavorite)) {
-            throw new BadRequestException();
+    async create(@Request() req, @Body() param: ArmyListParameterDTO): Promise<Id> {
+        if (!ParamHelper.isValid(param)) {
+            throw new BadRequestException("army list must not be null or undefined");
         }
-        const army: Army = await this.armyService.findOneById(armyId);
+        const army: Army = await this.armyService.findOneById(param.armyId);
         if (army === null) {
-            throw new NotFoundException(`The army ${armyId} does not exist.`);
+            throw new NotFoundException(`The army ${param.armyId} does not exist.`);
         }
-        const list: ArmyList = await this.armyListService.create(name, req.user.username, armyId, valuePoints, isShared,
-            isFavorite, []);
+        const list: ArmyList = await this.armyListService.create(param.name, req.user.username, param.armyId, param.valuePoints, param.isShared,
+            param.isFavorite, []);
 
         try {
             await this.armyListService.save(list);
-            list.units = await Promise.all(units.map(async (unit: ArmyListUnitCredentialsDTO): Promise<ArmyListUnit> =>
+            list.units = await Promise.all(param.units.map(async (unit: ArmyListUnitCredentialsDTO): Promise<ArmyListUnit> =>
                 this.armyListUnitService.createAndSaveWithRelations(unit, list)));
             return { id: list.id };
         } catch (error) {

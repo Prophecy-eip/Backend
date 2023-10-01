@@ -1,15 +1,30 @@
 import { ArmyListUnitMagicStandard } from "./army-list-unit-magic-standard.entity";
+import { IsDefined, IsNumber, Min } from "class-validator";
 
-export class ArmyListUnitMagicStandardDTO {
-    constructor(standard: ArmyListUnitMagicStandard) {
-        this.magicStandardId = standard.magicStandard.id;
-        this.unitOptionId = standard.unitOption?.id ?? null;
-        this.quantity = standard.quantity;
-        this.valuePoints = standard.valuePoints;
+export class    ArmyListUnitMagicStandardDTO {
+
+    public static fromArmyListUnitMagicStandard(standard: ArmyListUnitMagicStandard): ArmyListUnitMagicStandardDTO {
+        return {
+            magicStandardId: standard.magicStandard.id,
+            unitOptionId: standard.unitOption?.id ?? null,
+            quantity: standard.quantity,
+            valuePoints: standard.valuePoints
+        };
     }
 
+    @IsDefined()
+    @IsNumber()
     public magicStandardId: number;
+
     public unitOptionId: number | null;
+
+    @IsDefined()
+    @IsNumber()
+    @Min(1)
     public quantity: number;
+
+    @IsDefined()
+    @IsNumber()
+    @Min(1)
     public valuePoints: number;
 }

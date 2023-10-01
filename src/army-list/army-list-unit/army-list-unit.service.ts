@@ -81,7 +81,6 @@ export class ArmyListUnitService {
         if (unit === null) {
             throw new NotFoundException(`Unit ${credentials.unitId} not found.`);
         }
-
         const troops: Troop[] = await this.troopService.findByIds(credentials.troopIds);
         const armyListUnit: ArmyListUnit = await this.repository.save(await this.repository.create({
             id,
