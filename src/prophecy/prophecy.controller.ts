@@ -13,8 +13,7 @@ import {
 import { JwtAuthGuard } from "@account/auth/guards/jwt-auth.guard";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 import { ArmyListUnitService } from "@army-list/army-list-unit/army-list-unit.service";
-import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
-import { ProphecyUnit, ProphecyUnitAttackingPosition } from "./unit/prophecy-unit.entity";
+import { ProphecyUnit } from "./unit/prophecy-unit.entity";
 import { ProphecyUnitService } from "./unit/prophecy-unit.service";
 import { ProphecyUnitDTO, ProphecyUnitWithIdDTO } from "./unit/prophecy-unit.dto";
 import { ParamHelper } from "@helper/param.helper";
@@ -26,6 +25,7 @@ import { ProphecyArmyMathResponseDTO } from "@prophecy/maths/prophecy-army-maths
 import { ProphecyArmyWithIdDTO } from "@prophecy/army/prophecy-army.dto";
 import { ArmyList } from "@army-list/army-list.entity";
 import { ProphecyUnitMathsResponseDTO } from "@prophecy/maths/prophecy-unit-maths.dto";
+import { ProphecyUnitRequestDTO } from "@prophecy/prophecy.dto";
 
 @Controller("prophecies")
 export class ProphecyController {
@@ -41,24 +41,18 @@ export class ProphecyController {
     @Post("units")
     @HttpCode(HttpStatus.CREATED)
     async getUnitsProphecy(@Request() req,
-        @Body("attackingRegiment") attackingRegiment: ArmyListUnitCredentialsDTO,
-        @Body("defendingRegiment") defendingRegiment: ArmyListUnitCredentialsDTO,
-        @Body("attackingPosition") attackingPosition: ProphecyUnitAttackingPosition): Promise<ProphecyUnitDTO> {
-        if (!ParamHelper.isValid(attackingRegiment) || !ParamHelper.isValid(defendingRegiment)
-            || !ParamHelper.isValid(attackingPosition) || !this.checkAttackingPosition(attackingPosition)) {
-            throw new BadRequestException();
+        @Body() param: ProphecyUnitRequestDTO): Promise<ProphecyUnitDTO> {
+        if (!ParamHelper.isValid(param)) {
+            throw new BadRequestException("parameter must not be undefined or null");
         }
+
         try {
-            const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(attackingRegiment);
-            const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(defendingRegiment);
-
-            if (attackingRegimentUnit.troops.length > 1 || defendingRegimentUnit.troops.length > 1) {
-                throw new BadRequestException("The troopIds must contain one troop max");
-            }
-
-            const mathsResponse: ProphecyUnitMathsResponseDTO = await this.prophecyService.requestUnitsProphecy(attackingRegimentUnit, defendingRegimentUnit, attackingPosition);
-            const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username, attackingRegimentUnit,
-                defendingRegimentUnit, attackingPosition, mathsResponse);
+            const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(param.attackingRegiment);
+            const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(param.defendingRegiment);
+            const mathsResponse: ProphecyUnitMathsResponseDTO = await this.prophecyService.requestUnitsProphecy(
+                attackingRegimentUnit, defendingRegimentUnit, param.attackingPosition);
+            const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username,
+                attackingRegimentUnit, defendingRegimentUnit, param.attackingPosition, mathsResponse);
 
             await this.prophecyUnitService.save(prophecy);
             return new ProphecyUnitDTO(prophecy);
@@ -163,7 +157,7 @@ export class ProphecyController {
     @UseGuards(JwtAuthGuard)
     @Delete("/armies/:id")
     @HttpCode(HttpStatus.OK)
-    async deleteArmiesPorphecy(@Request() req, @Param("id") id: string): Promise<void> {
+    async deleteArmiesProphecy(@Request() req, @Param("id") id: string): Promise<void> {
         if (!ParamHelper.isValid(id)) {
             throw new BadRequestException("A valid id is required");
         }
@@ -178,9 +172,5 @@ export class ProphecyController {
             throw new ForbiddenException();
         }
         await this.prophecyArmyService.delete(id);
-    }
-
-    private checkAttackingPosition(position: string): boolean {
-        return (position === "front" || position === "back" || position === "flank");
     }
 }
