@@ -34,6 +34,12 @@ export class TestsHelper {
             });
     }
 
+    static async deleteArmyList(httpServer: any, token: string, listId: string): Promise<void> {
+        await request(httpServer)
+            .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${listId}`)
+            .set("Authorization", `Bearer ${token}`);
+    }
+
     static SIGN_UP_ROUTE: string = "/sign-up";
     static SIGN_IN_ROUTE: string = "/sign-in";
     static SIGN_OUT_ROUTE: string = "/sign-out";
