@@ -59,7 +59,7 @@ describe("armies-lists/get", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), token1);
     });
 
-    it(":id: basic get - then return 200 (ok)", async () => {
+    it("basic get - return 200 (ok)", async () => {
         const res = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${user1ListId}`)
             .set("Authorization", `Bearer ${token}`);
@@ -70,7 +70,7 @@ describe("armies-lists/get", () => {
 
     });
 
-    it(":id: with invalid token - then return 401 (unauthorized)", async () => {
+    it("with invalid token - return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${user1ListId}`)
             .set("Authorization", `Bearer abcd`);
@@ -78,7 +78,7 @@ describe("armies-lists/get", () => {
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    it(":id: user does not own a not-shared list - then return 403 (forbidden)", async () => {
+    it("user does not own a not-shared list - return 403 (forbidden)", async () => {
         const res = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${user1ListId}`)
             .set("Authorization", `Bearer ${token1}`);
@@ -86,7 +86,7 @@ describe("armies-lists/get", () => {
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    it(":id: user does not own a shared list - then should return 200 (OK)", async () => {
+    it("user does not own a shared list - should return 200 (OK)", async () => {
         const res = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${user2ListId}`)
             .set("Authorization", `Bearer ${token}`);
@@ -94,7 +94,7 @@ describe("armies-lists/get", () => {
         expect(res.status).toEqual(HttpStatus.OK);
     });
 
-    it(":id: with invalid id - then return 404 (not found)", async () => {
+    it("with invalid id - return 404 (not found)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
             .get(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)

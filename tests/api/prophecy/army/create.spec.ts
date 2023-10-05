@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "../../../../src/app.module";
 import { TestsHelper } from "../../../tests.helper";
-import { HttpStatus, INestApplication } from "@nestjs/common";
+import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
 import * as request from "supertest";
 import { ARMY1, ARMY2 } from "../../../fixtures/army-list/armies-lists";
 
@@ -32,6 +32,7 @@ describe("prophecies/armies/create", () => {
         }).compile();
 
         app = module.createNestApplication();
+        app.useGlobalPipes(new ValidationPipe());
         await app.init();
         userToken = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), USERNAME, EMAIL,
             PASSWORD);
@@ -57,7 +58,7 @@ describe("prophecies/armies/create", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), user1Token);
     });
 
-    it("request basic army prophecy - then should return 201 (created)", async () => {
+    it("basic prophecy - should return 201 (created)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`).send({
@@ -73,27 +74,67 @@ describe("prophecies/armies/create", () => {
         expect(res.body.player2Score).toBeDefined();
     });
 
-    it("request army prophecy, no army list 1 - then should return 400 (bad request)", async () => {
+    it("null parameter - should return 400 (bad request)", async () => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.ARMY_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${userToken}`).send(null);
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("undefined parameter - should return 400 (bad request)", async () => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.ARMY_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${userToken}`).send(undefined);
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("undefined army list 1 - should return 400 (bad request)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`).send({
+                armyList1: undefined,
                 armyList2: userArmyListId2
             });
 
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("request army prophecy, no army list 2 - then should return 400 (bad request)", async () => {
+    it("null army list 1 - should return 400 (bad request)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`).send({
-                armyList1: userArmyListId1
+                armyList1: null,
+                armyList2: userArmyListId2
             });
 
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("request army prophecy, wrong token - then should return 401 (unauthorized)", async () => {
+    it("undefined army list 2 - should return 400 (bad request)", async () => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.ARMY_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${userToken}`).send({
+                armyList1: userArmyListId1,
+                armyList2: undefined
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("null army list 2 - should return 400 (bad request)", async () => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.ARMY_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${userToken}`).send({
+                armyList1: userArmyListId1,
+                armyList2: null
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("invalid token - should return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer abcd`).send({
@@ -104,7 +145,7 @@ describe("prophecies/armies/create", () => {
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    it("request army prophecy, not existing army list 1 - then should return 404 (not found)", async () => {
+    it("not existing army list 1 - should return 404 (not found)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`).send({
@@ -115,7 +156,7 @@ describe("prophecies/armies/create", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    it("request army prophecy, not existing army list 2 - then should return 404 (not found)", async () => {
+    it("not existing army list 2 - should return 404 (not found)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`).send({
@@ -126,7 +167,7 @@ describe("prophecies/armies/create", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    it("request army prophecy, not owned not shared army list 1 - then should return 403 (forbidden)", async () => {
+    it("not owned not shared army list 1 - should return 403 (forbidden)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`).send({
@@ -137,7 +178,7 @@ describe("prophecies/armies/create", () => {
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
     });
 
-    it("request army prophecy, not owned not shared army list 2 - then should return 403 (forbidden)", async () => {
+    it("prophecy, not owned not shared army list 2 - should return 403 (forbidden)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`).send({
@@ -148,7 +189,7 @@ describe("prophecies/armies/create", () => {
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
     });
 
-    it("request army prophecy, not owned shared army list 1- then should return 201 (created)", async () => {
+    it("not owned shared army list 1- should return 201 (created)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`).send({
@@ -159,7 +200,7 @@ describe("prophecies/armies/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("request army prophecy, not owned shared army list 2 - then should return 201 (created)", async () => {
+    it("not owned shared army list 2 - should return 201 (created)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`).send({

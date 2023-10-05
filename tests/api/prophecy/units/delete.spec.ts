@@ -18,7 +18,7 @@ const USERNAME1 = faker.internet.userName();
 const EMAIL1 = faker.internet.email();
 const PASSWORD1 = faker.internet.password();
 
-describe("Prophecies route", () => {
+describe("prophecies/units/delete", () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -39,7 +39,7 @@ describe("Prophecies route", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), token1);
     });
 
-    it("units/delete: basic delete - then should return 200 (Ok)", async () => {
+    it("basic delete - should return 200 (Ok)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(PROPHECY_UNIT_REQUEST);
@@ -60,7 +60,7 @@ describe("Prophecies route", () => {
         expect(propheciesRes2.body.find(prophecy => prophecy.id === id)).toEqual(undefined);
     });
 
-    it("units/delete: delete with invalid token - then should return 401 (Unauthorized)", async () => {
+    it("invalid token - should return 401 (Unauthorized)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(PROPHECY_UNIT_REQUEST);
@@ -77,7 +77,7 @@ describe("Prophecies route", () => {
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    it("units/delete: delete not owned prophecy - then should return 403 (Forbidden)", async () => {
+    it("not owned prophecy - should return 403 (Forbidden)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(PROPHECY_UNIT_REQUEST);
@@ -93,7 +93,7 @@ describe("Prophecies route", () => {
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
     });
 
-    it("units/delete: delete without id - then should return 404 (Not found)", async () => {
+    it("without id - should return 404 (Not found)", async () => {
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.UNIT_PROPHECY_ROUTE}`)
             .set("Authorization", `Bearer ${token}`);
@@ -101,7 +101,7 @@ describe("Prophecies route", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    it("units/delete: delete un-existing prophecy - then should return 404 (Not found)", async () => {
+    it("un-existing prophecy - should return 404 (Not found)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.UNIT_PROPHECY_ROUTE}/${id}`)

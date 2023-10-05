@@ -53,7 +53,7 @@ describe("armies-lists/create", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), token1);
     });
 
-    it("basic lists - then should return 201 (created)", async () => {
+    it("basic lists - should return 201 (created)", async () => {
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`).send(ARMY1);
@@ -62,7 +62,7 @@ describe("armies-lists/create", () => {
         expect(res1.body.id).toBeDefined();
     });
 
-    it("empty units - then should return 201 (created)", async () => {
+    it("empty units - should return 201 (created)", async () => {
         const list: List = new List("name", ARMY1.armyId, 500, [], false, false);
         const res1 = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_ROUTE)
@@ -72,7 +72,7 @@ describe("armies-lists/create", () => {
         expect(res1.body.id).toBeDefined();
     });
 
-    it("create list with invalid armyId - then should return 404 (not found)", async () => {
+    it("invalid armyId - should return 404 (not found)", async () => {
         const list: List = new List(LIST_NAME, 123456, 123, [], false, false);
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_ROUTE)
@@ -81,7 +81,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    it("create list with invalid token - then should return 401 (unauthorized)", async () => {
+    it("invalid token - should return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer abcd`).send(ARMY1);
@@ -90,7 +90,7 @@ describe("armies-lists/create", () => {
     });
 
     // DTO
-    it("all properties null - then should return 400 (Bad Request)", async() => {
+    it("all properties null - should return 400 (Bad Request)", async() => {
         const dto = {
             name: null,
             armyId: null,
@@ -106,7 +106,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("all properties undefined - then should return 400 (Bad Request)", async() => {
+    it("all properties undefined - should return 400 (Bad Request)", async() => {
         const dto: ArmyListParameterDTO = {
             name: undefined,
             armyId: undefined,
@@ -122,7 +122,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("null army list - then should return 400 (Bad Request)", async() => {
+    it("null army list - should return 400 (Bad Request)", async() => {
         const dto = null;
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_ROUTE)
@@ -131,7 +131,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("undefined army list - then should return 400 (Bad Request)", async() => {
+    it("undefined army list - should return 400 (Bad Request)", async() => {
         const dto = undefined;
         const res = await request(app.getHttpServer())
             .post(TestsHelper.ARMIES_LISTS_ROUTE)
@@ -140,7 +140,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("undefined name - then should return 400 (Bad Request)", async() => {
+    it("undefined name - should return 400 (Bad Request)", async() => {
         const dto = {
             name: undefined,
             armyId: 1,
@@ -156,7 +156,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("null name - then should return 400 (Bad Request)", async() => {
+    it("null name - should return 400 (Bad Request)", async() => {
         const dto = {
             name: null,
             armyId: 1,
@@ -172,7 +172,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("undefined armyId - then should return 400 (Bad Request)", async() => {
+    it("undefined armyId - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: undefined,
@@ -188,7 +188,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("null armyId - then should return 400 (Bad Request)", async() => {
+    it("null armyId - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: null,
@@ -204,7 +204,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("undefined valuePoints - then return 400 (Bad Request)", async() => {
+    it("undefined valuePoints - return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -220,7 +220,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("null valuePoints - then should return 400 (Bad Request)", async() => {
+    it("null valuePoints - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -236,7 +236,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST)
     });
 
-    it("<1 valuePoints - then should return 400 (Bad Request)", async() => {
+    it("<1 valuePoints - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -252,7 +252,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST)
     });
 
-    it("undefined units - then should return 400 (Bad Request)", async() => {
+    it("undefined units - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -268,7 +268,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST)
     });
 
-    it("null units - then should return 400 (Bad Request)", async() => {
+    it("null units - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -284,7 +284,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST)
     });
 
-    it("null unit id - then should return 400 (Bad Request)", async() => {
+    it("null unit id - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -300,7 +300,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST)
     });
 
-    it("undefined unit id - then should return 400 (Bad Request)", async() => {
+    it("undefined unit id - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -316,7 +316,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST)
     });
 
-    it("undefined isShared - then should return 400 (Bad Request)", async() => {
+    it("undefined isShared - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -332,7 +332,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST)
     });
 
-    it("null isShared - then should return return 400 (Bad Request)", async() => {
+    it("null isShared - should return return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -348,7 +348,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST)
     });
 
-    it("undefined isFavorite - then should return 400 (Bad Request)", async() => {
+    it("undefined isFavorite - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -364,7 +364,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST)
     });
 
-    it("null isFavorite - then should return 400 (Bad Request)", async() => {
+    it("null isFavorite - should return 400 (Bad Request)", async() => {
         const dto = {
             name: "name",
             armyId: 1,
@@ -384,7 +384,7 @@ describe("armies-lists/create", () => {
      * UNITS
      */
 
-    it("units: valid properties - then should return 201 (Created)", async() => {
+    it("units: valid properties - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -403,7 +403,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units: all null properties - then should return 400 (Bad Request)", async() => {
+    it("units: all null properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: null,
             quantity: null,
@@ -422,7 +422,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: all undefined properties - then should return 400 (Bad Request)", async() => {
+    it("units: all undefined properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: undefined,
             quantity: undefined,
@@ -441,7 +441,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null unitId - then should return 400 (Bad Request)", async() => {
+    it("units: null unitId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: null,
             quantity: 1,
@@ -460,7 +460,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined unitId - then should return 400 (Bad Request)", async() => {
+    it("units: undefined unitId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: undefined,
             quantity: 1,
@@ -479,7 +479,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null quantity - then should return 400 (Bad Request)", async() => {
+    it("units: null quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: null,
@@ -498,7 +498,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined quantity - then should return 400 (Bad Request)", async() => {
+    it("units: undefined quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: undefined,
@@ -517,7 +517,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: <1 quantity - then should return 400 (Bad Request)", async() => {
+    it("units: <1 quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 0,
@@ -536,7 +536,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null formation - then should return 400 (Bad Request)", async() => {
+    it("units: null formation - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -555,7 +555,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined formation - then should return 400 (Bad Request)", async() => {
+    it("units: undefined formation - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -574,7 +574,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: formation is empty string - then should return 400 (Bad Request)", async() => {
+    it("units: formation is empty string - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -593,7 +593,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null troopIds - then should return 400 (Bad Request)", async() => {
+    it("units: null troopIds - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -612,7 +612,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined troopIds - then should return 400 (Bad Request)", async() => {
+    it("units: undefined troopIds - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -631,7 +631,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null troop id - then should return 400 (Bad Request)", async() => {
+    it("units: null troop id - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -650,7 +650,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined troop id - then should return 400 (Bad Request)", async() => {
+    it("units: undefined troop id - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -669,7 +669,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null magicItems - then should return 400 (Bad Request)", async() => {
+    it("units: null magicItems - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -688,7 +688,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined magicItems - then should return 400 (Bad Request)", async() => {
+    it("units: undefined magicItems - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -707,7 +707,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined magic item object - then should return 400 (Bad Request)", async() => {
+    it("units: undefined magic item object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -726,7 +726,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null magic item object - then should return 400 (Bad Request)", async() => {
+    it("units: null magic item object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -745,7 +745,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null magicStandards - then should return 400 (Bad Request)", async() => {
+    it("units: null magicStandards - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -764,7 +764,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined magicStandards - then should return 400 (Bad Request)", async() => {
+    it("units: undefined magicStandards - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -783,7 +783,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined magic standard object - then should return 400 (Bad Request)", async() => {
+    it("units: undefined magic standard object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -802,7 +802,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null magic standard object - then should return 400 (Bad Request)", async() => {
+    it("units: null magic standard object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -821,7 +821,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null options - then should return 400 (Bad Request)", async() => {
+    it("units: null options - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -840,7 +840,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined options - then should return 400 (Bad Request)", async() => {
+    it("units: undefined options - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -859,7 +859,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null option object - then should return 400 (Bad Request)", async() => {
+    it("units: null option object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -878,7 +878,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined option object - then should return 400 (Bad Request)", async() => {
+    it("units: undefined option object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -897,7 +897,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null specialRuleTroops - then should return 400 (Bad Request)", async() => {
+    it("units: null specialRuleTroops - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -916,7 +916,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined specialRuleTroops - then should return 400 (Bad Request)", async() => {
+    it("units: undefined specialRuleTroops - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -935,7 +935,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null rule object - then should return 400 (Bad Request)", async() => {
+    it("units: null rule object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -954,7 +954,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined rule object - then should return 400 (Bad Request)", async() => {
+    it("units: undefined rule object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -973,7 +973,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null equipmentTroops - then should return 400 (Bad Request)", async() => {
+    it("units: null equipmentTroops - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -992,7 +992,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined equipmentTroops - then should return 400 (Bad Request)", async() => {
+    it("units: undefined equipmentTroops - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1011,7 +1011,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: null equipment object - then should return 400 (Bad Request)", async() => {
+    it("units: null equipment object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1030,7 +1030,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units: undefined equipment object - then should return 400 (Bad Request)", async() => {
+    it("units: undefined equipment object - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1050,7 +1050,7 @@ describe("armies-lists/create", () => {
     });
 
 
-    it("units::magicItems: valid properties - then should return 201 (Created)", async() => {
+    it("units::magicItems: valid properties - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1076,7 +1076,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units::magicItems: null unitOptionId & equipmentId - then should return 201 (Created)", async() => {
+    it("units::magicItems: null unitOptionId & equipmentId - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 1,
@@ -1102,7 +1102,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units::magicItems: undefined unitOptionId & equipmentId - then should return 201 (Created)", async() => {
+    it("units::magicItems: undefined unitOptionId & equipmentId - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 1,
@@ -1128,7 +1128,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units::magicItems: all null properties - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: all null properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1154,7 +1154,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: all undefined properties - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: all undefined properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1180,7 +1180,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: null unitId - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: null unitId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1206,7 +1206,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: undefined unitId - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: undefined unitId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1232,7 +1232,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: undefined magicItemId - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: undefined magicItemId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1258,7 +1258,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: null magicItemId - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: null magicItemId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1284,7 +1284,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: null quantity - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: null quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1310,7 +1310,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: undefined quantity - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: undefined quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1336,7 +1336,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: <1 quantity - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: <1 quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1362,7 +1362,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: null valuePoints - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: null valuePoints - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1388,7 +1388,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: undefined valuePoints - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: undefined valuePoints - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1414,7 +1414,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicItems: <1 valuePoints - then should return 400 (Bad Request)", async() => {
+    it("units::magicItems: <1 valuePoints - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 1,
             quantity: 1,
@@ -1443,7 +1443,7 @@ describe("armies-lists/create", () => {
     /**
      * UNITS::MAGIC_STANDARDS
      */
-    it("units::magicStandards: valid properties - then should return 201 (Created)", async() => {
+    it("units::magicStandards: valid properties - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1467,7 +1467,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units::magicStandards: all null properties - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: all null properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1491,7 +1491,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicStandards: all undefined properties - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: all undefined properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1515,7 +1515,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicStandards: undefined magicStandardId - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: undefined magicStandardId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1539,7 +1539,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicStandards: null magicStandardId - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: null magicStandardId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1563,7 +1563,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicStandards: null unitOptionId - then should return 201 (Created)", async() => {
+    it("units::magicStandards: null unitOptionId - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1587,7 +1587,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units::magicStandards: undefined unitOptionId - then should return 201 (Created)", async() => {
+    it("units::magicStandards: undefined unitOptionId - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1611,7 +1611,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units::magicStandards: null quantity - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: null quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1635,7 +1635,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicStandards: undefined quantity - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: undefined quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1659,7 +1659,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicStandards: <1 quantity - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: <1 quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1683,7 +1683,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicStandards: null valuePoints - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: null valuePoints - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1707,7 +1707,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicStandards: undefined valuePoints - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: undefined valuePoints - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1731,7 +1731,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::magicStandards: <1 valuePoints - then should return 400 (Bad Request)", async() => {
+    it("units::magicStandards: <1 valuePoints - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1758,7 +1758,7 @@ describe("armies-lists/create", () => {
     /**
      * UNIT::OPTIONS
      */
-    it("units::options: valid properties - then should return 201 (Created)", async() => {
+    it("units::options: valid properties - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1782,7 +1782,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units::options: all null properties - then should return 400 (Bad Request)", async() => {
+    it("units::options: all null properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1806,7 +1806,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: all undefined properties - then should return 400 (Bad Request)", async() => {
+    it("units::options: all undefined properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1830,7 +1830,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: null unitId - then should return 400 (Bad Request)", async() => {
+    it("units::options: null unitId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1854,7 +1854,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: undefined unitId - then should return 400 (Bad Request)", async() => {
+    it("units::options: undefined unitId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1878,7 +1878,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: undefined optionId - then should return 400 (Bad Request)", async() => {
+    it("units::options: undefined optionId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1902,7 +1902,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: null optionId - then should return 400 (Bad Request)", async() => {
+    it("units::options: null optionId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1926,7 +1926,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: null quantity - then should return 400 (Bad Request)", async() => {
+    it("units::options: null quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1950,7 +1950,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: undefined quantity - then should return 400 (Bad Request)", async() => {
+    it("units::options: undefined quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1974,7 +1974,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: <1 quantity - then should return 400 (Bad Request)", async() => {
+    it("units::options: <1 quantity - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -1998,7 +1998,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: undefined valuePoints - then should return 400 (Bad Request)", async() => {
+    it("units::options: undefined valuePoints - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2022,7 +2022,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: null valuePoints - then should return 400 (Bad Request)", async() => {
+    it("units::options: null valuePoints - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2046,7 +2046,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::options: <1 valuePoints - then should return 400 (Bad Request)", async() => {
+    it("units::options: <1 valuePoints - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2074,7 +2074,7 @@ describe("armies-lists/create", () => {
      * UNITS::SPECIAL_RULE
      */
 
-    it("units::specialRule: valid properties - then should return 201 (Created)", async() => {
+    it("units::specialRule: valid properties - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2096,7 +2096,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units::specialRule: all null properties - then should return 400 (Bad Request)", async() => {
+    it("units::specialRule: all null properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2118,7 +2118,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::specialRule: all undefined properties - then should return 400 (Bad Request)", async() => {
+    it("units::specialRule: all undefined properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2140,7 +2140,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::specialRule: undefined troopId - then should return 400 (Bad Request)", async() => {
+    it("units::specialRule: undefined troopId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2162,7 +2162,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::specialRule: null troopId - then should return 400 (Bad Request)", async() => {
+    it("units::specialRule: null troopId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2184,7 +2184,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::specialRule: null ruleId - then should return 400 (Bad Request)", async() => {
+    it("units::specialRule: null ruleId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2206,7 +2206,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::specialRule: undefined ruleId - then should return 400 (Bad Request)", async() => {
+    it("units::specialRule: undefined ruleId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2231,7 +2231,7 @@ describe("armies-lists/create", () => {
     /**
      * UNIT::EQUIPMENT_TROOPS
      */
-    it("units::equipmentTroops: valid properties - then should return 201 (Created)", async() => {
+    it("units::equipmentTroops: valid properties - should return 201 (Created)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2253,7 +2253,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("units::equipmentTroops: all null properties - then should return 400 (Bad Request)", async() => {
+    it("units::equipmentTroops: all null properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2275,7 +2275,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::equipmentTroops: all undefined properties - then should return 400 (Bad Request)", async() => {
+    it("units::equipmentTroops: all undefined properties - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2297,7 +2297,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::equipmentTroops: undefined troopId - then should return 400 (Bad Request)", async() => {
+    it("units::equipmentTroops: undefined troopId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2319,7 +2319,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::equipmentTroops: null troopId - then should return 400 (Bad Request)", async() => {
+    it("units::equipmentTroops: null troopId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2341,7 +2341,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::equipmentTroops: null equipmentId - then should return 400 (Bad Request)", async() => {
+    it("units::equipmentTroops: null equipmentId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,
@@ -2363,7 +2363,7 @@ describe("armies-lists/create", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("units::equipmentTroops: undefined equipmentId - then should return 400 (Bad Request)", async() => {
+    it("units::equipmentTroops: undefined equipmentId - should return 400 (Bad Request)", async() => {
         const list: List = new List("name", ARMY1.armyId, 500, [{
             unitId: 396,
             quantity: 5,

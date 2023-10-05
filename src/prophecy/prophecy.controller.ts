@@ -25,7 +25,8 @@ import { ProphecyArmyMathResponseDTO } from "@prophecy/maths/prophecy-army-maths
 import { ProphecyArmyWithIdDTO } from "@prophecy/army/prophecy-army.dto";
 import { ArmyList } from "@army-list/army-list.entity";
 import { ProphecyUnitMathsResponseDTO } from "@prophecy/maths/prophecy-unit-maths.dto";
-import { ProphecyUnitRequestDTO } from "@prophecy/prophecy.dto";
+import { ProphecyArmyRequestDTO, ProphecyUnitRequestDTO } from "@prophecy/prophecy.dto";
+import { IsDefined } from "class-validator";
 
 @Controller("prophecies")
 export class ProphecyController {
@@ -105,29 +106,24 @@ export class ProphecyController {
     @HttpCode(HttpStatus.CREATED)
     async getArmiesProphecy(
         @Request() req,
-        @Body("armyList1") armyList1Id: string,
-        @Body("armyList2") armyList2Id: string,
+        @Body() {armyList1, armyList2}: ProphecyArmyRequestDTO,
     ): Promise<ProphecyArmyWithIdDTO> {
         const username: string = req.user.username;
 
-        if (armyList1Id === undefined || armyList2Id === undefined) {
-            throw new BadRequestException("Request body must contain armyList1 and armyList2");
-        }
+        const armyList_1: ArmyList = await this.armyListService.findOneById(armyList1, { loadAll: true });
+        const armyList_2: ArmyList = await this.armyListService.findOneById(armyList2, { loadAll: true });
 
-        const armyList1: ArmyList = await this.armyListService.findOneById(armyList1Id, { loadAll: true });
-        const armyList2: ArmyList = await this.armyListService.findOneById(armyList2Id, { loadAll: true });
-
-        if (armyList1 === null || armyList2 === null) {
-            throw new NotFoundException(`Army list ${(armyList1 === null) ? armyList1Id : armyList2Id} not found.`);
+        if (armyList_1 === null || armyList_2 === null) {
+            throw new NotFoundException(`Army list ${(armyList_1 === null) ? armyList1 : armyList2} not found.`);
         }
-        if (armyList1.owner !== username && armyList1.isShared === false) {
-            throw new ForbiddenException(`Unauthorized to access army list ${armyList1Id}`);
+        if (armyList_1.owner !== username && armyList_1.isShared === false) {
+            throw new ForbiddenException(`Unauthorized to access army list ${armyList1}`);
         }
-        if (armyList2.owner !== username && armyList2.isShared === false) {
-            throw new ForbiddenException(`Unauthorized to access army list ${armyList2Id}`);
+        if (armyList_2.owner !== username && armyList_2.isShared === false) {
+            throw new ForbiddenException(`Unauthorized to access army list ${armyList2}`);
         }
         try {
-            const prophecy: ProphecyArmy = await this.prophecyArmyService.create(username, armyList1, armyList2, 0, 0);
+            const prophecy: ProphecyArmy = await this.prophecyArmyService.create(username, armyList_1, armyList_2, 0, 0);
             const mathsResponse: ProphecyArmyMathResponseDTO = await this.prophecyService.requestArmiesProphecy(
                 prophecy.armyList1.units, prophecy.armyList2.units);
 
