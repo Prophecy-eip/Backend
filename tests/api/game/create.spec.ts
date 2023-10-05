@@ -23,7 +23,7 @@ let opponentToken: string;
 let ownerArmyListId: string;
 let opponentArmyListId:string;
 
-describe("Games route", () => {
+describe("games/create", () => {
 
     beforeAll(async () => {
         // app initialization
@@ -59,12 +59,271 @@ describe("Games route", () => {
         // deleting accounts
         await TestsHelper.deleteAccount(app.getHttpServer(), opponentToken);
         await TestsHelper.deleteAccount(app.getHttpServer(), ownerToken);
+        // delete armies lists
+        await TestsHelper.deleteArmyList(app.getHttpServer(), ownerToken, ownerArmyListId);
+        await TestsHelper.deleteArmyList(app.getHttpServer(), opponentToken, ownerArmyListId);
     });
 
-    /**
-     * CREATE
-     */
-    it("create: opponent, armies lists - then should return 201 (created)", async() => {
+    it("null parameter - should return 400 (bad request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send(null);
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("undefined parameter - should return 400 (bad request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send(undefined);
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("all null properties - should return 400 (bad request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: null,
+                ownerScore: null,
+                opponentScore: null,
+                ownerArmyListId: null,
+                opponentArmyListId: null
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("all undefined properties - should return 400 (bad request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: undefined,
+                ownerScore: undefined,
+                opponentScore: undefined,
+                ownerArmyListId: undefined,
+                opponentArmyListId: undefined
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("undefined opponent - should return 201 (Created)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: undefined,
+                ownerScore: 15,
+                opponentScore: 5,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.CREATED);
+    });
+
+    it("undefined opponent - should return 201 (Created)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: null,
+                ownerScore: 15,
+                opponentScore: 5,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.CREATED);
+    });
+
+    it("undefined ownerScore - should return 400 (Bad Request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: undefined,
+                opponentScore: 5,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("null ownerScore - should return 400 (Bad Request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: null,
+                opponentScore: 5,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("<0 ownerScore - should return 400 (Bad Request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: -1,
+                opponentScore: 15,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it(">20 ownerScore - should return 400 (Bad Request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: 21,
+                opponentScore: 15,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("undefined opponentScore - should return 400 (Bad Request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: 5,
+                opponentScore: undefined,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("null opponentScore - should return 400 (Bad Request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: 5,
+                opponentScore: null,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("<0 opponentScore - should return 400 (Bad Request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: 5,
+                opponentScore: -1,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it(">20 opponentScore - should return 400 (Bad Request)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: 5,
+                opponentScore: 21,
+                ownerArmyListId,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("null ownerArmyListId - should return 201 (Created)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: 5,
+                opponentScore: 15,
+                ownerArmyListId: null,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.CREATED);
+    });
+
+    it("undefined ownerArmyListId - should return 201 (Created)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: 5,
+                opponentScore: 15,
+                ownerArmyListId: undefined,
+                opponentArmyListId
+            });
+
+        expect(res.status).toEqual(HttpStatus.CREATED);
+    });
+
+    it("undefined opponentArmyListId - should return 201 (Created)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: 5,
+                opponentScore: 15,
+                ownerArmyListId,
+                opponentArmyListId: undefined
+            });
+
+        expect(res.status).toEqual(HttpStatus.CREATED);
+    });
+
+
+    it("null opponentArmyListId - should return 201 (Created)", async() => {
+        const res = await request(app.getHttpServer())
+            .post(TestsHelper.GAMES_ROUTE)
+            .set("Authorization", `Bearer ${ownerToken}`)
+            .send({
+                opponent: OPPONENT_USERNAME,
+                ownerScore: 5,
+                opponentScore: 15,
+                ownerArmyListId,
+                opponentArmyListId: null
+            });
+
+        expect(res.status).toEqual(HttpStatus.CREATED);
+    });
+
+    it("opponent, armies lists - should return 201 (created)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -79,7 +338,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("create: opponent, null opponent army list - then should return 201 (created)", async() => {
+    it("opponent, null opponent army list - should return 201 (created)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -94,7 +353,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("create: opponent, null owner army list - then should return 201 (created)", async() => {
+    it("opponent, null owner army list - should return 201 (created)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -109,7 +368,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("create: null opponent, armies lists - then should return 201 (created)", async() => {
+    it("null opponent, armies lists - should return 201 (created)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -124,7 +383,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("create: null opponent, null opponent army list - then should return 201 (created)", async() => {
+    it("null opponent, null opponent army list - should return 201 (created)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -139,7 +398,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("create: null opponent, null owner army list - then should return 201 (created)", async() => {
+    it("null opponent, null owner army list - should return 201 (created)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -154,7 +413,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("create: null opponent, null armies lists - then should return 201 (created)", async() => {
+    it("null opponent, null armies lists - should return 201 (created)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -169,7 +428,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.CREATED);
     });
 
-    it("create: total score under 20 - then should return 400 (bad request)", async() => {
+    it("total score under 20 - should return 400 (bad request)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -184,7 +443,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("create: total score over 20 - then should return 400 (bad request)", async() => {
+    it("total score over 20 - should return 400 (bad request)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -199,7 +458,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("create: no opponentId - then should return 400 (bad request)", async() => {
+    it("no opponentId - should return 400 (bad request)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -213,7 +472,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("create: no ownerScore - then should return 400 (bad request)", async() => {
+    it("no ownerScore - should return 400 (bad request)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -227,7 +486,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("create: no opponentScore - then should return 400 (bad request)", async() => {
+    it("no opponentScore - should return 400 (bad request)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -241,7 +500,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("create: no ownerArmyListId - then should return 400 (bad request)", async() => {
+    it("no ownerArmyListId - should return 400 (bad request)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -255,7 +514,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("create: no opponentArmyListId - then should return 400 (bad request)", async() => {
+    it("no opponentArmyListId - should return 400 (bad request)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -269,7 +528,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
     });
 
-    it("create: invalid token - then should return 401 (unauthorized)", async() => {
+    it("invalid token - should return 401 (unauthorized)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer abcdef`)
@@ -284,7 +543,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    it("create: invalid opponentId - then should return 404 (not found)", async() => {
+    it("invalid opponentId - should return 404 (not found)", async() => {
         const username: string = faker.internet.userName();
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
@@ -300,7 +559,7 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    it("create: invalid ownerArmyListId - then should return 404 (not found)", async() => {
+    it("invalid ownerArmyListId - should return 404 (not found)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
@@ -315,18 +574,20 @@ describe("Games route", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    it("create: invalid opponentArmyListId - then should return 404 (not found)", async() => {
+    it("invalid opponentArmyListId - should return 404 (not found)", async() => {
         const res = await request(app.getHttpServer())
             .post(TestsHelper.GAMES_ROUTE)
             .set("Authorization", `Bearer ${ownerToken}`)
             .send({
                 opponent: OPPONENT_USERNAME,
                 ownerScore: 15,
-                opponentScore: 9,
+                opponentScore: 5,
                 ownerArmyListId: ownerArmyListId,
                 opponentArmyListId: "efgh"
             });
 
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
+
+
 });
