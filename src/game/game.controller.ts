@@ -14,7 +14,8 @@ import { ArmyList } from "@army-list/army-list.entity";
 import { ArmyListService } from "@army-list/army-list.service";
 import { ProfileService } from "@profile/profile.service";
 import { Game } from "@app/game/game.entity";
-import { GameDTO } from "@app/game/game.dto";
+import { GameDTO, GameParameterDTO } from "@app/game/game.dto";
+import { ParamHelper } from "@helper/param.helper";
 
 /**
  * @class GameController
@@ -34,39 +35,32 @@ export class GameController {
      * @param opponent The opponent's username
      * @param ownerScore The user's score
      * @param opponentScore The opponent's score
-     * @param ownerArmyListId The user's army list id
+     * @param ownerArmyList The user's army list id
      * @param opponentArmyListId The opponent's army list id
      */
     @UseGuards(JwtAuthGuard)
     @Post("")
     @HttpCode(HttpStatus.CREATED)
     async create(@Request() req,
-        @Body("opponent") opponent: string | null,
-        @Body("ownerScore") ownerScore: number,
-        @Body("opponentScore") opponentScore: number,
-        @Body("ownerArmyListId") ownerArmyListId: string | null,
-        @Body("opponentArmyListId") opponentArmyListId: string | null,
+        @Body() { opponent, ownerScore, opponentScore, ownerArmyListId, opponentArmyListId }: GameParameterDTO
         ): Promise<void> {
         const username = req.user.username;
         const ownerArmyList: ArmyList = await this.armyListService.findOneById(ownerArmyListId);
         const opponentArmyList: ArmyList = await this.armyListService.findOneById(opponentArmyListId);
 
-        if (opponent === undefined || ownerScore === undefined || opponentScore === undefined ||
-            ownerArmyList === undefined || opponentArmyList === undefined) {
-            throw new BadRequestException();
+        if ((ownerScore + opponentScore) !== 20) {
+            throw new BadRequestException(`The sum of both scores must be equal to 20 (here ${ownerScore +
+            opponentScore}).`);
         }
-        if (opponent !== null && await this.profileService.findOneByUsername(opponent) === null) {
+        if (ParamHelper.isValid(opponent) && await this.profileService.findOneByUsername(opponent) === null) {
             throw new NotFoundException(`User ${opponent} not found.`);
         }
         if (ownerArmyList === null || opponentArmyList === null) {
-            throw new NotFoundException(`Army list ${ownerArmyList === null ? 
-                ownerArmyListId : opponentArmyListId} not found.`);
+            throw new NotFoundException(`Army list ${ownerArmyList === null ? ownerArmyListId : 
+                opponentArmyListId} not found.`);
         }
-        if ((ownerScore + opponentScore) !== 20) {
-            throw new BadRequestException(`The sum of both scores must be equal to 20 (here ${ownerScore + opponentScore}).`);
-        }
-
-        const game: Game = await this.gameService.create(username, opponent, ownerScore, opponentScore, ownerArmyListId, opponentArmyListId);
+        const game: Game = await this.gameService.create(username, opponent, ownerScore, opponentScore, ownerArmyListId,
+            opponentArmyListId);
         await this.gameService.save(game);
     }
 
