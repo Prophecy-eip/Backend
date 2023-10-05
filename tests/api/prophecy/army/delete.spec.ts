@@ -23,7 +23,7 @@ let userArmyListId1: string;
 let userArmyListId2: string;
 let prophecyId: string;
 
-describe("prophecies/armies/create", () => {
+describe("prophecies/armies/delete", () => {
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [AppModule]
@@ -58,7 +58,7 @@ describe("prophecies/armies/create", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), user1Token);
     });
 
-    it("basic delete - then should return 200 (OK)", async () => {
+    it("basic delete - should return 200 (OK)", async () => {
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.ARMY_PROPHECY_ROUTE}/${prophecyId}`)
             .set("Authorization", `Bearer ${userToken}`);
@@ -72,7 +72,7 @@ describe("prophecies/armies/create", () => {
         prophecies.map(p => expect(p.id !== prophecyId));
     });
 
-    it("Invalid token - then should return 401 (Unauthorized)", async () => {
+    it("Invalid token - should return 401 (Unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.ARMY_PROPHECY_ROUTE}/${prophecyId}`)
             .set("Authorization", `Bearer abcd`);
@@ -80,7 +80,7 @@ describe("prophecies/armies/create", () => {
         expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
-    it("Not existing prophecy id - then should return 404 (Not found)", async () => {
+    it("Not existing prophecy id - should return 404 (Not found)", async () => {
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.ARMY_PROPHECY_ROUTE}/abcd`)
             .set("Authorization", `Bearer ${userToken}`);
@@ -88,7 +88,7 @@ describe("prophecies/armies/create", () => {
         expect(res.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    it("Not owned prophecy - then should return 403 (Forbidden)", async () => {
+    it("Not owned prophecy - should return 403 (Forbidden)", async () => {
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.ARMY_PROPHECY_ROUTE}/${prophecyId}`)
             .set("Authorization", `Bearer ${user1Token}`);

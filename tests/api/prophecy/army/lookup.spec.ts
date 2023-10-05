@@ -20,7 +20,7 @@ let nb: number;
 
 jest.setTimeout(40000);
 
-describe("prophecies/armies/create", () => {
+describe("prophecies/armies/lookup", () => {
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             imports: [AppModule]
@@ -51,7 +51,7 @@ describe("prophecies/armies/create", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), userToken);
     });
 
-    it("basic lookup - then should return 200 (Ok)", async () => {
+    it("basic lookup - should return 200 (Ok)", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.ARMY_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${userToken}`);
@@ -68,7 +68,7 @@ describe("prophecies/armies/create", () => {
         });
     });
 
-    it("invalid token - then should return 401 (Unauthorized)", async () => {
+    it("invalid token - should return 401 (Unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer abcd`);

@@ -17,7 +17,7 @@ const USERNAME1 = faker.internet.userName();
 const EMAIL1 = faker.internet.email();
 const PASSWORD1 = faker.internet.password();
 
-describe("Prophecies route", () => {
+describe("prophecies/units/lookup", () => {
 
     beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -38,7 +38,7 @@ describe("Prophecies route", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), token1);
     });
 
-    it("units/lookup: basic lookup - then should return 200 (Ok)", async () => {
+    it("basic lookup - should return 200 (Ok)", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -54,7 +54,7 @@ describe("Prophecies route", () => {
         }
     });
 
-    it("units/lookup: lookup with invalid token - then should return 401 (Unauthorized)", async () => {
+    it("lookup with invalid token - should return 401 (Unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.UNIT_PROPHECY_ROUTE)
             .set("Authorization", `Bearer abcd`);

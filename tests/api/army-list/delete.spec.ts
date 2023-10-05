@@ -59,7 +59,7 @@ describe("armies-lists/delete", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), token1);
     });
 
-    it("delete: basic delete - then should return 200 (ok)", async () => {
+    it("basic delete - should return 200 (ok)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -77,7 +77,7 @@ describe("armies-lists/delete", () => {
         expect(res2.status).toEqual(HttpStatus.NOT_FOUND);
     });
 
-    it("delete: use invalid token - then should return unauthorised (401)", async () => {
+    it("use invalid token - should return unauthorised (401)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -90,7 +90,7 @@ describe("armies-lists/delete", () => {
     });
 
 
-    it("delete: not the owner - then should return forbidden (403)", async () => {
+    it("not the owner - should return forbidden (403)", async () => {
         const a = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -102,7 +102,7 @@ describe("armies-lists/delete", () => {
         expect(res.status).toEqual(HttpStatus.FORBIDDEN);
     });
 
-    it("delete: use invalid army list id - then should return not found (404)", async () => {
+    it("use invalid army list id - should return not found (404)", async () => {
         const id: string = "abcd";
         const res = await request(app.getHttpServer())
             .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${id}`)

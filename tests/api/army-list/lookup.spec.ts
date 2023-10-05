@@ -53,7 +53,7 @@ describe("armies-lists/lookup", () => {
         await TestsHelper.deleteAccount(app.getHttpServer(), token1);
     });
 
-    it("lookup: basic lookup - then return armies lists credentials", async () => {
+    it("basic lookup - should return armies lists credentials", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
@@ -62,7 +62,7 @@ describe("armies-lists/lookup", () => {
         expect(res.body).toBeDefined();
     });
 
-    it("lookup: with invalid token - then return 401 (unauthorized)", async () => {
+    it("invalid token - should return 401 (unauthorized)", async () => {
         const res = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer abcd`);
