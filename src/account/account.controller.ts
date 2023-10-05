@@ -18,6 +18,7 @@ import { AuthService } from "@auth/auth.service";
 import { EmailConfirmationService } from "@email/email-confirmation.service";
 import { ForgottenPasswordService } from "@email/forgotten-password.service";
 import { PasswordUpdateService } from "@email/password-update.service";
+import { PasswordParameterDTO, EmailParameterDTO, UsernameParameterDTO } from "@account/account.dto";
 
 dotenv.config();
 
@@ -73,8 +74,8 @@ export class AccountController {
      */
     @Post("send-password-reset-link")
     @HttpCode(HttpStatus.OK)
-    async sendPasswordResetLink(@Body("email") email: string): Promise<void> {
-        if (!this.isFieldValid(email) || await this.profileService.findOneByEmail(email) === null) {
+    async sendPasswordResetLink(@Body() { email }: EmailParameterDTO): Promise<void> {
+        if (await this.profileService.findOneByEmail(email) === null) {
             throw new BadRequestException("Invalid email address");
         }
         await this.forgottenPasswordService.sendPasswordResetLink(email);
@@ -90,12 +91,10 @@ export class AccountController {
      */
     @Put("reset-password")
     @HttpCode(HttpStatus.OK)
-    async resetPassword(@Query("token") token: string, @Body("password") password: string): Promise<void> {
+    async resetPassword(@Query("token") token: string,
+        @Body() { password }: PasswordParameterDTO): Promise<void> {
         const username: string = await this.forgottenPasswordService.decodeResetToken(token);
 
-        if (!this.isFieldValid(password)) {
-            throw new BadRequestException("Invalid password field");
-        }
         await this.forgottenPasswordService.resetPassword(username, password);
     }
 
@@ -126,13 +125,10 @@ export class AccountController {
     @UseGuards(JwtAuthGuard)
     @Put("password")
     @HttpCode(HttpStatus.OK)
-    async updatePassword(@Request() req, @Body("password") password: string): Promise<void> {
+    async updatePassword(@Request() req, @Body() { password }: PasswordParameterDTO): Promise<void> {
         const username = req.user.username;
         const profile: Profile = await this.profileService.findOneByUsername(username);
 
-        if (!this.isFieldValid(password)) {
-            throw new BadRequestException();
-        }
         await this.profileService.updatePassword(username, password);
         await this.passwordUpdateService.sendPasswordUpdateEmail(profile.email);
     }
@@ -147,13 +143,10 @@ export class AccountController {
     @UseGuards(JwtAuthGuard)
     @Put("email")
     @HttpCode(HttpStatus.OK)
-    async updateEmail(@Request() req, @Body("email") email: string): Promise<void> {
+    async updateEmail(@Request() req, @Body() { email }: EmailParameterDTO): Promise<void> {
         const username = req.user.username;
         const _profile: Profile = await this.profileService.findOneByUsername(username);
 
-        if (!this.isFieldValid(email)) {
-            throw new BadRequestException();
-        }
         await this.profileService.updateEmail(username, email);
         await this.emailConfirmationService.sendVerificationLink(email);
     }
@@ -168,15 +161,12 @@ export class AccountController {
     @UseGuards(JwtAuthGuard)
     @Put("username")
     @HttpCode(HttpStatus.OK)
-    async updateUsername(@Request() req, @Body("username") newUsername: string): Promise<{username: string}> {
-        const username = req.user.username;
+    async updateUsername(@Request() req, @Body() { username }: UsernameParameterDTO): Promise<UsernameParameterDTO> {
+        const u = req.user.username;
 
-        if (!this.isFieldValid(newUsername)) {
-            throw new BadRequestException();
-        }
-        await this.profileService.updateUsername(username, newUsername);
+        await this.profileService.updateUsername(u, username);
         return {
-            username: newUsername
+            username
         };
     }
 
@@ -194,16 +184,5 @@ export class AccountController {
             username: profile.username,
             email: profile.email
         };
-    }
-
-    /**
-     * @brief Checks if a string parameter is valid
-     *        Checks if it is not undefined, null or empty
-     * @param str The parameter to check
-     * @return True if the parameter is valid, false otherwise
-     * @private
-     */
-    private isFieldValid(str: string): boolean {
-        return (str !== undefined && str !== null && str !== "");
     }
 }

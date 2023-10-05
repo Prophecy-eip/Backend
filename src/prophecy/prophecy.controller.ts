@@ -26,7 +26,6 @@ import { ProphecyArmyWithIdDTO } from "@prophecy/army/prophecy-army.dto";
 import { ArmyList } from "@army-list/army-list.entity";
 import { ProphecyUnitMathsResponseDTO } from "@prophecy/maths/prophecy-unit-maths.dto";
 import { ProphecyArmyRequestDTO, ProphecyUnitRequestDTO } from "@prophecy/prophecy.dto";
-import { IsDefined } from "class-validator";
 
 @Controller("prophecies")
 export class ProphecyController {
