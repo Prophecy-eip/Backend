@@ -40,7 +40,7 @@ describe("armies-lists/create", () => {
     });
 
     afterAll(async () => {
-        const res = await  request(app.getHttpServer())
+        const res = await request(app.getHttpServer())
             .get(TestsHelper.ARMIES_LISTS_ROUTE)
             .set("Authorization", `Bearer ${token}`);
 
