@@ -51,6 +51,8 @@ export class TestsHelper {
     static UPDATE_PASSWORD_ROUTE: string = "/account/password";
     static UPDATE_EMAIL_ROUTE: string = "/account/email";
     static UPDATE_USERNAME_ROUTE: string = "/account/username";
+    static SEND_PASSWORD_RESET_LINK_ROUTE: string = "/account/send-password-reset-link";
+    static RESET_PASSWORD_ROUTE: string = "/account/reset-password";
 
     /**
      * PROPHECIES

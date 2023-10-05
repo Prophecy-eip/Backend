@@ -4,7 +4,6 @@ import {
 import { ProphecyUnitAttackingPosition } from "@prophecy/unit/prophecy-unit.entity";
 import { IsDefined, IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
-import { Body } from "@nestjs/common";
 
 export class ProphecyUnitRequestDTO {
     @IsDefined()
