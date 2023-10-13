@@ -57,8 +57,8 @@ describe("games/create", () => {
 
     afterAll(async () => {
         // deleting accounts
-        await TestsHelper.deleteAccount(app.getHttpServer(), opponentToken);
-        await TestsHelper.deleteAccount(app.getHttpServer(), ownerToken);
+        await TestsHelper.deleteAccount(app.getHttpServer(), opponentToken, OPPONENT_PASSWORD);
+        await TestsHelper.deleteAccount(app.getHttpServer(), ownerToken, OWNER_PASSWORD);
         // delete armies lists
         await TestsHelper.deleteArmyList(app.getHttpServer(), ownerToken, ownerArmyListId);
         await TestsHelper.deleteArmyList(app.getHttpServer(), opponentToken, ownerArmyListId);

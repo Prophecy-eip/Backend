@@ -29,13 +29,13 @@ describe("/sign-out", () => {
 
     afterAll(async () => {
         let token = await TestsHelper.getToken(app.getHttpServer(), USERNAME, PASSWORD);
-        await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD);
 
         token = await TestsHelper.getToken(app.getHttpServer(), USERNAME1, PASSWORD);
-        await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD);
 
         token = await TestsHelper.getToken(app.getHttpServer(), USERNAME, PASSWORD1);
-        await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD1);
     });
 
     it("logout with valid token - should return 200 (OK)", async () => {

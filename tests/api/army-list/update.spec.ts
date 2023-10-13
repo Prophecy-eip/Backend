@@ -55,8 +55,8 @@ describe("armies-lists/update", () => {
         await request(app.getHttpServer())
             .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${user2ListId}`)
             .set("Authorization", `Bearer ${token1}`);
-        await TestsHelper.deleteAccount(app.getHttpServer(), token);
-        await TestsHelper.deleteAccount(app.getHttpServer(), token1);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token1, PASSWORD);
     });
 
     it("basic - should return 200 (ok) and values should have changed", async () => {

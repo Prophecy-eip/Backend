@@ -17,10 +17,11 @@ export class TestsHelper {
         return response.body.access_token;
     }
 
-    static async deleteAccount(httpServer: any, token: string) {
+    static async deleteAccount(httpServer: any, token: string, password: string) {
         return request(httpServer)
             .delete(this.DELETE_ACCOUNT_ROUTE)
-            .set("Authorization", `Bearer ${token}`);
+            .set("Authorization", `Bearer ${token}`)
+            .send({ password });
     }
 
     static async signUp(httpServer: any, username: string, email: string, password: string) {

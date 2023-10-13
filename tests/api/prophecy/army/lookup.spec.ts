@@ -48,7 +48,7 @@ describe("prophecies/armies/lookup", () => {
     });
 
     afterAll(async () => {
-        await TestsHelper.deleteAccount(app.getHttpServer(), userToken);
+        await TestsHelper.deleteAccount(app.getHttpServer(), userToken, PASSWORD);
     });
 
     it("basic lookup - should return 200 (Ok)", async () => {
