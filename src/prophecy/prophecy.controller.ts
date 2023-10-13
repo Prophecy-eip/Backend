@@ -39,14 +39,14 @@ export class ProphecyController {
     @Post("units")
     @HttpCode(HttpStatus.CREATED)
     async getUnitsProphecy(@Request() req,
-        @Body() param: ProphecyUnitRequestDTO): Promise<ProphecyUnitDTO> {
+        @Body() { attackingRegiment, defendingRegiment, attackingPosition }: ProphecyUnitRequestDTO): Promise<ProphecyUnitDTO> {
         try {
-            const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(param.attackingRegiment);
-            const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(param.defendingRegiment);
+            const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(attackingRegiment);
+            const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(defendingRegiment);
             const mathsResponse: ProphecyUnitMathsResponseDTO = await this.prophecyService.requestUnitsProphecy(
-                attackingRegimentUnit, defendingRegimentUnit, param.attackingPosition);
+                attackingRegimentUnit, defendingRegimentUnit, attackingPosition);
             const prophecy: ProphecyUnit = await this.prophecyUnitService.create(req.user.username,
-                attackingRegimentUnit, defendingRegimentUnit, param.attackingPosition, mathsResponse);
+                attackingRegimentUnit, defendingRegimentUnit, attackingPosition, mathsResponse);
 
             await this.prophecyUnitService.save(prophecy);
             return new ProphecyUnitDTO(prophecy);
