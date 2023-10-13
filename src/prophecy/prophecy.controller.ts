@@ -1,5 +1,4 @@
 import {
-    BadRequestException,
     Body,
     Controller,
     HttpCode,
@@ -16,7 +15,6 @@ import { ArmyListUnitService } from "@army-list/army-list-unit/army-list-unit.se
 import { ProphecyUnit } from "./unit/prophecy-unit.entity";
 import { ProphecyUnitService } from "./unit/prophecy-unit.service";
 import { ProphecyUnitDTO, ProphecyUnitWithIdDTO } from "./unit/prophecy-unit.dto";
-import { ParamHelper } from "@helper/param.helper";
 import ProphecyArmyService from "@prophecy/army/prophecy-army.service";
 import ProphecyMathsService from "@prophecy/maths/prophecy-maths.service";
 import { ArmyListService } from "@army-list/army-list.service";
@@ -42,10 +40,6 @@ export class ProphecyController {
     @HttpCode(HttpStatus.CREATED)
     async getUnitsProphecy(@Request() req,
         @Body() param: ProphecyUnitRequestDTO): Promise<ProphecyUnitDTO> {
-        if (!ParamHelper.isValid(param)) {
-            throw new BadRequestException("parameter must not be undefined or null");
-        }
-
         try {
             const attackingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(param.attackingRegiment);
             const defendingRegimentUnit: ArmyListUnit = await this.armyListUnitService.createAndSaveWithRelations(param.defendingRegiment);
@@ -86,9 +80,6 @@ export class ProphecyController {
     async deleteUnitsProphecy(
         @Request() req,
         @Param("id") id: string) : Promise<void> {
-        if (!ParamHelper.isValid(id)) {
-            throw new BadRequestException("An id is required");
-        }
         const prophecy: ProphecyUnit = await this.prophecyUnitService.findOneById(id);
 
         if (prophecy === null) {
@@ -153,10 +144,6 @@ export class ProphecyController {
     @Delete("/armies/:id")
     @HttpCode(HttpStatus.OK)
     async deleteArmiesProphecy(@Request() req, @Param("id") id: string): Promise<void> {
-        if (!ParamHelper.isValid(id)) {
-            throw new BadRequestException("A valid id is required");
-        }
-
         const username: string = req.user.username;
         const prophecy: ProphecyArmy = await this.prophecyArmyService.findOneById(id);
 

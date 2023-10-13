@@ -4,7 +4,6 @@ import {
     ConflictException,
     Controller,
     HttpCode,
-    HttpException,
     HttpStatus, InternalServerErrorException,
     Post, Request, UseGuards
 } from "@nestjs/common";
@@ -13,6 +12,7 @@ import { JwtAuthGuard } from "@account/auth/guards/jwt-auth.guard";
 import { ProfileService } from "@account/profile/profile.service";
 import { AuthService } from "@account/auth/auth.service";
 import { EmailConfirmationService } from "@email/email-confirmation.service";
+import { SignUpParameterDTO } from "@app/app.dto";
 
 /**
  * @class AppController
@@ -36,14 +36,8 @@ export class AppController {
     @Post("sign-up")
     @HttpCode(HttpStatus.CREATED)
     async signUp(
-        @Body("username") username: string,
-        @Body("email") email: string,
-        @Body("password") password: string,
-        @Body("sendEmail") sendEmail: boolean
+        @Body() { username, email, password, sendEmail}: SignUpParameterDTO
     ): Promise<void> {
-        if (!this._isFieldValid(username) || !this._isFieldValid(email) || !this._isFieldValid(password)) {
-            throw new HttpException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
-        }
         if (await this.profileService.credentialsAlreadyInUse(username, email)) {
             throw new ConflictException();
         }
@@ -85,8 +79,4 @@ export class AppController {
     @Post("sign-out")
     @HttpCode(HttpStatus.OK)
     async logout(@Request() _req): Promise<void> {}
-
-    private _isFieldValid(str: string): boolean {
-        return (str !== undefined && str !== null && str !== "");
-    }
 }
