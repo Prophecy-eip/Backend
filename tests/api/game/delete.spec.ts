@@ -74,8 +74,8 @@ describe("Games route", () => {
 
     afterAll(async () => {
         // deleting accounts
-        await TestsHelper.deleteAccount(app.getHttpServer(), opponentToken);
-        await TestsHelper.deleteAccount(app.getHttpServer(), ownerToken);
+        await TestsHelper.deleteAccount(app.getHttpServer(), opponentToken, OPPONENT_PASSWORD);
+        await TestsHelper.deleteAccount(app.getHttpServer(), ownerToken, OWNER_PASSWORD);
     });
 
     it("basic delete - then should return 200 (OK)", async() => {

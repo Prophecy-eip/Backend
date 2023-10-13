@@ -54,8 +54,8 @@ describe("prophecies/armies/create", () => {
     });
 
     afterAll(async () => {
-        await TestsHelper.deleteAccount(app.getHttpServer(), userToken);
-        await TestsHelper.deleteAccount(app.getHttpServer(), user1Token);
+        await TestsHelper.deleteAccount(app.getHttpServer(), userToken, PASSWORD);
+        await TestsHelper.deleteAccount(app.getHttpServer(), user1Token, PASSWORD);
     });
 
     it("basic prophecy - should return 201 (created)", async () => {
