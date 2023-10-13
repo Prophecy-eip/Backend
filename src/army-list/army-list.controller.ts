@@ -101,7 +101,7 @@ export class ArmyListController {
         let list: ArmyList = await this.armyListService.findOneById(id);
 
         if (list === null) {
-            throw new NotFoundException();
+            throw new NotFoundException(`Army list ${id} not found`);
         }
         if (list.owner !== req.user.username) {
             throw new ForbiddenException();
@@ -115,9 +115,6 @@ export class ArmyListController {
     async update(@Request() req,
         @Param("id") id: string,
         @Body() param: ArmyListParameterDTO): Promise<void> {
-        if (!ParamHelper.isValid(param)) {
-            throw new BadRequestException("army list must not be null or undefined");
-        }
         let list: ArmyList = await this.armyListService.findOneById(id, { loadUnits: true});
 
         if (list === null) {
