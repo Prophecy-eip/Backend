@@ -4,7 +4,7 @@ import { Troop } from "./troop/troop.entity";
 import { SpecialRuleUnitTroop } from "./troop/special-rule/special-rule-unit-troop.entity";
 import { EquipmentUnitTroop } from "./troop/equipment/equipment-unit-troop.entity";
 import { UnitOption } from "./option/unit-option.entity";
-// import { ProphecyDatasource } from "@database/prophecy.datasource";
+import { ProphecyDatasource } from "@database/prophecy.datasource";
 
 export class UnitCharacteristic {
     public type: string;
@@ -91,17 +91,17 @@ export class Unit {
 
     @AfterLoad()
     private async load() {
-        // let datasource: ProphecyDatasource = new ProphecyDatasource();
-        //
-        // await datasource.initialize();
-        // for (const id of this.troopIds)
-        //     this.troops.push(await datasource.getRepository(Troop).findOneBy({ id: id }));
-        // for (const id of this.specialRuleUnitTroopIds)
-        //     this.specialRuleUnitTroops.push(await datasource.getRepository(SpecialRuleUnitTroop).findOneBy({ id: id }));
-        // for (const id of this.equipmentUnitTroopIds)
-        //     this.equipmentUnitTroops.push(await datasource.getRepository(EquipmentUnitTroop).findOneBy({ id: id }));
-        // for (const id of this.unitOptionIds)
-        //     this.unitOptions.push(await datasource.getRepository(UnitOption).findOneBy({ id: id }));
-        // await datasource.destroy();
+        let datasource: ProphecyDatasource = new ProphecyDatasource();
+
+        await datasource.initialize();
+        for (const id of this.troopIds)
+            this.troops.push(await datasource.getRepository(Troop).findOneBy({ id: id }));
+        for (const id of this.specialRuleUnitTroopIds)
+            this.specialRuleUnitTroops.push(await datasource.getRepository(SpecialRuleUnitTroop).findOneBy({ id: id }));
+        for (const id of this.equipmentUnitTroopIds)
+            this.equipmentUnitTroops.push(await datasource.getRepository(EquipmentUnitTroop).findOneBy({ id: id }));
+        for (const id of this.unitOptionIds)
+            this.unitOptions.push(await datasource.getRepository(UnitOption).findOneBy({ id: id }));
+        await datasource.destroy();
     }
 }
