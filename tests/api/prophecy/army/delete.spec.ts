@@ -54,8 +54,8 @@ describe("prophecies/armies/delete", () => {
     })
 
     afterAll(async () => {
-        await TestsHelper.deleteAccount(app.getHttpServer(), userToken);
-        await TestsHelper.deleteAccount(app.getHttpServer(), user1Token);
+        await TestsHelper.deleteAccount(app.getHttpServer(), userToken, PASSWORD);
+        await TestsHelper.deleteAccount(app.getHttpServer(), user1Token, PASSWORD);
     });
 
     it("basic delete - should return 200 (OK)", async () => {

@@ -55,8 +55,8 @@ describe("armies-lists/delete", () => {
                 .delete(`${TestsHelper.ARMIES_LISTS_ROUTE}/${a.id}`)
                 .set("Authorization", `Bearer ${token}`);
         }
-        await TestsHelper.deleteAccount(app.getHttpServer(), token);
-        await TestsHelper.deleteAccount(app.getHttpServer(), token1);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token1, PASSWORD);
     });
 
     it("basic delete - should return 200 (ok)", async () => {

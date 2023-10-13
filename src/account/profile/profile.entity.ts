@@ -1,5 +1,5 @@
 import { BeforeInsert, Column, Entity, PrimaryColumn } from "typeorm";
-import { hash } from "bcrypt";
+import { hash, compare } from "bcrypt";
 
 export enum AccountType {
     PLAYER,
@@ -44,5 +44,9 @@ export class Profile {
     @BeforeInsert()
     private async hashPassword() {
         this.password = await hash(this.password, 10);
+    }
+
+    public comparePassword(password: string): Promise<boolean> {
+        return compare(password, this.password);
     }
 }

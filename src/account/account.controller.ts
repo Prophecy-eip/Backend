@@ -102,14 +102,15 @@ export class AccountController {
      * @brief Enables users to delete their accounts
      *        Deletes the user's account in the database.
      * @param req The request
+     * @param password The user's password
      */
     @UseGuards(JwtAuthGuard)
     @Delete("")
     @HttpCode(HttpStatus.OK)
-    async deleteAccount(@Request() req): Promise<void> {
+    async deleteAccount(@Request() req, @Body() { password }: PasswordParameterDTO): Promise<void> {
         const username = req.user.username;
-
-        if (await this.profileService.findOneByUsername(username) === null) {
+        const profile: Profile = await this.profileService.findOneByUsername(username);
+        if ( profile === null || ! await profile.comparePassword(password)) {
             throw new UnauthorizedException();
         }
         await this.profileService.delete(username);

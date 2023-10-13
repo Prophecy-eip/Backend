@@ -29,13 +29,13 @@ describe("account/delete", () => {
 
     afterEach(async () => {
         let token = await TestsHelper.getToken(app.getHttpServer(), USERNAME, PASSWORD);
-        await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD);
 
         token = await TestsHelper.getToken(app.getHttpServer(), USERNAME1, PASSWORD);
-        await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD);
 
         token = await TestsHelper.getToken(app.getHttpServer(), USERNAME, PASSWORD1);
-        await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD1);
     });
 
     it("delete existing account - should return 200 (OK)", async () => {
@@ -48,7 +48,7 @@ describe("account/delete", () => {
         const token = await TestsHelper.getToken(app.getHttpServer(), USERNAME, PASSWORD);
 
         // deleting account
-        const response1 = await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        const response1 = await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD);
 
         expect(response1.status == HttpStatus.OK);
 
@@ -59,13 +59,33 @@ describe("account/delete", () => {
                 username: USERNAME,
                 password: PASSWORD,
             });
-
         expect(response2.status).toEqual(HttpStatus.UNAUTHORIZED);
+    });
+
+    it("undefined password - should return 400 (Bad Request)", async () => {
+        const token = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), USERNAME, EMAIL, PASSWORD);
+        const res = await TestsHelper.deleteAccount(app.getHttpServer(), token, undefined);
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("null password - should return 400 (Bad Request)", async () => {
+        const token = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), USERNAME, EMAIL, PASSWORD);
+        const res = await TestsHelper.deleteAccount(app.getHttpServer(), token, null);
+
+        expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("invalid password - should return 401 (Unauthorized)", async () => {
+        const token = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), USERNAME, EMAIL, PASSWORD);
+        const res = await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD1);
+
+        expect(res.status).toEqual(HttpStatus.UNAUTHORIZED);
     });
 
     it("invalid token - should return 401 (Unauthorized)", async () => {
         const token = "token"
-        const response1 = await TestsHelper.deleteAccount(app.getHttpServer(), token)
+        const response1 = await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD1)
 
         expect(response1.status == HttpStatus.UNAUTHORIZED);
     });
@@ -86,11 +106,11 @@ describe("account/delete", () => {
 
         const token = response2.body.access_token;
 
-        const response3 = await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        const response3 = await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD1);
 
         expect(response3.status == HttpStatus.OK);
 
-        const response4 = await TestsHelper.deleteAccount(app.getHttpServer(), token);
+        const response4 = await TestsHelper.deleteAccount(app.getHttpServer(), token, PASSWORD1);
 
         expect(response4.status == HttpStatus.UNAUTHORIZED);
     })
