@@ -76,8 +76,6 @@ export class Army {
             async (value: number): Promise<Equipment> => await datasource.getRepository(Equipment).findOneBy({ id: value })));
         this.specialRules = await Promise.all(this.equipmentIds.map(
             async (value: number): Promise<SpecialRule> => await datasource.getRepository(SpecialRule).findOneBy({ id: value })));
-        this.units = await Promise.all(this.unitIds.map(
-            async (value: number): Promise<Unit> => await datasource.getRepository(Unit).findOneBy({ id: value })));
         await datasource.destroy();
     }
 }

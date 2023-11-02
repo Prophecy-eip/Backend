@@ -7,6 +7,7 @@ import { ArmyList } from "@army-list/army-list.entity";
 import { ArmyListService } from "@army-list/army-list.service";
 import { Profile } from "@profile/profile.entity";
 import { ProfileService } from "@profile/profile.service";
+import { UnitModule } from "@army/unit/unit.module";
 
 /**
  * @class GameModule
@@ -18,7 +19,8 @@ import { ProfileService } from "@profile/profile.service";
             Game,
             ArmyList,
             Profile
-        ])
+        ]),
+        UnitModule
     ],
     providers: [
         GameService,

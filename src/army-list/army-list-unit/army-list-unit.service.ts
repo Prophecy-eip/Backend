@@ -68,7 +68,7 @@ export class ArmyListUnitService {
         private readonly armyListUnitMagicStandardService: ArmyListUnitMagicStandardService,
         private readonly armyListUnitOptionService: ArmyListUnitOptionService,
         private readonly armyListUnitTroopSpecialRuleService: ArmyListUnitTroopSpecialRuleService,
-        private readonly armyListUnitTroopEquipmentService: ArmyListUnitTroopEquipmentService,
+        private readonly armyListUnitTroopEquipmentService: ArmyListUnitTroopEquipmentService
     ) {}
 
     async createAndSaveWithRelations(
@@ -81,6 +81,7 @@ export class ArmyListUnitService {
         if (unit === null) {
             throw new NotFoundException(`Unit ${credentials.unitId} not found.`);
         }
+
         const troops: Troop[] = await this.troopService.findByIds(credentials.troopIds);
         const armyListUnit: ArmyListUnit = await this.repository.save(await this.repository.create({
             id,
@@ -129,8 +130,8 @@ export class ArmyListUnitService {
         await this.repository.createQueryBuilder().relation(ArmyListUnit, this._getRelation(option)).of(unit).add(option);
     }
 
-    async findByArmyList(listId: string, options?: ArmyListUnitServiceOptions): Promise<ArmyListUnit[]> {
-        return this.repository.find({
+    async finByArmyList(listId: string, options?: ArmyListUnitServiceOptions): Promise<ArmyListUnit[]> {
+        let units: ArmyListUnit[] = await this.repository.find({
             where: { armyList: { id: listId }},
             relations: {
                 unit: (options?.loadAll === true || options?.loadUnit === true),
@@ -141,6 +142,13 @@ export class ArmyListUnitService {
                 equipmentTroops: (options?.loadAll === true || options?.loadEquipment === true),
                 troops: (options?.loadAll === true || options?.loadTroops === true)
         }});
+
+        if (units !== undefined && units !== null) {
+            await Promise.all(units.map(async (unit: ArmyListUnit): Promise<void> => {
+                unit.unit = await this.unitService.findOneById(unit.unit.id);
+            }));
+        }
+        return units;
     }
 
     async deleteByArmyList(listId: string): Promise<void> {

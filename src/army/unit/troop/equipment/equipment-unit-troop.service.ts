@@ -14,6 +14,10 @@ class EquipmentUnitTroopService {
     async findOneById(id: number): Promise<EquipmentUnitTroop> {
         return this.repository.findOneBy([{ id: id }]);
     }
+
+    async findByIds(ids: number[]): Promise<EquipmentUnitTroop[]> {
+        return Promise.all(ids.map(async (id: number): Promise<EquipmentUnitTroop> => this.repository.findOneBy([{ id: id }])));
+    }
 }
 
 export default EquipmentUnitTroopService;

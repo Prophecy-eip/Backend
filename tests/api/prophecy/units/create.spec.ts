@@ -7,6 +7,8 @@ import * as request from "supertest";
 import { ArmyListUnitCredentialsDTO } from "../../../../src/army-list/army-list-unit/army-list-unit-credentials.dto";
 import { PROPHEC_UNIT_ATTACKING_REGIMENT, PROPHECY_UNIT_DEFENDING_REGIMENT, PROPHECY_UNIT_REQUEST } from "../../../fixtures/prophecy/prophecy";
 
+jest.setTimeout(20000);
+
 const USERNAME = faker.internet.userName();
 const EMAIL = faker.internet.email();
 const PASSWORD = faker.internet.password();

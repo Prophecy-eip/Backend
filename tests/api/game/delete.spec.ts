@@ -90,7 +90,6 @@ describe("Games route", () => {
             .set("Authorization", `Bearer ${ownerToken}`)
             .then(res => res.body);
 
-        // console.log(games)
         games.map(g => expect(g.id !== gameId));
 
     });
