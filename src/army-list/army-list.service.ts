@@ -6,6 +6,7 @@ import { randomUUID } from "crypto";
 import { ArmyList } from "./army-list.entity";
 import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
 import { ArmyListUnitServiceOptions } from "@army-list/army-list-unit/army-list-unit.service";
+import { UnitService } from "@army/unit/unit.service";
 
 export type ArmyListServiceOptions = {
     loadAll?: boolean;
@@ -17,7 +18,8 @@ export type ArmyListServiceOptions = {
 export class ArmyListService {
     constructor(
         @InjectRepository(ArmyList)
-        private repository: Repository<ArmyList>
+        private repository: Repository<ArmyList>,
+        private readonly unitService: UnitService
     ) {}
 
     async create(name: string, owner: string, armyId: number, valuePoints: number, isShared: boolean,
@@ -32,24 +34,39 @@ export class ArmyListService {
     }
 
     async findByOwner(username: string, options?: ArmyListServiceOptions): Promise<ArmyList[]> {
-        return this.repository.find({
+        let lists: ArmyList[] = await this.repository.find({
             where: { owner: username },
             relations: this._getRelations(options)
         });
+
+        if (options?.loadUnits === true) {
+            lists = await Promise.all(lists.map(async (list: ArmyList): Promise<ArmyList> => this._loadUnits(list)));
+        }
+        return lists;
     }
 
     async findOneById(id: string,  options?: ArmyListServiceOptions): Promise<ArmyList> {
-        return this.repository.findOne({
-            where: { id: id },
+        let list: ArmyList = await this.repository.findOne({
+            where: {id: id},
             relations: this._getRelations(options)
         });
+
+        if (options?.loadUnits === true) {
+            list = await this._loadUnits(list);
+        }
+        return list;
     }
 
     async findOneByOwnerAndId(username: string, id: string, options?: ArmyListServiceOptions): Promise<ArmyList> {
-        return this.repository.findOne({
+        let list: ArmyList = await this.repository.findOne({
             where: [{ id: id }, { owner: username }],
             relations: this._getRelations(options)
         });
+
+        if (options?.loadUnits === true) {
+            list = await this._loadUnits(list);
+        }
+        return list;
     }
 
     async delete(id: string): Promise<void> {
@@ -60,6 +77,15 @@ export class ArmyListService {
         await this.repository.update({ id: id }, { name: name, armyId: armyId,
             valuePoints: valuePoints, isShared: isShared, isFavorite: isFavorite});
         await this.repository.createQueryBuilder().relation(ArmyList, "units").of(id).add(units);
+    }
+
+    private async _loadUnits(armyList: ArmyList): Promise<ArmyList> {
+        if (armyList !== null && armyList !== undefined) {
+            await Promise.all(armyList.units.map(async (unit: ArmyListUnit): Promise<void> => {
+                unit.unit = await this.unitService.findOneById(unit.unit.id);
+            }));
+        }
+        return armyList;
     }
 
     private _getRelations(options: ArmyListServiceOptions): string[] {

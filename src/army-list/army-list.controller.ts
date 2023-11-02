@@ -111,7 +111,7 @@ export class ArmyListController {
     async update(@Request() req,
         @Param("id") id: string,
         @Body() { name, armyId, valuePoints, isShared, units, isFavorite }: ArmyListParameterDTO): Promise<void> {
-        let list: ArmyList = await this.armyListService.findOneById(id, { loadUnits: true});
+        let list: ArmyList = await this.armyListService.findOneById(id, { loadAll: true});
 
         if (list === null) {
             throw new NotFoundException();

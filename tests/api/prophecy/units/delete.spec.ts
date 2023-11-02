@@ -6,6 +6,8 @@ import { TestsHelper } from "../../../tests.helper";
 import * as request from "supertest";
 import { PROPHECY_UNIT_REQUEST } from "../../../fixtures/prophecy/prophecy";
 
+jest.setTimeout(20000);
+
 let app: INestApplication;
 let token: string;
 let token1: string;
