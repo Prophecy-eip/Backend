@@ -14,6 +14,10 @@ class SpecialRuleUnitTroopService {
     async findOneById(id: number): Promise<SpecialRuleUnitTroop> {
         return this.repository.findOneBy([{ id: id }]);
     }
+
+    async findByIds(ids: number[]): Promise<SpecialRuleUnitTroop[]> {
+        return Promise.all(ids.map(async (id: number): Promise<SpecialRuleUnitTroop> => this.repository.findOneBy([{ id: id }])));
+    }
 }
 
 export default SpecialRuleUnitTroopService;

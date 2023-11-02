@@ -24,7 +24,7 @@ export class ArmyController {
     @HttpCode(HttpStatus.OK)
     async get(@Param("id") id: number): Promise<ArmyDTO> {
         try {
-            let army: Army = await this.armyService.findOneById(id);
+            let army: Army = await this.armyService.findOneById(id, { loadUnits: true });
             if (army === null) {
                 throw new NotFoundException();
             }

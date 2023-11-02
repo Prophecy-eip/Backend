@@ -14,6 +14,10 @@ class UnitOptionService {
     async findOneById(id: number): Promise<UnitOption> {
         return this.repository.findOneBy([{ id: id }]);
     }
+
+    async findByIds(ids: number[]): Promise<UnitOption[]> {
+        return Promise.all(ids.map(async (id: number): Promise<UnitOption> => this.repository.findOneBy([{ id: id }])));
+    }
 }
 
 export default UnitOptionService;
