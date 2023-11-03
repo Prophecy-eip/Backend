@@ -23,7 +23,7 @@ import { ArmyListService } from "./army-list.service";
 import { ArmyService } from "@army/army.service";
 import { Army } from "@army/army.entity";
 import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
-import EntityId from "@app/common/types/enity-id.type";
+import EntityId from "@common/types/enity-id.type";
 
 @Controller("armies-lists")
 export class ArmyListController {
