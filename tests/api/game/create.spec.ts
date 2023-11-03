@@ -125,6 +125,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("undefined opponent - should return 201 (Created)", async() => {
@@ -140,6 +141,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("undefined ownerScore - should return 400 (Bad Request)", async() => {
@@ -275,6 +277,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("undefined ownerArmyListId - should return 201 (Created)", async() => {
@@ -290,6 +293,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("undefined opponentArmyListId - should return 201 (Created)", async() => {
@@ -305,6 +309,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
 
@@ -321,6 +326,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("opponent, armies lists - should return 201 (created)", async() => {
@@ -336,6 +342,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("opponent, null opponent army list - should return 201 (created)", async() => {
@@ -351,6 +358,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("opponent, null owner army list - should return 201 (created)", async() => {
@@ -366,6 +374,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("null opponent, armies lists - should return 201 (created)", async() => {
@@ -381,6 +390,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("null opponent, null opponent army list - should return 201 (created)", async() => {
@@ -396,6 +406,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("null opponent, null owner army list - should return 201 (created)", async() => {
@@ -411,6 +422,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("null opponent, null armies lists - should return 201 (created)", async() => {
@@ -426,6 +438,7 @@ describe("games/create", () => {
             });
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("total score under 20 - should return 400 (bad request)", async() => {

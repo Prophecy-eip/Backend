@@ -16,6 +16,7 @@ import { ProfileService } from "@profile/profile.service";
 import { Game } from "@app/game/game.entity";
 import { GameDTO, GameParameterDTO } from "@app/game/game.dto";
 import { ParamHelper } from "@helper/param.helper";
+import EntityId from "@app/common/types/enity-id.type";
 
 /**
  * @class GameController
@@ -43,7 +44,7 @@ export class GameController {
     @HttpCode(HttpStatus.CREATED)
     async create(@Request() req,
         @Body() { opponent, ownerScore, opponentScore, ownerArmyListId, opponentArmyListId }: GameParameterDTO
-        ): Promise<void> {
+        ): Promise<EntityId> {
         const username = req.user.username;
         const ownerArmyList: ArmyList = await this.armyListService.findOneById(ownerArmyListId);
         const opponentArmyList: ArmyList = await this.armyListService.findOneById(opponentArmyListId);
@@ -62,6 +63,7 @@ export class GameController {
         const game: Game = await this.gameService.create(username, opponent, ownerScore, opponentScore, ownerArmyListId,
             opponentArmyListId);
         await this.gameService.save(game);
+        return { id: game.id };
     }
 
     @UseGuards(JwtAuthGuard)
