@@ -23,10 +23,7 @@ import { ArmyListService } from "./army-list.service";
 import { ArmyService } from "@army/army.service";
 import { Army } from "@army/army.entity";
 import { ArmyListUnitCredentialsDTO } from "@army-list/army-list-unit/army-list-unit-credentials.dto";
-
-type Id = {
-    id: string;
-}
+import EntityId from "@app/common/types/enity-id.type";
 
 @Controller("armies-lists")
 export class ArmyListController {
@@ -40,7 +37,7 @@ export class ArmyListController {
     @Post("")
     @HttpCode(HttpStatus.CREATED)
     async create(@Request() req,
-        @Body() { armyId, valuePoints, isFavorite, name, isShared, units }: ArmyListParameterDTO): Promise<Id> {
+        @Body() { armyId, valuePoints, isFavorite, name, isShared, units }: ArmyListParameterDTO): Promise<EntityId> {
         const army: Army = await this.armyService.findOneById(armyId);
         if (army === null) {
             throw new NotFoundException(`The army ${armyId} does not exist.`);
