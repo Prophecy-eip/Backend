@@ -16,7 +16,7 @@ import { ProfileService } from "@profile/profile.service";
 import { Game } from "@app/game/game.entity";
 import { GameDTO, GameParameterDTO } from "@app/game/game.dto";
 import { ParamHelper } from "@helper/param.helper";
-import EntityId from "@app/common/types/enity-id.type";
+import EntityId from "@common/types/enity-id.type";
 
 /**
  * @class GameController
