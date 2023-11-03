@@ -401,6 +401,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units: all null properties - should return 400 (Bad Request)", async() => {
@@ -1074,6 +1075,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units::magicItems: null unitOptionId & equipmentId - should return 201 (Created)", async() => {
@@ -1100,6 +1102,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units::magicItems: undefined unitOptionId & equipmentId - should return 201 (Created)", async() => {
@@ -1126,6 +1129,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units::magicItems: all null properties - should return 400 (Bad Request)", async() => {
@@ -1465,6 +1469,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units::magicStandards: all null properties - should return 400 (Bad Request)", async() => {
@@ -1585,6 +1590,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units::magicStandards: undefined unitOptionId - should return 201 (Created)", async() => {
@@ -1609,6 +1615,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units::magicStandards: null quantity - should return 400 (Bad Request)", async() => {
@@ -1780,6 +1787,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units::options: all null properties - should return 400 (Bad Request)", async() => {
@@ -2094,6 +2102,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units::specialRule: all null properties - should return 400 (Bad Request)", async() => {
@@ -2251,6 +2260,7 @@ describe("armies-lists/create", () => {
             .set("Authorization", `Bearer ${token}`).send(list);
 
         expect(res.status).toEqual(HttpStatus.CREATED);
+        expect(res.body.id).toBeDefined();
     });
 
     it("units::equipmentTroops: all null properties - should return 400 (Bad Request)", async() => {
