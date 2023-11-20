@@ -540,7 +540,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/username'
+                $ref: '#/components/schemas/connectionResponse'
+
         400:
           description: Bad Request
         401:
