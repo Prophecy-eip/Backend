@@ -28,8 +28,6 @@ import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 
 dotenv.config();
 
-jest.setTimeout(40000);
-
 /**
  * @class AccountController
  * @brief Controller that defines the account routes
@@ -121,9 +119,15 @@ export class AccountController {
     async deleteAccount(@Request() req, @Body() { password }: PasswordParameterDTO): Promise<void> {
         const username = req.user.username;
         const profile: Profile = await this.profileService.findOneByUsername(username);
+
         if ( profile === null || ! await profile.comparePassword(password)) {
             throw new UnauthorizedException();
         }
+        let armiesLists: ArmyList[] = await this.armyListService.findByOwner(username);
+        let unitProphecies: ProphecyUnit[] = await this.prophecyUnitService.findByOwner(username, {loadAll: true});
+        let armyProphecies: ProphecyArmy[] = await this.prophecyArmyService.findByOwner(username);
+
+        await this._deleteUserData(armiesLists, unitProphecies, armyProphecies);
         await this.profileService.delete(username);
     }
 
@@ -179,10 +183,7 @@ export class AccountController {
         let unitProphecies: ProphecyUnit[] = await this.prophecyUnitService.findByOwner(oldUsername, {loadAll: true});
         let armyProphecies: ProphecyArmy[] = await this.prophecyArmyService.findByOwner(oldUsername);
 
-        await Promise.all(armyProphecies.map(async (p: ProphecyArmy): Promise<void> => { await this.prophecyArmyService.delete(p.id); }));
-        await Promise.all(armiesLists.map(async (l: ArmyList): Promise<void> => { await this.armyListService.delete(l.id); }));
-        await Promise.all(unitProphecies.map(async (p: ProphecyUnit): Promise<void> => { await this.prophecyUnitService.delete(p.id); }));
-
+       await this._deleteUserData(armiesLists, unitProphecies, armyProphecies);
         try {
             await this.profileService.updateUsername(oldUsername, username);
         } catch (_err) {
@@ -193,6 +194,14 @@ export class AccountController {
 
         const profile: Profile = await this.profileService.findOneByUsername(username);
         return this.authService.login(profile);
+    }
+
+    private async _deleteUserData( armiesLists: ArmyList[],
+        unitProphecies: ProphecyUnit[],
+        armyProphecies: ProphecyArmy[]): Promise<void> {
+        await Promise.all(armyProphecies.map(async (p: ProphecyArmy): Promise<void> => { await this.prophecyArmyService.delete(p.id); }));
+        await Promise.all(armiesLists.map(async (l: ArmyList): Promise<void> => { await this.armyListService.delete(l.id); }));
+        await Promise.all(unitProphecies.map(async (p: ProphecyUnit): Promise<void> => { await this.prophecyUnitService.delete(p.id); }));
     }
 
     private async _restoreUserData(username: string,
