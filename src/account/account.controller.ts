@@ -7,7 +7,7 @@ import {
     UseGuards,
     Request,
     Delete,
-    BadRequestException, UnauthorizedException, Put, Get, Query
+    BadRequestException, UnauthorizedException, Put, Get, Query, ConflictException
 } from "@nestjs/common";
 import * as dotenv from "dotenv";
 
@@ -19,8 +19,16 @@ import { EmailConfirmationService } from "@email/email-confirmation.service";
 import { ForgottenPasswordService } from "@email/forgotten-password.service";
 import { PasswordUpdateService } from "@email/password-update.service";
 import { PasswordParameterDTO, EmailParameterDTO, UsernameParameterDTO } from "@account/account.dto";
+import { ArmyList } from "@army-list/army-list.entity";
+import { ArmyListService } from "@army-list/army-list.service";
+import { ProphecyUnit } from "@prophecy/unit/prophecy-unit.entity";
+import { ProphecyUnitService } from "@prophecy/unit/prophecy-unit.service";
+import ProphecyArmyService from "@prophecy/army/prophecy-army.service";
+import { ProphecyArmy } from "@prophecy/army/prophecy-army.entity";
 
 dotenv.config();
+
+jest.setTimeout(40000);
 
 /**
  * @class AccountController
@@ -33,7 +41,10 @@ export class AccountController {
         private readonly authService: AuthService,
         private readonly emailConfirmationService: EmailConfirmationService,
         private readonly forgottenPasswordService: ForgottenPasswordService,
-        private readonly passwordUpdateService: PasswordUpdateService
+        private readonly passwordUpdateService: PasswordUpdateService,
+        private readonly armyListService: ArmyListService,
+        private readonly prophecyUnitService: ProphecyUnitService,
+        private readonly prophecyArmyService: ProphecyArmyService
     ) {}
 
     /**
@@ -162,13 +173,44 @@ export class AccountController {
     @UseGuards(JwtAuthGuard)
     @Put("username")
     @HttpCode(HttpStatus.OK)
-    async updateUsername(@Request() req, @Body() { username }: UsernameParameterDTO): Promise<UsernameParameterDTO> {
-        const u = req.user.username;
+    async updateUsername(@Request() req, @Body() { username }: UsernameParameterDTO): Promise<{ username: string, access_token: string }> {
+        const oldUsername: string = req.user.username;
+        let armiesLists: ArmyList[] = await this.armyListService.findByOwner(oldUsername);
+        let unitProphecies: ProphecyUnit[] = await this.prophecyUnitService.findByOwner(oldUsername, {loadAll: true});
+        let armyProphecies: ProphecyArmy[] = await this.prophecyArmyService.findByOwner(oldUsername);
 
-        await this.profileService.updateUsername(u, username);
-        return {
-            username
-        };
+        await Promise.all(armyProphecies.map(async (p: ProphecyArmy): Promise<void> => { await this.prophecyArmyService.delete(p.id); }));
+        await Promise.all(armiesLists.map(async (l: ArmyList): Promise<void> => { await this.armyListService.delete(l.id); }));
+        await Promise.all(unitProphecies.map(async (p: ProphecyUnit): Promise<void> => { await this.prophecyUnitService.delete(p.id); }));
+
+        try {
+            await this.profileService.updateUsername(oldUsername, username);
+        } catch (_err) {
+            await this._restoreUserData(oldUsername, armiesLists, unitProphecies, armyProphecies);
+            throw new ConflictException(`The username ${username} is already used.`);
+        }
+        await this._restoreUserData(username, armiesLists, unitProphecies, armyProphecies);
+
+        const profile: Profile = await this.profileService.findOneByUsername(username);
+        return this.authService.login(profile);
+    }
+
+    private async _restoreUserData(username: string,
+        armiesLists: ArmyList[],
+        unitProphecies: ProphecyUnit[],
+        armyProphecies: ProphecyArmy[]): Promise<void> {
+        await Promise.all(armiesLists.map(async (l: ArmyList): Promise<void> => {
+            l.owner = username;
+            await this.armyListService.save(l);
+        }));
+        await Promise.all(unitProphecies.map(async (p: ProphecyUnit): Promise<void> => {
+            p.owner = username;
+            await this.prophecyUnitService.save(p);
+        }));
+        await Promise.all(armyProphecies.map(async (p: ProphecyArmy): Promise<void> => {
+            p.owner = username;
+            await this.prophecyArmyService.save(p);
+        }));
     }
 
     @UseGuards(JwtAuthGuard)
