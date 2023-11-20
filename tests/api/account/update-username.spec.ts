@@ -4,6 +4,8 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "../../../src/app.module";
 import { TestsHelper } from "../../tests.helper";
 import * as request from "supertest";
+import { ARMY1, ARMY2 } from "../../fixtures/army-list/armies-lists";
+import { PROPHECY_UNIT_REQUEST } from "../../fixtures/prophecy/prophecy";
 
 const USERNAME = faker.internet.userName();
 const EMAIL = faker.internet.email();
@@ -56,6 +58,7 @@ describe("account/update-username", () => {
 
         expect(response1.status).toEqual(HttpStatus.OK);
         expect(response1.body.username).toBeDefined();
+        expect(response1.body.access_token).toBeDefined();
         expect(response1.body.username).toEqual(USERNAME1);
 
         // trying to sign in with old username
@@ -174,5 +177,73 @@ describe("account/update-username", () => {
             .send({ username: null });
 
         expect(response1.status).toEqual(HttpStatus.BAD_REQUEST);
+    });
+
+    it("update with armies lists and prophecies - should return 200 (OK)", async () => {
+       const token1: string = await TestsHelper.createAccountAndGetToken(app.getHttpServer(), USERNAME, EMAIL, PASSWORD);
+
+        expect(token1).toBeDefined();
+
+       // create armise lists
+        const armyListId1: string = await request(app.getHttpServer())
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
+            .set("Authorization", `Bearer ${token1}`).send(ARMY1).then(res => res.body.id);
+        const armyListId2: string = await request(app.getHttpServer())
+            .post(TestsHelper.ARMIES_LISTS_ROUTE)
+            .set("Authorization", `Bearer ${token1}`).send(ARMY2).then(res => res.body.id);
+
+        // create army prophecy
+        const prophecyArmyId = await request(app.getHttpServer())
+            .post(TestsHelper.ARMY_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${token1}`).send({
+                armyList1: armyListId1,
+                armyList2: armyListId2
+            }).then(res => res.body.id);
+
+       // create unit prophecy
+        await request(app.getHttpServer())
+            .post(TestsHelper.UNIT_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${token1}`).send(PROPHECY_UNIT_REQUEST);
+
+        // update username
+        const updateResponse = await request(app.getHttpServer())
+            .put(TestsHelper.UPDATE_USERNAME_ROUTE)
+            .set("Authorization", `Bearer ${token1}`)
+            .send({ username: USERNAME1 });
+
+
+        expect(updateResponse.status).toEqual(HttpStatus.OK);
+        expect(updateResponse.body.username).toBeDefined()
+        expect(updateResponse.body.username).toEqual(USERNAME1);
+        expect(updateResponse.body.access_token).toBeDefined();
+
+        const token2 = updateResponse.body.access_token;
+
+        // check that armies lists still exist
+        const armiesListsLookupResponse = await request(app.getHttpServer())
+            .get(TestsHelper.ARMIES_LISTS_ROUTE)
+            .set("Authorization", `Bearer ${token2}`);
+
+        expect(armiesListsLookupResponse.status).toEqual(HttpStatus.OK);
+        expect(armiesListsLookupResponse.body.length).toEqual(2);
+        expect(armiesListsLookupResponse.body.find(e => e.id === armyListId1)).toBeDefined();
+        expect(armiesListsLookupResponse.body.find(e => e.id === armyListId2)).toBeDefined();
+
+        // check that armies prophecies still exist
+        const armiesPropheciesLookupResponse = await request(app.getHttpServer())
+            .get(TestsHelper.ARMY_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${token2}`);
+
+        expect(armiesPropheciesLookupResponse.status).toEqual(HttpStatus.OK);
+        expect(armiesPropheciesLookupResponse.body.length).toEqual(1);
+        expect(armiesPropheciesLookupResponse.body[0].id).toEqual(prophecyArmyId);
+
+        // check that unit prophecies still exist
+        const unitsPropheciesLookupResponse = await request(app.getHttpServer())
+            .get(TestsHelper.UNIT_PROPHECY_ROUTE)
+            .set("Authorization", `Bearer ${token2}`);
+
+        expect(unitsPropheciesLookupResponse.status).toEqual(HttpStatus.OK);
+        expect(unitsPropheciesLookupResponse.body.length).toEqual(1);
     });
 });

@@ -13,6 +13,10 @@ import { ProfileModule } from "@profile/profile.module";
 import { AuthModule } from "@auth/auth.module";
 import { ForgottenPasswordService } from "@email/forgotten-password.service";
 import { PasswordUpdateService } from "@email/password-update.service";
+import { ArmyListModule } from "@army-list/army-list.module";
+import { AccountController } from "@account/account.controller";
+import { UnitModule } from "@army/unit/unit.module";
+import { ProphecyModule } from "@prophecy/prophecy.module";
 
 /**
  * @class AccountModule
@@ -27,9 +31,20 @@ import { PasswordUpdateService } from "@email/password-update.service";
             secret: jwtConstants.secret,
             signOptions: { expiresIn: "7d" }
         }),
-        EmailModule
+        EmailModule,
+        ArmyListModule,
+        UnitModule,
+        ProphecyModule
     ],
-    providers: [ProfileService, AuthService, EmailService, EmailConfirmationService, ForgottenPasswordService, PasswordUpdateService],
-    exports: [ProfileModule]
+    providers: [
+        ProfileService,
+        AuthService,
+        EmailService,
+        EmailConfirmationService,
+        ForgottenPasswordService,
+        PasswordUpdateService
+    ],
+    controllers: [AccountController],
+    exports: [ProfileModule, ArmyListModule]
 })
 export class AccountModule {}
