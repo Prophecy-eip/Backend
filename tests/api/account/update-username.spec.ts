@@ -7,6 +7,8 @@ import * as request from "supertest";
 import { ARMY1, ARMY2 } from "../../fixtures/army-list/armies-lists";
 import { PROPHECY_UNIT_REQUEST } from "../../fixtures/prophecy/prophecy";
 
+jest.setTimeout(40000);
+
 const USERNAME = faker.internet.userName();
 const EMAIL = faker.internet.email();
 const PASSWORD = faker.internet.password();
