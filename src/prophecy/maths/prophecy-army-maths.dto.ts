@@ -1,38 +1,27 @@
-import { ProphecyModelMathsDTO } from "@prophecy/maths/prophecy-maths.dto";
-import { ArmyListUnit } from "@army-list/army-list-unit/army-list-unit.entity";
+import {ArmyListUnit} from "@army-list/army-list-unit/army-list-unit.entity";
 
 class PlayerUnitMathDTO {
 
     constructor(unit: ArmyListUnit) {
-        this.unit = {
-            model: new ProphecyModelMathsDTO(unit)
-        };
+        this.name = unit.unit.name;
+        this.modifiers = [];
     }
 
-    public unit: {
-        model: ProphecyModelMathsDTO
-    };
-
+    public name: string;
+    modifiers: [];
 }
 
-class PlayerMathsDTO {
-    constructor(units: ArmyListUnit[]) {
-        this.units = units.map((u: ArmyListUnit): PlayerUnitMathDTO => new PlayerUnitMathDTO(u));
-    }
-
-    public units: PlayerUnitMathDTO[];
-}
 
 export class ProphecyArmyMathRequestDTO {
     constructor(key: string, player1Units: ArmyListUnit[], player2Units: ArmyListUnit[]) {
         this.key = key;
-        this.first_player = new PlayerMathsDTO(player1Units);
-        this.second_player = new PlayerMathsDTO(player2Units);
+        this.first_player = player1Units.map(e => new PlayerUnitMathDTO(e));
+        this.second_player = player2Units.map(e => new PlayerUnitMathDTO(e));
     }
 
     public key: string;
-    public first_player: PlayerMathsDTO;
-    public second_player: PlayerMathsDTO;
+    public first_player: PlayerUnitMathDTO[];
+    public second_player: PlayerUnitMathDTO[];
 }
 
 export type ProphecyArmyMathResponseDTO = {
