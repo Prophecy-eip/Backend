@@ -17,10 +17,10 @@ jobs:
       - name: "Setup environement"
         run: |
           printf "SERVER_PORT=${{ secrets.SERVER_PORT }}\n
-          POSTGRES_DB=${{ secrets.PROD_DATABASE_NAME}}\n
-          POSTGRES_USER=${{ secrets.PROD_DATABASE_USER }}\n
-          POSTGRES_PASSWORD=${{ secrets.PROD_DATABASE_PASSWORD }}\n
-          DATABASE_IP=${{ secrets.PROD_DATABASE_IP }}\n
+          POSTGRES_DB=${{ secrets.DEV_DATABASE_NAME }}\n
+          POSTGRES_USER=${{ secrets.DEV_DATABASE_USER }}\n
+          POSTGRES_PASSWORD=${{ secrets.DEV_DATABASE_PASSWORD }}\n
+          DATABASE_IP=${{ secrets.DEV_DATABASE_IP }}\n
           DATABASE_PORT=${{ secrets.DATABASE_PORT }}\n
           JWT_SECRET=${{ secrets.JWT_SECRET }}\n
           TESTS_PORT=${{ secrets.TESTS_PORT }}\n
